@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "326927403832",
+    "project_id": "mindful-minis-app",
+    "storage_bucket": "mindful-minis-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:326927403832:android:dc05ede42d87fe8d68cfcd",
+        "android_client_info": {
+          "package_name": "app.mindfulmini.in"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwQbI5Px2CDX2ix2gQP-d6Fi1DkHH490c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
