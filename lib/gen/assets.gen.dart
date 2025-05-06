@@ -58,6 +58,19 @@ class $AssetsIconsGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/Ellipse 70951.png
+  AssetGenImage get ellipse70951 =>
+      const AssetGenImage('assets/images/Ellipse 70951.png');
+
+  /// File path: assets/images/Star.svg
+  String get star => 'assets/images/Star.svg';
+
+  /// File path: assets/images/Star1.svg
+  String get star1 => 'assets/images/Star1.svg';
+
+  /// File path: assets/images/Star2.svg
+  String get star2 => 'assets/images/Star2.svg';
+
   /// File path: assets/images/onboard1.svg
   String get onboard1 => 'assets/images/onboard1.svg';
 
@@ -74,13 +87,30 @@ class $AssetsImagesGen {
   /// File path: assets/images/onboard_background.svg
   String get onboardBackgroundSvg => 'assets/images/onboard_background.svg';
 
+  /// File path: assets/images/phoneverficationdailog.svg
+  String get phoneverficationdailog =>
+      'assets/images/phoneverficationdailog.svg';
+
+  /// File path: assets/images/splash_1.svg
+  String get splash1 => 'assets/images/splash_1.svg';
+
+  /// File path: assets/images/splash_img.svg
+  String get splashImg => 'assets/images/splash_img.svg';
+
   /// List of all assets
   List<dynamic> get values => [
+    ellipse70951,
+    star,
+    star1,
+    star2,
     onboard1,
     onboard2,
     onboard3,
     onboardBackgroundPng,
     onboardBackgroundSvg,
+    phoneverficationdailog,
+    splash1,
+    splashImg,
   ];
 }
 

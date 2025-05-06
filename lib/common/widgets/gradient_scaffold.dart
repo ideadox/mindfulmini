@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class GradientScaffold extends StatelessWidget {
   final Widget? appbar;
@@ -8,21 +9,22 @@ class GradientScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            // gradient: LinearGradient(
-            //   begin: Alignment.topLeft,
-            //   end: Alignment.bottomRight,
-            //   colors: [
-            //     const Color.fromARGB(255, 254, 254, 186),
-            //     const Color.fromARGB(255, 118, 152, 238),
-            //     const Color.fromARGB(255, 241, 185, 180),
-            //   ],
-            // ),
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              HexColor('#FFF9E8'),
+              HexColor('#D4E1FE'),
+              HexColor('#FDE8EF'),
+              HexColor('#FFF4EE'),
+            ],
           ),
-          child: body,
         ),
+        child: SafeArea(child: body!),
       ),
     );
   }

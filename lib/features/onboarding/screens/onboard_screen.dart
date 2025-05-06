@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/features/authentication/screens/auth_main.dart';
@@ -8,7 +9,11 @@ import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../../../injection/injection.dart';
+
 class OnboardScreen extends StatelessWidget {
+  static String routeName = 'onboard-screen';
+  static String routePath = '/onboard-screen';
   const OnboardScreen({super.key});
 
   @override
@@ -78,13 +83,8 @@ class OnboardScreen extends StatelessWidget {
                         child: GradientButton(
                           onPressed: () {
                             if (op.currentPage == 2) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return AuthMain();
-                                  },
-                                ),
+                              sl<GoRouter>().pushReplacementNamed(
+                                AuthMain.routeName,
                               );
                               return;
                             }

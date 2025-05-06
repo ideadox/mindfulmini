@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mindfulminis/core/app_colors.dart';
+
 import 'package:mindfulminis/features/authentication/providers/phone_authh_provider.dart';
-import 'package:mindfulminis/features/onboarding/screens/onboard_screen.dart';
 
 import 'package:mindfulminis/gen/assets.gen.dart';
+import 'package:mindfulminis/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 class Mindfulminis extends StatelessWidget {
@@ -16,18 +19,38 @@ class Mindfulminis extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => PhoneAuthhProvider()),
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
+        builder: FlutterSmartDialog.init(
+          builder: (context, child) {
+            final mediaQueryData = MediaQuery.of(context);
+
+            final scale = mediaQueryData.textScaler.clamp(
+              minScaleFactor: 1.0,
+              maxScaleFactor: 1.3,
+            );
+            return MediaQuery(
+              data: mediaQueryData.copyWith(textScaler: scale),
+              child: child!,
+            );
+          },
+        ),
+
         title: 'Mindfulminis',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           fontFamily: Assets.fonts.newHeroRegular,
-          textTheme: TextTheme(),
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+
+          pageTransitionsTheme: const PageTransitionsTheme(
+            builders: {
+              TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+              TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            },
+          ),
+          colorScheme: ColorScheme.light(primary: AppColors.primary),
+          useMaterial3: true,
         ),
-        navigatorObservers: [FlutterSmartDialog.observer],
-        // here
-        builder: FlutterSmartDialog.init(),
-        home: OnboardScreen(),
+
+        routerConfig: sl<GoRouter>(),
       ),
     );
   }
