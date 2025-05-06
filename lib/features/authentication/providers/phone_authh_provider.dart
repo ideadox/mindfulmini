@@ -33,7 +33,7 @@ class PhoneAuthhProvider with ChangeNotifier {
       String phoneNumber = countryCode! + phoneNumerController.text.trim();
       startTimer();
       await firebaseAuth.verifyPhoneNumber(
-        autoRetrievedSmsCodeForTesting: '123456',
+        // autoRetrievedSmsCodeForTesting: '123456',
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
           final smsCode = credential.smsCode;

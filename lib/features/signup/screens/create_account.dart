@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/widgets/custom_back_button.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/common/widgets/gradient_scaffold.dart';
@@ -9,6 +10,7 @@ import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/widgets/common_text_form_field.dart';
+import '../../../injection/injection.dart';
 
 class CreateAccount extends StatelessWidget {
   static String routeName = 'create-account';
@@ -123,13 +125,16 @@ class CreateAccount extends StatelessWidget {
                         Text("Already have any account? "),
                         TextButton(
                           onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return Login();
-                                },
-                              ),
+                            // Navigator.pushReplacement(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) {
+                            //       return Login();
+                            //     },
+                            //   ),
+                            // );
+                            sl<GoRouter>().pushReplacementNamed(
+                              Login.routeName,
                             );
                           },
                           child: Text('Log In'),
