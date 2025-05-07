@@ -28,17 +28,26 @@ class $AssetsIconsGen {
   /// File path: assets/icons/Google Logo.svg
   String get googleLogo => 'assets/icons/Google Logo.svg';
 
+  /// File path: assets/icons/dob_icon.svg
+  String get dobIcon => 'assets/icons/dob_icon.svg';
+
   /// File path: assets/icons/invisble_eye.svg
   String get invisbleEye => 'assets/icons/invisble_eye.svg';
 
   /// File path: assets/icons/mail.svg
   String get mail => 'assets/icons/mail.svg';
 
+  /// File path: assets/icons/mic.svg
+  String get mic => 'assets/icons/mic.svg';
+
   /// File path: assets/icons/pass_lock.svg
   String get passLock => 'assets/icons/pass_lock.svg';
 
   /// File path: assets/icons/user.svg
   String get user => 'assets/icons/user.svg';
+
+  /// File path: assets/icons/verify_tick.svg
+  String get verifyTick => 'assets/icons/verify_tick.svg';
 
   /// File path: assets/icons/visible_eye.svg
   String get visibleEye => 'assets/icons/visible_eye.svg';
@@ -47,10 +56,13 @@ class $AssetsIconsGen {
   List<String> get values => [
     appleLogo,
     googleLogo,
+    dobIcon,
     invisbleEye,
     mail,
+    mic,
     passLock,
     user,
+    verifyTick,
     visibleEye,
   ];
 }
@@ -70,6 +82,18 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/Star2.svg
   String get star2 => 'assets/images/Star2.svg';
+
+  /// File path: assets/images/allset.svg
+  String get allset => 'assets/images/allset.svg';
+
+  /// File path: assets/images/amazing_feel.svg
+  String get amazingFeel => 'assets/images/amazing_feel.svg';
+
+  /// File path: assets/images/angry_feel.svg
+  String get angryFeel => 'assets/images/angry_feel.svg';
+
+  /// File path: assets/images/confused.svg
+  String get confused => 'assets/images/confused.svg';
 
   /// File path: assets/images/onboard1.svg
   String get onboard1 => 'assets/images/onboard1.svg';
@@ -91,11 +115,23 @@ class $AssetsImagesGen {
   String get phoneverficationdailog =>
       'assets/images/phoneverficationdailog.svg';
 
+  /// File path: assets/images/sad_feel.svg
+  String get sadFeel => 'assets/images/sad_feel.svg';
+
+  /// File path: assets/images/sleep_feel.svg
+  String get sleepFeel => 'assets/images/sleep_feel.svg';
+
+  /// File path: assets/images/so-so_feel.svg
+  String get soSoFeel => 'assets/images/so-so_feel.svg';
+
   /// File path: assets/images/splash_1.svg
   String get splash1 => 'assets/images/splash_1.svg';
 
   /// File path: assets/images/splash_img.svg
   String get splashImg => 'assets/images/splash_img.svg';
+
+  /// File path: assets/images/verifiedlottie.json
+  String get verifiedlottie => 'assets/images/verifiedlottie.json';
 
   /// List of all assets
   List<dynamic> get values => [
@@ -103,14 +139,22 @@ class $AssetsImagesGen {
     star,
     star1,
     star2,
+    allset,
+    amazingFeel,
+    angryFeel,
+    confused,
     onboard1,
     onboard2,
     onboard3,
     onboardBackgroundPng,
     onboardBackgroundSvg,
     phoneverficationdailog,
+    sadFeel,
+    sleepFeel,
+    soSoFeel,
     splash1,
     splashImg,
+    verifiedlottie,
   ];
 }
 

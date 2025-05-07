@@ -1,11 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mindfulminis/common/widgets/common_close_button.dart';
+
 import 'package:mindfulminis/common/widgets/common_text_form_field.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/common/widgets/gradient_scaffold.dart';
-import 'package:mindfulminis/core/app_colors.dart';
+
 import 'package:mindfulminis/gen/assets.gen.dart';
+
+import 'package:provider/provider.dart';
+
+import '../../../core/app_text_theme.dart';
+import '../providers/onboards_provider.dart';
 
 class Dob extends StatelessWidget {
   static String routeName = 'dob-name';
@@ -15,42 +21,86 @@ class Dob extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    GlobalKey<FormState> dobFormKey = GlobalKey();
+
     return GradientScaffold(
       body: Padding(
         padding: const EdgeInsets.all(12),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [CommonCloseButton()],
-            ),
-            Text(
-              'How old is your child?',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Enter any cute or funny name that your kids like the most',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontSize: 12,
-                color: AppColors.grey45,
-              ),
-            ),
-            SizedBox(height: 30),
+        child: Consumer<OnboardsProvider>(
+          builder: (context, provider, _) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 50),
 
-            CommonTextFormField(
-              prefixIcon: SvgPicture.asset(Assets.icons.user),
-              hintText: 'Enter Name',
-            ),
+                Text(
+                  'How old is your child?',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
 
-            Spacer(),
-            GradientButton(child: Center(child: Text('Save'))),
-          ],
+                SizedBox(height: 20),
+                Form(
+                  key: dobFormKey,
+                  child: CommonTextFormField(
+                    controller: provider.dobController,
+                    readOnly: true,
+                    prefixIcon: SvgPicture.asset(Assets.icons.dobIcon),
+                    hintText: 'Date Of Birth',
+                    validator: (p0) {
+                      if (p0!.isEmpty) {
+                        return 'Please select date of birth.';
+                      }
+
+                      return null;
+                    },
+                  ),
+                ),
+
+                Spacer(flex: 1),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  height: MediaQuery.sizeOf(context).height * 0.3,
+                  child: CupertinoDatePicker(
+                    initialDateTime: DateTime.now(),
+                    mode: CupertinoDatePickerMode.date,
+                    maximumDate: DateTime.now(),
+                    minimumDate: DateTime.now().subtract(
+                      const Duration(days: 100 * 365),
+                    ),
+                    use24hFormat: true,
+
+                    showDayOfWeek: true,
+                    onDateTimeChanged: (DateTime newDate) {
+                      provider.onChangeDob(newDate);
+                    },
+                  ),
+                ),
+                Spacer(flex: 2),
+                GradientButton(
+                  onPressed: () {
+                    if (dobFormKey.currentState!.validate()) {
+                      provider.onDateOfBirthSave();
+                    }
+                  },
+                  child: Center(
+                    child: Text(
+                      'Save',
+
+                      style:
+                          AppTextTheme.mainButtonTextStyle(context).titleLarge,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

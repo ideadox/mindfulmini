@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CommonCloseButton extends StatelessWidget {
-  const CommonCloseButton({super.key});
+  final VoidCallback? onPressed;
+  const CommonCloseButton({super.key, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class CommonCloseButton extends StatelessWidget {
         side: BorderSide(color: Colors.grey),
       ),
       // color: Colors.grey,
-      onPressed: () {},
+      onPressed: onPressed,
       icon: Icon(Icons.close),
     );
   }

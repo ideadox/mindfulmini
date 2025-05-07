@@ -6,14 +6,18 @@ import 'package:mindfulminis/features/authentication/screens/phone_verification.
 import 'package:mindfulminis/features/forgot_password/screens/forgot_password.dart';
 import 'package:mindfulminis/features/login/screens/login.dart';
 import 'package:mindfulminis/features/onbaord/screens/dob.dart';
+import 'package:mindfulminis/features/onbaord/screens/felling_today.dart';
 import 'package:mindfulminis/features/onbaord/screens/kid_name.dart';
 import 'package:mindfulminis/features/onboarding/screens/onboard_screen.dart';
 import 'package:mindfulminis/features/signup/screens/create_account.dart';
+
+import '../features/onbaord/screens/describe_yourself.dart';
 
 // GoRouter configuration
 GoRouter buildRouter() {
   return GoRouter(
     routes: [
+      GoRoute(path: '/', name: '/kid', builder: (context, state) => KidName()),
       GoRoute(
         path: SplashScreen.routePath,
         name: SplashScreen.routeName,
@@ -59,10 +63,20 @@ GoRouter buildRouter() {
         name: Dob.routeName,
         builder: (context, state) => Dob(),
       ),
+      GoRoute(
+        path: FellingToday.routePath,
+        name: FellingToday.routeName,
+        builder: (context, state) => FellingToday(),
+      ),
+      GoRoute(
+        path: DescribeYourself.routePath,
+        name: DescribeYourself.routeName,
+        builder: (context, state) => DescribeYourself(),
+      ),
     ],
-    redirect: (context, state) {
-      return null;
-    },
+    // redirect: (context, state) {
+    //   return KidName.routePath;
+    // },
     observers: [FlutterSmartDialog.observer],
   );
 }

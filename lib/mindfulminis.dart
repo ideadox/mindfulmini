@@ -4,8 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 
 import 'package:mindfulminis/features/authentication/providers/phone_authh_provider.dart';
-
-import 'package:mindfulminis/gen/assets.gen.dart';
+import 'package:mindfulminis/features/onbaord/providers/onboards_provider.dart';
 import 'package:mindfulminis/injection/injection.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +17,7 @@ class Mindfulminis extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => PhoneAuthhProvider()),
+        ChangeNotifierProvider(create: (context) => OnboardsProvider()),
       ],
       child: MaterialApp.router(
         builder: FlutterSmartDialog.init(
@@ -38,8 +38,7 @@ class Mindfulminis extends StatelessWidget {
         title: 'Mindfulminis',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          fontFamily: Assets.fonts.newHeroRegular,
-
+          fontFamily: 'New Hero',
           pageTransitionsTheme: const PageTransitionsTheme(
             builders: {
               TargetPlatform.android: CupertinoPageTransitionsBuilder(),

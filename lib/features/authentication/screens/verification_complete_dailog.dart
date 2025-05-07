@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
 
+import '../../../common/widgets/close_button_dailog.dart';
 import '../../../common/widgets/gradient_button.dart';
 import '../../signup/screens/create_account.dart';
 
@@ -13,8 +14,10 @@ class VerificationCompleteDailog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.sizeOf(context).width;
+    double height = MediaQuery.sizeOf(context).height;
+
     return Container(
-      height: 400,
+      height: height * 0.6,
       width: width * 0.9,
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -28,9 +31,9 @@ class VerificationCompleteDailog extends StatelessWidget {
       alignment: Alignment.center,
       child: Column(
         children: [
-          CloseButton(),
-          SizedBox(height: 150),
+          CloseButtonDailog(),
 
+          Lottie.asset(Assets.images.verifiedlottie, height: height * 0.25),
           Text(
             'Successfully Verified',
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22),
@@ -61,40 +64,6 @@ class VerificationCompleteDailog extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class CloseButton extends StatelessWidget {
-  const CloseButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Container(
-            height: 50,
-            width: 50,
-            decoration: BoxDecoration(
-              color: Colors.white,
-
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade200,
-                  spreadRadius: 6,
-                  blurRadius: 5,
-                  offset: const Offset(1, 3),
-                ),
-              ],
-              borderRadius: BorderRadius.circular(100),
-            ),
-            child: Icon(Icons.close),
           ),
         ],
       ),

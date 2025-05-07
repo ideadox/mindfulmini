@@ -10,6 +10,7 @@ class CommonTextFormField extends StatelessWidget {
   final TextEditingController? controller;
   final TextInputType? keyboardType;
   final bool obscureText;
+  final bool readOnly;
 
   const CommonTextFormField({
     super.key,
@@ -20,11 +21,13 @@ class CommonTextFormField extends StatelessWidget {
     this.controller,
     this.keyboardType,
     this.obscureText = false,
+    this.readOnly = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      readOnly: readOnly,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: controller,
       decoration: InputDecoration(
