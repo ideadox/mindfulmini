@@ -61,26 +61,36 @@ class Dob extends StatelessWidget {
                 ),
 
                 Spacer(flex: 1),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  height: MediaQuery.sizeOf(context).height * 0.3,
-                  child: CupertinoDatePicker(
-                    initialDateTime: DateTime.now(),
-                    mode: CupertinoDatePickerMode.date,
-                    maximumDate: DateTime.now(),
-                    minimumDate: DateTime.now().subtract(
-                      const Duration(days: 100 * 365),
-                    ),
-                    use24hFormat: true,
+                Row(
+                  children: [
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        height: MediaQuery.sizeOf(context).height * 0.35,
+                        child: CupertinoDatePicker(
+                          itemExtent: 40,
 
-                    showDayOfWeek: true,
-                    onDateTimeChanged: (DateTime newDate) {
-                      provider.onChangeDob(newDate);
-                    },
-                  ),
+                          initialDateTime: DateTime.now(),
+                          mode: CupertinoDatePickerMode.date,
+                          maximumDate: DateTime.now(),
+                          minimumDate: DateTime.now().subtract(
+                            const Duration(days: 100 * 365),
+                          ),
+                          use24hFormat: true,
+
+                          showDayOfWeek: false,
+                          onDateTimeChanged: (DateTime newDate) {
+                            provider.onChangeDob(newDate);
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                  ],
                 ),
                 Spacer(flex: 2),
                 GradientButton(

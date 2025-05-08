@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mindfulminis/common/widgets/common_close_button.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/common/widgets/gradient_scaffold.dart';
 import 'package:mindfulminis/core/app_colors.dart';
@@ -10,6 +9,7 @@ import 'package:mindfulminis/features/onbaord/widgets/listening_widget.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:provider/provider.dart';
 
+import '../../../common/widgets/common_close_button.dart';
 import '../providers/speech_provider.dart';
 
 class DescribeYourself extends StatefulWidget {
@@ -44,7 +44,7 @@ class _DescribeYourselfState extends State<DescribeYourself> {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: [CommonCloseButton()],
+                    children: [CommonCloseButton(onPressed: () {})],
                   ),
                   Text(
                     'Can you describe how your child feeling right now',
@@ -71,7 +71,10 @@ class _DescribeYourselfState extends State<DescribeYourself> {
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: Colors.white,
-                            hintText: 'Enter here...',
+                            hintText:
+                                speechProvider.isListening
+                                    ? "Listening..."
+                                    : 'Enter here...',
                             hintStyle: TextStyle(color: Colors.grey),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(
@@ -115,12 +118,12 @@ class _DescribeYourselfState extends State<DescribeYourself> {
                       ),
                     ],
                   ),
-                  if (speechProvider.error != null)
-                    Text(
-                      speechProvider.error!,
-                      style: TextStyle(color: Colors.red),
-                    ),
 
+                  // if (speechProvider.error != null)
+                  //   Text(
+                  //     speechProvider.error!,
+                  //     style: TextStyle(color: Colors.red),
+                  //   ),
                   Spacer(),
 
                   GradientButton(

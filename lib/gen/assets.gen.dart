@@ -9,6 +9,28 @@
 
 import 'package:flutter/widgets.dart';
 
+class $AssetsDummyGen {
+  const $AssetsDummyGen();
+
+  /// File path: assets/dummy/Frame 2043683273.svg
+  String get frame2043683273 => 'assets/dummy/Frame 2043683273.svg';
+
+  /// File path: assets/dummy/bread.svg
+  String get bread => 'assets/dummy/bread.svg';
+
+  /// File path: assets/dummy/medi.svg
+  String get medi => 'assets/dummy/medi.svg';
+
+  /// File path: assets/dummy/storty.svg
+  String get storty => 'assets/dummy/storty.svg';
+
+  /// File path: assets/dummy/yoga.svg
+  String get yoga => 'assets/dummy/yoga.svg';
+
+  /// List of all assets
+  List<String> get values => [frame2043683273, bread, medi, storty, yoga];
+}
+
 class $AssetsFontsGen {
   const $AssetsFontsGen();
 
@@ -28,11 +50,45 @@ class $AssetsIconsGen {
   /// File path: assets/icons/Google Logo.svg
   String get googleLogo => 'assets/icons/Google Logo.svg';
 
+  /// File path: assets/icons/activity_selected.svg
+  String get activitySelected => 'assets/icons/activity_selected.svg';
+
+  /// File path: assets/icons/activity_unselected.svg
+  String get activityUnselected => 'assets/icons/activity_unselected.svg';
+
   /// File path: assets/icons/dob_icon.svg
   String get dobIcon => 'assets/icons/dob_icon.svg';
 
+  /// File path: assets/icons/floating_button.png
+  AssetGenImage get floatingButton =>
+      const AssetGenImage('assets/icons/floating_button.png');
+
+  /// File path: assets/icons/floating_icon.svg
+  String get floatingIcon => 'assets/icons/floating_icon.svg';
+
+  /// File path: assets/icons/home_selected.svg
+  String get homeSelected => 'assets/icons/home_selected.svg';
+
+  /// File path: assets/icons/home_top.svg
+  String get homeTop => 'assets/icons/home_top.svg';
+
+  /// File path: assets/icons/home_top_logo.svg
+  String get homeTopLogo => 'assets/icons/home_top_logo.svg';
+
+  /// File path: assets/icons/home_unselected.svg
+  String get homeUnselected => 'assets/icons/home_unselected.svg';
+
   /// File path: assets/icons/invisble_eye.svg
   String get invisbleEye => 'assets/icons/invisble_eye.svg';
+
+  /// File path: assets/icons/journel_selected.svg
+  String get journelSelected => 'assets/icons/journel_selected.svg';
+
+  /// File path: assets/icons/journel_unselcted.svg
+  String get journelUnselcted => 'assets/icons/journel_unselcted.svg';
+
+  /// File path: assets/icons/lock.svg
+  String get lock => 'assets/icons/lock.svg';
 
   /// File path: assets/icons/mail.svg
   String get mail => 'assets/icons/mail.svg';
@@ -40,8 +96,27 @@ class $AssetsIconsGen {
   /// File path: assets/icons/mic.svg
   String get mic => 'assets/icons/mic.svg';
 
+  /// File path: assets/icons/notification.svg
+  String get notification => 'assets/icons/notification.svg';
+
   /// File path: assets/icons/pass_lock.svg
   String get passLock => 'assets/icons/pass_lock.svg';
+
+  /// File path: assets/icons/profile_selected.png
+  AssetGenImage get profileSelected =>
+      const AssetGenImage('assets/icons/profile_selected.png');
+
+  /// File path: assets/icons/profile_unselected.svg
+  String get profileUnselected => 'assets/icons/profile_unselected.svg';
+
+  /// File path: assets/icons/routine_selected.svg
+  String get routineSelected => 'assets/icons/routine_selected.svg';
+
+  /// File path: assets/icons/routine_unselected.svg
+  String get routineUnselected => 'assets/icons/routine_unselected.svg';
+
+  /// File path: assets/icons/timer.svg
+  String get timer => 'assets/icons/timer.svg';
 
   /// File path: assets/icons/user.svg
   String get user => 'assets/icons/user.svg';
@@ -49,20 +124,41 @@ class $AssetsIconsGen {
   /// File path: assets/icons/verify_tick.svg
   String get verifyTick => 'assets/icons/verify_tick.svg';
 
+  /// File path: assets/icons/views.svg
+  String get views => 'assets/icons/views.svg';
+
   /// File path: assets/icons/visible_eye.svg
   String get visibleEye => 'assets/icons/visible_eye.svg';
 
   /// List of all assets
-  List<String> get values => [
+  List<dynamic> get values => [
     appleLogo,
     googleLogo,
+    activitySelected,
+    activityUnselected,
     dobIcon,
+    floatingButton,
+    floatingIcon,
+    homeSelected,
+    homeTop,
+    homeTopLogo,
+    homeUnselected,
     invisbleEye,
+    journelSelected,
+    journelUnselcted,
+    lock,
     mail,
     mic,
+    notification,
     passLock,
+    profileSelected,
+    profileUnselected,
+    routineSelected,
+    routineUnselected,
+    timer,
     user,
     verifyTick,
+    views,
     visibleEye,
   ];
 }
@@ -74,6 +170,9 @@ class $AssetsImagesGen {
   AssetGenImage get ellipse70951 =>
       const AssetGenImage('assets/images/Ellipse 70951.png');
 
+  /// File path: assets/images/Header.png
+  AssetGenImage get header => const AssetGenImage('assets/images/Header.png');
+
   /// File path: assets/images/Star.svg
   String get star => 'assets/images/Star.svg';
 
@@ -82,6 +181,9 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/Star2.svg
   String get star2 => 'assets/images/Star2.svg';
+
+  /// File path: assets/images/add_feeling_background.svg
+  String get addFeelingBackground => 'assets/images/add_feeling_background.svg';
 
   /// File path: assets/images/allset.svg
   String get allset => 'assets/images/allset.svg';
@@ -94,6 +196,16 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/confused.svg
   String get confused => 'assets/images/confused.svg';
+
+  /// File path: assets/images/feeling_background.png
+  AssetGenImage get feelingBackground =>
+      const AssetGenImage('assets/images/feeling_background.png');
+
+  /// File path: assets/images/home_top_banner.svg
+  String get homeTopBanner => 'assets/images/home_top_banner.svg';
+
+  /// File path: assets/images/home_top_gradient.svg
+  String get homeTopGradient => 'assets/images/home_top_gradient.svg';
 
   /// File path: assets/images/onboard1.svg
   String get onboard1 => 'assets/images/onboard1.svg';
@@ -130,19 +242,33 @@ class $AssetsImagesGen {
   /// File path: assets/images/splash_img.svg
   String get splashImg => 'assets/images/splash_img.svg';
 
+  /// File path: assets/images/top_header.svg
+  String get topHeader => 'assets/images/top_header.svg';
+
+  /// File path: assets/images/top_header_1.svg
+  String get topHeader1 => 'assets/images/top_header_1.svg';
+
   /// File path: assets/images/verifiedlottie.json
   String get verifiedlottie => 'assets/images/verifiedlottie.json';
+
+  /// File path: assets/images/white_shade.svg
+  String get whiteShade => 'assets/images/white_shade.svg';
 
   /// List of all assets
   List<dynamic> get values => [
     ellipse70951,
+    header,
     star,
     star1,
     star2,
+    addFeelingBackground,
     allset,
     amazingFeel,
     angryFeel,
     confused,
+    feelingBackground,
+    homeTopBanner,
+    homeTopGradient,
     onboard1,
     onboard2,
     onboard3,
@@ -154,16 +280,43 @@ class $AssetsImagesGen {
     soSoFeel,
     splash1,
     splashImg,
+    topHeader,
+    topHeader1,
     verifiedlottie,
+    whiteShade,
   ];
+}
+
+class $AssetsTabiconsGen {
+  const $AssetsTabiconsGen();
+
+  /// File path: assets/tabicons/home1.svg
+  String get home1 => 'assets/tabicons/home1.svg';
+
+  /// File path: assets/tabicons/home2.svg
+  String get home2 => 'assets/tabicons/home2.svg';
+
+  /// File path: assets/tabicons/home3.svg
+  String get home3 => 'assets/tabicons/home3.svg';
+
+  /// File path: assets/tabicons/home4.svg
+  String get home4 => 'assets/tabicons/home4.svg';
+
+  /// File path: assets/tabicons/home5.svg
+  String get home5 => 'assets/tabicons/home5.svg';
+
+  /// List of all assets
+  List<String> get values => [home1, home2, home3, home4, home5];
 }
 
 class Assets {
   const Assets._();
 
+  static const $AssetsDummyGen dummy = $AssetsDummyGen();
   static const $AssetsFontsGen fonts = $AssetsFontsGen();
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
+  static const $AssetsTabiconsGen tabicons = $AssetsTabiconsGen();
 }
 
 class AssetGenImage {

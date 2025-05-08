@@ -10,6 +10,7 @@ import 'package:mindfulminis/features/onbaord/screens/felling_today.dart';
 import 'package:mindfulminis/features/onbaord/screens/kid_name.dart';
 import 'package:mindfulminis/features/onboarding/screens/onboard_screen.dart';
 import 'package:mindfulminis/features/signup/screens/create_account.dart';
+import 'package:mindfulminis/features/tab_view/screens/tab_view.dart';
 
 import '../features/onbaord/screens/describe_yourself.dart';
 
@@ -17,7 +18,7 @@ import '../features/onbaord/screens/describe_yourself.dart';
 GoRouter buildRouter() {
   return GoRouter(
     routes: [
-      GoRoute(path: '/', name: '/kid', builder: (context, state) => KidName()),
+      // GoRoute(path: '/', name: '/', builder: (context, state) => TabView()),
       GoRoute(
         path: SplashScreen.routePath,
         name: SplashScreen.routeName,
@@ -73,9 +74,14 @@ GoRouter buildRouter() {
         name: DescribeYourself.routeName,
         builder: (context, state) => DescribeYourself(),
       ),
+      GoRoute(
+        path: TabView.routePath,
+        name: TabView.routeName,
+        builder: (context, state) => TabView(),
+      ),
     ],
     // redirect: (context, state) {
-    //   return KidName.routePath;
+    //   return TabView.routePath;
     // },
     observers: [FlutterSmartDialog.observer],
   );

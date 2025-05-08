@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mindfulminis/injection/injection.dart';
 
 import '../../../common/widgets/close_button_dailog.dart';
 import '../../../common/widgets/gradient_button.dart';
 import '../../../gen/assets.gen.dart';
 
 class AllsetDailog extends StatelessWidget {
-  const AllsetDailog({super.key});
+  final VoidCallback onGoToHome;
+  final VoidCallback onCancel;
+
+  const AllsetDailog({
+    super.key,
+    required this.onGoToHome,
+    required this.onCancel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +35,7 @@ class AllsetDailog extends StatelessWidget {
       alignment: Alignment.center,
       child: Column(
         children: [
-          CloseButtonDailog(),
+          InkWell(onTap: onCancel, child: CloseButtonDailog()),
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -62,9 +68,7 @@ class AllsetDailog extends StatelessWidget {
                   width: width * 0.4,
                   height: 50,
                   child: GradientButton(
-                    onPressed: () {
-                      // sl<GoRouter>().pushNamed(CreateAccount.routeName);
-                    },
+                    onPressed: onGoToHome,
                     child: Center(
                       child: Text(
                         'Go To Home',

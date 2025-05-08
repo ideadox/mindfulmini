@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mindfulminis/core/app_colors.dart';
 
 class AppTextTheme {
   static TextTheme titleTextTheme(BuildContext context) {
@@ -33,6 +34,17 @@ class AppTextTheme {
         fontSize: 16,
         fontWeight: FontWeight.w500,
         color: Colors.white,
+      ),
+    );
+  }
+
+  static TextTheme bodyTextStyle(BuildContext context) {
+    final base = Theme.of(context).textTheme;
+    return base.copyWith(
+      bodyMedium: base.bodyMedium?.copyWith(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        color: AppColors.grey45,
       ),
     );
   }

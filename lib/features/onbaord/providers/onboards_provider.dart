@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:mindfulminis/features/onbaord/screens/describe_yourself.dart';
 import 'package:mindfulminis/features/onbaord/widgets/allset_dailog.dart';
+import 'package:mindfulminis/features/tab_view/screens/tab_view.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
 
@@ -67,7 +68,12 @@ class OnboardsProvider with ChangeNotifier {
       clickMaskDismiss: false,
       backType: SmartBackType.block,
       builder: (context) {
-        return AllsetDailog();
+        return AllsetDailog(
+          onCancel: () {},
+          onGoToHome: () {
+            sl<GoRouter>().goNamed(TabView.routeName);
+          },
+        );
       },
     );
   }

@@ -7,4 +7,5 @@ class AppColors {
 
   static Color grey45 = Colors.grey;
   static HexColor whitehex = HexColor('#FFFFFF');
+  static HexColor dividerColor = HexColor('#ACADBC42');
 }

@@ -68,7 +68,10 @@ class FellingToday extends StatelessWidget {
                                     provider.feeling == null ||
                                             provider.feeling !=
                                                 provider.feelList[index]['name']
-                                        ? null
+                                        ? Border.all(
+                                          color: Colors.transparent,
+                                          width: 2,
+                                        )
                                         : Border.all(
                                           color: AppColors.primary,
                                           width: 2,
