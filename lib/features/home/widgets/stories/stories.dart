@@ -42,7 +42,7 @@ class StoriesWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
 
-                child: SvgPicture.asset(Assets.dummy.storty, height: 268),
+                child: Image.asset(Assets.dummy.story.path, height: 268),
               );
             },
           ),

@@ -42,7 +42,7 @@ class MeditationWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
 
-                child: SvgPicture.asset(Assets.dummy.medi, height: 268),
+                child: Image.asset(Assets.dummy.medit.path, height: 268),
               );
             },
           ),

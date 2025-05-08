@@ -42,7 +42,7 @@ class YogaFlowWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
 
-                child: SvgPicture.asset(Assets.dummy.yoga, height: 268),
+                child: SvgPicture.asset(Assets.dummy.yogaSvg, height: 268),
               );
             },
           ),

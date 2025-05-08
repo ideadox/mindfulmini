@@ -81,7 +81,7 @@ GoRouter buildRouter() {
       ),
     ],
     // redirect: (context, state) {
-    //   return TabView.routePath;
+    //   return Dob.routePath;
     // },
     observers: [FlutterSmartDialog.observer],
   );

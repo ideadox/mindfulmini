@@ -86,6 +86,13 @@ class Dob extends StatelessWidget {
                           onDateTimeChanged: (DateTime newDate) {
                             provider.onChangeDob(newDate);
                           },
+                          // selectionOverlayBuilder: (
+                          //   context, {
+                          //   required columnCount,
+                          //   required selectedIndex,
+                          // }) {
+                          //   return Container(color: Colors.transparent);
+                          // },
                         ),
                       ),
                     ),

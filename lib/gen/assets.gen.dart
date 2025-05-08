@@ -15,20 +15,47 @@ class $AssetsDummyGen {
   /// File path: assets/dummy/Frame 2043683273.svg
   String get frame2043683273 => 'assets/dummy/Frame 2043683273.svg';
 
+  /// File path: assets/dummy/acti.png
+  AssetGenImage get acti => const AssetGenImage('assets/dummy/acti.png');
+
   /// File path: assets/dummy/bread.svg
   String get bread => 'assets/dummy/bread.svg';
+
+  /// File path: assets/dummy/breathuing.png
+  AssetGenImage get breathuing =>
+      const AssetGenImage('assets/dummy/breathuing.png');
 
   /// File path: assets/dummy/medi.svg
   String get medi => 'assets/dummy/medi.svg';
 
+  /// File path: assets/dummy/medit.png
+  AssetGenImage get medit => const AssetGenImage('assets/dummy/medit.png');
+
   /// File path: assets/dummy/storty.svg
   String get storty => 'assets/dummy/storty.svg';
 
+  /// File path: assets/dummy/story.png
+  AssetGenImage get story => const AssetGenImage('assets/dummy/story.png');
+
+  /// File path: assets/dummy/yoga.png
+  AssetGenImage get yogaPng => const AssetGenImage('assets/dummy/yoga.png');
+
   /// File path: assets/dummy/yoga.svg
-  String get yoga => 'assets/dummy/yoga.svg';
+  String get yogaSvg => 'assets/dummy/yoga.svg';
 
   /// List of all assets
-  List<String> get values => [frame2043683273, bread, medi, storty, yoga];
+  List<dynamic> get values => [
+    frame2043683273,
+    acti,
+    bread,
+    breathuing,
+    medi,
+    medit,
+    storty,
+    story,
+    yogaPng,
+    yogaSvg,
+  ];
 }
 
 class $AssetsFontsGen {
@@ -242,6 +269,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/splash_img.svg
   String get splashImg => 'assets/images/splash_img.svg';
 
+  /// File path: assets/images/splash_img1.svg
+  String get splashImg1 => 'assets/images/splash_img1.svg';
+
   /// File path: assets/images/top_header.svg
   String get topHeader => 'assets/images/top_header.svg';
 
@@ -280,6 +310,7 @@ class $AssetsImagesGen {
     soSoFeel,
     splash1,
     splashImg,
+    splashImg1,
     topHeader,
     topHeader1,
     verifiedlottie,

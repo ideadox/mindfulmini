@@ -33,21 +33,13 @@ class AuthMain extends StatelessWidget {
             children: [
               SizedBox(height: 40),
               Text(
-                'Login In Or Sign Up',
+                'Let’s get Started!',
                 style: TextTheme.of(context).titleLarge?.copyWith(
                   fontWeight: FontWeight.w600,
                   fontSize: 30,
                 ),
               ),
-              const SizedBox(height: 10),
-              Text(
-                'Welcome to MindfulMinis! Please log in to save your progress!',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.grey.shade500,
-                ),
-              ),
+
               const SizedBox(height: 10),
               Text(
                 'Enter your Mobile Number ',

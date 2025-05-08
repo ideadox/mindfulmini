@@ -46,7 +46,7 @@ class DailyActivityWidget extends StatelessWidget {
 
                     child: SvgPicture.asset(Assets.dummy.frame2043683273),
                   ),
-                  Positioned(bottom: 50, left: 16, child: TotalTimingWidget()),
+                  // Positioned(bottom: 50, left: 16, child: TotalTimingWidget()),
                 ],
               );
             },

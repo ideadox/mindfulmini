@@ -42,7 +42,7 @@ class BreathingWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
 
-                child: SvgPicture.asset(Assets.dummy.bread, height: 268),
+                child: Image.asset(Assets.dummy.breathuing.path, height: 268),
               );
             },
           ),
