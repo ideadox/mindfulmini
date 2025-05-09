@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mindfulminis/features/home/screens/home_screen.dart';
+
 import 'package:mindfulminis/features/tab_view/widgets/icon_animate_switcher.dart';
 
 import 'package:mindfulminis/gen/assets.gen.dart';
@@ -28,7 +28,7 @@ class TabView extends StatelessWidget {
         builder: (context, provider, _) {
           return Scaffold(
             extendBody: true,
-            body: HomeScreen(),
+            body: provider.screens[provider.currentIndex],
             floatingActionButton: IconButton(
               onPressed: () {},
               icon: Image.asset(Assets.icons.floatingButton.path),

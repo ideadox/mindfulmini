@@ -52,6 +52,8 @@ dependencies:
   jumping_dot: ^0.0.7
   simple_ripple_animation: ^0.1.0
   speech_to_text: ^7.0.0
+  flutter_bounceable: ^1.2.0
+  syncfusion_flutter_calendar: ^29.1.41
   # custom_navigation_bar: ^0.8.2
 
 dev_dependencies:

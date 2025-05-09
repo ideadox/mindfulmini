@@ -21,15 +21,31 @@ class $AssetsDummyGen {
   /// File path: assets/dummy/bread.svg
   String get bread => 'assets/dummy/bread.svg';
 
+  /// File path: assets/dummy/breathing_exe_activity.png
+  AssetGenImage get breathingExeActivity =>
+      const AssetGenImage('assets/dummy/breathing_exe_activity.png');
+
   /// File path: assets/dummy/breathuing.png
   AssetGenImage get breathuing =>
       const AssetGenImage('assets/dummy/breathuing.png');
+
+  /// File path: assets/dummy/madition_activity.png
+  AssetGenImage get maditionActivity =>
+      const AssetGenImage('assets/dummy/madition_activity.png');
 
   /// File path: assets/dummy/medi.svg
   String get medi => 'assets/dummy/medi.svg';
 
   /// File path: assets/dummy/medit.png
   AssetGenImage get medit => const AssetGenImage('assets/dummy/medit.png');
+
+  /// File path: assets/dummy/moral_story_activity.png
+  AssetGenImage get moralStoryActivity =>
+      const AssetGenImage('assets/dummy/moral_story_activity.png');
+
+  /// File path: assets/dummy/scan_activity.png
+  AssetGenImage get scanActivity =>
+      const AssetGenImage('assets/dummy/scan_activity.png');
 
   /// File path: assets/dummy/storty.svg
   String get storty => 'assets/dummy/storty.svg';
@@ -43,18 +59,27 @@ class $AssetsDummyGen {
   /// File path: assets/dummy/yoga.svg
   String get yogaSvg => 'assets/dummy/yoga.svg';
 
+  /// File path: assets/dummy/yoga_activity.png
+  AssetGenImage get yogaActivity =>
+      const AssetGenImage('assets/dummy/yoga_activity.png');
+
   /// List of all assets
   List<dynamic> get values => [
     frame2043683273,
     acti,
     bread,
+    breathingExeActivity,
     breathuing,
+    maditionActivity,
     medi,
     medit,
+    moralStoryActivity,
+    scanActivity,
     storty,
     story,
     yogaPng,
     yogaSvg,
+    yogaActivity,
   ];
 }
 
@@ -123,6 +148,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/mic.svg
   String get mic => 'assets/icons/mic.svg';
 
+  /// File path: assets/icons/morning_icon.svg
+  String get morningIcon => 'assets/icons/morning_icon.svg';
+
   /// File path: assets/icons/notification.svg
   String get notification => 'assets/icons/notification.svg';
 
@@ -176,6 +204,7 @@ class $AssetsIconsGen {
     lock,
     mail,
     mic,
+    morningIcon,
     notification,
     passLock,
     profileSelected,
@@ -228,11 +257,9 @@ class $AssetsImagesGen {
   AssetGenImage get feelingBackground =>
       const AssetGenImage('assets/images/feeling_background.png');
 
-  /// File path: assets/images/home_top_banner.svg
-  String get homeTopBanner => 'assets/images/home_top_banner.svg';
-
-  /// File path: assets/images/home_top_gradient.svg
-  String get homeTopGradient => 'assets/images/home_top_gradient.svg';
+  /// File path: assets/images/journal_top_background.png
+  AssetGenImage get journalTopBackground =>
+      const AssetGenImage('assets/images/journal_top_background.png');
 
   /// File path: assets/images/onboard1.svg
   String get onboard1 => 'assets/images/onboard1.svg';
@@ -254,6 +281,10 @@ class $AssetsImagesGen {
   String get phoneverficationdailog =>
       'assets/images/phoneverficationdailog.svg';
 
+  /// File path: assets/images/routine_top_background.png
+  AssetGenImage get routineTopBackground =>
+      const AssetGenImage('assets/images/routine_top_background.png');
+
   /// File path: assets/images/sad_feel.svg
   String get sadFeel => 'assets/images/sad_feel.svg';
 
@@ -271,12 +302,6 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/splash_img1.svg
   String get splashImg1 => 'assets/images/splash_img1.svg';
-
-  /// File path: assets/images/top_header.svg
-  String get topHeader => 'assets/images/top_header.svg';
-
-  /// File path: assets/images/top_header_1.svg
-  String get topHeader1 => 'assets/images/top_header_1.svg';
 
   /// File path: assets/images/verifiedlottie.json
   String get verifiedlottie => 'assets/images/verifiedlottie.json';
@@ -297,22 +322,20 @@ class $AssetsImagesGen {
     angryFeel,
     confused,
     feelingBackground,
-    homeTopBanner,
-    homeTopGradient,
+    journalTopBackground,
     onboard1,
     onboard2,
     onboard3,
     onboardBackgroundPng,
     onboardBackgroundSvg,
     phoneverficationdailog,
+    routineTopBackground,
     sadFeel,
     sleepFeel,
     soSoFeel,
     splash1,
     splashImg,
     splashImg1,
-    topHeader,
-    topHeader1,
     verifiedlottie,
     whiteShade,
   ];
