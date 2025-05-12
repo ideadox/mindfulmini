@@ -9,6 +9,9 @@ import 'package:mindfulminis/features/onbaord/screens/dob.dart';
 import 'package:mindfulminis/features/onbaord/screens/felling_today.dart';
 import 'package:mindfulminis/features/onbaord/screens/kid_name.dart';
 import 'package:mindfulminis/features/onboarding/screens/onboard_screen.dart';
+import 'package:mindfulminis/features/profile/screens/app_setting_screen.dart';
+import 'package:mindfulminis/features/profile/screens/edit_profile_screen.dart';
+import 'package:mindfulminis/features/profile/screens/language_screen.dart';
 import 'package:mindfulminis/features/signup/screens/create_account.dart';
 import 'package:mindfulminis/features/tab_view/screens/tab_view.dart';
 
@@ -18,12 +21,12 @@ import '../features/onbaord/screens/describe_yourself.dart';
 GoRouter buildRouter() {
   return GoRouter(
     routes: [
-      // GoRoute(path: '/', name: '/', builder: (context, state) => TabView()),
-      GoRoute(
-        path: SplashScreen.routePath,
-        name: SplashScreen.routeName,
-        builder: (context, state) => SplashScreen(),
-      ),
+      GoRoute(path: '/', name: '/', builder: (context, state) => TabView()),
+      // GoRoute(
+      //   path: SplashScreen.routePath,
+      //   name: SplashScreen.routeName,
+      //   builder: (context, state) => SplashScreen(),
+      // ),
       GoRoute(
         path: OnboardScreen.routePath,
         name: OnboardScreen.routeName,
@@ -79,10 +82,25 @@ GoRouter buildRouter() {
         name: TabView.routeName,
         builder: (context, state) => TabView(),
       ),
+      GoRoute(
+        path: EditProfileScreen.routePath,
+        name: EditProfileScreen.routeName,
+        builder: (context, state) => EditProfileScreen(),
+      ),
+      GoRoute(
+        path: AppSettingScreen.routePath,
+        name: AppSettingScreen.routeName,
+        builder: (context, state) => AppSettingScreen(),
+      ),
+      GoRoute(
+        path: LanguageScreen.routePath,
+        name: LanguageScreen.routeName,
+        builder: (context, state) => LanguageScreen(),
+      ),
     ],
-    redirect: (context, state) {
-      return TabView.routePath;
-    },
+    // redirect: (context, state) {
+    //   return TabView.routePath;
+    // },
     observers: [FlutterSmartDialog.observer],
   );
 }

@@ -39,6 +39,13 @@ class Mindfulminis extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,
+          appBarTheme: AppBarTheme(
+            titleTextStyle: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+          ),
           fontFamily: 'New Hero',
           pageTransitionsTheme: const PageTransitionsTheme(
             builders: {

@@ -4,6 +4,8 @@ import 'package:mindfulminis/features/home/screens/home_screen.dart';
 import 'package:mindfulminis/features/journal/screens/journal_screen.dart';
 import 'package:mindfulminis/features/routine/screens/routine_screen.dart';
 
+import '../../profile/screens/profile_screen.dart';
+
 class TabViewProvider with ChangeNotifier {
   TabViewProvider() {
     _currentIndex = 0;
@@ -22,6 +24,6 @@ class TabViewProvider with ChangeNotifier {
     ActivityScreen(),
     JournalScreen(),
     RoutineScreen(),
-    Container(),
+    ProfileScreen(),
   ];
 }

@@ -266,6 +266,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/confused.svg
   String get confused => 'assets/images/confused.svg';
 
+  /// File path: assets/images/delete_account_image.png
+  AssetGenImage get deleteAccountImage =>
+      const AssetGenImage('assets/images/delete_account_image.png');
+
   /// File path: assets/images/feeling_background.png
   AssetGenImage get feelingBackground =>
       const AssetGenImage('assets/images/feeling_background.png');
@@ -334,6 +338,7 @@ class $AssetsImagesGen {
     amazingFeel,
     angryFeel,
     confused,
+    deleteAccountImage,
     feelingBackground,
     journalTopBackground,
     onboard1,
@@ -351,6 +356,111 @@ class $AssetsImagesGen {
     splashImg1,
     verifiedlottie,
     whiteShade,
+  ];
+}
+
+class $AssetsProfileIconsGen {
+  const $AssetsProfileIconsGen();
+
+  /// File path: assets/profile_icons/about.svg
+  String get about => 'assets/profile_icons/about.svg';
+
+  /// File path: assets/profile_icons/anylitices.svg
+  String get anylitices => 'assets/profile_icons/anylitices.svg';
+
+  /// File path: assets/profile_icons/apple_helth.svg
+  String get appleHelth => 'assets/profile_icons/apple_helth.svg';
+
+  /// File path: assets/profile_icons/bottom.svg
+  String get bottom => 'assets/profile_icons/bottom.svg';
+
+  /// File path: assets/profile_icons/bottom_left.png
+  AssetGenImage get bottomLeftPng =>
+      const AssetGenImage('assets/profile_icons/bottom_left.png');
+
+  /// File path: assets/profile_icons/bottom_left.svg
+  String get bottomLeftSvg => 'assets/profile_icons/bottom_left.svg';
+
+  /// File path: assets/profile_icons/bottom_right.svg
+  String get bottomRight => 'assets/profile_icons/bottom_right.svg';
+
+  /// File path: assets/profile_icons/edit _button.png
+  AssetGenImage get editButton =>
+      const AssetGenImage('assets/profile_icons/edit _button.png');
+
+  /// File path: assets/profile_icons/gardint_circular_png.png
+  AssetGenImage get gardintCircularPng =>
+      const AssetGenImage('assets/profile_icons/gardint_circular_png.png');
+
+  /// File path: assets/profile_icons/gradient_circular.svg
+  String get gradientCircular => 'assets/profile_icons/gradient_circular.svg';
+
+  /// File path: assets/profile_icons/help_center.svg
+  String get helpCenter => 'assets/profile_icons/help_center.svg';
+
+  /// File path: assets/profile_icons/language.svg
+  String get language => 'assets/profile_icons/language.svg';
+
+  /// File path: assets/profile_icons/library.svg
+  String get library => 'assets/profile_icons/library.svg';
+
+  /// File path: assets/profile_icons/logout.svg
+  String get logout => 'assets/profile_icons/logout.svg';
+
+  /// File path: assets/profile_icons/no_profile_png.png
+  AssetGenImage get noProfilePng =>
+      const AssetGenImage('assets/profile_icons/no_profile_png.png');
+
+  /// File path: assets/profile_icons/privacy_policy.svg
+  String get privacyPolicy => 'assets/profile_icons/privacy_policy.svg';
+
+  /// File path: assets/profile_icons/profile.svg
+  String get profile => 'assets/profile_icons/profile.svg';
+
+  /// File path: assets/profile_icons/referal.svg
+  String get referal => 'assets/profile_icons/referal.svg';
+
+  /// File path: assets/profile_icons/setting.svg
+  String get setting => 'assets/profile_icons/setting.svg';
+
+  /// File path: assets/profile_icons/subscription.svg
+  String get subscription => 'assets/profile_icons/subscription.svg';
+
+  /// File path: assets/profile_icons/termofservice.svg
+  String get termofservice => 'assets/profile_icons/termofservice.svg';
+
+  /// File path: assets/profile_icons/top_right.png
+  AssetGenImage get topRightPng =>
+      const AssetGenImage('assets/profile_icons/top_right.png');
+
+  /// File path: assets/profile_icons/top_right.svg
+  String get topRightSvg => 'assets/profile_icons/top_right.svg';
+
+  /// List of all assets
+  List<dynamic> get values => [
+    about,
+    anylitices,
+    appleHelth,
+    bottom,
+    bottomLeftPng,
+    bottomLeftSvg,
+    bottomRight,
+    editButton,
+    gardintCircularPng,
+    gradientCircular,
+    helpCenter,
+    language,
+    library,
+    logout,
+    noProfilePng,
+    privacyPolicy,
+    profile,
+    referal,
+    setting,
+    subscription,
+    termofservice,
+    topRightPng,
+    topRightSvg,
   ];
 }
 
@@ -383,6 +493,7 @@ class Assets {
   static const $AssetsFontsGen fonts = $AssetsFontsGen();
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
+  static const $AssetsProfileIconsGen profileIcons = $AssetsProfileIconsGen();
   static const $AssetsTabiconsGen tabicons = $AssetsTabiconsGen();
 }
 

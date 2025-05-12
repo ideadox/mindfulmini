@@ -31,7 +31,10 @@ class CommonTextFormField extends StatelessWidget {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: controller,
       decoration: InputDecoration(
-        prefixIconConstraints: BoxConstraints(minWidth: 60, maxWidth: 100),
+        prefixIconConstraints:
+            prefixIcon == null
+                ? null
+                : BoxConstraints(minWidth: 60, maxWidth: 100),
         hintText: hintText,
         hintStyle: TextStyle(color: AppColors.grey45, fontSize: 16),
         prefixIcon: Padding(
