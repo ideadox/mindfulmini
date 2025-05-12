@@ -108,6 +108,10 @@ class $AssetsIconsGen {
   /// File path: assets/icons/activity_unselected.svg
   String get activityUnselected => 'assets/icons/activity_unselected.svg';
 
+  /// File path: assets/icons/cry_emoji.png
+  AssetGenImage get cryEmoji =>
+      const AssetGenImage('assets/icons/cry_emoji.png');
+
   /// File path: assets/icons/dob_icon.svg
   String get dobIcon => 'assets/icons/dob_icon.svg';
 
@@ -117,6 +121,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/floating_icon.svg
   String get floatingIcon => 'assets/icons/floating_icon.svg';
+
+  /// File path: assets/icons/happy_emoji.svg
+  String get happyEmoji => 'assets/icons/happy_emoji.svg';
 
   /// File path: assets/icons/home_selected.svg
   String get homeSelected => 'assets/icons/home_selected.svg';
@@ -179,6 +186,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/verify_tick.svg
   String get verifyTick => 'assets/icons/verify_tick.svg';
 
+  /// File path: assets/icons/vhappy_emoji.svg
+  String get vhappyEmoji => 'assets/icons/vhappy_emoji.svg';
+
   /// File path: assets/icons/views.svg
   String get views => 'assets/icons/views.svg';
 
@@ -191,9 +201,11 @@ class $AssetsIconsGen {
     googleLogo,
     activitySelected,
     activityUnselected,
+    cryEmoji,
     dobIcon,
     floatingButton,
     floatingIcon,
+    happyEmoji,
     homeSelected,
     homeTop,
     homeTopLogo,
@@ -214,6 +226,7 @@ class $AssetsIconsGen {
     timer,
     user,
     verifyTick,
+    vhappyEmoji,
     views,
     visibleEye,
   ];

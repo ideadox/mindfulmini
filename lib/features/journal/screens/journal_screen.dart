@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
@@ -12,6 +11,20 @@ class JournalScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String getGreeting() {
+      final hour = DateTime.now().hour;
+
+      if (hour >= 5 && hour < 12) {
+        return 'Good Morning';
+      } else if (hour >= 12 && hour < 17) {
+        return 'Good Afternoon';
+      } else if (hour >= 17 && hour < 21) {
+        return 'Good Evening';
+      } else {
+        return 'Good Night';
+      }
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -44,7 +57,7 @@ class JournalScreen extends StatelessWidget {
                         SvgPicture.asset(Assets.icons.morningIcon),
                         Space.w12,
 
-                        Text('Good Morning', style: TextStyle(fontSize: 12)),
+                        Text(getGreeting(), style: TextStyle(fontSize: 12)),
                       ],
                     ),
                   ),

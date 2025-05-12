@@ -80,9 +80,9 @@ GoRouter buildRouter() {
         builder: (context, state) => TabView(),
       ),
     ],
-    // redirect: (context, state) {
-    //   return TabView.routePath;
-    // },
+    redirect: (context, state) {
+      return TabView.routePath;
+    },
     observers: [FlutterSmartDialog.observer],
   );
 }

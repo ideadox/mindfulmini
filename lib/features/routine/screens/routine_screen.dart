@@ -94,8 +94,8 @@ class RoutineScreen extends StatelessWidget {
               ],
             ),
             Space.h40,
-            Space.h40,
 
+            // Space.h40,
             HorizontalWeekCalendar(
               selectedDate: DateTime.now(),
               onDateSelected: (date) {},
