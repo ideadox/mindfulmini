@@ -4,6 +4,8 @@ import 'package:mindfulminis/common/screens/splash_screen.dart';
 import 'package:mindfulminis/features/authentication/screens/auth_main.dart';
 import 'package:mindfulminis/features/authentication/screens/phone_verification.dart';
 import 'package:mindfulminis/features/forgot_password/screens/forgot_password.dart';
+import 'package:mindfulminis/features/journal/screens/create_journal_screen.dart';
+import 'package:mindfulminis/features/journal/screens/journal_detail_screen.dart';
 import 'package:mindfulminis/features/login/screens/login.dart';
 import 'package:mindfulminis/features/onbaord/screens/dob.dart';
 import 'package:mindfulminis/features/onbaord/screens/felling_today.dart';
@@ -96,6 +98,16 @@ GoRouter buildRouter() {
         path: LanguageScreen.routePath,
         name: LanguageScreen.routeName,
         builder: (context, state) => LanguageScreen(),
+      ),
+      GoRoute(
+        path: CreateJournalScreen.routePath,
+        name: CreateJournalScreen.routeName,
+        builder: (context, state) => CreateJournalScreen(),
+      ),
+      GoRoute(
+        path: JournalDetailScreen.routePath,
+        name: JournalDetailScreen.routeName,
+        builder: (context, state) => JournalDetailScreen(),
       ),
     ],
     // redirect: (context, state) {

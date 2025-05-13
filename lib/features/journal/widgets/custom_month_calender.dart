@@ -4,16 +4,19 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
+import 'package:mindfulminis/features/journal/providers/journal_provider.dart';
+import 'package:mindfulminis/features/journal/screens/journal_detail1_screen.dart';
+import 'package:mindfulminis/features/journal/screens/journal_detail_screen.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class CustomMonthCalender extends StatelessWidget {
-  const CustomMonthCalender({super.key});
+  final JournalProvider provider;
+  const CustomMonthCalender({super.key, required this.provider});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(12),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade400),
         borderRadius: BorderRadius.circular(16),
@@ -55,7 +58,18 @@ class CustomMonthCalender extends StatelessWidget {
           SizedBox(
             height: 450,
             child: SfCalendar(
-              onTap: null,
+              onTap: (calendarTapDetails) {
+                // provider.navigateToJournalDetail();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return JournalDetail1Screen();
+                    },
+                  ),
+                );
+                return;
+              },
               // initialSelectedDate: DateTime.now(),
               firstDayOfWeek: 7,
               view: CalendarView.month,
@@ -103,7 +117,7 @@ class CustomMonthCalender extends StatelessWidget {
                       child:
                           !isToday
                               ? null
-                              : SvgPicture.asset(Assets.icons.vhappyEmoji),
+                              : SvgPicture.asset(Assets.icons.amazingEmoji),
                     ),
                     const SizedBox(height: 6),
                     Container(

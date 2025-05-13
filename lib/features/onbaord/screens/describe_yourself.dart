@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mindfulminis/common/providers/speech_provider.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/common/widgets/gradient_scaffold.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/onbaord/providers/onboards_provider.dart';
-import 'package:mindfulminis/features/onbaord/widgets/listening_widget.dart';
+import 'package:mindfulminis/common/widgets/listening_widget.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/widgets/common_close_button.dart';
-import '../providers/speech_provider.dart';
 
 class DescribeYourself extends StatefulWidget {
   static String routeName = 'describe-yourself';
@@ -61,9 +61,7 @@ class _DescribeYourselfState extends State<DescribeYourself> {
                       Form(
                         key: describeFormKey,
                         child: TextFormField(
-                          controller: TextEditingController(
-                            text: speechProvider.text,
-                          ),
+                          controller: speechProvider.textController,
                           minLines: 8,
 
                           maxLines: 8,

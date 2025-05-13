@@ -46,7 +46,7 @@ class DeleteAccount extends StatelessWidget {
                     textAlign: TextAlign.center,
 
                     'We’re sad to see you leave 😢, but we understand. If you’re ready to go, we’ll make it happen. If not, your calm and mindful space will always be here waiting for you! 🌈',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w100),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w100),
                   ),
                   Space.h20,
 

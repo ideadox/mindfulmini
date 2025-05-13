@@ -3,7 +3,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:jumping_dot/jumping_dot.dart';
 import 'package:simple_ripple_animation/simple_ripple_animation.dart';
 
-import '../../../core/app_colors.dart';
+import '../../core/app_colors.dart';
 
 class ListeningWidget extends StatelessWidget {
   const ListeningWidget({super.key});

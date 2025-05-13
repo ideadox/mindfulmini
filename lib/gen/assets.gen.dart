@@ -108,9 +108,11 @@ class $AssetsIconsGen {
   /// File path: assets/icons/activity_unselected.svg
   String get activityUnselected => 'assets/icons/activity_unselected.svg';
 
-  /// File path: assets/icons/cry_emoji.png
-  AssetGenImage get cryEmoji =>
-      const AssetGenImage('assets/icons/cry_emoji.png');
+  /// File path: assets/icons/amazing_emoji.svg
+  String get amazingEmoji => 'assets/icons/amazing_emoji.svg';
+
+  /// File path: assets/icons/confushed_emoji.svg
+  String get confushedEmoji => 'assets/icons/confushed_emoji.svg';
 
   /// File path: assets/icons/dob_icon.svg
   String get dobIcon => 'assets/icons/dob_icon.svg';
@@ -122,8 +124,8 @@ class $AssetsIconsGen {
   /// File path: assets/icons/floating_icon.svg
   String get floatingIcon => 'assets/icons/floating_icon.svg';
 
-  /// File path: assets/icons/happy_emoji.svg
-  String get happyEmoji => 'assets/icons/happy_emoji.svg';
+  /// File path: assets/icons/happy.svg
+  String get happy => 'assets/icons/happy.svg';
 
   /// File path: assets/icons/home_selected.svg
   String get homeSelected => 'assets/icons/home_selected.svg';
@@ -171,23 +173,32 @@ class $AssetsIconsGen {
   /// File path: assets/icons/profile_unselected.svg
   String get profileUnselected => 'assets/icons/profile_unselected.svg';
 
+  /// File path: assets/icons/redo.svg
+  String get redo => 'assets/icons/redo.svg';
+
   /// File path: assets/icons/routine_selected.svg
   String get routineSelected => 'assets/icons/routine_selected.svg';
 
   /// File path: assets/icons/routine_unselected.svg
   String get routineUnselected => 'assets/icons/routine_unselected.svg';
 
+  /// File path: assets/icons/sad_emoji.svg
+  String get sadEmoji => 'assets/icons/sad_emoji.svg';
+
   /// File path: assets/icons/timer.svg
   String get timer => 'assets/icons/timer.svg';
+
+  /// File path: assets/icons/undo.svg
+  String get undo => 'assets/icons/undo.svg';
+
+  /// File path: assets/icons/upset_emoji.svg
+  String get upsetEmoji => 'assets/icons/upset_emoji.svg';
 
   /// File path: assets/icons/user.svg
   String get user => 'assets/icons/user.svg';
 
   /// File path: assets/icons/verify_tick.svg
   String get verifyTick => 'assets/icons/verify_tick.svg';
-
-  /// File path: assets/icons/vhappy_emoji.svg
-  String get vhappyEmoji => 'assets/icons/vhappy_emoji.svg';
 
   /// File path: assets/icons/views.svg
   String get views => 'assets/icons/views.svg';
@@ -201,11 +212,12 @@ class $AssetsIconsGen {
     googleLogo,
     activitySelected,
     activityUnselected,
-    cryEmoji,
+    amazingEmoji,
+    confushedEmoji,
     dobIcon,
     floatingButton,
     floatingIcon,
-    happyEmoji,
+    happy,
     homeSelected,
     homeTop,
     homeTopLogo,
@@ -221,12 +233,15 @@ class $AssetsIconsGen {
     passLock,
     profileSelected,
     profileUnselected,
+    redo,
     routineSelected,
     routineUnselected,
+    sadEmoji,
     timer,
+    undo,
+    upsetEmoji,
     user,
     verifyTick,
-    vhappyEmoji,
     views,
     visibleEye,
   ];
@@ -234,6 +249,10 @@ class $AssetsIconsGen {
 
 class $AssetsImagesGen {
   const $AssetsImagesGen();
+
+  /// File path: assets/images/Ellipse 70951 2.png
+  AssetGenImage get ellipse709512 =>
+      const AssetGenImage('assets/images/Ellipse 70951 2.png');
 
   /// File path: assets/images/Ellipse 70951.png
   AssetGenImage get ellipse70951 =>
@@ -263,6 +282,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/angry_feel.svg
   String get angryFeel => 'assets/images/angry_feel.svg';
 
+  /// File path: assets/images/celebrate_continue.svg
+  String get celebrateContinue => 'assets/images/celebrate_continue.svg';
+
   /// File path: assets/images/confused.svg
   String get confused => 'assets/images/confused.svg';
 
@@ -273,6 +295,15 @@ class $AssetsImagesGen {
   /// File path: assets/images/feeling_background.png
   AssetGenImage get feelingBackground =>
       const AssetGenImage('assets/images/feeling_background.png');
+
+  /// File path: assets/images/joural_bottom_right.svg
+  String get jouralBottomRight => 'assets/images/joural_bottom_right.svg';
+
+  /// File path: assets/images/joural_detail_bottom.svg
+  String get jouralDetailBottom => 'assets/images/joural_detail_bottom.svg';
+
+  /// File path: assets/images/journal_bottom_left.svg
+  String get journalBottomLeft => 'assets/images/journal_bottom_left.svg';
 
   /// File path: assets/images/journal_top_background.png
   AssetGenImage get journalTopBackground =>
@@ -297,6 +328,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/phoneverficationdailog.svg
   String get phoneverficationdailog =>
       'assets/images/phoneverficationdailog.svg';
+
+  /// File path: assets/images/recent_activity_backgrocd.png
+  AssetGenImage get recentActivityBackgrocd =>
+      const AssetGenImage('assets/images/recent_activity_backgrocd.png');
 
   /// File path: assets/images/routine_top_background.png
   AssetGenImage get routineTopBackground =>
@@ -328,6 +363,7 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<dynamic> get values => [
+    ellipse709512,
     ellipse70951,
     header,
     star,
@@ -337,9 +373,13 @@ class $AssetsImagesGen {
     allset,
     amazingFeel,
     angryFeel,
+    celebrateContinue,
     confused,
     deleteAccountImage,
     feelingBackground,
+    jouralBottomRight,
+    jouralDetailBottom,
+    journalBottomLeft,
     journalTopBackground,
     onboard1,
     onboard2,
@@ -347,6 +387,7 @@ class $AssetsImagesGen {
     onboardBackgroundPng,
     onboardBackgroundSvg,
     phoneverficationdailog,
+    recentActivityBackgrocd,
     routineTopBackground,
     sadFeel,
     sleepFeel,
