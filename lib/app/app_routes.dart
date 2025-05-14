@@ -14,6 +14,7 @@ import 'package:mindfulminis/features/onboarding/screens/onboard_screen.dart';
 import 'package:mindfulminis/features/profile/screens/app_setting_screen.dart';
 import 'package:mindfulminis/features/profile/screens/edit_profile_screen.dart';
 import 'package:mindfulminis/features/profile/screens/language_screen.dart';
+import 'package:mindfulminis/features/routine/screens/create_routine_screen.dart';
 import 'package:mindfulminis/features/signup/screens/create_account.dart';
 import 'package:mindfulminis/features/tab_view/screens/tab_view.dart';
 
@@ -108,6 +109,11 @@ GoRouter buildRouter() {
         path: JournalDetailScreen.routePath,
         name: JournalDetailScreen.routeName,
         builder: (context, state) => JournalDetailScreen(),
+      ),
+      GoRoute(
+        path: CreateRoutineScreen.routePath,
+        name: CreateRoutineScreen.routeName,
+        builder: (context, state) => CreateRoutineScreen(),
       ),
     ],
     // redirect: (context, state) {

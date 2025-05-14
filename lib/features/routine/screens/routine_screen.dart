@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
+import 'package:mindfulminis/features/routine/screens/create_routine_screen.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
+import 'package:mindfulminis/injection/injection.dart';
 
 import '../widgets/horizontal_week_calender.dart';
 
@@ -57,7 +60,11 @@ class RoutineScreen extends StatelessWidget {
                         width: 170,
                         height: 48,
                         child: GradientButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            sl<GoRouter>().pushNamed(
+                              CreateRoutineScreen.routeName,
+                            );
+                          },
                           child: Center(
                             child: Text(
                               'Create Now',

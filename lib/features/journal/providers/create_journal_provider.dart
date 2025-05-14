@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mindfulminis/features/journal/widgets/celebrate_dailog.dart';
+import 'package:mindfulminis/common/widgets/custom_dailog.dart';
 import 'package:mindfulminis/injection/injection.dart';
 
 class CreateJournalProvider with ChangeNotifier {
@@ -25,11 +25,14 @@ class CreateJournalProvider with ChangeNotifier {
         child: Container(color: Colors.black12),
       ),
       builder: (context) {
-        return CelebrateDailog(
+        return CustomDailog(
           onNext: () {
             SmartDialog.dismiss();
             _navigationService.pop();
           },
+          title: 'Congratulation',
+          subTitle: 'A little thanks goes a long way. See you tomorrow! 😊',
+          buttonText: '🎈 Celebrate & Continue',
         );
       },
     );

@@ -108,6 +108,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/activity_unselected.svg
   String get activityUnselected => 'assets/icons/activity_unselected.svg';
 
+  /// File path: assets/icons/alarm.svg
+  String get alarm => 'assets/icons/alarm.svg';
+
   /// File path: assets/icons/amazing_emoji.svg
   String get amazingEmoji => 'assets/icons/amazing_emoji.svg';
 
@@ -123,6 +126,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/floating_icon.svg
   String get floatingIcon => 'assets/icons/floating_icon.svg';
+
+  /// File path: assets/icons/full_sun_icon.svg
+  String get fullSunIcon => 'assets/icons/full_sun_icon.svg';
 
   /// File path: assets/icons/happy.svg
   String get happy => 'assets/icons/happy.svg';
@@ -157,6 +163,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/mic.svg
   String get mic => 'assets/icons/mic.svg';
 
+  /// File path: assets/icons/moon_icon.svg
+  String get moonIcon => 'assets/icons/moon_icon.svg';
+
   /// File path: assets/icons/morning_icon.svg
   String get morningIcon => 'assets/icons/morning_icon.svg';
 
@@ -176,6 +185,12 @@ class $AssetsIconsGen {
   /// File path: assets/icons/redo.svg
   String get redo => 'assets/icons/redo.svg';
 
+  /// File path: assets/icons/rimder_icon.svg
+  String get rimderIcon => 'assets/icons/rimder_icon.svg';
+
+  /// File path: assets/icons/routine_calender_icon.svg
+  String get routineCalenderIcon => 'assets/icons/routine_calender_icon.svg';
+
   /// File path: assets/icons/routine_selected.svg
   String get routineSelected => 'assets/icons/routine_selected.svg';
 
@@ -184,6 +199,12 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/sad_emoji.svg
   String get sadEmoji => 'assets/icons/sad_emoji.svg';
+
+  /// File path: assets/icons/sun_dim_icon.svg
+  String get sunDimIcon => 'assets/icons/sun_dim_icon.svg';
+
+  /// File path: assets/icons/sun_icon.svg
+  String get sunIcon => 'assets/icons/sun_icon.svg';
 
   /// File path: assets/icons/timer.svg
   String get timer => 'assets/icons/timer.svg';
@@ -212,11 +233,13 @@ class $AssetsIconsGen {
     googleLogo,
     activitySelected,
     activityUnselected,
+    alarm,
     amazingEmoji,
     confushedEmoji,
     dobIcon,
     floatingButton,
     floatingIcon,
+    fullSunIcon,
     happy,
     homeSelected,
     homeTop,
@@ -228,15 +251,20 @@ class $AssetsIconsGen {
     lock,
     mail,
     mic,
+    moonIcon,
     morningIcon,
     notification,
     passLock,
     profileSelected,
     profileUnselected,
     redo,
+    rimderIcon,
+    routineCalenderIcon,
     routineSelected,
     routineUnselected,
     sadEmoji,
+    sunDimIcon,
+    sunIcon,
     timer,
     undo,
     upsetEmoji,
@@ -282,11 +310,20 @@ class $AssetsImagesGen {
   /// File path: assets/images/angry_feel.svg
   String get angryFeel => 'assets/images/angry_feel.svg';
 
+  /// File path: assets/images/breath_routine.svg
+  String get breathRoutine => 'assets/images/breath_routine.svg';
+
   /// File path: assets/images/celebrate_continue.svg
   String get celebrateContinue => 'assets/images/celebrate_continue.svg';
 
+  /// File path: assets/images/complete_dailog1.svg
+  String get completeDailog1 => 'assets/images/complete_dailog1.svg';
+
   /// File path: assets/images/confused.svg
   String get confused => 'assets/images/confused.svg';
+
+  /// File path: assets/images/daillog_complete.svg
+  String get daillogComplete => 'assets/images/daillog_complete.svg';
 
   /// File path: assets/images/delete_account_image.png
   AssetGenImage get deleteAccountImage =>
@@ -296,18 +333,30 @@ class $AssetsImagesGen {
   AssetGenImage get feelingBackground =>
       const AssetGenImage('assets/images/feeling_background.png');
 
-  /// File path: assets/images/joural_bottom_right.svg
-  String get jouralBottomRight => 'assets/images/joural_bottom_right.svg';
-
   /// File path: assets/images/joural_detail_bottom.svg
   String get jouralDetailBottom => 'assets/images/joural_detail_bottom.svg';
 
-  /// File path: assets/images/journal_bottom_left.svg
-  String get journalBottomLeft => 'assets/images/journal_bottom_left.svg';
+  /// File path: assets/images/journal_bottom1.png
+  AssetGenImage get journalBottom1 =>
+      const AssetGenImage('assets/images/journal_bottom1.png');
+
+  /// File path: assets/images/journal_bottomleft.png
+  AssetGenImage get journalBottomleft =>
+      const AssetGenImage('assets/images/journal_bottomleft.png');
+
+  /// File path: assets/images/journal_bottomright.png
+  AssetGenImage get journalBottomright =>
+      const AssetGenImage('assets/images/journal_bottomright.png');
 
   /// File path: assets/images/journal_top_background.png
   AssetGenImage get journalTopBackground =>
       const AssetGenImage('assets/images/journal_top_background.png');
+
+  /// File path: assets/images/mediatation_routine.svg
+  String get mediatationRoutine => 'assets/images/mediatation_routine.svg';
+
+  /// File path: assets/images/mini-body-routine.svg
+  String get miniBodyRoutine => 'assets/images/mini-body-routine.svg';
 
   /// File path: assets/images/onboard1.svg
   String get onboard1 => 'assets/images/onboard1.svg';
@@ -328,6 +377,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/phoneverficationdailog.svg
   String get phoneverficationdailog =>
       'assets/images/phoneverficationdailog.svg';
+
+  /// File path: assets/images/rainbow.svg
+  String get rainbow => 'assets/images/rainbow.svg';
 
   /// File path: assets/images/recent_activity_backgrocd.png
   AssetGenImage get recentActivityBackgrocd =>
@@ -355,11 +407,20 @@ class $AssetsImagesGen {
   /// File path: assets/images/splash_img1.svg
   String get splashImg1 => 'assets/images/splash_img1.svg';
 
+  /// File path: assets/images/story_routine.svg
+  String get storyRoutine => 'assets/images/story_routine.svg';
+
   /// File path: assets/images/verifiedlottie.json
   String get verifiedlottie => 'assets/images/verifiedlottie.json';
 
   /// File path: assets/images/white_shade.svg
   String get whiteShade => 'assets/images/white_shade.svg';
+
+  /// File path: assets/images/white_shader.svg
+  String get whiteShader => 'assets/images/white_shader.svg';
+
+  /// File path: assets/images/yoga_routine.svg
+  String get yogaRoutine => 'assets/images/yoga_routine.svg';
 
   /// List of all assets
   List<dynamic> get values => [
@@ -373,20 +434,27 @@ class $AssetsImagesGen {
     allset,
     amazingFeel,
     angryFeel,
+    breathRoutine,
     celebrateContinue,
+    completeDailog1,
     confused,
+    daillogComplete,
     deleteAccountImage,
     feelingBackground,
-    jouralBottomRight,
     jouralDetailBottom,
-    journalBottomLeft,
+    journalBottom1,
+    journalBottomleft,
+    journalBottomright,
     journalTopBackground,
+    mediatationRoutine,
+    miniBodyRoutine,
     onboard1,
     onboard2,
     onboard3,
     onboardBackgroundPng,
     onboardBackgroundSvg,
     phoneverficationdailog,
+    rainbow,
     recentActivityBackgrocd,
     routineTopBackground,
     sadFeel,
@@ -395,8 +463,11 @@ class $AssetsImagesGen {
     splash1,
     splashImg,
     splashImg1,
+    storyRoutine,
     verifiedlottie,
     whiteShade,
+    whiteShader,
+    yogaRoutine,
   ];
 }
 
