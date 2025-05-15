@@ -8,4 +8,17 @@ class AppColors {
   static Color grey45 = Colors.grey;
   static HexColor whitehex = HexColor('#FFFFFF');
   static HexColor dividerColor = HexColor('#ACADBC42');
+
+  static List<HexColor> primaryGradientColors = [
+    HexColor('#6E40F9'),
+    HexColor('#A569FB'),
+    HexColor('#CE89FF'),
+  ];
+
+  static LinearGradient primaryGradient = LinearGradient(
+    begin: Alignment.bottomCenter,
+    end: Alignment.topCenter,
+
+    colors: AppColors.primaryGradientColors,
+  );
 }

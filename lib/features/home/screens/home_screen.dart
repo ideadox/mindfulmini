@@ -8,6 +8,7 @@ import 'package:mindfulminis/features/home/widgets/daily_activity/daily_activity
 import 'package:mindfulminis/features/home/widgets/meditation/meditation.dart';
 import 'package:mindfulminis/features/home/widgets/stories/stories.dart';
 import 'package:mindfulminis/features/home/widgets/yoga_flow/yoga_flow.dart';
+import 'package:mindfulminis/features/routine/widgets/myroutine_brief_card.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 
 import '../widgets/create_routine_button/create_routine_button.dart';
@@ -64,7 +65,21 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Column(
                 children: [
-                  CreateRoutineButton(),
+                  // CreateRoutineButton(),
+                  Text(
+                    'Your Routine',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                  Text(
+                    'Your own mindful routine for a calm and happy day',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.grey45,
+                    ),
+                  ),
+                  Space.h12,
+                  MyroutineBriefCard(formHome: true),
                   Space.h20,
                   DailyActivityWidget(),
                   Space.h20,

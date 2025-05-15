@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/activity/widgets/activity_home_card.dart';
+import 'package:mindfulminis/features/yoga/screens/yoga_main.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
+import 'package:mindfulminis/injection/injection.dart';
 
 import '../../../core/app_colors.dart';
 import '../../../core/app_text_theme.dart';
@@ -45,6 +48,10 @@ class ActivityScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ActivityHomeCard(
+                        onTap: () {
+                          sl<GoRouter>().pushNamed(YogaMain.routeName);
+                          return;
+                        },
                         image: Assets.dummy.yogaActivity.path,
                       ),
                     ),

@@ -16,6 +16,8 @@ class CreateRoutineProvider with ChangeNotifier {
   String? routineSpendTime;
   List<String> routineTypes = [];
 
+  bool remainder = false;
+
   void onChangeTimeLine(val) {
     routineTimeLine = val;
     notifyListeners();
@@ -40,6 +42,11 @@ class CreateRoutineProvider with ChangeNotifier {
       }
       routineTypes.add(val);
     }
+    notifyListeners();
+  }
+
+  void toogleRemaider() {
+    remainder = !remainder;
     notifyListeners();
   }
 
@@ -123,10 +130,10 @@ class CreateRoutineProvider with ChangeNotifier {
   ];
 
   List<Map<String, String>> fourthPageData = [
-    {'icon': Assets.images.mediatationRoutine, 'title': 'Meditation'},
-    {'icon': Assets.images.yogaRoutine, 'title': 'Yoga'},
-    {'icon': Assets.images.breathRoutine, 'title': 'Breath'},
-    {'icon': Assets.images.storyRoutine, 'title': "Story"},
-    {'icon': Assets.images.miniBodyRoutine, 'title': "Mini Body Scan"},
+    {'icon': Assets.images.meditationRoutine.path, 'title': 'Meditation'},
+    {'icon': Assets.images.yogaRoutine.path, 'title': 'Yoga'},
+    {'icon': Assets.images.breathRoutine.path, 'title': 'Breath'},
+    {'icon': Assets.images.storyRoutine.path, 'title': "Story"},
+    {'icon': Assets.images.miniBodyScanRoutine.path, 'title': "Mini Body Scan"},
   ];
 }

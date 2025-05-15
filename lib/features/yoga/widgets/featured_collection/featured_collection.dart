@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
+import 'package:mindfulminis/features/home/widgets/common_widgets/total_timing_widget.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 
-class BreathingWidget extends StatelessWidget {
-  const BreathingWidget({super.key});
+class FeaturedCollection extends StatelessWidget {
+  const FeaturedCollection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,16 +15,10 @@ class BreathingWidget extends StatelessWidget {
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(
-            'Breathing',
+            'Featured Collection',
             style: AppTextTheme.titleTextTheme(
               context,
             ).titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
-          ),
-          subtitle: Text(
-            'Quick Meditation for Kids to Calm Down.',
-            style: AppTextTheme.bodyTextStyle(
-              context,
-            ).bodyMedium?.copyWith(fontSize: 12),
           ),
         ),
         SizedBox(
@@ -34,14 +30,19 @@ class BreathingWidget extends StatelessWidget {
               return Space.w16;
             },
             itemBuilder: (context, index) {
-              return Container(
-                width: 177,
-                height: 268,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+              return Stack(
+                children: [
+                  Container(
+                    width: 296,
+                    height: 268,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
 
-                child: Image.asset(Assets.dummy.breathuing.path, height: 268),
+                    child: SvgPicture.asset(Assets.dummy.frame2043683273),
+                  ),
+                  // Positioned(bottom: 50, left: 16, child: TotalTimingWidget()),
+                ],
               );
             },
           ),

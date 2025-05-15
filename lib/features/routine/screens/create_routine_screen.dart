@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mindfulminis/common/widgets/custom_back_button.dart';
+import 'package:mindfulminis/common/widgets/custom_gradient_text.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/common/widgets/gradient_checkbox.dart';
 import 'package:mindfulminis/common/widgets/gradient_scaffold.dart';
+import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/routine/providers/create_routine_provider.dart';
 import 'package:mindfulminis/features/routine/screens/remainder_confirmation_screen.dart';
 import 'package:mindfulminis/features/routine/widgets/create_routine_conatiner.dart';
+import 'package:mindfulminis/features/routine/widgets/goal_routine_container.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:provider/provider.dart';
 
@@ -391,9 +394,10 @@ class BuildFourthPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.sizeOf(context).width;
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
 
@@ -403,72 +407,60 @@ class BuildFourthPage extends StatelessWidget {
               'What goals you want to focus on?',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
-            Space.h40,
-            Space.h16,
+            Space.h20,
+
             GridView.builder(
               shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                mainAxisSpacing: 8.0,
-                crossAxisSpacing: 8.0,
+                mainAxisSpacing: 12.0,
+                crossAxisSpacing: 12.0,
+                mainAxisExtent: 175,
               ),
-              physics: NeverScrollableScrollPhysics(),
               itemCount:
-                  // provider.fourthPageData.length % 2 == 0
-                  //     ?
-                  provider.fourthPageData.length,
-
-              // : provider.fourthPageData.length - 1,
+                  provider.fourthPageData.length.isEven
+                      ? provider.fourthPageData.length
+                      : provider.fourthPageData.length - 1,
               itemBuilder: (context, index) {
                 final item = provider.fourthPageData[index];
-                return Stack(
-                  alignment: Alignment.topRight,
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
 
-                      child: Column(
-                        children: [
-                          Stack(
-                            alignment: Alignment.center,
-
-                            children: [
-                              SvgPicture.asset(item['icon'] ?? ''),
-                              Positioned(
-                                child: SvgPicture.asset(
-                                  Assets.images.whiteShader,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            item['title'] ?? '',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    Positioned(
-                      child: GradientCheckbox(
-                        value: provider.routineTypes.contains(item['title']),
-                        onChanged: (val) {
-                          provider.onChangeType(item['title']);
-                        },
-                      ),
-                    ),
-                  ],
+                return GoalRoutineContainer(
+                  title: item['title'] ?? "",
+                  icon: item['icon'] ?? '',
+                  isSelected: provider.routineTypes.contains(item['title']),
+                  onChanged: (val) {
+                    provider.onChangeType(item['title']);
+                  },
                 );
               },
             ),
+            Space.h12,
+            if (provider.fourthPageData.length.isOdd)
+              SizedBox(
+                height: 175,
+                width: (width / 2) - 18,
+                child: GoalRoutineContainer(
+                  title:
+                      provider.fourthPageData[provider.fourthPageData.length -
+                          1]['title'] ??
+                      "",
+                  icon:
+                      provider.fourthPageData[provider.fourthPageData.length -
+                          1]['icon'] ??
+                      '',
+                  isSelected: provider.routineTypes.contains(
+                    provider.fourthPageData[provider.fourthPageData.length -
+                        1]['title'],
+                  ),
+                  onChanged: (val) {
+                    provider.onChangeType(
+                      provider.fourthPageData[provider.fourthPageData.length -
+                          1]['title'],
+                    );
+                  },
+                ),
+              ),
           ],
         ),
       ),

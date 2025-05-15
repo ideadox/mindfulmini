@@ -3,12 +3,13 @@ import 'package:flutter_bounceable/flutter_bounceable.dart';
 
 class ActivityHomeCard extends StatelessWidget {
   final String image;
-  const ActivityHomeCard({super.key, required this.image});
+  final VoidCallback? onTap;
+  const ActivityHomeCard({super.key, required this.image, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Bounceable(
-      onTap: () {},
+      onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),

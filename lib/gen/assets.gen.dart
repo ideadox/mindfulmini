@@ -47,6 +47,10 @@ class $AssetsDummyGen {
   AssetGenImage get scanActivity =>
       const AssetGenImage('assets/dummy/scan_activity.png');
 
+  /// File path: assets/dummy/starter_deck.png
+  AssetGenImage get starterDeck =>
+      const AssetGenImage('assets/dummy/starter_deck.png');
+
   /// File path: assets/dummy/storty.svg
   String get storty => 'assets/dummy/storty.svg';
 
@@ -75,6 +79,7 @@ class $AssetsDummyGen {
     medit,
     moralStoryActivity,
     scanActivity,
+    starterDeck,
     storty,
     story,
     yogaPng,
@@ -310,8 +315,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/angry_feel.svg
   String get angryFeel => 'assets/images/angry_feel.svg';
 
-  /// File path: assets/images/breath_routine.svg
-  String get breathRoutine => 'assets/images/breath_routine.svg';
+  /// File path: assets/images/breath_routine.png
+  AssetGenImage get breathRoutine =>
+      const AssetGenImage('assets/images/breath_routine.png');
 
   /// File path: assets/images/celebrate_continue.svg
   String get celebrateContinue => 'assets/images/celebrate_continue.svg';
@@ -352,11 +358,13 @@ class $AssetsImagesGen {
   AssetGenImage get journalTopBackground =>
       const AssetGenImage('assets/images/journal_top_background.png');
 
-  /// File path: assets/images/mediatation_routine.svg
-  String get mediatationRoutine => 'assets/images/mediatation_routine.svg';
+  /// File path: assets/images/meditation_routine.png
+  AssetGenImage get meditationRoutine =>
+      const AssetGenImage('assets/images/meditation_routine.png');
 
-  /// File path: assets/images/mini-body-routine.svg
-  String get miniBodyRoutine => 'assets/images/mini-body-routine.svg';
+  /// File path: assets/images/mini_body_scan_routine.png
+  AssetGenImage get miniBodyScanRoutine =>
+      const AssetGenImage('assets/images/mini_body_scan_routine.png');
 
   /// File path: assets/images/onboard1.svg
   String get onboard1 => 'assets/images/onboard1.svg';
@@ -407,8 +415,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/splash_img1.svg
   String get splashImg1 => 'assets/images/splash_img1.svg';
 
-  /// File path: assets/images/story_routine.svg
-  String get storyRoutine => 'assets/images/story_routine.svg';
+  /// File path: assets/images/story_routine.png
+  AssetGenImage get storyRoutine =>
+      const AssetGenImage('assets/images/story_routine.png');
 
   /// File path: assets/images/verifiedlottie.json
   String get verifiedlottie => 'assets/images/verifiedlottie.json';
@@ -416,11 +425,13 @@ class $AssetsImagesGen {
   /// File path: assets/images/white_shade.svg
   String get whiteShade => 'assets/images/white_shade.svg';
 
-  /// File path: assets/images/white_shader.svg
-  String get whiteShader => 'assets/images/white_shader.svg';
+  /// File path: assets/images/yoga_main_header.png
+  AssetGenImage get yogaMainHeader =>
+      const AssetGenImage('assets/images/yoga_main_header.png');
 
-  /// File path: assets/images/yoga_routine.svg
-  String get yogaRoutine => 'assets/images/yoga_routine.svg';
+  /// File path: assets/images/yoga_routine.png
+  AssetGenImage get yogaRoutine =>
+      const AssetGenImage('assets/images/yoga_routine.png');
 
   /// List of all assets
   List<dynamic> get values => [
@@ -446,8 +457,8 @@ class $AssetsImagesGen {
     journalBottomleft,
     journalBottomright,
     journalTopBackground,
-    mediatationRoutine,
-    miniBodyRoutine,
+    meditationRoutine,
+    miniBodyScanRoutine,
     onboard1,
     onboard2,
     onboard3,
@@ -466,7 +477,7 @@ class $AssetsImagesGen {
     storyRoutine,
     verifiedlottie,
     whiteShade,
-    whiteShader,
+    yogaMainHeader,
     yogaRoutine,
   ];
 }
@@ -598,6 +609,27 @@ class $AssetsTabiconsGen {
   List<String> get values => [home1, home2, home3, home4, home5];
 }
 
+class $AssetsVectorsGen {
+  const $AssetsVectorsGen();
+
+  /// File path: assets/vectors/myroutine_center.svg
+  String get myroutineCenter => 'assets/vectors/myroutine_center.svg';
+
+  /// File path: assets/vectors/myroutine_right.png
+  AssetGenImage get myroutineRightPng =>
+      const AssetGenImage('assets/vectors/myroutine_right.png');
+
+  /// File path: assets/vectors/myroutine_right.svg
+  String get myroutineRightSvg => 'assets/vectors/myroutine_right.svg';
+
+  /// List of all assets
+  List<dynamic> get values => [
+    myroutineCenter,
+    myroutineRightPng,
+    myroutineRightSvg,
+  ];
+}
+
 class Assets {
   const Assets._();
 
@@ -607,6 +639,7 @@ class Assets {
   static const $AssetsImagesGen images = $AssetsImagesGen();
   static const $AssetsProfileIconsGen profileIcons = $AssetsProfileIconsGen();
   static const $AssetsTabiconsGen tabicons = $AssetsTabiconsGen();
+  static const $AssetsVectorsGen vectors = $AssetsVectorsGen();
 }
 
 class AssetGenImage {

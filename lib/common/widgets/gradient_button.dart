@@ -3,8 +3,14 @@ import 'package:hexcolor/hexcolor.dart';
 
 class GradientButton extends StatelessWidget {
   final Widget child;
+  final bool hasShadow;
   final void Function()? onPressed;
-  const GradientButton({super.key, required this.child, this.onPressed});
+  const GradientButton({
+    super.key,
+    required this.child,
+    this.onPressed,
+    this.hasShadow = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,14 +20,17 @@ class GradientButton extends StatelessWidget {
       child: Container(
         height: 56,
         decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.shade50,
-              spreadRadius: 1,
-              blurRadius: 5,
-              offset: const Offset(0, 3), // changes position of shadow
-            ),
-          ],
+          boxShadow:
+              !hasShadow
+                  ? null
+                  : [
+                    BoxShadow(
+                      color: Colors.grey.shade50,
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                      offset: const Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
           color: onPressed != null ? null : HexColor('#EAEBFF'),
           gradient:
               onPressed == null
