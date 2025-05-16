@@ -163,7 +163,7 @@ class MyroutineBriefCard extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 child: Text(
-                                  'Get Started',
+                                  'Go To Routine',
                                   style: TextStyle(fontSize: 12),
                                 ),
                               ),

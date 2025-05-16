@@ -47,6 +47,10 @@ class $AssetsDummyGen {
   AssetGenImage get scanActivity =>
       const AssetGenImage('assets/dummy/scan_activity.png');
 
+  /// File path: assets/dummy/spring_yoga.png
+  AssetGenImage get springYoga =>
+      const AssetGenImage('assets/dummy/spring_yoga.png');
+
   /// File path: assets/dummy/starter_deck.png
   AssetGenImage get starterDeck =>
       const AssetGenImage('assets/dummy/starter_deck.png');
@@ -79,6 +83,7 @@ class $AssetsDummyGen {
     medit,
     moralStoryActivity,
     scanActivity,
+    springYoga,
     starterDeck,
     storty,
     story,
@@ -104,8 +109,18 @@ class $AssetsIconsGen {
   /// File path: assets/icons/Apple Logo.svg
   String get appleLogo => 'assets/icons/Apple Logo.svg';
 
+  /// File path: assets/icons/Chevron.png
+  AssetGenImage get chevron => const AssetGenImage('assets/icons/Chevron.png');
+
   /// File path: assets/icons/Google Logo.svg
   String get googleLogo => 'assets/icons/Google Logo.svg';
+
+  /// File path: assets/icons/Heart Button.svg
+  String get heartButton => 'assets/icons/Heart Button.svg';
+
+  /// File path: assets/icons/active_yoga_stepper.png
+  AssetGenImage get activeYogaStepper =>
+      const AssetGenImage('assets/icons/active_yoga_stepper.png');
 
   /// File path: assets/icons/activity_selected.svg
   String get activitySelected => 'assets/icons/activity_selected.svg';
@@ -119,6 +134,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/amazing_emoji.svg
   String get amazingEmoji => 'assets/icons/amazing_emoji.svg';
 
+  /// File path: assets/icons/back_10.svg
+  String get back10 => 'assets/icons/back_10.svg';
+
   /// File path: assets/icons/confushed_emoji.svg
   String get confushedEmoji => 'assets/icons/confushed_emoji.svg';
 
@@ -131,6 +149,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/floating_icon.svg
   String get floatingIcon => 'assets/icons/floating_icon.svg';
+
+  /// File path: assets/icons/forward_10.svg
+  String get forward10 => 'assets/icons/forward_10.svg';
 
   /// File path: assets/icons/full_sun_icon.svg
   String get fullSunIcon => 'assets/icons/full_sun_icon.svg';
@@ -180,6 +201,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/pass_lock.svg
   String get passLock => 'assets/icons/pass_lock.svg';
 
+  /// File path: assets/icons/play_button.svg
+  String get playButton => 'assets/icons/play_button.svg';
+
   /// File path: assets/icons/profile_selected.png
   AssetGenImage get profileSelected =>
       const AssetGenImage('assets/icons/profile_selected.png');
@@ -189,6 +213,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/redo.svg
   String get redo => 'assets/icons/redo.svg';
+
+  /// File path: assets/icons/repeat_icon.svg
+  String get repeatIcon => 'assets/icons/repeat_icon.svg';
 
   /// File path: assets/icons/rimder_icon.svg
   String get rimderIcon => 'assets/icons/rimder_icon.svg';
@@ -235,15 +262,20 @@ class $AssetsIconsGen {
   /// List of all assets
   List<dynamic> get values => [
     appleLogo,
+    chevron,
     googleLogo,
+    heartButton,
+    activeYogaStepper,
     activitySelected,
     activityUnselected,
     alarm,
     amazingEmoji,
+    back10,
     confushedEmoji,
     dobIcon,
     floatingButton,
     floatingIcon,
+    forward10,
     fullSunIcon,
     happy,
     homeSelected,
@@ -260,9 +292,11 @@ class $AssetsIconsGen {
     morningIcon,
     notification,
     passLock,
+    playButton,
     profileSelected,
     profileUnselected,
     redo,
+    repeatIcon,
     rimderIcon,
     routineCalenderIcon,
     routineSelected,
@@ -612,6 +646,10 @@ class $AssetsTabiconsGen {
 class $AssetsVectorsGen {
   const $AssetsVectorsGen();
 
+  /// File path: assets/vectors/boy_yoga_play.png
+  AssetGenImage get boyYogaPlay =>
+      const AssetGenImage('assets/vectors/boy_yoga_play.png');
+
   /// File path: assets/vectors/myroutine_center.svg
   String get myroutineCenter => 'assets/vectors/myroutine_center.svg';
 
@@ -622,11 +660,37 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/myroutine_right.svg
   String get myroutineRightSvg => 'assets/vectors/myroutine_right.svg';
 
+  /// File path: assets/vectors/play_green_bottom.png
+  AssetGenImage get playGreenBottom =>
+      const AssetGenImage('assets/vectors/play_green_bottom.png');
+
+  /// File path: assets/vectors/play_purple_left.png
+  AssetGenImage get playPurpleLeft =>
+      const AssetGenImage('assets/vectors/play_purple_left.png');
+
+  /// File path: assets/vectors/play_red_right.png
+  AssetGenImage get playRedRight =>
+      const AssetGenImage('assets/vectors/play_red_right.png');
+
+  /// File path: assets/vectors/play_yellow_top_left.png
+  AssetGenImage get playYellowTopLeft =>
+      const AssetGenImage('assets/vectors/play_yellow_top_left.png');
+
+  /// File path: assets/vectors/purple_vector_2.png
+  AssetGenImage get purpleVector2 =>
+      const AssetGenImage('assets/vectors/purple_vector_2.png');
+
   /// List of all assets
   List<dynamic> get values => [
+    boyYogaPlay,
     myroutineCenter,
     myroutineRightPng,
     myroutineRightSvg,
+    playGreenBottom,
+    playPurpleLeft,
+    playRedRight,
+    playYellowTopLeft,
+    purpleVector2,
   ];
 }
 

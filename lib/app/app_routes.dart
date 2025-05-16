@@ -11,6 +11,7 @@ import 'package:mindfulminis/features/onbaord/screens/dob.dart';
 import 'package:mindfulminis/features/onbaord/screens/felling_today.dart';
 import 'package:mindfulminis/features/onbaord/screens/kid_name.dart';
 import 'package:mindfulminis/features/onboarding/screens/onboard_screen.dart';
+import 'package:mindfulminis/features/play%20visuals/screen/play_visuals.dart';
 import 'package:mindfulminis/features/profile/screens/app_setting_screen.dart';
 import 'package:mindfulminis/features/profile/screens/edit_profile_screen.dart';
 import 'package:mindfulminis/features/profile/screens/language_screen.dart';
@@ -19,6 +20,7 @@ import 'package:mindfulminis/features/routine/screens/my_routine_screen.dart';
 import 'package:mindfulminis/features/routine/screens/routine_detail_screen.dart';
 import 'package:mindfulminis/features/signup/screens/create_account.dart';
 import 'package:mindfulminis/features/tab_view/screens/tab_view.dart';
+import 'package:mindfulminis/features/yoga/screens/yoga_list.dart';
 import 'package:mindfulminis/features/yoga/screens/yoga_main.dart';
 
 import '../features/onbaord/screens/describe_yourself.dart';
@@ -132,6 +134,16 @@ GoRouter buildRouter() {
         path: YogaMain.routePath,
         name: YogaMain.routeName,
         builder: (context, state) => YogaMain(),
+      ),
+      GoRoute(
+        path: YogaList.routePath,
+        name: YogaList.routeName,
+        builder: (context, state) => YogaList(),
+      ),
+      GoRoute(
+        path: PlayVisuals.routePath,
+        name: PlayVisuals.routeName,
+        builder: (context, state) => PlayVisuals(),
       ),
     ],
     // redirect: (context, state) {

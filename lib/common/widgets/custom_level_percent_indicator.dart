@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mindfulminis/common/widgets/custom_precentage_indicator.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class CustomLevelPercentIndicator extends StatelessWidget {
   final double percent;

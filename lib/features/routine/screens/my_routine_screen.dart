@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/widgets/common_appbar.dart';
+import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
+import 'package:mindfulminis/features/routine/screens/create_routine_screen.dart';
 import 'package:mindfulminis/features/routine/screens/routine_detail_screen.dart';
 import 'package:mindfulminis/features/routine/widgets/myroutine_brief_card.dart';
 import 'package:mindfulminis/injection/injection.dart';
@@ -41,6 +43,23 @@ class MyRoutineScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+
+      floatingActionButton: InkWell(
+        borderRadius: BorderRadius.circular(100),
+
+        onTap: () {
+          sl<GoRouter>().pushNamed(CreateRoutineScreen.routeName);
+        },
+        child: Container(
+          height: 48,
+          width: 48,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(100),
+            gradient: AppColors.primaryGradient,
+          ),
+          child: Icon(Icons.add, color: Colors.white),
+        ),
       ),
     );
   }

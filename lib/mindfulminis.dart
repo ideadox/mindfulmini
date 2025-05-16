@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/core/app_colors.dart';
+import 'package:mindfulminis/core/app_screen_size.dart';
 
 import 'package:mindfulminis/features/authentication/providers/phone_authh_provider.dart';
 import 'package:mindfulminis/features/onbaord/providers/onboards_provider.dart';
@@ -22,6 +23,8 @@ class Mindfulminis extends StatelessWidget {
       child: MaterialApp.router(
         builder: FlutterSmartDialog.init(
           builder: (context, child) {
+            ScreenSize.width = MediaQuery.sizeOf(context).width;
+            ScreenSize.height = MediaQuery.sizeOf(context).height;
             final mediaQueryData = MediaQuery.of(context);
 
             final scale = mediaQueryData.textScaler.clamp(
