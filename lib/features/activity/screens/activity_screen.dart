@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/activity/widgets/activity_home_card.dart';
+import 'package:mindfulminis/features/breathing/screens/breathing_screen.dart';
+import 'package:mindfulminis/features/meditation/screens/meditation_screen.dart';
+import 'package:mindfulminis/features/stories/screens/stories_screen.dart';
 import 'package:mindfulminis/features/yoga/screens/yoga_main.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
@@ -61,12 +64,22 @@ class ActivityScreen extends StatelessWidget {
                         children: [
                           Expanded(
                             child: ActivityHomeCard(
+                              onTap: () {
+                                sl<GoRouter>().pushNamed(
+                                  MeditationScreen.routeName,
+                                );
+                              },
                               image: Assets.dummy.maditionActivity.path,
                             ),
                           ),
                           Space.h8,
                           Expanded(
                             child: ActivityHomeCard(
+                              onTap: () {
+                                sl<GoRouter>().pushNamed(
+                                  StoriesScreen.routeName,
+                                );
+                              },
                               image: Assets.dummy.moralStoryActivity.path,
                             ),
                           ),
@@ -82,6 +95,9 @@ class ActivityScreen extends StatelessWidget {
                 height: 180,
                 width: double.infinity,
                 child: ActivityHomeCard(
+                  onTap: () {
+                    sl<GoRouter>().pushNamed(BreathingScreen.routeName);
+                  },
                   image: Assets.dummy.breathingExeActivity.path,
                 ),
               ),

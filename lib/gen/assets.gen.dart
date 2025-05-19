@@ -39,6 +39,14 @@ class $AssetsDummyGen {
   /// File path: assets/dummy/medit.png
   AssetGenImage get medit => const AssetGenImage('assets/dummy/medit.png');
 
+  /// File path: assets/dummy/meditation_card.png
+  AssetGenImage get meditationCard =>
+      const AssetGenImage('assets/dummy/meditation_card.png');
+
+  /// File path: assets/dummy/meditation_suggestion_card.png
+  AssetGenImage get meditationSuggestionCard =>
+      const AssetGenImage('assets/dummy/meditation_suggestion_card.png');
+
   /// File path: assets/dummy/moral_story_activity.png
   AssetGenImage get moralStoryActivity =>
       const AssetGenImage('assets/dummy/moral_story_activity.png');
@@ -81,6 +89,8 @@ class $AssetsDummyGen {
     maditionActivity,
     medi,
     medit,
+    meditationCard,
+    meditationSuggestionCard,
     moralStoryActivity,
     scanActivity,
     springYoga,
@@ -118,6 +128,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/Heart Button.svg
   String get heartButton => 'assets/icons/Heart Button.svg';
 
+  /// File path: assets/icons/Time Circle.svg
+  String get timeCircle => 'assets/icons/Time Circle.svg';
+
   /// File path: assets/icons/active_yoga_stepper.png
   AssetGenImage get activeYogaStepper =>
       const AssetGenImage('assets/icons/active_yoga_stepper.png');
@@ -137,8 +150,14 @@ class $AssetsIconsGen {
   /// File path: assets/icons/back_10.svg
   String get back10 => 'assets/icons/back_10.svg';
 
+  /// File path: assets/icons/completed_level_icon.svg
+  String get completedLevelIcon => 'assets/icons/completed_level_icon.svg';
+
   /// File path: assets/icons/confushed_emoji.svg
   String get confushedEmoji => 'assets/icons/confushed_emoji.svg';
+
+  /// File path: assets/icons/current_level_icon.svg
+  String get currentLevelIcon => 'assets/icons/current_level_icon.svg';
 
   /// File path: assets/icons/dob_icon.svg
   String get dobIcon => 'assets/icons/dob_icon.svg';
@@ -244,6 +263,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/undo.svg
   String get undo => 'assets/icons/undo.svg';
 
+  /// File path: assets/icons/upcoming_level_icon.svg
+  String get upcomingLevelIcon => 'assets/icons/upcoming_level_icon.svg';
+
   /// File path: assets/icons/upset_emoji.svg
   String get upsetEmoji => 'assets/icons/upset_emoji.svg';
 
@@ -265,13 +287,16 @@ class $AssetsIconsGen {
     chevron,
     googleLogo,
     heartButton,
+    timeCircle,
     activeYogaStepper,
     activitySelected,
     activityUnselected,
     alarm,
     amazingEmoji,
     back10,
+    completedLevelIcon,
     confushedEmoji,
+    currentLevelIcon,
     dobIcon,
     floatingButton,
     floatingIcon,
@@ -306,6 +331,7 @@ class $AssetsIconsGen {
     sunIcon,
     timer,
     undo,
+    upcomingLevelIcon,
     upsetEmoji,
     user,
     verifyTick,
@@ -353,6 +379,10 @@ class $AssetsImagesGen {
   AssetGenImage get breathRoutine =>
       const AssetGenImage('assets/images/breath_routine.png');
 
+  /// File path: assets/images/breathing_top_header.png
+  AssetGenImage get breathingTopHeader =>
+      const AssetGenImage('assets/images/breathing_top_header.png');
+
   /// File path: assets/images/celebrate_continue.svg
   String get celebrateContinue => 'assets/images/celebrate_continue.svg';
 
@@ -395,6 +425,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/meditation_routine.png
   AssetGenImage get meditationRoutine =>
       const AssetGenImage('assets/images/meditation_routine.png');
+
+  /// File path: assets/images/meditation_top_hrader.png
+  AssetGenImage get meditationTopHrader =>
+      const AssetGenImage('assets/images/meditation_top_hrader.png');
 
   /// File path: assets/images/mini_body_scan_routine.png
   AssetGenImage get miniBodyScanRoutine =>
@@ -449,6 +483,14 @@ class $AssetsImagesGen {
   /// File path: assets/images/splash_img1.svg
   String get splashImg1 => 'assets/images/splash_img1.svg';
 
+  /// File path: assets/images/stories_top_header.png
+  AssetGenImage get storiesTopHeader =>
+      const AssetGenImage('assets/images/stories_top_header.png');
+
+  /// File path: assets/images/stories_tree.png
+  AssetGenImage get storiesTree =>
+      const AssetGenImage('assets/images/stories_tree.png');
+
   /// File path: assets/images/story_routine.png
   AssetGenImage get storyRoutine =>
       const AssetGenImage('assets/images/story_routine.png');
@@ -480,6 +522,7 @@ class $AssetsImagesGen {
     amazingFeel,
     angryFeel,
     breathRoutine,
+    breathingTopHeader,
     celebrateContinue,
     completeDailog1,
     confused,
@@ -492,6 +535,7 @@ class $AssetsImagesGen {
     journalBottomright,
     journalTopBackground,
     meditationRoutine,
+    meditationTopHrader,
     miniBodyScanRoutine,
     onboard1,
     onboard2,
@@ -508,6 +552,8 @@ class $AssetsImagesGen {
     splash1,
     splashImg,
     splashImg1,
+    storiesTopHeader,
+    storiesTree,
     storyRoutine,
     verifiedlottie,
     whiteShade,
@@ -680,6 +726,18 @@ class $AssetsVectorsGen {
   AssetGenImage get purpleVector2 =>
       const AssetGenImage('assets/vectors/purple_vector_2.png');
 
+  /// File path: assets/vectors/stories_left.png
+  AssetGenImage get storiesLeft =>
+      const AssetGenImage('assets/vectors/stories_left.png');
+
+  /// File path: assets/vectors/stories_right.png
+  AssetGenImage get storiesRight =>
+      const AssetGenImage('assets/vectors/stories_right.png');
+
+  /// File path: assets/vectors/stories_top.png
+  AssetGenImage get storiesTop =>
+      const AssetGenImage('assets/vectors/stories_top.png');
+
   /// List of all assets
   List<dynamic> get values => [
     boyYogaPlay,
@@ -691,6 +749,9 @@ class $AssetsVectorsGen {
     playRedRight,
     playYellowTopLeft,
     purpleVector2,
+    storiesLeft,
+    storiesRight,
+    storiesTop,
   ];
 }
 

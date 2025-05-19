@@ -237,9 +237,9 @@ class _PlayVisualsState extends State<PlayVisuals>
             ),
 
             Positioned(
-              top: 100,
+              top: 110,
               left: 0,
-              right: 0,
+              right: 100,
               child: AnimatedOpacity(
                 opacity: !startAnimation ? 0 : 1,
                 duration: Duration(milliseconds: 1000),

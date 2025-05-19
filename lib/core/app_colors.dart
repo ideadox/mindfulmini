@@ -14,11 +14,22 @@ class AppColors {
     HexColor('#A569FB'),
     HexColor('#CE89FF'),
   ];
+  static List<Color> secondaryGradientColors = [
+    HexColor('#6E40F9').withValues(alpha: 0.5),
+    HexColor('#A569FB').withValues(alpha: 0.5),
+    HexColor('#CE89FF').withValues(alpha: 0.5),
+  ];
 
   static LinearGradient primaryGradient = LinearGradient(
     begin: Alignment.bottomCenter,
     end: Alignment.topCenter,
 
     colors: AppColors.primaryGradientColors,
+  );
+  static LinearGradient secondaryGradient = LinearGradient(
+    begin: Alignment.bottomCenter,
+    end: Alignment.topCenter,
+
+    colors: AppColors.secondaryGradientColors,
   );
 }

@@ -3,10 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/screens/splash_screen.dart';
 import 'package:mindfulminis/features/authentication/screens/auth_main.dart';
 import 'package:mindfulminis/features/authentication/screens/phone_verification.dart';
+import 'package:mindfulminis/features/breathing/screens/breathing_screen.dart';
 import 'package:mindfulminis/features/forgot_password/screens/forgot_password.dart';
 import 'package:mindfulminis/features/journal/screens/create_journal_screen.dart';
 import 'package:mindfulminis/features/journal/screens/journal_detail_screen.dart';
 import 'package:mindfulminis/features/login/screens/login.dart';
+import 'package:mindfulminis/features/meditation/screens/meditation_screen.dart';
 import 'package:mindfulminis/features/onbaord/screens/dob.dart';
 import 'package:mindfulminis/features/onbaord/screens/felling_today.dart';
 import 'package:mindfulminis/features/onbaord/screens/kid_name.dart';
@@ -19,6 +21,8 @@ import 'package:mindfulminis/features/routine/screens/create_routine_screen.dart
 import 'package:mindfulminis/features/routine/screens/my_routine_screen.dart';
 import 'package:mindfulminis/features/routine/screens/routine_detail_screen.dart';
 import 'package:mindfulminis/features/signup/screens/create_account.dart';
+import 'package:mindfulminis/features/stories/screens/stories_download.dart';
+import 'package:mindfulminis/features/stories/screens/stories_screen.dart';
 import 'package:mindfulminis/features/tab_view/screens/tab_view.dart';
 import 'package:mindfulminis/features/yoga/screens/yoga_list.dart';
 import 'package:mindfulminis/features/yoga/screens/yoga_main.dart';
@@ -141,9 +145,29 @@ GoRouter buildRouter() {
         builder: (context, state) => YogaList(),
       ),
       GoRoute(
+        path: MeditationScreen.routePath,
+        name: MeditationScreen.routeName,
+        builder: (context, state) => MeditationScreen(),
+      ),
+      GoRoute(
+        path: StoriesScreen.routePath,
+        name: StoriesScreen.routeName,
+        builder: (context, state) => StoriesScreen(),
+      ),
+      GoRoute(
+        path: BreathingScreen.routePath,
+        name: BreathingScreen.routeName,
+        builder: (context, state) => BreathingScreen(),
+      ),
+      GoRoute(
         path: PlayVisuals.routePath,
         name: PlayVisuals.routeName,
         builder: (context, state) => PlayVisuals(),
+      ),
+      GoRoute(
+        path: StoriesDownload.routePath,
+        name: StoriesDownload.routeName,
+        builder: (context, state) => StoriesDownload(),
       ),
     ],
     // redirect: (context, state) {

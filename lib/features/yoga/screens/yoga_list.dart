@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
-import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/play%20visuals/screen/play_visuals.dart';
@@ -143,9 +143,15 @@ class VerticalStepperList extends StatelessWidget {
                                 isActive
                                     ? LinearGradient(
                                       colors: [
-                                        HexColor('#6E40F9').withOpacity(0.8),
-                                        HexColor('#A569FB').withOpacity(0.8),
-                                        HexColor('#CE89FF').withOpacity(0.8),
+                                        HexColor(
+                                          '#6E40F9',
+                                        ).withValues(alpha: 0.8),
+                                        HexColor(
+                                          '#A569FB',
+                                        ).withValues(alpha: 0.8),
+                                        HexColor(
+                                          '#CE89FF',
+                                        ).withValues(alpha: 0.8),
                                       ],
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter,
@@ -163,44 +169,19 @@ class VerticalStepperList extends StatelessWidget {
                       child: Container(
                         width: 32,
                         height: 32,
-                        decoration: BoxDecoration(
-                          color:
-                              isActive
-                                  ? AppColors.purple.withOpacity(0.3)
-                                  : Colors.grey.withOpacity(0.2),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Container(
-                          margin: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient:
-                                isActive
-                                    ? LinearGradient(
-                                      colors: [
-                                        HexColor('#6E40F9').withOpacity(0.8),
-                                        HexColor('#A569FB').withOpacity(0.8),
-                                        HexColor('#CE89FF').withOpacity(0.8),
-                                      ],
-                                    )
-                                    : null,
-                            color: isActive ? null : Colors.grey.shade300,
-                          ),
-                          child: Container(
-                            margin: const EdgeInsets.all(1),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                              border: Border.all(
-                                width: 2,
-                                color:
-                                    isActive
-                                        ? HexColor('#6E40F9')
-                                        : Colors.grey,
-                              ),
-                            ),
-                          ),
-                        ),
+                        decoration: BoxDecoration(shape: BoxShape.circle),
+                        child:
+                            activeIndex == index
+                                ? SvgPicture.asset(
+                                  Assets.icons.currentLevelIcon,
+                                )
+                                : index < activeIndex
+                                ? SvgPicture.asset(
+                                  Assets.icons.completedLevelIcon,
+                                )
+                                : SvgPicture.asset(
+                                  Assets.icons.upcomingLevelIcon,
+                                ),
                       ),
                     ),
                   ],
@@ -218,7 +199,7 @@ class VerticalStepperList extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
+                        color: Colors.black.withValues(alpha: 0.04),
                         blurRadius: 6,
                         offset: const Offset(0, 2),
                       ),
