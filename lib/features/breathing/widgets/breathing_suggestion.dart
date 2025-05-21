@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
-import 'package:mindfulminis/features/home/widgets/common_widgets/total_timing_widget.dart';
-import 'package:mindfulminis/features/yoga/screens/yoga_list.dart';
+
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
+
+import '../../play visuals/screen/play_visuals.dart';
 
 class BreathingSuggestion extends StatelessWidget {
   const BreathingSuggestion({super.key});
@@ -39,7 +39,7 @@ class BreathingSuggestion extends StatelessWidget {
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () {
-                  sl<GoRouter>().pushNamed(YogaList.routeName);
+                  sl<GoRouter>().pushNamed(PlayVisuals.routeName);
                 },
                 child: Stack(
                   children: [
@@ -49,7 +49,6 @@ class BreathingSuggestion extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                       ),
-
                       child: Image.asset(
                         Assets.dummy.meditationSuggestionCard.path,
                       ),

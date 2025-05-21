@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class CommonCloseButton extends StatelessWidget {
   final VoidCallback? onPressed;
-  const CommonCloseButton({super.key, this.onPressed});
+  final Color? borderColor;
+  const CommonCloseButton(
+      {super.key, this.onPressed, this.borderColor = Colors.grey});
 
   @override
   Widget build(BuildContext context) {
@@ -10,10 +12,9 @@ class CommonCloseButton extends StatelessWidget {
       style: IconButton.styleFrom(
         minimumSize: Size(50, 50),
         maximumSize: Size(50, 50),
-
         backgroundColor: Colors.white,
         shape: CircleBorder(),
-        side: BorderSide(color: Colors.grey),
+        side: BorderSide(color: borderColor!),
       ),
       // color: Colors.grey,
       onPressed: onPressed,

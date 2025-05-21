@@ -28,6 +28,7 @@ import 'package:mindfulminis/features/yoga/screens/yoga_list.dart';
 import 'package:mindfulminis/features/yoga/screens/yoga_main.dart';
 
 import '../features/onbaord/screens/describe_yourself.dart';
+import '../features/sidhi/screens/shidi_chat_screen.dart';
 
 // GoRouter configuration
 GoRouter buildRouter() {
@@ -168,6 +169,11 @@ GoRouter buildRouter() {
         path: StoriesDownload.routePath,
         name: StoriesDownload.routeName,
         builder: (context, state) => StoriesDownload(),
+      ),
+      GoRoute(
+        path: ShidiChatScreen.routePath,
+        name: ShidiChatScreen.routeName,
+        builder: (context, state) => ShidiChatScreen(),
       ),
     ],
     // redirect: (context, state) {

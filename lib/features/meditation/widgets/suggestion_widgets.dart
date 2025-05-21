@@ -8,6 +8,8 @@ import 'package:mindfulminis/features/yoga/screens/yoga_list.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
 
+import '../../play visuals/screen/play_visuals.dart';
+
 class SuggestionWidgets extends StatelessWidget {
   const SuggestionWidgets({super.key});
 
@@ -39,7 +41,7 @@ class SuggestionWidgets extends StatelessWidget {
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () {
-                  sl<GoRouter>().pushNamed(YogaList.routeName);
+                  sl<GoRouter>().pushNamed(PlayVisuals.routeName);
                 },
                 child: Stack(
                   children: [
@@ -49,7 +51,6 @@ class SuggestionWidgets extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                       ),
-
                       child: Image.asset(
                         Assets.dummy.meditationSuggestionCard.path,
                       ),

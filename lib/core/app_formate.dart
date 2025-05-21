@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class AppFormate {
   static String formatAMPM(TimeOfDay time) {
@@ -13,5 +14,19 @@ class AppFormate {
     final minutes = twoDigits(duration.inMinutes.remainder(60));
     final seconds = twoDigits(duration.inSeconds.remainder(60));
     return '$minutes:$seconds';
+  }
+
+  static String formatChatDate(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final aDate = DateTime(date.year, date.month, date.day);
+
+    if (aDate == today) {
+      return "Today";
+    } else if (aDate == today.subtract(Duration(days: 1))) {
+      return "Yesterday";
+    } else {
+      return DateFormat.yMMMd().format(date); // e.g. Apr 12, 2025
+    }
   }
 }

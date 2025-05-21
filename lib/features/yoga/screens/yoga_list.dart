@@ -26,11 +26,9 @@ class YogaList extends StatelessWidget {
             Space.h32,
             Stack(
               alignment: Alignment.center,
-
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                   children: [
                     IconButton(
                       onPressed: () {
@@ -41,13 +39,11 @@ class YogaList extends StatelessWidget {
                     SizedBox(width: 48),
                   ],
                 ),
-
                 Center(
                   child: Text('Morning yoga', style: TextStyle(fontSize: 17)),
                 ),
               ],
             ),
-
             Padding(
               padding: EdgeInsets.all(12),
               child: Column(
@@ -139,24 +135,23 @@ class VerticalStepperList extends StatelessWidget {
                         child: Container(
                           width: 4,
                           decoration: BoxDecoration(
-                            gradient:
-                                isActive
-                                    ? LinearGradient(
-                                      colors: [
-                                        HexColor(
-                                          '#6E40F9',
-                                        ).withValues(alpha: 0.8),
-                                        HexColor(
-                                          '#A569FB',
-                                        ).withValues(alpha: 0.8),
-                                        HexColor(
-                                          '#CE89FF',
-                                        ).withValues(alpha: 0.8),
-                                      ],
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                    )
-                                    : null,
+                            gradient: isActive
+                                ? LinearGradient(
+                                    colors: [
+                                      HexColor(
+                                        '#6E40F9',
+                                      ).withValues(alpha: 0.8),
+                                      HexColor(
+                                        '#A569FB',
+                                      ).withValues(alpha: 0.8),
+                                      HexColor(
+                                        '#CE89FF',
+                                      ).withValues(alpha: 0.8),
+                                    ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                  )
+                                : null,
                             color: isActive ? null : Colors.grey.shade300,
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -170,18 +165,17 @@ class VerticalStepperList extends StatelessWidget {
                         width: 32,
                         height: 32,
                         decoration: BoxDecoration(shape: BoxShape.circle),
-                        child:
-                            activeIndex == index
+                        child: activeIndex == index
+                            ? SvgPicture.asset(
+                                Assets.icons.currentLevelIcon,
+                              )
+                            : index < activeIndex
                                 ? SvgPicture.asset(
-                                  Assets.icons.currentLevelIcon,
-                                )
-                                : index < activeIndex
-                                ? SvgPicture.asset(
-                                  Assets.icons.completedLevelIcon,
-                                )
+                                    Assets.icons.completedLevelIcon,
+                                  )
                                 : SvgPicture.asset(
-                                  Assets.icons.upcomingLevelIcon,
-                                ),
+                                    Assets.icons.upcomingLevelIcon,
+                                  ),
                       ),
                     ),
                   ],

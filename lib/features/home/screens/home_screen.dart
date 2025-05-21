@@ -9,9 +9,8 @@ import 'package:mindfulminis/features/home/widgets/meditation/meditation.dart';
 import 'package:mindfulminis/features/home/widgets/stories/stories.dart';
 import 'package:mindfulminis/features/home/widgets/yoga_flow/yoga_flow.dart';
 import 'package:mindfulminis/features/routine/widgets/myroutine_brief_card.dart';
+import 'package:mindfulminis/features/subscription/widgets/subscription_sheet.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-
-import '../widgets/create_routine_button/create_routine_button.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -60,7 +59,6 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Column(

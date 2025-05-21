@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:lottie/lottie.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/play%20visuals/models/audolyric.dart';
@@ -26,13 +27,13 @@ class _PlayVisualsState extends State<PlayVisuals>
   bool startAnimation = false;
   late AnimationController _controller;
   late Animation<Offset> _textOffsetAnimation;
-  late Animation<double> _scaleAnimation;
-  late Animation<double> _scaleVectorsAnimation;
+  // late Animation<double> _scaleAnimation;
+  // late Animation<double> _scaleVectorsAnimation;
 
-  late final Animation<Offset> _purpleSlideAnimation;
-  late final Animation<Offset> _redSlideAnimation;
-  late final Animation<Offset> _yellowSlideAnimation;
-  late final Animation<Offset> _greenSlideAnimation;
+  // late final Animation<Offset> _purpleSlideAnimation;
+  // late final Animation<Offset> _redSlideAnimation;
+  // late final Animation<Offset> _yellowSlideAnimation;
+  // late final Animation<Offset> _greenSlideAnimation;
 
   //
 
@@ -46,7 +47,7 @@ class _PlayVisualsState extends State<PlayVisuals>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 600),
     );
 
     _textOffsetAnimation = Tween<Offset>(
@@ -54,34 +55,34 @@ class _PlayVisualsState extends State<PlayVisuals>
       end: const Offset(0, 10), // move text downward off-screen
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.9,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    // _scaleAnimation = Tween<double>(
+    //   begin: 1.0,
+    //   end: 0.9,
+    // ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
-    _purpleSlideAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: const Offset(-0.1, 0), // towards center
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    // _purpleSlideAnimation = Tween<Offset>(
+    //   begin: Offset.zero,
+    //   end: const Offset(-0.1, 0), // towards center
+    // ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
-    _redSlideAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: const Offset(-0.1, 0), // towards center
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-    _yellowSlideAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: const Offset(0, 0), // towards center
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    // _redSlideAnimation = Tween<Offset>(
+    //   begin: Offset.zero,
+    //   end: const Offset(-0.1, 0), // towards center
+    // ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    // _yellowSlideAnimation = Tween<Offset>(
+    //   begin: Offset.zero,
+    //   end: const Offset(0, 0), // towards center
+    // ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
-    _greenSlideAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: const Offset(-0.3, 0), // towards center
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    // _greenSlideAnimation = Tween<Offset>(
+    //   begin: Offset.zero,
+    //   end: const Offset(-0.3, 0), // towards center
+    // ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
-    _scaleVectorsAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.5,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    // _scaleVectorsAnimation = Tween<double>(
+    //   begin: 1.0,
+    //   end: 0.5,
+    // ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     //
 
@@ -119,7 +120,11 @@ class _PlayVisualsState extends State<PlayVisuals>
     setState(() {
       startAnimation = true;
     });
-    _controller.forward();
+    _controller.forward(from: 0.0);
+  }
+
+  void _playAnimation() {
+    _controller.forward(from: 0.0); // Play from start
   }
 
   @override
@@ -133,58 +138,70 @@ class _PlayVisualsState extends State<PlayVisuals>
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Positioned(
-              top: 0,
-              left: 0,
-              child: SlideTransition(
-                position: _yellowSlideAnimation,
+            // Positioned(
+            //   top: 0,
+            //   left: 0,
+            //   child: SlideTransition(
+            //     position: _yellowSlideAnimation,
 
-                child: ScaleTransition(
-                  scale: _scaleVectorsAnimation,
+            //     child: ScaleTransition(
+            //       scale: _scaleVectorsAnimation,
 
-                  child: Image.asset(Assets.vectors.playYellowTopLeft.path),
-                ),
-              ),
+            //       child: Image.asset(Assets.vectors.playYellowTopLeft.path),
+            //     ),
+            //   ),
+            // ),
+
+            // Positioned(
+            //   bottom: 50,
+            //   right: 0,
+            //   top: 200,
+            //   child: SlideTransition(
+            //     position: _redSlideAnimation,
+            //     child: ScaleTransition(
+            //       scale: _scaleVectorsAnimation,
+            //       child: Image.asset(Assets.vectors.playRedRight.path),
+            //     ),
+            //   ),
+            // ),
+
+            // // Purple Left Path (animate to center from left)
+            // Positioned(
+            //   bottom: 100,
+            //   left: 0,
+            //   child: SlideTransition(
+            //     position: _purpleSlideAnimation,
+            //     child: ScaleTransition(
+            //       scale: _scaleVectorsAnimation,
+            //       child: Image.asset(
+            //         height: 300,
+            //         startAnimation
+            //             ? Assets.vectors.purpleVector2.path
+            //             : Assets.vectors.playPurpleLeft.path,
+            //       ),
+            //     ),
+            //   ),
+            // ),
+
+            // if (!startAnimation) ...[
+            //   Positioned(
+            //     bottom: -50,
+            //     child: Image.asset(Assets.vectors.playGreenBottom.path),
+            //   ),
+            // ],
+
+            //lottie
+            Lottie.asset(
+              width: double.infinity,
+              fit: BoxFit.fill,
+              Assets.vectors.flow146, // Your Lottie path
+              controller: _controller,
+              onLoaded: (composition) {
+                _controller.duration = composition.duration;
+              },
             ),
 
-            Positioned(
-              bottom: 50,
-              right: 0,
-              top: 200,
-              child: SlideTransition(
-                position: _redSlideAnimation,
-                child: ScaleTransition(
-                  scale: _scaleVectorsAnimation,
-                  child: Image.asset(Assets.vectors.playRedRight.path),
-                ),
-              ),
-            ),
-
-            // Purple Left Path (animate to center from left)
-            Positioned(
-              bottom: 100,
-              left: 0,
-              child: SlideTransition(
-                position: _purpleSlideAnimation,
-                child: ScaleTransition(
-                  scale: _scaleVectorsAnimation,
-                  child: Image.asset(
-                    height: 300,
-                    startAnimation
-                        ? Assets.vectors.purpleVector2.path
-                        : Assets.vectors.playPurpleLeft.path,
-                  ),
-                ),
-              ),
-            ),
-
-            if (!startAnimation) ...[
-              Positioned(
-                bottom: -50,
-                child: Image.asset(Assets.vectors.playGreenBottom.path),
-              ),
-            ],
-            // Bottom content
+            // top app bar icon
             Positioned(
               top: 50,
               left: 12,
@@ -196,7 +213,6 @@ class _PlayVisualsState extends State<PlayVisuals>
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(100),
-
                       boxShadow: [
                         BoxShadow(
                           color: AppColors.purple.withValues(alpha: 0.5),
@@ -217,7 +233,6 @@ class _PlayVisualsState extends State<PlayVisuals>
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(100),
-
                       boxShadow: [
                         BoxShadow(
                           color: AppColors.purple.withValues(alpha: 0.5),
@@ -235,7 +250,7 @@ class _PlayVisualsState extends State<PlayVisuals>
                 ],
               ),
             ),
-
+//lyricess text
             Positioned(
               top: 110,
               left: 0,
@@ -252,46 +267,34 @@ class _PlayVisualsState extends State<PlayVisuals>
                 ),
               ),
             ),
+
+//content
             Positioned(
               left: 0,
               right: 0,
-              bottom: height * 0.08,
+              bottom: height * 0.06,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SlideTransition(
-                    position: Tween<Offset>(
-                      begin: Offset.zero,
-                      end: const Offset(0, 0.3),
-                    ).animate(
-                      CurvedAnimation(
-                        parent: _controller,
-                        curve: Curves.easeInOut,
-                      ),
-                    ),
-                    child: ScaleTransition(
-                      scale: _scaleAnimation,
-                      child: Image.asset(Assets.vectors.boyYogaPlay.path),
-                    ),
-                  ),
-
-                  SlideTransition(
                     position: _textOffsetAnimation,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Mountain Pose',
+                          textAlign: TextAlign.center,
+                          'Tenali Raman and the Wise Judgment',
                           style: const TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         const Text(
-                          'A Morning Wake-Up Yoga',
+                          textAlign: TextAlign.center,
+                          "The Mango Tree teaches that true prosperity comes from unity and sharing, showing how cooperation fosters abundance and harmony for all.",
                           style: TextStyle(color: Colors.black45),
                         ),
                         Space.h12,
-
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 18),
                           height: 8,
@@ -305,7 +308,7 @@ class _PlayVisualsState extends State<PlayVisuals>
                   ),
                   AnimatedOpacity(
                     opacity: !startAnimation ? 0 : 1,
-                    duration: Duration(milliseconds: 1000),
+                    duration: Duration(milliseconds: 600),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: AudioProgressWithLyrics(
@@ -315,7 +318,7 @@ class _PlayVisualsState extends State<PlayVisuals>
                       ),
                     ),
                   ),
-                  Space.h12,
+                  if (startAnimation) Space.h12,
                   SizedBox(
                     height: 60,
                     child: Stack(
@@ -401,7 +404,10 @@ class _PlayVisualsState extends State<PlayVisuals>
         backgroundColor: Colors.grey.shade300,
       ),
       onPressed: start,
-      icon: SvgPicture.asset(Assets.icons.playButton),
+      icon: SvgPicture.asset(
+        Assets.icons.playButton,
+        colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
+      ),
     );
   }
 

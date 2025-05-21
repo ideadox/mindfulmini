@@ -147,6 +147,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/amazing_emoji.svg
   String get amazingEmoji => 'assets/icons/amazing_emoji.svg';
 
+  /// File path: assets/icons/arrow_back.svg
+  String get arrowBack => 'assets/icons/arrow_back.svg';
+
   /// File path: assets/icons/back_10.svg
   String get back10 => 'assets/icons/back_10.svg';
 
@@ -251,6 +254,13 @@ class $AssetsIconsGen {
   /// File path: assets/icons/sad_emoji.svg
   String get sadEmoji => 'assets/icons/sad_emoji.svg';
 
+  /// File path: assets/icons/shidi_icon.png
+  AssetGenImage get shidiIcon =>
+      const AssetGenImage('assets/icons/shidi_icon.png');
+
+  /// File path: assets/icons/shidi_voice.svg
+  String get shidiVoice => 'assets/icons/shidi_voice.svg';
+
   /// File path: assets/icons/sun_dim_icon.svg
   String get sunDimIcon => 'assets/icons/sun_dim_icon.svg';
 
@@ -293,6 +303,7 @@ class $AssetsIconsGen {
     activityUnselected,
     alarm,
     amazingEmoji,
+    arrowBack,
     back10,
     completedLevelIcon,
     confushedEmoji,
@@ -327,6 +338,8 @@ class $AssetsIconsGen {
     routineSelected,
     routineUnselected,
     sadEmoji,
+    shidiIcon,
+    shidiVoice,
     sunDimIcon,
     sunIcon,
     timer,
@@ -353,6 +366,9 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/Header.png
   AssetGenImage get header => const AssetGenImage('assets/images/Header.png');
+
+  /// File path: assets/images/Partten.png
+  AssetGenImage get partten => const AssetGenImage('assets/images/Partten.png');
 
   /// File path: assets/images/Star.svg
   String get star => 'assets/images/Star.svg';
@@ -495,11 +511,22 @@ class $AssetsImagesGen {
   AssetGenImage get storyRoutine =>
       const AssetGenImage('assets/images/story_routine.png');
 
+  /// File path: assets/images/subscription_main.png
+  AssetGenImage get subscriptionMain =>
+      const AssetGenImage('assets/images/subscription_main.png');
+
+  /// File path: assets/images/subscription_top.svg
+  String get subscriptionTop => 'assets/images/subscription_top.svg';
+
   /// File path: assets/images/verifiedlottie.json
   String get verifiedlottie => 'assets/images/verifiedlottie.json';
 
+  /// File path: assets/images/white_shade.png
+  AssetGenImage get whiteShadePng =>
+      const AssetGenImage('assets/images/white_shade.png');
+
   /// File path: assets/images/white_shade.svg
-  String get whiteShade => 'assets/images/white_shade.svg';
+  String get whiteShadeSvg => 'assets/images/white_shade.svg';
 
   /// File path: assets/images/yoga_main_header.png
   AssetGenImage get yogaMainHeader =>
@@ -514,6 +541,7 @@ class $AssetsImagesGen {
     ellipse709512,
     ellipse70951,
     header,
+    partten,
     star,
     star1,
     star2,
@@ -555,8 +583,11 @@ class $AssetsImagesGen {
     storiesTopHeader,
     storiesTree,
     storyRoutine,
+    subscriptionMain,
+    subscriptionTop,
     verifiedlottie,
-    whiteShade,
+    whiteShadePng,
+    whiteShadeSvg,
     yogaMainHeader,
     yogaRoutine,
   ];
@@ -692,6 +723,12 @@ class $AssetsTabiconsGen {
 class $AssetsVectorsGen {
   const $AssetsVectorsGen();
 
+  /// File path: assets/vectors/A.png
+  AssetGenImage get a => const AssetGenImage('assets/vectors/A.png');
+
+  /// File path: assets/vectors/Flow 146.json
+  String get flow146 => 'assets/vectors/Flow 146.json';
+
   /// File path: assets/vectors/boy_yoga_play.png
   AssetGenImage get boyYogaPlay =>
       const AssetGenImage('assets/vectors/boy_yoga_play.png');
@@ -740,6 +777,8 @@ class $AssetsVectorsGen {
 
   /// List of all assets
   List<dynamic> get values => [
+    a,
+    flow146,
     boyYogaPlay,
     myroutineCenter,
     myroutineRightPng,
