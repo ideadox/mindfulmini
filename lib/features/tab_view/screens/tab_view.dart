@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mindfulminis/features/lottie_ex.dart';
 
 import 'package:mindfulminis/features/tab_view/widgets/icon_animate_switcher.dart';
 
@@ -42,6 +43,7 @@ class TabView extends StatelessWidget {
                 //     builder: (context) {
                 //       return SubscriptionSheet();
                 //     });
+
                 sl<GoRouter>().pushNamed(ShidiChatScreen.routeName);
               },
               icon: Image.asset(Assets.icons.floatingButton.path),

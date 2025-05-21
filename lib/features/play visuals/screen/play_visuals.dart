@@ -23,9 +23,11 @@ class PlayVisuals extends StatefulWidget {
 }
 
 class _PlayVisualsState extends State<PlayVisuals>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   bool startAnimation = false;
   late AnimationController _controller;
+  late AnimationController _lottiController;
+
   late Animation<Offset> _textOffsetAnimation;
   // late Animation<double> _scaleAnimation;
   // late Animation<double> _scaleVectorsAnimation;
@@ -37,6 +39,7 @@ class _PlayVisualsState extends State<PlayVisuals>
 
   //
 
+  bool _showLottie = false;
   late final Animation<Offset> _leftMostSlide;
   late final Animation<Offset> _leftSlide;
   late final Animation<Offset> _rightSlide;
@@ -50,41 +53,12 @@ class _PlayVisualsState extends State<PlayVisuals>
       duration: const Duration(milliseconds: 600),
     );
 
+    _lottiController = AnimationController(vsync: this);
+
     _textOffsetAnimation = Tween<Offset>(
       begin: Offset.zero,
       end: const Offset(0, 10), // move text downward off-screen
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-
-    // _scaleAnimation = Tween<double>(
-    //   begin: 1.0,
-    //   end: 0.9,
-    // ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-
-    // _purpleSlideAnimation = Tween<Offset>(
-    //   begin: Offset.zero,
-    //   end: const Offset(-0.1, 0), // towards center
-    // ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-
-    // _redSlideAnimation = Tween<Offset>(
-    //   begin: Offset.zero,
-    //   end: const Offset(-0.1, 0), // towards center
-    // ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-    // _yellowSlideAnimation = Tween<Offset>(
-    //   begin: Offset.zero,
-    //   end: const Offset(0, 0), // towards center
-    // ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-
-    // _greenSlideAnimation = Tween<Offset>(
-    //   begin: Offset.zero,
-    //   end: const Offset(-0.3, 0), // towards center
-    // ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-
-    // _scaleVectorsAnimation = Tween<double>(
-    //   begin: 1.0,
-    //   end: 0.5,
-    // ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-
-    //
 
     // Animate left buttons
     // Animate like spaceEvenly (further out = larger offset)
@@ -107,20 +81,26 @@ class _PlayVisualsState extends State<PlayVisuals>
       begin: Offset.zero,
       end: const Offset(2.8, 0),
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    Future.delayed(Duration(milliseconds: 300), () {
+      setState(() {
+        _showLottie = true;
+      });
+    });
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _lottiController.dispose();
     super.dispose();
   }
 
   void start() {
-    log('egnoer');
     setState(() {
       startAnimation = true;
     });
-    _controller.forward(from: 0.0);
+    _controller.forward();
+    _lottiController.forward(from: 0.0);
   }
 
   void _playAnimation() {
@@ -138,68 +118,24 @@ class _PlayVisualsState extends State<PlayVisuals>
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // Positioned(
-            //   top: 0,
-            //   left: 0,
-            //   child: SlideTransition(
-            //     position: _yellowSlideAnimation,
-
-            //     child: ScaleTransition(
-            //       scale: _scaleVectorsAnimation,
-
-            //       child: Image.asset(Assets.vectors.playYellowTopLeft.path),
-            //     ),
-            //   ),
-            // ),
-
-            // Positioned(
-            //   bottom: 50,
-            //   right: 0,
-            //   top: 200,
-            //   child: SlideTransition(
-            //     position: _redSlideAnimation,
-            //     child: ScaleTransition(
-            //       scale: _scaleVectorsAnimation,
-            //       child: Image.asset(Assets.vectors.playRedRight.path),
-            //     ),
-            //   ),
-            // ),
-
-            // // Purple Left Path (animate to center from left)
-            // Positioned(
-            //   bottom: 100,
-            //   left: 0,
-            //   child: SlideTransition(
-            //     position: _purpleSlideAnimation,
-            //     child: ScaleTransition(
-            //       scale: _scaleVectorsAnimation,
-            //       child: Image.asset(
-            //         height: 300,
-            //         startAnimation
-            //             ? Assets.vectors.purpleVector2.path
-            //             : Assets.vectors.playPurpleLeft.path,
-            //       ),
-            //     ),
-            //   ),
-            // ),
-
-            // if (!startAnimation) ...[
-            //   Positioned(
-            //     bottom: -50,
-            //     child: Image.asset(Assets.vectors.playGreenBottom.path),
-            //   ),
-            // ],
-
             //lottie
-            Lottie.asset(
-              width: double.infinity,
-              fit: BoxFit.fill,
-              Assets.vectors.flow146, // Your Lottie path
-              controller: _controller,
-              onLoaded: (composition) {
-                _controller.duration = composition.duration;
-              },
-            ),
+            if (_showLottie)
+              Positioned(
+                left: 0,
+                top: 0,
+                right: 0,
+                bottom: MediaQuery.sizeOf(context).height * 0.1,
+                child: Lottie.asset(
+                  // width: double.infinity,
+                  backgroundLoading: true,
+                  fit: BoxFit.fill,
+                  Assets.vectors.flow146, // Your Lottie path
+                  controller: _lottiController,
+                  onLoaded: (composition) {
+                    _lottiController.duration = composition.duration;
+                  },
+                ),
+              ),
 
             // top app bar icon
             Positioned(
