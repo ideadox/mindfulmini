@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mindfulminis/common/widgets/gradient_radio_button.dart';
-import 'package:mindfulminis/core/app_colors.dart';
 
 class CreateRoutineConatiner extends StatelessWidget {
   final String icon;

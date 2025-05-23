@@ -1,18 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mindfulminis/common/widgets/custom_back_button.dart';
-import 'package:mindfulminis/common/widgets/gradient_button.dart';
-import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/stories/widgets/short_stories.dart';
 import 'package:mindfulminis/features/stories/widgets/stories_categories.dart';
 import 'package:mindfulminis/features/stories/widgets/suggestion_widget.dart';
-import 'package:mindfulminis/features/yoga/widgets/create_calm/create_calm.dart';
-import 'package:mindfulminis/features/yoga/widgets/deep_sleep/deep_sleep.dart';
-import 'package:mindfulminis/features/yoga/widgets/featured_collection/featured_collection.dart';
-import 'package:mindfulminis/features/yoga/widgets/recent_collection/recent_collection.dart';
-import 'package:mindfulminis/features/yoga/widgets/starter_deck/starter_deck.dart';
-import 'package:mindfulminis/features/yoga/widgets/warm-up/warm_up.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 
 class StoriesScreen extends StatelessWidget {

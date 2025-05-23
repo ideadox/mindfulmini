@@ -31,7 +31,8 @@ class SubscriptionSheet extends StatelessWidget {
               Container(
                 height: 200,
                 decoration: BoxDecoration(
-                    color: AppColors.purple.withValues(alpha: 0.3)),
+                  color: AppColors.purple.withValues(alpha: 0.3),
+                ),
               ),
               Image.asset(Assets.images.subscriptionMain.path),
               Image.asset(Assets.images.whiteShadePng.path),
@@ -43,30 +44,33 @@ class SubscriptionSheet extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          height: 150,
-                        ),
+                        SizedBox(height: 150),
                         Text(
                           'Unlock Mindful Minis',
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         Space.h20,
                         TextRow(text: 'Limited content to explore'),
-                        Space.h12,
+                        Space.h8,
                         TextRow(
-                            text:
-                                'Basic Yoga Practices for building strength, flexibility, and mindfulness'),
-                        Space.h12,
+                          text:
+                              'Basic Yoga Practices for building strength, flexibility, and mindfulness',
+                        ),
+                        Space.h8,
                         TextRow(
-                            text:
-                                'Access to selected Mindful-minis moral stories'),
-                        Space.h12,
+                          text:
+                              'Access to selected Mindful-minis moral stories',
+                        ),
+                        Space.h8,
                         TextRow(text: 'Limited music tracks to chill out'),
-                        Space.h12,
+                        Space.h8,
                         TextRow(
-                            text:
-                                "Basic mood tracking to help recognize kids' emotional patterns and triggers"),
+                          text:
+                              "Basic mood tracking to help recognize kids' emotional patterns and triggers",
+                        ),
                         Space.h20,
                         Space.h20,
                         PlanCard(
@@ -83,32 +87,39 @@ class SubscriptionSheet extends StatelessWidget {
                         ),
                         Space.h20,
                         GradientButton(
-                            onPressed: () {},
-                            child: Center(
-                                child: Text(
+                          onPressed: () {},
+                          child: Center(
+                            child: Text(
                               'Start your 7-day Free Trails',
-                              style: AppTextTheme.mainButtonTextStyle(context)
-                                  .titleLarge,
-                            )))
+                              style:
+                                  AppTextTheme.mainButtonTextStyle(
+                                    context,
+                                  ).titleLarge,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ),
               ),
               Positioned(
-                  right: 20,
-                  top: 20,
-                  child: CommonCloseButton(
-                    onPressed: () {
-                      sl<GoRouter>().pop();
-                    },
-                    borderColor: AppColors.purple,
-                  )),
+                right: 20,
+                top: 20,
+                child: CommonCloseButton(
+                  onPressed: () {
+                    sl<GoRouter>().pop();
+                  },
+                  borderColor: AppColors.purple,
+                ),
+              ),
             ],
           ),
         ),
         Positioned(
-            top: 0, child: SvgPicture.asset(Assets.images.subscriptionTop))
+          top: 0,
+          child: SvgPicture.asset(Assets.images.subscriptionTop),
+        ),
       ],
     );
   }
@@ -125,11 +136,15 @@ class TextRow extends StatelessWidget {
         CommonCheckIcon(),
         Space.w12,
         Expanded(
-            child: Text(
-          text,
-          style: TextStyle(
-              color: Colors.black54, fontSize: 14, fontWeight: FontWeight.w300),
-        ))
+          child: Text(
+            text,
+            style: TextStyle(
+              color: Colors.black54,
+              fontSize: 14,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+        ),
       ],
     );
   }

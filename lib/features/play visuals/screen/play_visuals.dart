@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -422,11 +421,11 @@ class GradientProgressBar extends StatelessWidget {
   final BorderRadiusGeometry borderRadius;
 
   const GradientProgressBar({
-    Key? key,
+    super.key,
     required this.progress,
     this.height = 8,
     this.borderRadius = const BorderRadius.all(Radius.circular(8)),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -9,7 +9,6 @@ import 'package:mindfulminis/features/home/widgets/meditation/meditation.dart';
 import 'package:mindfulminis/features/home/widgets/stories/stories.dart';
 import 'package:mindfulminis/features/home/widgets/yoga_flow/yoga_flow.dart';
 import 'package:mindfulminis/features/routine/widgets/myroutine_brief_card.dart';
-import 'package:mindfulminis/features/subscription/widgets/subscription_sheet.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 
 class HomeScreen extends StatelessWidget {

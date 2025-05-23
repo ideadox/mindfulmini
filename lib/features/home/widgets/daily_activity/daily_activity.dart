@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
-import 'package:mindfulminis/features/home/widgets/common_widgets/total_timing_widget.dart';
 
 import '../../../../gen/assets.gen.dart';
 

@@ -16,7 +16,7 @@ class PhoneAuthhProvider with ChangeNotifier {
   TextEditingController phoneNumerController = TextEditingController();
   String? countryCode;
   String? code;
-  bool _isLoading = false;
+  final bool _isLoading = false;
   String? error;
   bool get isLoading => _isLoading;
   String get phoneNumber => countryCode! + phoneNumerController.text.trim();

@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mindfulminis/common/widgets/custom_back_button.dart';
-import 'package:mindfulminis/common/widgets/custom_gradient_text.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
-import 'package:mindfulminis/common/widgets/gradient_checkbox.dart';
 import 'package:mindfulminis/common/widgets/gradient_scaffold.dart';
-import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/routine/providers/create_routine_provider.dart';
 import 'package:mindfulminis/features/routine/screens/remainder_confirmation_screen.dart';
 import 'package:mindfulminis/features/routine/widgets/create_routine_conatiner.dart';
 import 'package:mindfulminis/features/routine/widgets/goal_routine_container.dart';
-import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:provider/provider.dart';
 
 class CreateRoutineScreen extends StatefulWidget {

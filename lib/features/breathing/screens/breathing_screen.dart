@@ -7,15 +7,6 @@ import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/breathing/providers/breathing_provider.dart';
 import 'package:mindfulminis/features/breathing/widgets/breathing_category.dart';
 import 'package:mindfulminis/features/breathing/widgets/breathing_suggestion.dart';
-import 'package:mindfulminis/features/meditation/providers/meditation_provider.dart';
-import 'package:mindfulminis/features/meditation/widgets/category_widget.dart';
-import 'package:mindfulminis/features/meditation/widgets/suggestion_widgets.dart';
-import 'package:mindfulminis/features/yoga/widgets/create_calm/create_calm.dart';
-import 'package:mindfulminis/features/yoga/widgets/deep_sleep/deep_sleep.dart';
-import 'package:mindfulminis/features/yoga/widgets/featured_collection/featured_collection.dart';
-import 'package:mindfulminis/features/yoga/widgets/recent_collection/recent_collection.dart';
-import 'package:mindfulminis/features/yoga/widgets/starter_deck/starter_deck.dart';
-import 'package:mindfulminis/features/yoga/widgets/warm-up/warm_up.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:provider/provider.dart';
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mindfulminis/features/lottie_ex.dart';
 
 import 'package:mindfulminis/features/tab_view/widgets/icon_animate_switcher.dart';
 
@@ -12,7 +11,6 @@ import 'package:provider/provider.dart';
 import '../../../common/bottom_bar/src/custom_navigation_bar_item.dart';
 import '../../../common/bottom_bar/src/custome_navigation_bar.dart';
 import '../../sidhi/screens/shidi_chat_screen.dart';
-import '../../subscription/widgets/subscription_sheet.dart';
 import '../providers/tab_view_provider.dart';
 import '../widgets/tab_text.dart';
 
@@ -23,7 +21,7 @@ class TabView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<GlobalKey<IconFrameAnimatorState>> _animatorKeys = [
+    final List<GlobalKey<IconFrameAnimatorState>> animatorKeys = [
       GlobalKey<IconFrameAnimatorState>(),
       GlobalKey<IconFrameAnimatorState>(),
     ];
@@ -37,12 +35,13 @@ class TabView extends StatelessWidget {
             floatingActionButton: IconButton(
               onPressed: () {
                 // showModalBottomSheet(
-                //     context: context,
-                //     isScrollControlled: true,
-                //     backgroundColor: Colors.transparent,
-                //     builder: (context) {
-                //       return SubscriptionSheet();
-                //     });
+                //   context: context,
+                //   isScrollControlled: true,
+                //   backgroundColor: Colors.transparent,
+                //   builder: (context) {
+                //     return SubscriptionSheet();
+                //   },
+                // );
 
                 sl<GoRouter>().pushNamed(ShidiChatScreen.routeName);
               },

@@ -15,7 +15,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-library custom_navigation_bar;
+library;
 
 export 'src/custom_navigation_bar_item.dart';
 export 'src/custome_navigation_bar.dart';

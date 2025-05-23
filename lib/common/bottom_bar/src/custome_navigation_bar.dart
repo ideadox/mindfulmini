@@ -29,7 +29,7 @@ class CustomNavigationBar extends StatefulWidget {
   /// create a [CustomNavigationBar]
   ///
   const CustomNavigationBar({
-    Key? key,
+    super.key,
     required this.items,
     this.selectedColor,
     this.unSelectedColor,
@@ -46,11 +46,9 @@ class CustomNavigationBar extends StatefulWidget {
     this.isFloating = false,
     this.blurEffect = false,
     this.opacity = 0.8,
-  }) : assert(items != null),
-       assert(scaleFactor <= 0.5, 'Scale factor must smaller than 0.5'),
+  }) : assert(scaleFactor <= 0.5, 'Scale factor must smaller than 0.5'),
        assert(scaleFactor > 0, 'Scale factor must bigger than 0'),
-       assert(0 <= currentIndex && currentIndex < items.length),
-       super(key: key);
+       assert(0 <= currentIndex && currentIndex < items.length);
 
   ///
   /// scale factor for the icon scale animation effect.
@@ -190,14 +188,14 @@ class _CustomNavigationBarState extends State<CustomNavigationBar>
       vsync: this,
       duration: Duration(milliseconds: 300),
     );
-    CurvedAnimation _curvedAnimation = CurvedAnimation(
+    CurvedAnimation curvedAnimation = CurvedAnimation(
       parent: _controller!,
       curve: widget.bubbleCurve,
     );
-    Tween<double>(begin: 0.0, end: 1.0).animate(_curvedAnimation).addListener(
+    Tween<double>(begin: 0.0, end: 1.0).animate(curvedAnimation).addListener(
       () {
         setState(() {
-          _radiuses[index] = _maxRadius! * _curvedAnimation.value;
+          _radiuses[index] = _maxRadius! * curvedAnimation.value;
         });
       },
     );
@@ -213,16 +211,16 @@ class _CustomNavigationBarState extends State<CustomNavigationBar>
         _scaleController?.reverse();
       }
     });
-    CurvedAnimation _scaleAnimation = CurvedAnimation(
+    CurvedAnimation scaleAnimation = CurvedAnimation(
       parent: _scaleController!,
       curve: widget.scaleCurve,
       reverseCurve: widget.scaleCurve.flipped,
     );
 
-    Tween<double>(begin: 0.0, end: 1.0).animate(_scaleAnimation).addListener(
+    Tween<double>(begin: 0.0, end: 1.0).animate(scaleAnimation).addListener(
       () {
         setState(() {
-          _sizes[index] = _scaleAnimation.value * widget.scaleFactor;
+          _sizes[index] = scaleAnimation.value * widget.scaleFactor;
         });
       },
     );

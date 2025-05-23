@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class BadgeText extends StatelessWidget {
   const BadgeText({
-    Key? key,
+    super.key,
     this.count,
     this.right,
     this.show,
-  }) : super(key: key);
+  });
 
   // counter showed in notification badge
   // set to 0 will hide notification badge
@@ -24,7 +24,7 @@ class BadgeText extends StatelessWidget {
       child: show!
           ? Container(
               padding: EdgeInsets.all(2),
-              decoration: new BoxDecoration(
+              decoration: BoxDecoration(
                 color: Colors.red,
                 borderRadius: BorderRadius.circular(6),
               ),

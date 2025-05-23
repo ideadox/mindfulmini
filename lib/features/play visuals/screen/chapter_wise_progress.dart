@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_formate.dart';
 import 'dart:async';
 
