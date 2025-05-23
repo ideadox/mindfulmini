@@ -258,6 +258,9 @@ class $AssetsIconsGen {
   AssetGenImage get shidiIcon =>
       const AssetGenImage('assets/icons/shidi_icon.png');
 
+  /// File path: assets/icons/shidi_listening_active.svg
+  String get shidiListeningActive => 'assets/icons/shidi_listening_active.svg';
+
   /// File path: assets/icons/shidi_voice.svg
   String get shidiVoice => 'assets/icons/shidi_voice.svg';
 
@@ -339,6 +342,7 @@ class $AssetsIconsGen {
     routineUnselected,
     sadEmoji,
     shidiIcon,
+    shidiListeningActive,
     shidiVoice,
     sunDimIcon,
     sunIcon,
@@ -381,6 +385,9 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/add_feeling_background.svg
   String get addFeelingBackground => 'assets/images/add_feeling_background.svg';
+
+  /// File path: assets/images/ai_chat.png
+  AssetGenImage get aiChat => const AssetGenImage('assets/images/ai_chat.png');
 
   /// File path: assets/images/allset.svg
   String get allset => 'assets/images/allset.svg';
@@ -546,6 +553,7 @@ class $AssetsImagesGen {
     star1,
     star2,
     addFeelingBackground,
+    aiChat,
     allset,
     amazingFeel,
     angryFeel,

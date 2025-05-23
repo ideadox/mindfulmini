@@ -5,6 +5,7 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 class SpeechProvider with ChangeNotifier {
   final stt.SpeechToText _speech = stt.SpeechToText();
   final TextEditingController textController = TextEditingController();
+  bool showIamListeningText = false;
 
   bool _isListening = false;
   bool get isListening => _isListening;
@@ -29,6 +30,7 @@ class SpeechProvider with ChangeNotifier {
         }
       },
       onError: (val) {
+        log('error : $val');
         _error = val.errorMsg;
         _isListening = false;
         notifyListeners();
@@ -64,7 +66,17 @@ class SpeechProvider with ChangeNotifier {
           }
         },
       );
+      _handleListeningText();
     }
+  }
+
+  _handleListeningText() {
+    showIamListeningText = true;
+    notifyListeners();
+    Future.delayed(const Duration(seconds: 2), () {
+      showIamListeningText = false;
+      notifyListeners();
+    });
   }
 
   void stopListening() {

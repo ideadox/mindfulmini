@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../../../common/bottom_bar/src/custom_navigation_bar_item.dart';
 import '../../../common/bottom_bar/src/custome_navigation_bar.dart';
 import '../../sidhi/screens/shidi_chat_screen.dart';
+import '../../subscription/widgets/subscription_sheet.dart';
 import '../providers/tab_view_provider.dart';
 import '../widgets/tab_text.dart';
 
