@@ -1,5 +1,8 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mindfulminis/features/sidhi/providers/shidi_chat_provider.dart';
+import 'package:mindfulminis/injection/injection.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SpeechProvider with ChangeNotifier {
@@ -16,18 +19,38 @@ class SpeechProvider with ChangeNotifier {
 
   String? _error;
   String? get error => _error;
-
-  Future<void> initSpeech() async {
+  bool shidiChat = false;
+  ShidiChatProvider? shidiChatProvider;
+  Future<void> initSpeech({
+    bool shidi = false,
+    ShidiChatProvider? scProvider,
+  }) async {
+    if (shidi) {
+      shidiChat = shidi;
+      shidiChatProvider = scProvider;
+    }
     await _speech.initialize(
       onStatus: (val) {
         log('Speech status: $val');
-        if (val == 'notListening' || val == 'done') {
+        if (val == 'notListening') {
           _isListening = false;
           notifyListeners();
         } else if (val == 'listening') {
           _isListening = true;
           notifyListeners();
+        } else if (val == 'done') {
+          log('outside done');
+          if (shidiChat) {
+            log('done called in shsid true ${textController.text} value');
+            shidiChatProvider!.messageController.text = textController.text;
+            textController.clear;
+            sl<GoRouter>().pop(false);
+            return;
+          }
+          _isListening = false;
+          notifyListeners();
         }
+        log('staus comple');
       },
       onError: (val) {
         log('error : $val');
@@ -50,10 +73,11 @@ class SpeechProvider with ChangeNotifier {
   }
 
   void startListening() async {
-    await initSpeech();
+    // await initSpeech();
     if (!_isListening) {
       _speech.listen(
         onResult: (val) {
+          log(val.recognizedWords.toString());
           if (val.recognizedWords.isNotEmpty) {
             final newText =
                 '${textController.text} ${val.recognizedWords}'.trim();

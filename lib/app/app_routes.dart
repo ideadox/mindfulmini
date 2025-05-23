@@ -1,5 +1,6 @@
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mindfulminis/features/analytices/screens/analytic_screen.dart';
 import 'package:mindfulminis/features/authentication/screens/auth_main.dart';
 import 'package:mindfulminis/features/authentication/screens/phone_verification.dart';
 import 'package:mindfulminis/features/breathing/screens/breathing_screen.dart';
@@ -173,6 +174,12 @@ GoRouter buildRouter() {
         path: ShidiChatScreen.routePath,
         name: ShidiChatScreen.routeName,
         builder: (context, state) => ShidiChatScreen(),
+      ),
+
+      GoRoute(
+        path: AnalyticScreen.routePath,
+        name: AnalyticScreen.routeName,
+        builder: (context, state) => AnalyticScreen(),
       ),
     ],
     // redirect: (context, state) {

@@ -607,6 +607,12 @@ class $AssetsProfileIconsGen {
   /// File path: assets/profile_icons/about.svg
   String get about => 'assets/profile_icons/about.svg';
 
+  /// File path: assets/profile_icons/analy_bottom.svg
+  String get analyBottom => 'assets/profile_icons/analy_bottom.svg';
+
+  /// File path: assets/profile_icons/analy_bottom_1.svg
+  String get analyBottom1 => 'assets/profile_icons/analy_bottom_1.svg';
+
   /// File path: assets/profile_icons/anylitices.svg
   String get anylitices => 'assets/profile_icons/anylitices.svg';
 
@@ -625,6 +631,9 @@ class $AssetsProfileIconsGen {
 
   /// File path: assets/profile_icons/bottom_right.svg
   String get bottomRight => 'assets/profile_icons/bottom_right.svg';
+
+  /// File path: assets/profile_icons/current_streak.svg
+  String get currentStreak => 'assets/profile_icons/current_streak.svg';
 
   /// File path: assets/profile_icons/edit _button.png
   AssetGenImage get editButton =>
@@ -648,6 +657,9 @@ class $AssetsProfileIconsGen {
 
   /// File path: assets/profile_icons/logout.svg
   String get logout => 'assets/profile_icons/logout.svg';
+
+  /// File path: assets/profile_icons/longest_streak.svg
+  String get longestStreak => 'assets/profile_icons/longest_streak.svg';
 
   /// File path: assets/profile_icons/no_profile_png.png
   AssetGenImage get noProfilePng =>
@@ -681,12 +693,15 @@ class $AssetsProfileIconsGen {
   /// List of all assets
   List<dynamic> get values => [
     about,
+    analyBottom,
+    analyBottom1,
     anylitices,
     appleHelth,
     bottom,
     bottomLeftPng,
     bottomLeftSvg,
     bottomRight,
+    currentStreak,
     editButton,
     gardintCircularPng,
     gradientCircular,
@@ -694,6 +709,7 @@ class $AssetsProfileIconsGen {
     language,
     library,
     logout,
+    longestStreak,
     noProfilePng,
     privacyPolicy,
     profile,
@@ -741,6 +757,18 @@ class $AssetsVectorsGen {
   AssetGenImage get boyYogaPlay =>
       const AssetGenImage('assets/vectors/boy_yoga_play.png');
 
+  /// File path: assets/vectors/daily_act_1.png
+  AssetGenImage get dailyAct1 =>
+      const AssetGenImage('assets/vectors/daily_act_1.png');
+
+  /// File path: assets/vectors/daily_act_2.png
+  AssetGenImage get dailyAct2 =>
+      const AssetGenImage('assets/vectors/daily_act_2.png');
+
+  /// File path: assets/vectors/listening.gif
+  AssetGenImage get listening =>
+      const AssetGenImage('assets/vectors/listening.gif');
+
   /// File path: assets/vectors/myroutine_center.svg
   String get myroutineCenter => 'assets/vectors/myroutine_center.svg';
 
@@ -771,6 +799,16 @@ class $AssetsVectorsGen {
   AssetGenImage get purpleVector2 =>
       const AssetGenImage('assets/vectors/purple_vector_2.png');
 
+  /// File path: assets/vectors/shidi_chat_vector.json
+  String get shidiChatVector => 'assets/vectors/shidi_chat_vector.json';
+
+  /// File path: assets/vectors/shidi_circular_animation.json
+  String get shidiCircularAnimation =>
+      'assets/vectors/shidi_circular_animation.json';
+
+  /// File path: assets/vectors/shidi_circular_shade.svg
+  String get shidiCircularShade => 'assets/vectors/shidi_circular_shade.svg';
+
   /// File path: assets/vectors/stories_left.png
   AssetGenImage get storiesLeft =>
       const AssetGenImage('assets/vectors/stories_left.png');
@@ -788,6 +826,9 @@ class $AssetsVectorsGen {
     a,
     flow146,
     boyYogaPlay,
+    dailyAct1,
+    dailyAct2,
+    listening,
     myroutineCenter,
     myroutineRightPng,
     myroutineRightSvg,
@@ -796,6 +837,9 @@ class $AssetsVectorsGen {
     playRedRight,
     playYellowTopLeft,
     purpleVector2,
+    shidiChatVector,
+    shidiCircularAnimation,
+    shidiCircularShade,
     storiesLeft,
     storiesRight,
     storiesTop,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mindfulminis/features/analytices/screens/analytic_screen.dart';
 import 'package:mindfulminis/features/profile/screens/app_setting_screen.dart';
 import 'package:mindfulminis/features/profile/screens/language_screen.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
@@ -12,6 +13,11 @@ class ProfileProvider with ChangeNotifier {
 
   void navigateToEditProfile() {
     _navigationService.pushNamed(EditProfileScreen.routeName);
+    return;
+  }
+
+  void navigateToAnalytices() {
+    _navigationService.pushNamed(AnalyticScreen.routeName);
     return;
   }
 
