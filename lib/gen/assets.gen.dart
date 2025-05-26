@@ -753,9 +753,47 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/Flow 146.json
   String get flow146 => 'assets/vectors/Flow 146.json';
 
+  /// File path: assets/vectors/affir_bottom_left_leafs.svg
+  String get affirBottomLeftLeafs =>
+      'assets/vectors/affir_bottom_left_leafs.svg';
+
+  /// File path: assets/vectors/affir_center_boy.png
+  AssetGenImage get affirCenterBoy =>
+      const AssetGenImage('assets/vectors/affir_center_boy.png');
+
+  /// File path: assets/vectors/affir_green_bottom.png
+  AssetGenImage get affirGreenBottom =>
+      const AssetGenImage('assets/vectors/affir_green_bottom.png');
+
+  /// File path: assets/vectors/affir_rainbow.svg
+  String get affirRainbow => 'assets/vectors/affir_rainbow.svg';
+
+  /// File path: assets/vectors/affir_red_backg.png
+  AssetGenImage get affirRedBackg =>
+      const AssetGenImage('assets/vectors/affir_red_backg.png');
+
+  /// File path: assets/vectors/affir_red_full_backg.png
+  AssetGenImage get affirRedFullBackg =>
+      const AssetGenImage('assets/vectors/affir_red_full_backg.png');
+
+  /// File path: assets/vectors/affir_right_bottom_leafs.svg
+  String get affirRightBottomLeafs =>
+      'assets/vectors/affir_right_bottom_leafs.svg';
+
+  /// File path: assets/vectors/affir_star_back.svg
+  String get affirStarBack => 'assets/vectors/affir_star_back.svg';
+
+  /// File path: assets/vectors/affir_top_right_cloud.png
+  AssetGenImage get affirTopRightCloud =>
+      const AssetGenImage('assets/vectors/affir_top_right_cloud.png');
+
   /// File path: assets/vectors/boy_yoga_play.png
   AssetGenImage get boyYogaPlay =>
       const AssetGenImage('assets/vectors/boy_yoga_play.png');
+
+  /// File path: assets/vectors/center_boy1.png
+  AssetGenImage get centerBoy1 =>
+      const AssetGenImage('assets/vectors/center_boy1.png');
 
   /// File path: assets/vectors/daily_act_1.png
   AssetGenImage get dailyAct1 =>
@@ -825,7 +863,17 @@ class $AssetsVectorsGen {
   List<dynamic> get values => [
     a,
     flow146,
+    affirBottomLeftLeafs,
+    affirCenterBoy,
+    affirGreenBottom,
+    affirRainbow,
+    affirRedBackg,
+    affirRedFullBackg,
+    affirRightBottomLeafs,
+    affirStarBack,
+    affirTopRightCloud,
     boyYogaPlay,
+    centerBoy1,
     dailyAct1,
     dailyAct2,
     listening,

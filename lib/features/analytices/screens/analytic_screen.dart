@@ -5,6 +5,7 @@ import 'package:mindfulminis/features/analytices/widgets/bottom_container.dart';
 import 'package:mindfulminis/features/analytices/widgets/daily_act_conatiner.dart';
 import 'package:mindfulminis/features/analytices/widgets/horizontal_analytic_day.dart';
 import 'package:mindfulminis/features/analytices/widgets/lession_container.dart';
+import 'package:mindfulminis/features/analytices/widgets/performance_view.dart';
 import 'package:mindfulminis/features/analytices/widgets/streak_row.dart';
 
 class AnalyticScreen extends StatelessWidget {
@@ -25,10 +26,14 @@ class AnalyticScreen extends StatelessWidget {
 
       body: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.all(12),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   HorizontalAnalyticDay(
                     selectedDate: DateTime.now(),
@@ -42,6 +47,9 @@ class AnalyticScreen extends StatelessWidget {
                   Space.h20,
 
                   LessionContainer(),
+                  Space.h20,
+
+                  PerformanceView(),
                 ],
               ),
             ),

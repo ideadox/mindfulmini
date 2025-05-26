@@ -167,6 +167,7 @@ class RoutineDetailScreen extends StatelessWidget {
                               return RoutineLevelContainer(
                                 isCompleted: index == 0,
                                 currentLevel: index == 1,
+                                index: index,
                               );
                             },
                           ),

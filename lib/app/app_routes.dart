@@ -17,6 +17,7 @@ import 'package:mindfulminis/features/play%20visuals/screen/play_visuals.dart';
 import 'package:mindfulminis/features/profile/screens/app_setting_screen.dart';
 import 'package:mindfulminis/features/profile/screens/edit_profile_screen.dart';
 import 'package:mindfulminis/features/profile/screens/language_screen.dart';
+import 'package:mindfulminis/features/routine/screens/affirmation_screen.dart';
 import 'package:mindfulminis/features/routine/screens/create_routine_screen.dart';
 import 'package:mindfulminis/features/routine/screens/my_routine_screen.dart';
 import 'package:mindfulminis/features/routine/screens/routine_detail_screen.dart';
@@ -180,6 +181,11 @@ GoRouter buildRouter() {
         path: AnalyticScreen.routePath,
         name: AnalyticScreen.routeName,
         builder: (context, state) => AnalyticScreen(),
+      ),
+      GoRoute(
+        path: AffirmationScreen.routePath,
+        name: AffirmationScreen.routeName,
+        builder: (context, state) => AffirmationScreen(),
       ),
     ],
     // redirect: (context, state) {
