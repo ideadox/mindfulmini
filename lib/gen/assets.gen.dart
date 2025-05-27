@@ -753,6 +753,10 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/Flow 146.json
   String get flow146 => 'assets/vectors/Flow 146.json';
 
+  /// File path: assets/vectors/affir_blue_oval.png
+  AssetGenImage get affirBlueOval =>
+      const AssetGenImage('assets/vectors/affir_blue_oval.png');
+
   /// File path: assets/vectors/affir_bottom_left_leafs.svg
   String get affirBottomLeftLeafs =>
       'assets/vectors/affir_bottom_left_leafs.svg';
@@ -764,6 +768,14 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/affir_green_bottom.png
   AssetGenImage get affirGreenBottom =>
       const AssetGenImage('assets/vectors/affir_green_bottom.png');
+
+  /// File path: assets/vectors/affir_place_hand_girl.png
+  AssetGenImage get affirPlaceHandGirl =>
+      const AssetGenImage('assets/vectors/affir_place_hand_girl.png');
+
+  /// File path: assets/vectors/affir_purple_red_backg.png
+  AssetGenImage get affirPurpleRedBackg =>
+      const AssetGenImage('assets/vectors/affir_purple_red_backg.png');
 
   /// File path: assets/vectors/affir_rainbow.svg
   String get affirRainbow => 'assets/vectors/affir_rainbow.svg';
@@ -783,9 +795,26 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/affir_star_back.svg
   String get affirStarBack => 'assets/vectors/affir_star_back.svg';
 
+  /// File path: assets/vectors/affir_sun.png
+  AssetGenImage get affirSun =>
+      const AssetGenImage('assets/vectors/affir_sun.png');
+
   /// File path: assets/vectors/affir_top_right_cloud.png
   AssetGenImage get affirTopRightCloud =>
       const AssetGenImage('assets/vectors/affir_top_right_cloud.png');
+
+  /// File path: assets/vectors/affir_white_curve.png
+  AssetGenImage get affirWhiteCurve =>
+      const AssetGenImage('assets/vectors/affir_white_curve.png');
+
+  /// File path: assets/vectors/affri_seed.svg
+  String get affriSeed => 'assets/vectors/affri_seed.svg';
+
+  /// File path: assets/vectors/bird_flying.json
+  String get birdFlying => 'assets/vectors/bird_flying.json';
+
+  /// File path: assets/vectors/birds_flying.json
+  String get birdsFlying => 'assets/vectors/birds_flying.json';
 
   /// File path: assets/vectors/boy_yoga_play.png
   AssetGenImage get boyYogaPlay =>
@@ -795,6 +824,10 @@ class $AssetsVectorsGen {
   AssetGenImage get centerBoy1 =>
       const AssetGenImage('assets/vectors/center_boy1.png');
 
+  /// File path: assets/vectors/circular_rainbow.png
+  AssetGenImage get circularRainbow =>
+      const AssetGenImage('assets/vectors/circular_rainbow.png');
+
   /// File path: assets/vectors/daily_act_1.png
   AssetGenImage get dailyAct1 =>
       const AssetGenImage('assets/vectors/daily_act_1.png');
@@ -802,6 +835,10 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/daily_act_2.png
   AssetGenImage get dailyAct2 =>
       const AssetGenImage('assets/vectors/daily_act_2.png');
+
+  /// File path: assets/vectors/listen_sucess.png
+  AssetGenImage get listenSucess =>
+      const AssetGenImage('assets/vectors/listen_sucess.png');
 
   /// File path: assets/vectors/listening.gif
   AssetGenImage get listening =>
@@ -863,19 +900,29 @@ class $AssetsVectorsGen {
   List<dynamic> get values => [
     a,
     flow146,
+    affirBlueOval,
     affirBottomLeftLeafs,
     affirCenterBoy,
     affirGreenBottom,
+    affirPlaceHandGirl,
+    affirPurpleRedBackg,
     affirRainbow,
     affirRedBackg,
     affirRedFullBackg,
     affirRightBottomLeafs,
     affirStarBack,
+    affirSun,
     affirTopRightCloud,
+    affirWhiteCurve,
+    affriSeed,
+    birdFlying,
+    birdsFlying,
     boyYogaPlay,
     centerBoy1,
+    circularRainbow,
     dailyAct1,
     dailyAct2,
+    listenSucess,
     listening,
     myroutineCenter,
     myroutineRightPng,

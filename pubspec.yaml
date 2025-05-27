@@ -54,6 +54,7 @@ dependencies:
   speech_to_text: ^7.0.0
   flutter_bounceable: ^1.2.0
   syncfusion_flutter_calendar: ^29.1.41
+  animated_text_kit: ^4.2.3
   # custom_navigation_bar: ^0.8.2
 
 dev_dependencies:
