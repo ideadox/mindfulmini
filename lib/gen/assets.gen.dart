@@ -757,6 +757,10 @@ class $AssetsVectorsGen {
   AssetGenImage get affirBlueOval =>
       const AssetGenImage('assets/vectors/affir_blue_oval.png');
 
+  /// File path: assets/vectors/affir_bottom_green_layer.png
+  AssetGenImage get affirBottomGreenLayer =>
+      const AssetGenImage('assets/vectors/affir_bottom_green_layer.png');
+
   /// File path: assets/vectors/affir_bottom_left_leafs.svg
   String get affirBottomLeftLeafs =>
       'assets/vectors/affir_bottom_left_leafs.svg';
@@ -765,9 +769,17 @@ class $AssetsVectorsGen {
   AssetGenImage get affirCenterBoy =>
       const AssetGenImage('assets/vectors/affir_center_boy.png');
 
+  /// File path: assets/vectors/affir_flowers.png
+  AssetGenImage get affirFlowers =>
+      const AssetGenImage('assets/vectors/affir_flowers.png');
+
   /// File path: assets/vectors/affir_green_bottom.png
   AssetGenImage get affirGreenBottom =>
       const AssetGenImage('assets/vectors/affir_green_bottom.png');
+
+  /// File path: assets/vectors/affir_listen.png
+  AssetGenImage get affirListen =>
+      const AssetGenImage('assets/vectors/affir_listen.png');
 
   /// File path: assets/vectors/affir_place_hand_girl.png
   AssetGenImage get affirPlaceHandGirl =>
@@ -854,6 +866,18 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/myroutine_right.svg
   String get myroutineRightSvg => 'assets/vectors/myroutine_right.svg';
 
+  /// File path: assets/vectors/plant_phase1.svg
+  String get plantPhase1 => 'assets/vectors/plant_phase1.svg';
+
+  /// File path: assets/vectors/plant_phase2.svg
+  String get plantPhase2 => 'assets/vectors/plant_phase2.svg';
+
+  /// File path: assets/vectors/plant_phase3.svg
+  String get plantPhase3 => 'assets/vectors/plant_phase3.svg';
+
+  /// File path: assets/vectors/plant_phase4.svg
+  String get plantPhase4 => 'assets/vectors/plant_phase4.svg';
+
   /// File path: assets/vectors/play_green_bottom.png
   AssetGenImage get playGreenBottom =>
       const AssetGenImage('assets/vectors/play_green_bottom.png');
@@ -901,9 +925,12 @@ class $AssetsVectorsGen {
     a,
     flow146,
     affirBlueOval,
+    affirBottomGreenLayer,
     affirBottomLeftLeafs,
     affirCenterBoy,
+    affirFlowers,
     affirGreenBottom,
+    affirListen,
     affirPlaceHandGirl,
     affirPurpleRedBackg,
     affirRainbow,
@@ -927,6 +954,10 @@ class $AssetsVectorsGen {
     myroutineCenter,
     myroutineRightPng,
     myroutineRightSvg,
+    plantPhase1,
+    plantPhase2,
+    plantPhase3,
+    plantPhase4,
     playGreenBottom,
     playPurpleLeft,
     playRedRight,
