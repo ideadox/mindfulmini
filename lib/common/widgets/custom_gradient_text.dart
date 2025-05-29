@@ -6,13 +6,16 @@ class CustomGradientText extends StatelessWidget {
   final double? fontSize;
   final bool isBold;
   final int? maxLines;
+  final TextAlign? textAlign;
+  final TextStyle? textStyle;
 
   const CustomGradientText({
     required this.text,
     this.fontSize,
     this.maxLines,
     this.isBold = false,
-
+    this.textAlign = TextAlign.left,
+    this.textStyle,
     super.key,
   });
 
@@ -34,10 +37,13 @@ class CustomGradientText extends StatelessWidget {
         text,
         maxLines: maxLines,
         overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-          fontSize: fontSize ?? 16,
-          fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-        ),
+        textAlign: textAlign,
+        style:
+            textStyle ??
+            TextStyle(
+              fontSize: fontSize ?? 16,
+              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+            ),
       ),
     );
   }

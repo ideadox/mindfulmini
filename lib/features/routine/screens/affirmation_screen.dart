@@ -5,6 +5,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
+import 'package:mindfulminis/common/widgets/custom_gradient_text.dart';
 import 'package:mindfulminis/common/widgets/listening_widget.dart';
 import 'package:mindfulminis/features/routine/models/affir_text_detail.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
@@ -107,7 +108,8 @@ class _AffirmationScreenState extends State<AffirmationScreen>
       fourthStart = 0.15,
       fourthEnd = 0.18,
       fifthStart = 0.2,
-      fifthEnd = 0.25;
+      fifthEnd = 0.25,
+      sixthStart = 0.2;
 
   @override
   void initState() {
@@ -163,51 +165,51 @@ class _AffirmationScreenState extends State<AffirmationScreen>
     //first frame
     bottomGreenAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.0, 0.05, curve: Curves.fastEaseInToSlowEaseOut),
+      curve: Interval(0.0, 0.04, curve: Curves.fastEaseInToSlowEaseOut),
     );
 
     blueOvalAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.0, 0.05, curve: Curves.fastEaseInToSlowEaseOut),
+      curve: Interval(0.0, 0.04, curve: Curves.fastEaseInToSlowEaseOut),
     );
     topCloudAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.0, 0.05, curve: Curves.easeIn),
+      curve: Interval(0.0, 0.04, curve: Curves.easeIn),
     );
     redBackAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.0, 0.05, curve: Curves.easeOutBack),
+      curve: Interval(0.0, 0.04, curve: Curves.easeOutBack),
     );
     leftLeafAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.0, 0.05, curve: Curves.easeOutBack),
+      curve: Interval(0.0, 0.04, curve: Curves.easeOutBack),
     );
     rightLeafAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.0, 0.05, curve: Curves.easeOutBack),
+      curve: Interval(0.0, 0.04, curve: Curves.easeOutBack),
     );
     rainbowAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.0, 0.05, curve: Curves.easeOutBack),
+      curve: Interval(0.0, 0.04, curve: Curves.easeOutBack),
     );
     centerBoyAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.0, 0.05, curve: Curves.easeOutBack),
+      curve: Interval(0.0, 0.04, curve: Curves.easeOutBack),
     );
 
     //second frame
     rainbowLiftAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.08, 0.1, curve: Curves.easeOut),
+      curve: Interval(0.07, 0.09, curve: Curves.easeOut),
     );
     textAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.08, 0.1, curve: Curves.fastOutSlowIn),
+      curve: Interval(0.07, 0.09, curve: Curves.fastOutSlowIn),
     );
 
     rightLeafExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.08, 0.1, curve: Curves.easeIn),
+      curve: Interval(0.07, 0.09, curve: Curves.easeIn),
     );
 
     //third frame
@@ -224,14 +226,14 @@ class _AffirmationScreenState extends State<AffirmationScreen>
       parent: _controller,
       curve: Interval(0.12, 0.125, curve: Curves.easeIn),
     );
-    text2Anim = CurvedAnimation(
-      parent: _controller,
-      curve: Interval(0.12, 0.13, curve: Curves.fastOutSlowIn),
-    );
-    text2ExitAnim = CurvedAnimation(
-      parent: _controller,
-      curve: Interval(0.15, 0.18, curve: Curves.fastOutSlowIn),
-    );
+    // text2Anim = CurvedAnimation(
+    //   parent: _controller,
+    //   curve: Interval(0.12, 0.13, curve: Curves.fastOutSlowIn),
+    // );
+    // text2ExitAnim = CurvedAnimation(
+    //   parent: _controller,
+    //   curve: Interval(0.15, 0.18, curve: Curves.fastOutSlowIn),
+    // );
 
     //fourth frame
     centerBoyExitAnim = CurvedAnimation(
@@ -264,14 +266,14 @@ class _AffirmationScreenState extends State<AffirmationScreen>
       curve: Interval(0.24, 0.25, curve: Curves.fastOutSlowIn),
     );
 
-    textLine1Anim = CurvedAnimation(
-      parent: _controller,
-      curve: Interval(0.2, 0.25, curve: Curves.easeOut),
-    );
-    textLine1ExitAnim = CurvedAnimation(
-      parent: _controller,
-      curve: Interval(0.3, 0.35, curve: Curves.easeOut),
-    );
+    // textLine1Anim = CurvedAnimation(
+    //   parent: _controller,
+    //   curve: Interval(0.2, 0.25, curve: Curves.easeOut),
+    // );
+    // textLine1ExitAnim = CurvedAnimation(
+    //   parent: _controller,
+    //   curve: Interval(0.3, 0.35, curve: Curves.easeOut),
+    // );
 
     girlPlaceHandAnim = CurvedAnimation(
       parent: _controller,
@@ -464,12 +466,12 @@ class _AffirmationScreenState extends State<AffirmationScreen>
   }
 
   _runAnimation() {
-    _controller.forward(from: 0.5);
+    _controller.forward(from: 0.0);
   }
 
   final List<AffirTextDetail> textLines = [
-    AffirTextDetail(start: 0.08, end: 0.12, text: 'Hi Tom!'),
-    AffirTextDetail(start: 0.12, end: 0.15, text: 'Let’s do a affirmation'),
+    AffirTextDetail(start: 0.07, end: 0.11, text: 'Hi Tom!'),
+    AffirTextDetail(start: 0.11, end: 0.14, text: 'Let’s do a affirmation'),
     AffirTextDetail(
       start: 0.2,
       end: 0.3,
@@ -487,6 +489,7 @@ class _AffirmationScreenState extends State<AffirmationScreen>
       start: 0.71,
       end: 0.75,
       text: 'Bravo!\n Let’s do it again!',
+      isGradientText: true,
     ),
     AffirTextDetail(
       start: 0.75,
@@ -497,6 +500,7 @@ class _AffirmationScreenState extends State<AffirmationScreen>
       start: 0.86,
       end: 0.88,
       text: ' Awesome!\nLet’s do one more!',
+      isGradientText: true,
     ),
 
     AffirTextDetail(
@@ -504,7 +508,12 @@ class _AffirmationScreenState extends State<AffirmationScreen>
       end: 0.93,
       text: '"I am brave, and I learn new things every day."',
     ),
-    AffirTextDetail(start: 0.96, end: 1.0, text: 'Woohoo!\nYou did it! 🎊'),
+    AffirTextDetail(
+      start: 0.96,
+      end: 1.0,
+      text: 'Woohoo!\nYou did it! 🎊',
+      isGradientText: true,
+    ),
   ];
 
   @override
@@ -1291,6 +1300,7 @@ class _AffirmationScreenState extends State<AffirmationScreen>
                       child: BuildAnimationText(
                         currentLyricIndex: index,
                         currentLyric: currentLine.text,
+                        isGradientText: currentLine.isGradientText,
                       ),
                     )
                     : const SizedBox.shrink();
@@ -1338,10 +1348,12 @@ class _AffirmationScreenState extends State<AffirmationScreen>
 class BuildAnimationText extends StatelessWidget {
   final int currentLyricIndex;
   final String currentLyric;
+  final bool isGradientText;
   const BuildAnimationText({
     super.key,
     required this.currentLyricIndex,
     required this.currentLyric,
+    required this.isGradientText,
   });
 
   @override
@@ -1358,13 +1370,26 @@ class BuildAnimationText extends StatelessWidget {
             child: FadeTransition(opacity: animation, child: child),
           );
         },
-        child: Text(
-          currentLyric,
-          key: ValueKey(currentLyricIndex),
+        child:
+            isGradientText
+                ? CustomGradientText(
+                  text: currentLyric,
+                  textAlign: TextAlign.center,
+                  textStyle: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+                : Text(
+                  currentLyric,
+                  key: ValueKey(currentLyricIndex),
 
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
-        ),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
       ),
     );
   }
