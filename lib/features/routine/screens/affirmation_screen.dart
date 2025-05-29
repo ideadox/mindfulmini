@@ -1,10 +1,15 @@
 import 'dart:developer';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
+import 'package:mindfulminis/common/widgets/listening_widget.dart';
+import 'package:mindfulminis/features/routine/models/affir_text_detail.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
+import 'package:video_player/video_player.dart';
+import '../widgets/complete_affirmation_widget.dart';
 
 class AffirmationScreen extends StatefulWidget {
   static String routeName = 'affirmation-screen';
@@ -21,9 +26,11 @@ class _AffirmationScreenState extends State<AffirmationScreen>
 
   bool _hasStartedBirds = false;
   bool _hasStartedBird = false;
+  bool _butterFlyHasStarted = false;
   late AnimationController _controller;
   late final AnimationController _birdsLottieController;
   late final AnimationController _birdLottieController;
+  late VideoPlayerController _videoPlayerController;
   late Animation<double> gradientProgress;
 
   late Animation<double> topCloudAnim;
@@ -88,13 +95,19 @@ class _AffirmationScreenState extends State<AffirmationScreen>
   late Animation<double> bottomFlowersAnim;
   late Animation<double> didItTextAnim;
 
-  late Animation<double> listenAppearAnim;
-  late Animation<double> listenSuccessFadeIn;
-  late Animation<double> listenSuccessMoveUp;
-  late Animation<double> listenSuccessExitAnim;
-
   late Animation<double> sun2Anim;
   late Animation<double> sun2ExitAnim;
+
+  double firstStart = 0.0,
+      firstEnd = 0.5,
+      secondStart = 0.08,
+      secondEnd = 0.1,
+      thirdStart = 0.12,
+      thirdEnd = 0.125,
+      fourthStart = 0.15,
+      fourthEnd = 0.18,
+      fifthStart = 0.2,
+      fifthEnd = 0.25;
 
   @override
   void initState() {
@@ -106,22 +119,44 @@ class _AffirmationScreenState extends State<AffirmationScreen>
 
     _birdsLottieController = AnimationController(vsync: this);
     _birdLottieController = AnimationController(vsync: this);
-
+    _videoPlayerController = VideoPlayerController.asset(
+      Assets.vectors.a202502121524117946638,
+    )..initialize();
     _controller.addListener(() {
-      if (_controller.value >= 0.6 && !_hasStartedBirds) {
+      if (_controller.value >= 0.54 && !_hasStartedBirds) {
         _hasStartedBirds = true;
         _birdsLottieController.forward();
       }
 
-      if (_controller.value >= 0.65 &&
-          _controller.value < 0.8 &&
+      if (_controller.value >= 0.58 &&
+          _controller.value < 0.7 &&
           !_hasStartedBird) {
         _hasStartedBird = true;
         _birdLottieController.forward();
       }
+
+      if (_controller.value >= 0.95 && !_butterFlyHasStarted) {
+        _butterFlyHasStarted = true;
+        _videoPlayerController.play();
+      }
+
+      if (_controller.isCompleted) {
+        SmartDialog.show(
+          clickMaskDismiss: false,
+          backType: SmartBackType.block,
+          maskWidget: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(color: Colors.black12),
+          ),
+          builder: (context) {
+            return CompleteAffirmationDialog();
+          },
+        );
+      }
     });
 
     _gradientAnim();
+
     _listenAndSuccess();
     _plantGrowAnim();
 
@@ -260,65 +295,47 @@ class _AffirmationScreenState extends State<AffirmationScreen>
       curve: Interval(0.3, 0.35, curve: Curves.fastOutSlowIn),
     );
 
-    textLine2Anim = CurvedAnimation(
-      parent: _controller,
-      curve: Interval(0.3, 0.35, curve: Curves.easeInOut),
-    );
-
-    textLine2ExitAnim = CurvedAnimation(
-      parent: _controller,
-      curve: Interval(0.4, 0.45, curve: Curves.easeInOut),
-    );
-    textLine3Anim = CurvedAnimation(
-      parent: _controller,
-      curve: Interval(0.45, 0.5, curve: Curves.easeInOut),
-    );
-    textLine3ExitAnim = CurvedAnimation(
-      parent: _controller,
-      curve: Interval(0.53, 0.58, curve: Curves.easeInOut),
-    );
-
     bottomPurpleRedExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.53, 0.58, curve: Curves.fastOutSlowIn),
+      curve: Interval(0.5, 0.51, curve: Curves.fastOutSlowIn),
     );
 
     // bird frames
     sunAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.58, 0.6, curve: Curves.fastOutSlowIn),
+      curve: Interval(0.51, 0.53, curve: Curves.fastOutSlowIn),
     );
 
     bottomGreenLayerAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.58, 0.6, curve: Curves.fastOutSlowIn),
+      curve: Interval(0.51, 0.53, curve: Curves.fastOutSlowIn),
     );
 
     blueOvalExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.58, 0.6, curve: Curves.easeIn),
+      curve: Interval(0.51, 0.52, curve: Curves.easeIn),
     );
     bottomGreenExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.58, 0.6, curve: Curves.easeIn),
+      curve: Interval(0.51, 0.52, curve: Curves.easeIn),
     );
 
     seedAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.65, 0.75, curve: Curves.easeInOut),
+      curve: Interval(0.58, 0.68, curve: Curves.easeInOut),
     );
 
     sunExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.75, 0.78, curve: Curves.easeIn),
+      curve: Interval(0.69, 0.70, curve: Curves.easeIn),
     );
 
     bottomPurpleRedReturnAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.76, 0.78, curve: Curves.easeInOut),
+      curve: Interval(0.69, 0.70, curve: Curves.easeInOut),
     );
 
-    _controller.forward(from: 0.0);
+    _runAnimation();
   }
 
   _gradientAnim() {
@@ -331,14 +348,14 @@ class _AffirmationScreenState extends State<AffirmationScreen>
   _plantGrowAnim() {
     sun2Anim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.76, 0.78, curve: Curves.fastOutSlowIn),
+      curve: Interval(0.84, 0.85, curve: Curves.fastOutSlowIn),
     );
 
     // Phase 1: plant grows up
 
     plantPhase1Anim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.76, 0.78, curve: Curves.easeOut),
+      curve: Interval(0.84, 0.85, curve: Curves.easeOut),
     );
 
     // Switch phase images
@@ -368,22 +385,127 @@ class _AffirmationScreenState extends State<AffirmationScreen>
     );
   }
 
+  late Animation<double> listenAppearAnim;
+  late Animation<double> listenAppearExitAnim;
+  late Animation<double> listen1AppearAnim;
+  late Animation<double> listen1AppearExitAnim;
+  late Animation<double> listen2AppearAnim;
+  late Animation<double> listen2AppearExitAnim;
+
+  late Animation<double> listenSuccessFadeIn;
+  late Animation<double> listenSuccessMoveUp;
+  late Animation<double> listenSuccess1FadeIn;
+  late Animation<double> listenSuccess1MoveUp;
+  late Animation<double> listenSuccess2FadeIn;
+  late Animation<double> listenSuccess2MoveUp;
+
   _listenAndSuccess() {
     listenAppearAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.50, 0.54, curve: Curves.easeOut),
+      curve: Interval(0.43, 0.45, curve: Curves.easeOut),
+    );
+
+    listenAppearExitAnim = CurvedAnimation(
+      parent: _controller,
+      curve: Interval(0.48, 0.49, curve: Curves.easeOut),
     );
 
     listenSuccessFadeIn = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.53, 0.58, curve: Curves.easeIn),
+      curve: Interval(0.48, 0.49, curve: Curves.easeIn),
     );
 
     listenSuccessMoveUp = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.58, 0.60, curve: Curves.easeOut),
+      curve: Interval(0.5, 0.51, curve: Curves.easeOut),
+    );
+
+    //appear 1
+    listen1AppearAnim = CurvedAnimation(
+      parent: _controller,
+      curve: Interval(0.77, 0.78, curve: Curves.easeOut),
+    );
+
+    listen1AppearExitAnim = CurvedAnimation(
+      parent: _controller,
+      curve: Interval(0.82, 0.83, curve: Curves.easeOut),
+    );
+
+    listenSuccess1FadeIn = CurvedAnimation(
+      parent: _controller,
+      curve: Interval(0.82, 0.83, curve: Curves.easeIn),
+    );
+
+    listenSuccess1MoveUp = CurvedAnimation(
+      parent: _controller,
+      curve: Interval(0.84, 0.85, curve: Curves.easeOut),
+    );
+
+    //appear 2
+    listen2AppearAnim = CurvedAnimation(
+      parent: _controller,
+      curve: Interval(0.77, 0.78, curve: Curves.easeOut),
+    );
+
+    listen2AppearExitAnim = CurvedAnimation(
+      parent: _controller,
+      curve: Interval(0.82, 0.83, curve: Curves.easeOut),
+    );
+
+    listenSuccess2FadeIn = CurvedAnimation(
+      parent: _controller,
+      curve: Interval(0.82, 0.83, curve: Curves.easeIn),
+    );
+
+    listenSuccess2MoveUp = CurvedAnimation(
+      parent: _controller,
+      curve: Interval(0.84, 0.85, curve: Curves.easeOut),
     );
   }
+
+  _runAnimation() {
+    _controller.forward(from: 0.5);
+  }
+
+  final List<AffirTextDetail> textLines = [
+    AffirTextDetail(start: 0.08, end: 0.12, text: 'Hi Tom!'),
+    AffirTextDetail(start: 0.12, end: 0.15, text: 'Let’s do a affirmation'),
+    AffirTextDetail(
+      start: 0.2,
+      end: 0.3,
+      text: 'Placing a hand on the heart ❤️✋',
+    ),
+
+    AffirTextDetail(start: 0.3, end: 0.4, text: 'Now, read this aloud'),
+    AffirTextDetail(
+      start: 0.4,
+      end: 0.48,
+      text: '"I am brave, and I learn new things every day."',
+    ),
+
+    AffirTextDetail(
+      start: 0.71,
+      end: 0.75,
+      text: 'Bravo!\n Let’s do it again!',
+    ),
+    AffirTextDetail(
+      start: 0.75,
+      end: 0.82,
+      text: '"I am brave, and I learn new things every day."',
+    ),
+    AffirTextDetail(
+      start: 0.86,
+      end: 0.88,
+      text: ' Awesome!\nLet’s do one more!',
+    ),
+
+    AffirTextDetail(
+      start: 0.88,
+      end: 0.93,
+      text: '"I am brave, and I learn new things every day."',
+    ),
+    AffirTextDetail(start: 0.96, end: 1.0, text: 'Woohoo!\nYou did it! 🎊'),
+  ];
 
   @override
   void dispose() {
@@ -393,19 +515,9 @@ class _AffirmationScreenState extends State<AffirmationScreen>
     _controller.removeListener(() {});
     _birdsLottieController.removeListener(() {});
     _birdLottieController.removeListener(() {});
+    _videoPlayerController.dispose();
+
     super.dispose();
-  }
-
-  final List<String> textLines = [
-    'Placing a hand on the heart ❤️✋',
-    'Now, read this aloud',
-    '"I am brave, and I learn new things every day."',
-  ];
-
-  String getCurrentLine(double value) {
-    if (value < 0.35) return textLines[0];
-    if (value < 0.5) return textLines[1];
-    return textLines[2];
   }
 
   @override
@@ -418,7 +530,7 @@ class _AffirmationScreenState extends State<AffirmationScreen>
         builder: (context, child) {
           Gradient? gradient;
 
-          if (gradientProgress.value < 0.6) {
+          if (gradientProgress.value < 0.51) {
             gradient = LinearGradient(
               colors: [
                 HexColor('#9D9FE6').withValues(alpha: 0.2),
@@ -427,7 +539,7 @@ class _AffirmationScreenState extends State<AffirmationScreen>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             );
-          } else if (gradientProgress.value > 0.75) {
+          } else if (gradientProgress.value >= 0.69) {
             gradient = LinearGradient(
               colors: [
                 HexColor('#CFFFCD').withValues(alpha: 0.4),
@@ -451,6 +563,26 @@ class _AffirmationScreenState extends State<AffirmationScreen>
           alignment: Alignment.center,
           children: [
             Positioned(child: SvgPicture.asset(Assets.vectors.affirStarBack)),
+
+            // butter fly video
+            AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                final value = _controller.value;
+
+                return AnimatedSwitcher(
+                  duration: Duration(milliseconds: 500),
+                  child:
+                      value >= 0.95 && value <= 1.0
+                          ? child
+                          : const SizedBox.shrink(),
+                );
+              },
+              child: AspectRatio(
+                aspectRatio: _videoPlayerController.value.aspectRatio,
+                child: VideoPlayer(_videoPlayerController),
+              ),
+            ),
 
             // first frame Top Cloud
             AnimatedBuilder(
@@ -499,6 +631,7 @@ class _AffirmationScreenState extends State<AffirmationScreen>
               ),
             ),
 
+            //white shade on girl
             AnimatedBuilder(
               animation: _controller,
               builder: (context, child) {
@@ -568,13 +701,38 @@ class _AffirmationScreenState extends State<AffirmationScreen>
                 position += exit * size.height;
 
                 // Apply return movement back to visible
-                position -= returnVal * size.height;
+                // position -= returnVal * size.height;
 
                 // Combine opacity only for entry and return, ignore exit fade
-                final double opacity = (entry * (1.0 - exit + returnVal)).clamp(
-                  0.0,
-                  1.0,
+                final double opacity = (entry * (1.0 - exit)).clamp(0.0, 1.0);
+
+                return Positioned(
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: position,
+                  child: Opacity(opacity: opacity, child: child!),
                 );
+              },
+              child: Image.asset(
+                Assets.vectors.affirPurpleRedBackg.path,
+                fit: BoxFit.contain,
+              ),
+            ),
+
+            // bottom Purple Red with return
+            AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                final returnVal = bottomPurpleRedReturnAnim.value;
+
+                final double entryStart = 0.0;
+                final double entryEnd = 0.0;
+
+                double position =
+                    entryStart + (entryEnd - entryStart) * returnVal;
+
+                final double opacity = (returnVal).clamp(0.0, 1.0);
 
                 return Positioned(
                   left: 0,
@@ -797,6 +955,7 @@ class _AffirmationScreenState extends State<AffirmationScreen>
               ),
             ),
 
+            //center boy
             AnimatedBuilder(
               animation: _controller,
               builder: (context, child) {
@@ -829,72 +988,6 @@ class _AffirmationScreenState extends State<AffirmationScreen>
               ),
             ),
 
-            AnimatedBuilder(
-              animation: _controller,
-              builder: (context, child) {
-                final opacity = textAnim.value * (1 - textExitAnim.value);
-
-                final double start = size.height * 0.35;
-                final double end = size.height * 0.4;
-
-                final double entryOffset =
-                    (textAnim.value) * (end - start) + start;
-
-                // Move it upward during exit
-                final double exitOffset = textExitAnim.value * 60;
-
-                return Positioned(
-                  top: entryOffset - exitOffset,
-
-                  child: AnimatedOpacity(
-                    opacity: opacity,
-                    duration: Duration(milliseconds: 500),
-                    child: child!,
-                  ),
-                );
-              },
-              child: Container(
-                alignment: Alignment.center,
-                width: size.width,
-                child: Text(
-                  'Hi Tom!',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
-                ),
-              ),
-            ),
-
-            AnimatedBuilder(
-              animation: _controller,
-              builder: (context, child) {
-                final opacity = text2Anim.value * (1 - text2ExitAnim.value);
-                final double start = size.height * 0.35;
-                final double end = size.height * 0.4;
-
-                final double entryOffset =
-                    (text2Anim.value) * (end - start) + start;
-
-                // Move it upward during exit
-                final double exitOffset = text2ExitAnim.value * 60;
-
-                return Positioned(
-                  top: entryOffset - exitOffset,
-                  child: AnimatedOpacity(
-                    opacity: opacity,
-                    duration: Duration(milliseconds: 300),
-                    child: child!,
-                  ),
-                );
-              },
-              child: Container(
-                alignment: Alignment.center,
-                width: size.width,
-                child: Text(
-                  'Let’s do a affirmation',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
-                ),
-              ),
-            ),
-
             // yellow sun
             AnimatedBuilder(
               animation: _controller,
@@ -919,6 +1012,7 @@ class _AffirmationScreenState extends State<AffirmationScreen>
               child: Image.asset(Assets.vectors.affirSun.path),
             ),
 
+            //sun return
             AnimatedBuilder(
               animation: _controller,
               builder: (context, child) {
@@ -948,10 +1042,7 @@ class _AffirmationScreenState extends State<AffirmationScreen>
               builder: (context, child) {
                 final exitValue = sunExitAnim.value;
                 final opacity = (1.0 - exitValue).clamp(0.0, 1.0);
-                final offset =
-                    exitValue *
-                    size.height *
-                    0.1; // slide slightly up while fading
+                final offset = exitValue * size.height * 0.1;
 
                 return Positioned(
                   top: size.height * 0.3 - offset,
@@ -1063,6 +1154,7 @@ class _AffirmationScreenState extends State<AffirmationScreen>
               },
             ),
 
+            // plant Phase 3 and 4
             AnimatedBuilder(
               animation: _controller,
               builder: (context, child) {
@@ -1100,6 +1192,8 @@ class _AffirmationScreenState extends State<AffirmationScreen>
                 );
               },
             ),
+
+            // Bottom Flowers
             AnimatedBuilder(
               animation: _controller,
               builder: (context, child) {
@@ -1119,175 +1213,88 @@ class _AffirmationScreenState extends State<AffirmationScreen>
               child: Image.asset(Assets.vectors.affirFlowers.path),
             ),
 
-            buildAnimatedLine('Woohoo!  You did it! 🎊', didItTextAnim),
-
-            //text lines
-            AnimatedBuilder(
-              animation: _controller,
-              builder: (context, child) {
-                final double opacityIn = textLine1Anim.value;
-                final double opacityOut = 1.0 - textLine1ExitAnim.value;
-                final double opacity = (opacityIn * opacityOut).clamp(0.0, 1.0);
-
-                final double entryStart = size.height * 0.35;
-                final double entryEnd = size.height * 0.3;
-                final entryValue = textLine1Anim.value;
-                final exitValue = textLine1ExitAnim.value;
-
-                double position =
-                    entryStart + (entryEnd - entryStart) * entryValue;
-
-                position -= exitValue * entryEnd;
-
-                return Positioned(
-                  left: 0,
-                  right: 0,
-                  top: position.clamp(entryEnd - 50, entryStart),
-                  child: Opacity(opacity: opacity, child: child!),
-                );
-              },
-              child: Text(
-                'Placing a hand on the heart ❤️✋',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-
-            // Line 2
-            AnimatedBuilder(
-              animation: _controller,
-              builder: (context, child) {
-                final double opacityIn = textLine2Anim.value;
-                final double opacityOut = 1.0 - textLine2ExitAnim.value;
-                final double opacity = (opacityIn * opacityOut).clamp(0.0, 1.0);
-
-                final double entryStart = size.height * 0.35;
-                final double entryEnd = size.height * 0.3;
-                final entryValue = textLine2Anim.value;
-                final exitValue = textLine2ExitAnim.value;
-
-                double position =
-                    entryStart + (entryEnd - entryStart) * entryValue;
-
-                position -= exitValue * entryEnd;
-
-                return Positioned(
-                  left: 0,
-                  right: 0,
-                  top: position.clamp(entryEnd - 50, entryStart),
-                  child: Opacity(opacity: opacity, child: child!),
-                );
-              },
-              child: Text(
-                'Now, read this aloud',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-
-            // Line 3
-            AnimatedBuilder(
-              animation: textLine3Anim,
-              builder: (context, child) {
-                final double opacityIn = textLine3Anim.value;
-                final double opacityOut = 1.0 - textLine3ExitAnim.value;
-                final double opacity = (opacityIn * opacityOut).clamp(0.0, 1.0);
-
-                final double entryStart = size.height * 0.35;
-                final double entryEnd = size.height * 0.3;
-                final entryValue = textLine3Anim.value;
-                final exitValue = textLine3ExitAnim.value;
-
-                double position =
-                    entryStart + (entryEnd - entryStart) * entryValue;
-
-                position -= exitValue * entryEnd;
-
-                return Positioned(
-                  left: 0,
-                  right: 0,
-                  top: position.clamp(entryEnd - 50, entryStart),
-                  child: Opacity(opacity: opacity, child: child!),
-                );
-              },
-              child: Container(
-                height: 130,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 10,
-                      offset: Offset(0, 4), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Text(
-                  '"I am brave, and I learn new things every day."',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ),
-
             // "Listen" Image
-            AnimatedBuilder(
-              animation: listenAppearAnim,
-              builder: (context, child) {
-                final value = _controller.value;
+            // AnimatedBuilder(
+            //   animation: _controller,
+            //   builder: (context, child) {
+            //     final opacity1 = listenAppearAnim.value;
+            //     final opacity2 = listen1AppearAnim.value;
+            //     final opacity1Exit = 1.0 - listenAppearExitAnim.value;
+            //     final opacity2Exit = 1.0 - listen1AppearExitAnim.value;
 
-                // Only show during the interval (e.g., 0.50 to 0.54)
-                final isVisible = value >= 0.50 && value <= 0.54;
-                final opacity = isVisible ? listenAppearAnim.value : 0.0;
+            //     final opacity = (opacity1 *
+            //             opacity1Exit *
+            //             opacity2 *
+            //             opacity2Exit)
+            //         .clamp(0.0, 1.0);
 
-                return isVisible
-                    ? Positioned(
-                      left: 0,
-                      right: 0,
-                      top: size.height / 2,
-                      child: Opacity(opacity: opacity, child: child!),
-                    )
-                    : const SizedBox.shrink(); // Don't render anything outside interval
-              },
-              child: SizedBox(
-                width: 88,
-                height: 88,
-                child: Image.asset(Assets.vectors.affirListen.path),
-              ),
+            //     return Positioned(
+            //       top: size.height / 2,
+            //       child: Opacity(opacity: opacity, child: child!),
+            //     );
+            //   },
+            //   child: ListeningWidget(),
+            // ),
+            IntervalFadeWidget(
+              controller: _controller,
+              appearAnim: listenAppearAnim,
+              exitAnim: listenAppearExitAnim,
+              child: ListeningWidget(),
+            ),
+            IntervalFadeWidget(
+              controller: _controller,
+              appearAnim: listen1AppearAnim,
+              exitAnim: listen1AppearExitAnim,
+              child: ListeningWidget(),
+            ),
+            IntervalFadeWidget(
+              controller: _controller,
+              appearAnim: listen2AppearAnim,
+              exitAnim: listen2AppearExitAnim,
+              child: ListeningWidget(),
             ),
 
             // "Listen Success" Image that fades in then moves up
+            SuccessListenWidget(
+              controller: _controller,
+              listenSuccessFadeIn: listenSuccessFadeIn,
+              listenSuccessMoveUp: listenSuccessMoveUp,
+            ),
+            SuccessListenWidget(
+              controller: _controller,
+              listenSuccessFadeIn: listenSuccess1FadeIn,
+              listenSuccessMoveUp: listenSuccess1MoveUp,
+            ),
+            SuccessListenWidget(
+              controller: _controller,
+              listenSuccessFadeIn: listenSuccess2FadeIn,
+              listenSuccessMoveUp: listenSuccess2MoveUp,
+            ),
+
             AnimatedBuilder(
               animation: _controller,
               builder: (context, child) {
-                final fadeIn = listenSuccessFadeIn.value;
-                final moveUp = listenSuccessMoveUp.value;
-                final opacity = (fadeIn * (1.0 - moveUp)).clamp(0.0, 1.0);
-                final offset = moveUp * size.height * 0.5;
+                final value = _controller.value;
 
-                return Positioned(
-                  left: 0,
-                  right: 0,
-                  top: (size.height / 2) - offset,
-                  child: Opacity(opacity: opacity, child: child!),
+                // Find current lyric index
+                final index = textLines.indexWhere(
+                  (line) => value >= line.start && value <= line.end,
                 );
+
+                final currentLine = index != -1 ? textLines[index] : null;
+
+                return currentLine != null
+                    ? Positioned(
+                      left: 0,
+                      right: 0,
+                      top: size.height * 0.3,
+                      child: BuildAnimationText(
+                        currentLyricIndex: index,
+                        currentLyric: currentLine.text,
+                      ),
+                    )
+                    : const SizedBox.shrink();
               },
-              child: SizedBox(
-                width: 88,
-                height: 88,
-                child: Image.asset(Assets.vectors.listenSucess.path),
-              ),
             ),
           ],
         ),
@@ -1326,35 +1333,186 @@ class _AffirmationScreenState extends State<AffirmationScreen>
       }),
     );
   }
+}
 
-  Widget buildAnimatedLine(String text, Animation<double> anim) {
-    return AnimatedBuilder(
-      animation: anim,
-      builder: (context, child) {
-        final opacity = anim.value;
-        final offset = Tween<Offset>(
-          begin: Offset(0, 1),
-          end: Offset.zero,
-        ).transform(anim.value);
+class BuildAnimationText extends StatelessWidget {
+  final int currentLyricIndex;
+  final String currentLyric;
+  const BuildAnimationText({
+    super.key,
+    required this.currentLyricIndex,
+    required this.currentLyric,
+  });
 
-        return Positioned(
-          left: 0,
-          right: 0,
-          top: MediaQuery.of(context).size.height * 0.25,
-          child: Opacity(
-            opacity: opacity,
-            child: Transform.translate(
-              offset: Offset(0, offset.dy * 20),
-              child: child!,
-            ),
-          ),
-        );
-      },
-      child: Text(
-        text,
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
-        textAlign: TextAlign.center,
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 400),
+        transitionBuilder: (child, animation) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, 0.5),
+              end: Offset.zero,
+            ).animate(animation),
+            child: FadeTransition(opacity: animation, child: child),
+          );
+        },
+        child: Text(
+          currentLyric,
+          key: ValueKey(currentLyricIndex),
+
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+        ),
       ),
     );
   }
 }
+
+class IntervalFadeWidget extends StatelessWidget {
+  final AnimationController controller;
+  final Animation<double> appearAnim;
+  final Animation<double> exitAnim;
+
+  final Widget child;
+
+  const IntervalFadeWidget({
+    super.key,
+    required this.controller,
+
+    required this.child,
+    required this.appearAnim,
+    required this.exitAnim,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+
+    return AnimatedBuilder(
+      animation: controller,
+      builder: (context, _) {
+        final opacity = (appearAnim.value * (1.0 - exitAnim.value)).clamp(
+          0.0,
+          1.0,
+        );
+
+        if (opacity == 0.0) return const SizedBox.shrink();
+
+        return Positioned(
+          top: size.height / 2,
+          child: Opacity(opacity: opacity, child: child),
+        );
+      },
+    );
+  }
+}
+
+class SuccessListenWidget extends StatelessWidget {
+  final AnimationController controller;
+  final Animation<double> listenSuccessFadeIn;
+  final Animation<double> listenSuccessMoveUp;
+
+  const SuccessListenWidget({
+    super.key,
+    required this.controller,
+    required this.listenSuccessFadeIn,
+    required this.listenSuccessMoveUp,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+
+    return AnimatedBuilder(
+      animation: controller,
+      builder: (context, child) {
+        final fadeIn = listenSuccessFadeIn.value;
+        final moveUp = listenSuccessMoveUp.value;
+        final opacity = (fadeIn * (1.0 - moveUp)).clamp(0.0, 1.0);
+        final offset = moveUp * size.height * 0.5;
+
+        return Positioned(
+          left: 0,
+          right: 0,
+          top: (size.height / 2) - offset,
+          child: Opacity(opacity: opacity, child: child!),
+        );
+      },
+      child: SizedBox(
+        width: 88,
+        height: 88,
+        child: Image.asset(Assets.vectors.listenSucess.path),
+      ),
+    );
+  }
+}
+
+
+
+            // AnimatedBuilder(
+            //   animation: _controller,
+            //   builder: (context, child) {
+            //     final opacity = textAnim.value * (1 - textExitAnim.value);
+
+            //     final double start = size.height * 0.35;
+            //     final double end = size.height * 0.4;
+
+            //     final double entryOffset =
+            //         (textAnim.value) * (end - start) + start;
+
+            //     // Move it upward during exit
+            //     final double exitOffset = textExitAnim.value * 60;
+
+            //     return Positioned(
+            //       top: entryOffset - exitOffset,
+
+            //       child: AnimatedOpacity(
+            //         opacity: opacity,
+            //         duration: Duration(milliseconds: 500),
+            //         child: child!,
+            //       ),
+            //     );
+            //   },
+            //   child: Container(
+            //     alignment: Alignment.center,
+            //     width: size.width,
+            //     child: Text(
+            //       'Hi Tom!',
+            //       style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
+            //     ),
+            //   ),
+            // ),
+
+            // AnimatedBuilder(
+            //   animation: _controller,
+            //   builder: (context, child) {
+            //     final opacity = text2Anim.value * (1 - text2ExitAnim.value);
+            //     final double start = size.height * 0.35;
+            //     final double end = size.height * 0.4;
+
+            //     final double entryOffset =
+            //         (text2Anim.value) * (end - start) + start;
+
+            //     // Move it upward during exit
+            //     final double exitOffset = text2ExitAnim.value * 60;
+
+            //     return Positioned(
+            //       top: entryOffset - exitOffset,
+            //       child: AnimatedOpacity(
+            //         opacity: opacity,
+            //         duration: Duration(milliseconds: 300),
+            //         child: child!,
+            //       ),
+            //     );
+            //   },
+            //   child: Container(
+            //     alignment: Alignment.center,
+            //     width: size.width,
+            //     child: Text(
+            //       'Let’s do a affirmation',
+            //       style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
+            //     ),
+            //   ),
+            // ),

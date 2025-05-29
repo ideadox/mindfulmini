@@ -294,6 +294,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/visible_eye.svg
   String get visibleEye => 'assets/icons/visible_eye.svg';
 
+  /// File path: assets/icons/yellow_star.svg
+  String get yellowStar => 'assets/icons/yellow_star.svg';
+
   /// List of all assets
   List<dynamic> get values => [
     appleLogo,
@@ -354,6 +357,7 @@ class $AssetsIconsGen {
     verifyTick,
     views,
     visibleEye,
+    yellowStar,
   ];
 }
 
@@ -747,6 +751,10 @@ class $AssetsTabiconsGen {
 class $AssetsVectorsGen {
   const $AssetsVectorsGen();
 
+  /// File path: assets/vectors/20250212-1524-11.7946638.mp4
+  String get a202502121524117946638 =>
+      'assets/vectors/20250212-1524-11.7946638.mp4';
+
   /// File path: assets/vectors/A.png
   AssetGenImage get a => const AssetGenImage('assets/vectors/A.png');
 
@@ -764,6 +772,9 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/affir_bottom_left_leafs.svg
   String get affirBottomLeftLeafs =>
       'assets/vectors/affir_bottom_left_leafs.svg';
+
+  /// File path: assets/vectors/affir_butterfly.json
+  String get affirButterfly => 'assets/vectors/affir_butterfly.json';
 
   /// File path: assets/vectors/affir_center_boy.png
   AssetGenImage get affirCenterBoy =>
@@ -831,6 +842,10 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/boy_yoga_play.png
   AssetGenImage get boyYogaPlay =>
       const AssetGenImage('assets/vectors/boy_yoga_play.png');
+
+  /// File path: assets/vectors/bubble_blast.gif
+  AssetGenImage get bubbleBlast =>
+      const AssetGenImage('assets/vectors/bubble_blast.gif');
 
   /// File path: assets/vectors/center_boy1.png
   AssetGenImage get centerBoy1 =>
@@ -922,11 +937,13 @@ class $AssetsVectorsGen {
 
   /// List of all assets
   List<dynamic> get values => [
+    a202502121524117946638,
     a,
     flow146,
     affirBlueOval,
     affirBottomGreenLayer,
     affirBottomLeftLeafs,
+    affirButterfly,
     affirCenterBoy,
     affirFlowers,
     affirGreenBottom,
@@ -945,6 +962,7 @@ class $AssetsVectorsGen {
     birdFlying,
     birdsFlying,
     boyYogaPlay,
+    bubbleBlast,
     centerBoy1,
     circularRainbow,
     dailyAct1,
