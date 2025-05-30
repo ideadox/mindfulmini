@@ -10,6 +10,7 @@ import 'package:mindfulminis/common/widgets/listening_widget.dart';
 import 'package:mindfulminis/features/routine/models/affir_text_detail.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:video_player/video_player.dart';
+import '../models/affir_container_design.dart';
 import '../widgets/complete_affirmation_widget.dart';
 
 class AffirmationScreen extends StatefulWidget {
@@ -24,7 +25,6 @@ class AffirmationScreen extends StatefulWidget {
 class _AffirmationScreenState extends State<AffirmationScreen>
     with TickerProviderStateMixin {
   int totalSteps = 3;
-
   bool _hasStartedBirds = false;
   bool _hasStartedBird = false;
   bool _butterFlyHasStarted = false;
@@ -33,11 +33,9 @@ class _AffirmationScreenState extends State<AffirmationScreen>
   late final AnimationController _birdLottieController;
   late VideoPlayerController _videoPlayerController;
   late Animation<double> gradientProgress;
-
   late Animation<double> topCloudAnim;
   late Animation<double> bottomGreenAnim;
   late Animation<double> blueOvalAnim;
-
   late Animation<double> redBackAnim;
   late Animation<double> leftLeafAnim;
   late Animation<double> rightLeafAnim;
@@ -55,14 +53,11 @@ class _AffirmationScreenState extends State<AffirmationScreen>
   late Animation<double> redBackExitAnim;
   late Animation<double> circularRaninBowAnim;
   late Animation<double> circularRaninExitBowAnim;
-
   late Animation<double> topStepperAnim;
   late Animation<double> bottomWhiteShateAnim;
   late Animation<double> girlPlaceHandAnim;
-
   late Animation<double> bottomWhiteShateExitAnim;
   late Animation<double> girlPlaceHandExitAnim;
-
   late Animation<double> bottomPurpleRedAnim;
   late Animation<double> bottomPurpleRedExitAnim;
   late Animation<double> placeHandTextAnim;
@@ -78,7 +73,6 @@ class _AffirmationScreenState extends State<AffirmationScreen>
   late Animation<double> sunAnim;
   late Animation<double> bottomGreenExitAnim;
   late Animation<double> bottomGreenLayerAnim;
-
   late Animation<double> blueOvalExitAnim;
   late Animation<double> seedWithBirdAnim;
   late Animation<double> seedAnim;
@@ -86,37 +80,83 @@ class _AffirmationScreenState extends State<AffirmationScreen>
   late Animation<double> sunExitAnim;
   late Animation<double> bottomPurpleRedReturnAnim;
   late Animation<double> letDoItAgaintextAnim;
-
   late Animation<double> plantPhase1Anim;
-
   late Animation<double> plantPhase2Anim;
-
   late Animation<double> plantPhaseExitAnim;
-
   late Animation<double> bottomFlowersAnim;
   late Animation<double> didItTextAnim;
-
   late Animation<double> sun2Anim;
   late Animation<double> sun2ExitAnim;
+  late Animation<double> listenAppearAnim;
+  late Animation<double> listenAppearExitAnim;
+  late Animation<double> listen1AppearAnim;
+  late Animation<double> listen1AppearExitAnim;
+  late Animation<double> listen2AppearAnim;
+  late Animation<double> listen2AppearExitAnim;
+  late Animation<double> listenSuccessFadeIn;
+  late Animation<double> listenSuccessMoveUp;
+  late Animation<double> listenSuccess1FadeIn;
+  late Animation<double> listenSuccess1MoveUp;
+  late Animation<double> listenSuccess2FadeIn;
+  late Animation<double> listenSuccess2MoveUp;
 
   double firstStart = 0.0,
-      firstEnd = 0.5,
-      secondStart = 0.08,
-      secondEnd = 0.1,
+      firstEnd = 0.03,
+      secondStart = 0.07,
+      secondEnd = 0.08,
       thirdStart = 0.12,
       thirdEnd = 0.125,
       fourthStart = 0.15,
       fourthEnd = 0.18,
-      fifthStart = 0.2,
-      fifthEnd = 0.25,
-      sixthStart = 0.2;
+      fifthStart = 0.19,
+      fifthEnd = 0.22,
+      sixthStart = 0.26,
+      sixthEnd = 0.27,
+      seventhStart = 0.27,
+      seventhEnd = 0.29,
+      eightStart = 0.42,
+      ninthStart = 0.58,
+      tenthStart = 0.73,
+      eleventhStart = 0.76,
+      twelvthStart = 0.76 + 0.1 + 0.05,
+      end = 1.0;
+
+  List<AffirTextDetail> textLines = [];
+
+  List<AffirContainerDesign> designIntervals = [];
 
   @override
   void initState() {
     super.initState();
+
+    _initControllers();
+
+    _gradientAnim();
+
+    _listenAndSuccess();
+    _plantGrowAnim();
+    _setContainerDesign();
+    _initAnimations();
+    _runAnimation();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _birdsLottieController.dispose();
+    _birdLottieController.dispose();
+    _controller.removeListener(() {});
+    _birdsLottieController.removeListener(() {});
+    _birdLottieController.removeListener(() {});
+    _videoPlayerController.dispose();
+
+    super.dispose();
+  }
+
+  void _initControllers() {
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 44, milliseconds: 200),
+      duration: Duration(seconds: 50),
     );
 
     _birdsLottieController = AnimationController(vsync: this);
@@ -125,19 +165,17 @@ class _AffirmationScreenState extends State<AffirmationScreen>
       Assets.vectors.a202502121524117946638,
     )..initialize();
     _controller.addListener(() {
-      if (_controller.value >= 0.54 && !_hasStartedBirds) {
+      if (_controller.value >= eightStart && !_hasStartedBirds) {
         _hasStartedBirds = true;
         _birdsLottieController.forward();
       }
 
-      if (_controller.value >= 0.58 &&
-          _controller.value < 0.7 &&
-          !_hasStartedBird) {
+      if (_controller.value >= eightStart + 0.04 && !_hasStartedBird) {
         _hasStartedBird = true;
         _birdLottieController.forward();
       }
 
-      if (_controller.value >= 0.95 && !_butterFlyHasStarted) {
+      if (_controller.value >= twelvthStart && !_butterFlyHasStarted) {
         _butterFlyHasStarted = true;
         _videoPlayerController.play();
       }
@@ -156,377 +194,474 @@ class _AffirmationScreenState extends State<AffirmationScreen>
         );
       }
     });
+  }
 
-    _gradientAnim();
-
-    _listenAndSuccess();
-    _plantGrowAnim();
-
+  void _initAnimations() {
     //first frame
     bottomGreenAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.0, 0.04, curve: Curves.fastEaseInToSlowEaseOut),
+      curve: Interval(
+        firstStart,
+        firstEnd,
+        curve: Curves.fastEaseInToSlowEaseOut,
+      ),
     );
 
     blueOvalAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.0, 0.04, curve: Curves.fastEaseInToSlowEaseOut),
+      curve: Interval(
+        firstStart,
+        firstEnd,
+        curve: Curves.fastEaseInToSlowEaseOut,
+      ),
     );
     topCloudAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.0, 0.04, curve: Curves.easeIn),
+      curve: Interval(firstStart, firstEnd, curve: Curves.easeIn),
     );
     redBackAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.0, 0.04, curve: Curves.easeOutBack),
+      curve: Interval(firstStart, firstEnd, curve: Curves.easeOutBack),
     );
     leftLeafAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.0, 0.04, curve: Curves.easeOutBack),
+      curve: Interval(firstStart, firstEnd, curve: Curves.easeOutBack),
     );
     rightLeafAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.0, 0.04, curve: Curves.easeOutBack),
+      curve: Interval(firstStart, firstEnd, curve: Curves.easeOutBack),
     );
     rainbowAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.0, 0.04, curve: Curves.easeOutBack),
+      curve: Interval(firstStart, firstEnd, curve: Curves.easeOutBack),
     );
     centerBoyAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.0, 0.04, curve: Curves.easeOutBack),
+      curve: Interval(firstStart, firstEnd, curve: Curves.easeOutBack),
     );
 
     //second frame
     rainbowLiftAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.07, 0.09, curve: Curves.easeOut),
+      curve: Interval(secondStart, secondEnd, curve: Curves.easeOut),
     );
     textAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.07, 0.09, curve: Curves.fastOutSlowIn),
+      curve: Interval(secondStart, secondEnd, curve: Curves.fastOutSlowIn),
     );
 
     rightLeafExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.07, 0.09, curve: Curves.easeIn),
+      curve: Interval(secondStart, secondEnd, curve: Curves.easeIn),
     );
 
     //third frame
     textExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.12, 0.125, curve: Curves.fastOutSlowIn),
+      curve: Interval(thirdStart, thirdEnd, curve: Curves.fastOutSlowIn),
     );
     rainbowExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.12, 0.125, curve: Curves.easeOutSine),
+      curve: Interval(thirdStart, thirdEnd, curve: Curves.easeOutSine),
     );
 
     topCloudExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.12, 0.125, curve: Curves.easeIn),
+      curve: Interval(thirdStart, thirdEnd, curve: Curves.easeIn),
     );
-    // text2Anim = CurvedAnimation(
-    //   parent: _controller,
-    //   curve: Interval(0.12, 0.13, curve: Curves.fastOutSlowIn),
-    // );
-    // text2ExitAnim = CurvedAnimation(
-    //   parent: _controller,
-    //   curve: Interval(0.15, 0.18, curve: Curves.fastOutSlowIn),
-    // );
 
     //fourth frame
     centerBoyExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.15, 0.18, curve: Curves.easeIn),
+      curve: Interval(fourthStart, fourthEnd, curve: Curves.easeIn),
     );
     redBackExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.15, 0.18, curve: Curves.easeIn),
+      curve: Interval(fourthStart, fourthEnd, curve: Curves.easeIn),
+    );
+
+    circularRaninBowAnim = CurvedAnimation(
+      parent: _controller,
+      curve: Interval(fourthStart, fourthEnd, curve: Curves.easeIn),
     );
 
     // fifth frame
-    circularRaninBowAnim = CurvedAnimation(
-      parent: _controller,
-      curve: Interval(0.15, 0.18, curve: Curves.easeIn),
-    );
-
     circularRaninExitBowAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.2, 0.25, curve: Curves.easeIn),
+      curve: Interval(fifthStart - 0.01, fifthEnd - 0.01, curve: Curves.easeIn),
     );
 
     //sixthframe
     topStepperAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.2, 0.25, curve: Curves.fastOutSlowIn),
+      curve: Interval(fifthStart, fifthEnd, curve: Curves.fastOutSlowIn),
     );
     bottomWhiteShateAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.24, 0.25, curve: Curves.fastOutSlowIn),
+      curve: Interval(fifthStart + 0.02, fifthEnd, curve: Curves.fastOutSlowIn),
     );
-
-    // textLine1Anim = CurvedAnimation(
-    //   parent: _controller,
-    //   curve: Interval(0.2, 0.25, curve: Curves.easeOut),
-    // );
-    // textLine1ExitAnim = CurvedAnimation(
-    //   parent: _controller,
-    //   curve: Interval(0.3, 0.35, curve: Curves.easeOut),
-    // );
 
     girlPlaceHandAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.2, 0.25, curve: Curves.easeIn),
+      curve: Interval(fifthStart, fifthEnd, curve: Curves.easeIn),
     );
 
     bottomWhiteShateExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.3, 0.35, curve: Curves.fastOutSlowIn),
+      curve: Interval(sixthStart, sixthEnd, curve: Curves.fastOutSlowIn),
     );
 
     girlPlaceHandExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.3, 0.35, curve: Curves.easeIn),
+      curve: Interval(sixthStart, sixthEnd, curve: Curves.easeIn),
     );
-
-    // seventh frame
 
     bottomPurpleRedAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.3, 0.35, curve: Curves.fastOutSlowIn),
+      curve: Interval(sixthEnd, sixthEnd, curve: Curves.fastOutSlowIn),
     );
 
+    // seventh frame
     bottomPurpleRedExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.5, 0.51, curve: Curves.fastOutSlowIn),
+      curve: Interval(
+        eightStart,
+        eightStart + 0.01,
+        curve: Curves.fastOutSlowIn,
+      ),
     );
 
     // bird frames
     sunAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.51, 0.53, curve: Curves.fastOutSlowIn),
+      curve: Interval(
+        eightStart,
+        eightStart + 0.02,
+        curve: Curves.fastOutSlowIn,
+      ),
     );
 
     bottomGreenLayerAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.51, 0.53, curve: Curves.fastOutSlowIn),
+      curve: Interval(
+        eightStart,
+        eightStart + 0.02,
+        curve: Curves.fastOutSlowIn,
+      ),
     );
 
     blueOvalExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.51, 0.52, curve: Curves.easeIn),
+      curve: Interval(eightStart, eightStart + 0.01, curve: Curves.easeIn),
     );
     bottomGreenExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.51, 0.52, curve: Curves.easeIn),
+      curve: Interval(eightStart, eightStart + 0.01, curve: Curves.easeIn),
     );
-
+    double seedStart = eightStart + 0.04;
+    double seedOtherExit = seedStart + 0.1;
     seedAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.58, 0.68, curve: Curves.easeInOut),
+      curve: Interval(seedStart, seedStart + 0.1, curve: Curves.easeInOut),
     );
 
     sunExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.69, 0.70, curve: Curves.easeIn),
+      curve: Interval(
+        seedOtherExit,
+        seedOtherExit + 0.01,
+        curve: Curves.easeIn,
+      ),
     );
 
     bottomPurpleRedReturnAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.69, 0.70, curve: Curves.easeInOut),
+      curve: Interval(
+        seedOtherExit + 0.01,
+        seedOtherExit + 0.02,
+        curve: Curves.easeInOut,
+      ),
     );
-
-    _runAnimation();
   }
 
-  _gradientAnim() {
+  void _gradientAnim() {
     gradientProgress = CurvedAnimation(
       parent: _controller,
       curve: Curves.linear,
     );
   }
 
-  _plantGrowAnim() {
+  void _plantGrowAnim() {
     sun2Anim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.84, 0.85, curve: Curves.fastOutSlowIn),
+      curve: Interval(
+        tenthStart,
+        tenthStart + 0.01,
+        curve: Curves.fastOutSlowIn,
+      ),
     );
-
-    // Phase 1: plant grows up
 
     plantPhase1Anim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.84, 0.85, curve: Curves.easeOut),
+      curve: Interval(tenthStart, tenthStart + 0.01, curve: Curves.easeOut),
     );
 
-    // Switch phase images
-    plantPhase2Anim = CurvedAnimation(
-      parent: _controller,
-      curve: Interval(0.87, 0.9, curve: Curves.linear),
-    );
+    double listenAppear2Start = eleventhStart + 0.07;
+    double listenAppear2Exit = listenAppear2Start + 0.04;
 
-    bottomFlowersAnim = CurvedAnimation(
-      parent: _controller,
-      curve: Interval(0.95, 0.97, curve: Curves.easeIn),
-    );
-
-    // Exit phase: plant shrinks back down
     plantPhaseExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.85, 0.87, curve: Curves.easeOut),
+      curve: Interval(
+        listenAppear2Exit,
+        listenAppear2Exit + 0.01,
+        curve: Curves.easeOut,
+      ),
+    );
+
+    plantPhase2Anim = CurvedAnimation(
+      parent: _controller,
+      curve: Interval(
+        listenAppear2Exit,
+        listenAppear2Exit + 0.01,
+        curve: Curves.linear,
+      ),
     );
 
     didItTextAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.95, 0.96, curve: Curves.easeOut),
+      curve: Interval(twelvthStart, twelvthStart + 0.01, curve: Curves.easeOut),
     );
     sun2ExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.95, 0.97, curve: Curves.fastOutSlowIn),
+      curve: Interval(
+        twelvthStart,
+        twelvthStart + 0.02,
+        curve: Curves.fastOutSlowIn,
+      ),
     );
+    bottomFlowersAnim = CurvedAnimation(
+      parent: _controller,
+      curve: Interval(twelvthStart, twelvthStart + 0.02, curve: Curves.easeIn),
+    );
+
+    textLines = [
+      AffirTextDetail(start: secondStart, end: thirdStart, text: 'Hi Tom!'),
+      AffirTextDetail(
+        start: thirdStart,
+        end: fourthStart,
+        text: 'Let’s do a affirmation',
+      ),
+
+      AffirTextDetail(
+        start: fifthStart,
+        end: sixthEnd,
+        text: 'Placing a hand on the heart ❤️✋',
+      ),
+
+      AffirTextDetail(
+        start: seventhStart,
+        end: seventhStart + 0.05,
+        text: 'Now, read this aloud',
+      ),
+
+      AffirTextDetail(
+        start: seventhStart + 0.05,
+        end: seventhStart + 0.1 + 0.05,
+        text: '"I am brave, and I learn new things every day."',
+      ),
+
+      AffirTextDetail(
+        start: ninthStart,
+        end: ninthStart + 0.04,
+        text: 'Bravo!\n Let’s do it again!',
+        isGradientText: true,
+      ),
+
+      AffirTextDetail(
+        start: ninthStart + 0.05,
+        end: ninthStart + 0.1 + 0.05,
+        text: '"I am brave, and I learn new things every day."',
+      ),
+      AffirTextDetail(
+        start: eleventhStart,
+        end: eleventhStart + 0.04,
+        text: ' Awesome!\nLet’s do one more!',
+        isGradientText: true,
+      ),
+
+      AffirTextDetail(
+        start: eleventhStart + 0.05,
+        end: eleventhStart + 0.1 + 0.05,
+        text: '"I am brave, and I learn new things every day."',
+      ),
+      AffirTextDetail(
+        start: twelvthStart,
+        end: end,
+        text: 'Woohoo!\nYou did it! 🎊',
+        isGradientText: true,
+      ),
+    ];
   }
 
-  late Animation<double> listenAppearAnim;
-  late Animation<double> listenAppearExitAnim;
-  late Animation<double> listen1AppearAnim;
-  late Animation<double> listen1AppearExitAnim;
-  late Animation<double> listen2AppearAnim;
-  late Animation<double> listen2AppearExitAnim;
+  void _listenAndSuccess() {
+    double listenAppearStart = seventhStart + 0.07;
+    double listenAppearExit = listenAppearStart + 0.04;
 
-  late Animation<double> listenSuccessFadeIn;
-  late Animation<double> listenSuccessMoveUp;
-  late Animation<double> listenSuccess1FadeIn;
-  late Animation<double> listenSuccess1MoveUp;
-  late Animation<double> listenSuccess2FadeIn;
-  late Animation<double> listenSuccess2MoveUp;
-
-  _listenAndSuccess() {
+    double listenMoveUp = seventhStart + 0.1 + 0.05;
     listenAppearAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.43, 0.45, curve: Curves.easeOut),
+      curve: Interval(
+        listenAppearStart,
+        listenAppearStart + 0.02,
+        curve: Curves.easeOut,
+      ),
     );
 
     listenAppearExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.48, 0.49, curve: Curves.easeOut),
+      curve: Interval(
+        listenAppearExit,
+        listenAppearExit + 0.01,
+        curve: Curves.easeOut,
+      ),
     );
 
     listenSuccessFadeIn = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.48, 0.49, curve: Curves.easeIn),
+      curve: Interval(
+        listenAppearExit,
+        listenAppearExit + 0.01,
+        curve: Curves.easeIn,
+      ),
     );
 
     listenSuccessMoveUp = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.5, 0.51, curve: Curves.easeOut),
+      curve: Interval(listenMoveUp, listenMoveUp + 0.01, curve: Curves.easeOut),
     );
 
     //appear 1
+    double listenAppear1Start = ninthStart + 0.07;
+    double listenAppear1Exit = listenAppear1Start + 0.04;
+
+    double listen1MoveUp = ninthStart + 0.1 + 0.05;
+
     listen1AppearAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.77, 0.78, curve: Curves.easeOut),
+      curve: Interval(
+        listenAppear1Start,
+        listenAppear1Start + 0.01,
+        curve: Curves.easeOut,
+      ),
     );
 
     listen1AppearExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.82, 0.83, curve: Curves.easeOut),
+      curve: Interval(
+        listenAppear1Exit,
+        listenAppear1Exit + 0.01,
+        curve: Curves.easeOut,
+      ),
     );
 
     listenSuccess1FadeIn = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.82, 0.83, curve: Curves.easeIn),
+      curve: Interval(
+        listenAppear1Exit,
+        listenAppear1Exit + 0.01,
+
+        curve: Curves.easeIn,
+      ),
     );
 
     listenSuccess1MoveUp = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.84, 0.85, curve: Curves.easeOut),
+      curve: Interval(
+        listen1MoveUp,
+        listen1MoveUp + 0.01,
+
+        curve: Curves.easeOut,
+      ),
     );
 
     //appear 2
+    double listenAppear2Start = eleventhStart + 0.07;
+    double listenAppear2Exit = listenAppear2Start + 0.04;
+
+    double listen2MoveUp = eleventhStart + 0.1 + 0.05;
+
     listen2AppearAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.77, 0.78, curve: Curves.easeOut),
+      curve: Interval(
+        listenAppear2Start,
+        listenAppear2Start + 0.01,
+        curve: Curves.easeOut,
+      ),
     );
 
     listen2AppearExitAnim = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.82, 0.83, curve: Curves.easeOut),
+      curve: Interval(
+        listenAppear2Exit,
+        listenAppear2Exit + 0.01,
+        curve: Curves.easeOut,
+      ),
     );
 
     listenSuccess2FadeIn = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.82, 0.83, curve: Curves.easeIn),
+      curve: Interval(
+        listenAppear2Exit,
+        listenAppear2Exit + 0.01,
+        curve: Curves.easeIn,
+      ),
     );
 
     listenSuccess2MoveUp = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.84, 0.85, curve: Curves.easeOut),
+      curve: Interval(
+        listen2MoveUp,
+        listen2MoveUp + 0.01,
+        curve: Curves.easeOut,
+      ),
     );
   }
 
-  _runAnimation() {
+  void _runAnimation() {
     _controller.forward(from: 0.0);
   }
 
-  final List<AffirTextDetail> textLines = [
-    AffirTextDetail(start: 0.07, end: 0.11, text: 'Hi Tom!'),
-    AffirTextDetail(start: 0.11, end: 0.14, text: 'Let’s do a affirmation'),
-    AffirTextDetail(
-      start: 0.2,
-      end: 0.3,
-      text: 'Placing a hand on the heart ❤️✋',
-    ),
+  void _setContainerDesign() {
+    designIntervals = [
+      AffirContainerDesign(
+        start: seventhStart + 0.05,
 
-    AffirTextDetail(start: 0.3, end: 0.4, text: 'Now, read this aloud'),
-    AffirTextDetail(
-      start: 0.4,
-      end: 0.48,
-      text: '"I am brave, and I learn new things every day."',
-    ),
+        end: seventhStart + 0.1 + 0.05,
+        isGradint: false,
+        hasShadow: true,
+        hasTextShadow: true,
+        color: Colors.white.withValues(alpha: 0.7),
+      ),
 
-    AffirTextDetail(
-      start: 0.71,
-      end: 0.75,
-      text: 'Bravo!\n Let’s do it again!',
-      isGradientText: true,
-    ),
-    AffirTextDetail(
-      start: 0.75,
-      end: 0.82,
-      text: '"I am brave, and I learn new things every day."',
-    ),
-    AffirTextDetail(
-      start: 0.86,
-      end: 0.88,
-      text: ' Awesome!\nLet’s do one more!',
-      isGradientText: true,
-    ),
-
-    AffirTextDetail(
-      start: 0.88,
-      end: 0.93,
-      text: '"I am brave, and I learn new things every day."',
-    ),
-    AffirTextDetail(
-      start: 0.96,
-      end: 1.0,
-      text: 'Woohoo!\nYou did it! 🎊',
-      isGradientText: true,
-    ),
-  ];
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _birdsLottieController.dispose();
-    _birdLottieController.dispose();
-    _controller.removeListener(() {});
-    _birdsLottieController.removeListener(() {});
-    _birdLottieController.removeListener(() {});
-    _videoPlayerController.dispose();
-
-    super.dispose();
+      AffirContainerDesign(
+        start: eleventhStart + 0.05,
+        end: eleventhStart + 0.1 + 0.05,
+        isGradint: false,
+        hasShadow: false,
+        color: Colors.white.withValues(alpha: 0.5),
+      ),
+      AffirContainerDesign(
+        start: twelvthStart + 0.01,
+        end: end,
+        isGradint: true,
+        hasShadow: false,
+        gradientColor: [
+          Colors.white10,
+          HexColor('#CE89FF').withValues(alpha: 0.2),
+          Colors.white10,
+        ],
+      ),
+    ];
   }
 
   @override
@@ -539,7 +674,7 @@ class _AffirmationScreenState extends State<AffirmationScreen>
         builder: (context, child) {
           Gradient? gradient;
 
-          if (gradientProgress.value < 0.51) {
+          if (gradientProgress.value < eightStart) {
             gradient = LinearGradient(
               colors: [
                 HexColor('#9D9FE6').withValues(alpha: 0.2),
@@ -548,7 +683,7 @@ class _AffirmationScreenState extends State<AffirmationScreen>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             );
-          } else if (gradientProgress.value >= 0.69) {
+          } else if (gradientProgress.value >= ninthStart) {
             gradient = LinearGradient(
               colors: [
                 HexColor('#CFFFCD').withValues(alpha: 0.4),
@@ -697,8 +832,6 @@ class _AffirmationScreenState extends State<AffirmationScreen>
               builder: (context, child) {
                 final entry = bottomPurpleRedAnim.value; // Entry from top
                 final exit = bottomPurpleRedExitAnim.value; // Exit (down)
-                final returnVal =
-                    bottomPurpleRedReturnAnim.value; // Return (up)
 
                 final double entryStart = -size.height;
                 final double entryEnd = 0.0;
@@ -708,9 +841,6 @@ class _AffirmationScreenState extends State<AffirmationScreen>
 
                 // Apply exit movement
                 position += exit * size.height;
-
-                // Apply return movement back to visible
-                // position -= returnVal * size.height;
 
                 // Combine opacity only for entry and return, ignore exit fade
                 final double opacity = (entry * (1.0 - exit)).clamp(0.0, 1.0);
@@ -764,13 +894,13 @@ class _AffirmationScreenState extends State<AffirmationScreen>
                 int currentStep = 0;
                 final opacity = topStepperAnim.value.clamp(0.0, 1.0);
 
-                if (_controller.value >= 0.2) {
+                if (_controller.value >= fifthStart) {
                   currentStep = 0;
                 }
-                if (_controller.value >= 0.75) {
+                if (_controller.value >= ninthStart) {
                   currentStep = 1;
                 }
-                if (_controller.value >= 0.9) {
+                if (_controller.value >= twelvthStart) {
                   currentStep = 2;
                 }
 
@@ -1135,7 +1265,7 @@ class _AffirmationScreenState extends State<AffirmationScreen>
                 final opacity = (fadeIn * fadeOut).clamp(0.0, 1.0);
 
                 final currentPhase =
-                    _controller.value >= 0.8
+                    _controller.value >= eleventhStart + 0.07
                         ? SvgPicture.asset(
                           key: const ValueKey(2),
                           Assets.vectors.plantPhase2,
@@ -1174,7 +1304,7 @@ class _AffirmationScreenState extends State<AffirmationScreen>
                 final opacity = (fadeIn).clamp(0.0, 1.0);
 
                 final currentPhase =
-                    _controller.value >= 0.95
+                    _controller.value >= twelvthStart
                         ? SvgPicture.asset(
                           key: const ValueKey(4),
                           Assets.vectors.plantPhase4,
@@ -1222,28 +1352,6 @@ class _AffirmationScreenState extends State<AffirmationScreen>
               child: Image.asset(Assets.vectors.affirFlowers.path),
             ),
 
-            // "Listen" Image
-            // AnimatedBuilder(
-            //   animation: _controller,
-            //   builder: (context, child) {
-            //     final opacity1 = listenAppearAnim.value;
-            //     final opacity2 = listen1AppearAnim.value;
-            //     final opacity1Exit = 1.0 - listenAppearExitAnim.value;
-            //     final opacity2Exit = 1.0 - listen1AppearExitAnim.value;
-
-            //     final opacity = (opacity1 *
-            //             opacity1Exit *
-            //             opacity2 *
-            //             opacity2Exit)
-            //         .clamp(0.0, 1.0);
-
-            //     return Positioned(
-            //       top: size.height / 2,
-            //       child: Opacity(opacity: opacity, child: child!),
-            //     );
-            //   },
-            //   child: ListeningWidget(),
-            // ),
             IntervalFadeWidget(
               controller: _controller,
               appearAnim: listenAppearAnim,
@@ -1285,25 +1393,80 @@ class _AffirmationScreenState extends State<AffirmationScreen>
               builder: (context, child) {
                 final value = _controller.value;
 
-                // Find current lyric index
                 final index = textLines.indexWhere(
                   (line) => value >= line.start && value <= line.end,
                 );
 
                 final currentLine = index != -1 ? textLines[index] : null;
 
-                return currentLine != null
-                    ? Positioned(
-                      left: 0,
-                      right: 0,
-                      top: size.height * 0.3,
-                      child: BuildAnimationText(
-                        currentLyricIndex: index,
-                        currentLyric: currentLine.text,
-                        isGradientText: currentLine.isGradientText,
+                // Get current design
+                final designIndex = designIntervals.indexWhere(
+                  (design) => value >= design.start && value <= design.end,
+                );
+                final currentDesign =
+                    designIndex != -1 ? designIntervals[designIndex] : null;
+
+                if (currentLine == null) return const SizedBox.shrink();
+
+                final BoxDecoration decoration;
+                final bool hasTextShadow =
+                    currentDesign != null && currentDesign.hasTextShadow;
+
+                if (currentDesign != null) {
+                  if (currentDesign.isGradint &&
+                      currentDesign.gradientColor != null) {
+                    decoration = BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: currentDesign.gradientColor!,
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                    )
-                    : const SizedBox.shrink();
+                      boxShadow:
+                          currentDesign.hasShadow
+                              ? [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.1),
+                                  blurRadius: 10,
+                                  offset: Offset(0, 4),
+                                ),
+                              ]
+                              : [],
+                    );
+                  } else {
+                    decoration = BoxDecoration(
+                      color: currentDesign.color ?? Colors.transparent,
+                      boxShadow:
+                          currentDesign.hasShadow
+                              ? [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.1),
+                                  blurRadius: 10,
+                                  offset: Offset(0, 4),
+                                ),
+                              ]
+                              : [],
+                    );
+                  }
+                } else {
+                  decoration = const BoxDecoration();
+                }
+
+                return Positioned(
+                  left: 0,
+                  right: 0,
+                  top: size.height * 0.25,
+                  child: Container(
+                    height: 130,
+                    width: size.width,
+                    decoration: decoration,
+                    child: BuildAnimationText(
+                      currentLyricIndex: index,
+                      currentLyric: currentLine.text,
+                      isGradientText: currentLine.isGradientText,
+                      hasTextShadow: hasTextShadow,
+                    ),
+                  ),
+                );
               },
             ),
           ],
@@ -1349,11 +1512,13 @@ class BuildAnimationText extends StatelessWidget {
   final int currentLyricIndex;
   final String currentLyric;
   final bool isGradientText;
+  final bool hasTextShadow;
   const BuildAnimationText({
     super.key,
     required this.currentLyricIndex,
     required this.currentLyric,
     required this.isGradientText,
+    this.hasTextShadow = false,
   });
 
   @override
@@ -1385,9 +1550,21 @@ class BuildAnimationText extends StatelessWidget {
                   key: ValueKey(currentLyricIndex),
 
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
+                    shadows:
+                        !hasTextShadow
+                            ? []
+                            : [
+                              Shadow(
+                                offset: Offset(0, 4),
+                                blurRadius: 80,
+                                color: HexColor(
+                                  '#8E00FF',
+                                ).withValues(alpha: 0.25),
+                              ),
+                            ],
                   ),
                 ),
       ),
@@ -1466,78 +1643,10 @@ class SuccessListenWidget extends StatelessWidget {
         );
       },
       child: SizedBox(
-        width: 88,
-        height: 88,
+        width: 77,
+        height: 77,
         child: Image.asset(Assets.vectors.listenSucess.path),
       ),
     );
   }
 }
-
-
-
-            // AnimatedBuilder(
-            //   animation: _controller,
-            //   builder: (context, child) {
-            //     final opacity = textAnim.value * (1 - textExitAnim.value);
-
-            //     final double start = size.height * 0.35;
-            //     final double end = size.height * 0.4;
-
-            //     final double entryOffset =
-            //         (textAnim.value) * (end - start) + start;
-
-            //     // Move it upward during exit
-            //     final double exitOffset = textExitAnim.value * 60;
-
-            //     return Positioned(
-            //       top: entryOffset - exitOffset,
-
-            //       child: AnimatedOpacity(
-            //         opacity: opacity,
-            //         duration: Duration(milliseconds: 500),
-            //         child: child!,
-            //       ),
-            //     );
-            //   },
-            //   child: Container(
-            //     alignment: Alignment.center,
-            //     width: size.width,
-            //     child: Text(
-            //       'Hi Tom!',
-            //       style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
-            //     ),
-            //   ),
-            // ),
-
-            // AnimatedBuilder(
-            //   animation: _controller,
-            //   builder: (context, child) {
-            //     final opacity = text2Anim.value * (1 - text2ExitAnim.value);
-            //     final double start = size.height * 0.35;
-            //     final double end = size.height * 0.4;
-
-            //     final double entryOffset =
-            //         (text2Anim.value) * (end - start) + start;
-
-            //     // Move it upward during exit
-            //     final double exitOffset = text2ExitAnim.value * 60;
-
-            //     return Positioned(
-            //       top: entryOffset - exitOffset,
-            //       child: AnimatedOpacity(
-            //         opacity: opacity,
-            //         duration: Duration(milliseconds: 300),
-            //         child: child!,
-            //       ),
-            //     );
-            //   },
-            //   child: Container(
-            //     alignment: Alignment.center,
-            //     width: size.width,
-            //     child: Text(
-            //       'Let’s do a affirmation',
-            //       style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
-            //     ),
-            //   ),
-            // ),
