@@ -56,6 +56,8 @@ dependencies:
   syncfusion_flutter_calendar: ^29.1.41
   animated_text_kit: ^4.2.3
   video_player: ^2.9.5
+  percent_indicator: ^4.2.5
+  pie_chart_sz: ^1.1.1
   # custom_navigation_bar: ^0.8.2
 
 dev_dependencies:

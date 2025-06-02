@@ -3,7 +3,8 @@ import 'package:mindfulminis/common/widgets/custom_back_button.dart';
 
 class CommonAppbar extends StatelessWidget {
   final Widget? title;
-  const CommonAppbar({super.key, this.title});
+  final bool hasBackground;
+  const CommonAppbar({super.key, this.title, this.hasBackground = true});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class CommonAppbar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
             children: [
-              CustomBackButton(hasBackground: true),
+              CustomBackButton(hasBackground: hasBackground),
               SizedBox(width: 48),
             ],
           ),

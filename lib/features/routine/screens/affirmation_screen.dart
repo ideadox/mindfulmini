@@ -99,24 +99,36 @@ class _AffirmationScreenState extends State<AffirmationScreen>
   late Animation<double> listenSuccess1MoveUp;
   late Animation<double> listenSuccess2FadeIn;
   late Animation<double> listenSuccess2MoveUp;
-
+  //rain bow,
   double firstStart = 0.0,
-      firstEnd = 0.03,
-      secondStart = 0.07,
-      secondEnd = 0.08,
-      thirdStart = 0.12,
+      firstEnd = 0.02,
+          //hi tom
+          secondStart =
+          0.05,
+      secondEnd = 0.06,
+          //let do affrim
+          thirdStart =
+          0.09,
       thirdEnd = 0.125,
-      fourthStart = 0.15,
-      fourthEnd = 0.18,
-      fifthStart = 0.19,
-      fifthEnd = 0.22,
-      sixthStart = 0.26,
-      sixthEnd = 0.27,
-      seventhStart = 0.27,
-      seventhEnd = 0.29,
-      eightStart = 0.42,
-      ninthStart = 0.58,
-      tenthStart = 0.73,
+          // circular rain bow
+          fourthStart =
+          0.13,
+      fourthEnd = 0.16,
+          // girl and text
+          fifthStart =
+          0.17,
+      fifthEnd = 0.19,
+          // girl exit steeper
+          sixthStart =
+          0.23,
+      sixthEnd = 0.24,
+          // read loud and i am brave
+          seventhStart =
+          0.24,
+      seventhEnd = 0.26,
+      eightStart = 0.40,
+      ninthStart = 0.56,
+      tenthStart = 0.70,
       eleventhStart = 0.76,
       twelvthStart = 0.76 + 0.1 + 0.05,
       end = 1.0;
@@ -156,7 +168,7 @@ class _AffirmationScreenState extends State<AffirmationScreen>
   void _initControllers() {
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 50),
+      duration: Duration(seconds: 55),
     );
 
     _birdsLottieController = AnimationController(vsync: this);

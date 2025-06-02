@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:mindfulminis/common/widgets/common_appbar.dart';
 import 'package:mindfulminis/common/widgets/custom_back_button.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
-import 'package:mindfulminis/features/analytices/widgets/bottom_container.dart';
-import 'package:mindfulminis/features/analytices/widgets/daily_act_conatiner.dart';
-import 'package:mindfulminis/features/analytices/widgets/horizontal_analytic_day.dart';
-import 'package:mindfulminis/features/analytices/widgets/lession_container.dart';
-import 'package:mindfulminis/features/analytices/widgets/performance_view.dart';
-import 'package:mindfulminis/features/analytices/widgets/streak_row.dart';
+import 'package:mindfulminis/features/analytices/widgets/week_widgets/week_anayl.dart';
+import 'package:mindfulminis/injection/injection.dart';
+
+import '../widgets/overall_widgets/overall_widget.dart';
+import '../widgets/today_widgets/today_anayl.dart';
 
 class AnalyticScreen extends StatelessWidget {
   static String routeName = 'analytices-screen';
@@ -16,45 +18,83 @@ class AnalyticScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        surfaceTintColor: Colors.transparent,
-        centerTitle: true,
-        leading: CustomBackButton(),
-        title: Text('Analytics'),
-      ),
-
-      body: SingleChildScrollView(
-        child: Column(
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(12),
+            Container(
+              height: 150,
+              alignment: Alignment.bottomCenter,
+              // padding: EdgeInsets.only(left: 12, right: 12, bottom: 10),
+              decoration: BoxDecoration(
+                color: HexColor('#F7F4FF'),
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(20),
+                ),
+              ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  HorizontalAnalyticDay(
-                    selectedDate: DateTime.now(),
-                    onDateSelected: (value) {},
+                  Space.h16,
+                  CommonAppbar(
+                    hasBackground: false,
+                    title: Text(
+                      'Analytics',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                   ),
-                  Space.h20,
-                  StreakRow(),
-                  Space.h20,
-
-                  DailyActConatiner(),
-                  Space.h20,
-
-                  LessionContainer(),
-                  Space.h20,
-
-                  PerformanceView(),
+                  Container(
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: TabBar(
+                      dividerColor: Colors.transparent,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      labelStyle: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      unselectedLabelStyle: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey,
+                      ),
+                      indicator: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            HexColor('#DCB8FF'),
+                            HexColor('#DCB8FF').withValues(alpha: 0.2),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(300),
+                      ),
+                      tabs: [
+                        Tab(text: 'Today'),
+                        Tab(text: 'Week'),
+                        Tab(text: 'Overall'),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
-            SizedBox(height: 200),
-            BottomContainer(),
+
+            Expanded(
+              child: TabBarView(
+                physics: NeverScrollableScrollPhysics(),
+                children: [TodayAnayl(), WeekAnayl(), OverallWidget()],
+              ),
+            ),
           ],
         ),
       ),

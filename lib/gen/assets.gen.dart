@@ -390,6 +390,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/add_feeling_background.svg
   String get addFeelingBackground => 'assets/images/add_feeling_background.svg';
 
+  /// File path: assets/images/affirmation_avatar.png
+  AssetGenImage get affirmationAvatar =>
+      const AssetGenImage('assets/images/affirmation_avatar.png');
+
   /// File path: assets/images/ai_chat.png
   AssetGenImage get aiChat => const AssetGenImage('assets/images/ai_chat.png');
 
@@ -401,6 +405,10 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/angry_feel.svg
   String get angryFeel => 'assets/images/angry_feel.svg';
+
+  /// File path: assets/images/breadthing_avatar.png
+  AssetGenImage get breadthingAvatar =>
+      const AssetGenImage('assets/images/breadthing_avatar.png');
 
   /// File path: assets/images/breath_routine.png
   AssetGenImage get breathRoutine =>
@@ -430,6 +438,10 @@ class $AssetsImagesGen {
   AssetGenImage get feelingBackground =>
       const AssetGenImage('assets/images/feeling_background.png');
 
+  /// File path: assets/images/gratitue_avatar.png
+  AssetGenImage get gratitueAvatar =>
+      const AssetGenImage('assets/images/gratitue_avatar.png');
+
   /// File path: assets/images/joural_detail_bottom.svg
   String get jouralDetailBottom => 'assets/images/joural_detail_bottom.svg';
 
@@ -448,6 +460,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/journal_top_background.png
   AssetGenImage get journalTopBackground =>
       const AssetGenImage('assets/images/journal_top_background.png');
+
+  /// File path: assets/images/meditation_avatar.png
+  AssetGenImage get meditationAvatar =>
+      const AssetGenImage('assets/images/meditation_avatar.png');
 
   /// File path: assets/images/meditation_routine.png
   AssetGenImage get meditationRoutine =>
@@ -557,10 +573,12 @@ class $AssetsImagesGen {
     star1,
     star2,
     addFeelingBackground,
+    affirmationAvatar,
     aiChat,
     allset,
     amazingFeel,
     angryFeel,
+    breadthingAvatar,
     breathRoutine,
     breathingTopHeader,
     celebrateContinue,
@@ -569,11 +587,13 @@ class $AssetsImagesGen {
     daillogComplete,
     deleteAccountImage,
     feelingBackground,
+    gratitueAvatar,
     jouralDetailBottom,
     journalBottom1,
     journalBottomleft,
     journalBottomright,
     journalTopBackground,
+    meditationAvatar,
     meditationRoutine,
     meditationTopHrader,
     miniBodyScanRoutine,
@@ -833,6 +853,10 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/affri_seed.svg
   String get affriSeed => 'assets/vectors/affri_seed.svg';
 
+  /// File path: assets/vectors/anayl_backg.png
+  AssetGenImage get anaylBackg =>
+      const AssetGenImage('assets/vectors/anayl_backg.png');
+
   /// File path: assets/vectors/bird_flying.json
   String get birdFlying => 'assets/vectors/bird_flying.json';
 
@@ -935,6 +959,10 @@ class $AssetsVectorsGen {
   AssetGenImage get storiesTop =>
       const AssetGenImage('assets/vectors/stories_top.png');
 
+  /// File path: assets/vectors/today_anayl_bg.png
+  AssetGenImage get todayAnaylBg =>
+      const AssetGenImage('assets/vectors/today_anayl_bg.png');
+
   /// List of all assets
   List<dynamic> get values => [
     a202502121524117946638,
@@ -959,6 +987,7 @@ class $AssetsVectorsGen {
     affirTopRightCloud,
     affirWhiteCurve,
     affriSeed,
+    anaylBackg,
     birdFlying,
     birdsFlying,
     boyYogaPlay,
@@ -987,6 +1016,7 @@ class $AssetsVectorsGen {
     storiesLeft,
     storiesRight,
     storiesTop,
+    todayAnaylBg,
   ];
 }
 

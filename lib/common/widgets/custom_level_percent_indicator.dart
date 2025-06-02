@@ -17,9 +17,9 @@ class CustomLevelPercentIndicator extends StatelessWidget {
             percent == 1
                 ? [
                   BoxShadow(
-                    color: HexColor('#0FC09C').withOpacity(0.5),
-                    spreadRadius: 1,
-                    blurRadius: 12,
+                    color: HexColor('#0FC09C').withValues(alpha: 0.4),
+                    spreadRadius: 0,
+                    blurRadius: 6,
                     offset: Offset(0, 1),
                   ),
                 ]
