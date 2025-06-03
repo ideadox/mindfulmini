@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mindfulminis/common/widgets/common_appbar.dart';
-import 'package:mindfulminis/common/widgets/custom_back_button.dart';
+
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/analytices/widgets/week_widgets/week_anayl.dart';
-import 'package:mindfulminis/injection/injection.dart';
 
 import '../widgets/overall_widgets/overall_widget.dart';
 import '../widgets/today_widgets/today_anayl.dart';
@@ -28,7 +26,7 @@ class AnalyticScreen extends StatelessWidget {
             Container(
               height: 150,
               alignment: Alignment.bottomCenter,
-              // padding: EdgeInsets.only(left: 12, right: 12, bottom: 10),
+
               decoration: BoxDecoration(
                 color: HexColor('#F7F4FF'),
                 borderRadius: BorderRadius.vertical(
@@ -50,6 +48,7 @@ class AnalyticScreen extends StatelessWidget {
                   ),
                   Container(
                     height: 48,
+                    margin: EdgeInsets.only(left: 16, right: 16),
                     decoration: BoxDecoration(
                       color: Colors.grey.shade200,
                       borderRadius: BorderRadius.circular(30),
@@ -65,7 +64,7 @@ class AnalyticScreen extends StatelessWidget {
                       unselectedLabelStyle: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: Colors.grey,
+                        color: Colors.black54,
                       ),
                       indicator: BoxDecoration(
                         gradient: LinearGradient(

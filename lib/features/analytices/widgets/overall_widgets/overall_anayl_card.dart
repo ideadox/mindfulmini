@@ -27,9 +27,10 @@ class OverallAnaylCard extends StatelessWidget {
             ),
           ],
         ),
-        Space.h12,
-        SizedBox(height: 200),
+        Space.h20,
+
         OverallInfo(),
+    
         Space.h20,
 
         OverallBuildRoutineCard(),

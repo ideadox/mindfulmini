@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mindfulminis/core/app_colors.dart';
+import 'package:mindfulminis/core/app_spacing.dart';
+import 'package:mindfulminis/features/analytices/widgets/overall_widgets/overall_chart.dart';
 
 class OverallInfo extends StatelessWidget {
   const OverallInfo({super.key});
@@ -21,6 +24,13 @@ class OverallInfo extends StatelessWidget {
             ),
             Text('13h 30 min', style: TextStyle(fontSize: 12)),
           ],
+        ),
+        Space.h32,
+
+        OverallChart(
+          value: 80,
+          gradientColors: AppColors.primaryGradientColors,
+          strokeWidth: 22,
         ),
       ],
     );

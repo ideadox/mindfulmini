@@ -19,8 +19,8 @@ class WeekAnayl extends StatelessWidget {
             ),
             Space.h16,
             WeekAnaylCard(
-              type: 'Morning Routine',
-              icon: Assets.icons.sunDimIcon,
+              type: 'Afternoon Routine',
+              icon: Assets.icons.fullSunIcon,
             ),
           ],
         ),

@@ -863,6 +863,9 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/birds_flying.json
   String get birdsFlying => 'assets/vectors/birds_flying.json';
 
+  /// File path: assets/vectors/blur_filter.svg
+  String get blurFilter => 'assets/vectors/blur_filter.svg';
+
   /// File path: assets/vectors/boy_yoga_play.png
   AssetGenImage get boyYogaPlay =>
       const AssetGenImage('assets/vectors/boy_yoga_play.png');
@@ -963,6 +966,14 @@ class $AssetsVectorsGen {
   AssetGenImage get todayAnaylBg =>
       const AssetGenImage('assets/vectors/today_anayl_bg.png');
 
+  /// File path: assets/vectors/week_anayl_layer1.png
+  AssetGenImage get weekAnaylLayer1 =>
+      const AssetGenImage('assets/vectors/week_anayl_layer1.png');
+
+  /// File path: assets/vectors/week_anayl_layer2.png
+  AssetGenImage get weekAnaylLayer2 =>
+      const AssetGenImage('assets/vectors/week_anayl_layer2.png');
+
   /// List of all assets
   List<dynamic> get values => [
     a202502121524117946638,
@@ -990,6 +1001,7 @@ class $AssetsVectorsGen {
     anaylBackg,
     birdFlying,
     birdsFlying,
+    blurFilter,
     boyYogaPlay,
     bubbleBlast,
     centerBoy1,
@@ -1017,6 +1029,8 @@ class $AssetsVectorsGen {
     storiesRight,
     storiesTop,
     todayAnaylBg,
+    weekAnaylLayer1,
+    weekAnaylLayer2,
   ];
 }
 

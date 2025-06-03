@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:mindfulminis/common/widgets/custom_gradient_text.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/analytices/widgets/today_widgets/routine_card.dart';
-import 'package:mindfulminis/features/analytices/widgets/today_widgets/today_chart_widget.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 
 import '../../../../common/widgets/custom_segemt_percent_indicator.dart';
@@ -15,7 +15,7 @@ class TodayAnaylCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<RoutineLevelModel> _levelData = [
+    List<RoutineLevelModel> levelData = [
       RoutineLevelModel(
         icon: Assets.images.gratitueAvatar.path,
         title: 'Gratitude Journal',
@@ -64,23 +64,27 @@ class TodayAnaylCard extends StatelessWidget {
             DurationLevel(
               invested: Duration(minutes: 12),
               total: Duration(minutes: 15),
-              color: Colors.purple,
+              color: [
+                HexColor('#6E40F9'),
+                HexColor('#A569FB'),
+                HexColor('#CE89FF'),
+              ],
             ),
 
             DurationLevel(
               invested: Duration(minutes: 4),
               total: Duration(minutes: 5),
-              color: Colors.orange,
+              color: [HexColor('#F7B25E'), HexColor('#FEDD8378')],
             ),
             DurationLevel(
               invested: Duration(minutes: 3),
               total: Duration(minutes: 5),
-              color: const Color.fromARGB(255, 239, 64, 255),
+              color: [HexColor('#BA7DFF'), HexColor('#FF9DBA')],
             ),
             DurationLevel(
               invested: Duration(minutes: 10),
               total: Duration(minutes: 10),
-              color: Colors.green,
+              color: [HexColor('#D2F5E3'), HexColor('#64BD94')],
             ),
           ],
           child: Column(
@@ -103,12 +107,12 @@ class TodayAnaylCard extends StatelessWidget {
 
         Space.h40,
         ListView.separated(
-          itemCount: _levelData.length,
+          itemCount: levelData.length,
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           separatorBuilder: (context, index) => Space.h12,
           itemBuilder: (context, index) {
-            final item = _levelData[index];
+            final item = levelData[index];
             return RoutineCard(
               icon: item.icon,
               title: item.title,

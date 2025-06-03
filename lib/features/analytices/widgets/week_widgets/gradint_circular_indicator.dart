@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -10,6 +8,7 @@ class GradientCircularIndicator extends StatelessWidget {
   final double lineWidth;
   final List<Color> gradientColors;
   final String centerText;
+  final bool isslected;
 
   const GradientCircularIndicator({
     super.key,
@@ -18,6 +17,7 @@ class GradientCircularIndicator extends StatelessWidget {
     required this.lineWidth,
     required this.gradientColors,
     required this.centerText,
+    this.isslected = false,
   });
 
   @override
@@ -26,7 +26,7 @@ class GradientCircularIndicator extends StatelessWidget {
       radius: radius,
       lineWidth: lineWidth,
       percent: percent.clamp(0.0, 1.0),
-      backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+      backgroundColor: AppColors.primary.withValues(alpha: 0.2),
       circularStrokeCap: CircularStrokeCap.round,
       center: Text(
         centerText,

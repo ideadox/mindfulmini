@@ -40,17 +40,29 @@ class WeekHorizCalender extends StatelessWidget {
                   style: TextStyle(fontSize: 12, color: Colors.black54),
                 ),
                 Space.h16,
-                SizedBox(
-                  width: 40,
-                  height: 40,
-                  child: GradientCircularIndicator(
-                    percent: 0.75,
-                    radius: 20,
-                    lineWidth: 3,
-                    gradientColors:
-                        AppColors.primaryGradientColors.reversed.toList(),
-                    centerText: "75",
-                  ),
+                Stack(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 40,
+                      height: 40,
+                      child: GradientCircularIndicator(
+                        percent: 0.75,
+                        radius: 20,
+                        lineWidth: 3,
+                        gradientColors:
+                            AppColors.primaryGradientColors.reversed.toList(),
+                        centerText: date.day.toString(),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
