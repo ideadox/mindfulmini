@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/features/analytices/screens/analytic_screen.dart';
+import 'package:mindfulminis/features/help_center/screens/help_center_screen.dart';
 import 'package:mindfulminis/features/profile/screens/app_setting_screen.dart';
 import 'package:mindfulminis/features/profile/screens/language_screen.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
@@ -28,6 +29,11 @@ class ProfileProvider with ChangeNotifier {
 
   void navigateToLanguage() {
     _navigationService.pushNamed(LanguageScreen.routeName);
+    return;
+  }
+
+  void navigateToHelpCenter() {
+    _navigationService.pushNamed(HelpCenterScreen.routeName);
     return;
   }
 

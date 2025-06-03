@@ -4,12 +4,14 @@ import 'package:hexcolor/hexcolor.dart';
 class GradientButton extends StatelessWidget {
   final Widget child;
   final bool hasShadow;
+  final List<Color>? gradientColors;
   final void Function()? onPressed;
   const GradientButton({
     super.key,
     required this.child,
     this.onPressed,
     this.hasShadow = true,
+    this.gradientColors,
   });
 
   @override
@@ -36,11 +38,13 @@ class GradientButton extends StatelessWidget {
               onPressed == null
                   ? null
                   : LinearGradient(
-                    colors: [
-                      HexColor('#6E40F9'),
-                      HexColor('#A569FB'),
-                      HexColor('#CE89FF'),
-                    ],
+                    colors:
+                        gradientColors ??
+                        [
+                          HexColor('#6E40F9'),
+                          HexColor('#A569FB'),
+                          HexColor('#CE89FF'),
+                        ],
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                   ),

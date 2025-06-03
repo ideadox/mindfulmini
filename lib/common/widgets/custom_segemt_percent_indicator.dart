@@ -91,7 +91,7 @@ class _MultiSegmentPainter extends CustomPainter {
               ..style = PaintingStyle.stroke
               ..strokeWidth = strokeWidth + 3
               ..strokeCap = StrokeCap.round
-              ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 5);
+              ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
 
         canvas.drawArc(rect, startAngle, investedArc, false, shadowPaint);
       }
@@ -152,7 +152,7 @@ class CustomSegemtPercentIndicator extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         CustomPaint(
-          size: Size(size.width * 0.4, size.width * 0.4),
+          size: Size(size.width * 0.5, size.width * 0.5),
           painter: _MultiSegmentPainter(
             levels: levels,
             strokeWidth: 8,

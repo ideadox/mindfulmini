@@ -57,7 +57,7 @@ class TodayAnaylCard extends StatelessWidget {
           ],
         ),
         TodayHorizCalender(),
-        Space.h20,
+        Space.h12,
 
         CustomSegemtPercentIndicator(
           levels: [
@@ -105,7 +105,7 @@ class TodayAnaylCard extends StatelessWidget {
           ),
         ),
 
-        Space.h40,
+        Space.h16,
         ListView.separated(
           itemCount: levelData.length,
           physics: NeverScrollableScrollPhysics(),

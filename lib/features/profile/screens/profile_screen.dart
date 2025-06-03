@@ -118,6 +118,9 @@ class ProfileScreen extends StatelessWidget {
                                   provider.navigateToLanguage();
                                   return;
                                 }
+                                if (index == 8) {
+                                  provider.navigateToHelpCenter();
+                                }
                               },
                               title: Text(
                                 item['name'] ?? '',

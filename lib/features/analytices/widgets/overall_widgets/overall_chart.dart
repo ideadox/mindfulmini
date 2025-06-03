@@ -17,31 +17,38 @@ class OverallChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        CustomPaint(
-          size: const Size(215, 117),
-          painter: _SemicircleChartPainter(
-            value: value.clamp(0, 100),
-            gradientColors: gradientColors,
-            strokeWidth: strokeWidth,
-          ),
-        ),
-        Column(
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(begin: 0, end: value.clamp(0, 100)),
+      duration: const Duration(seconds: 2),
+      curve: Curves.easeOutCubic,
+      builder: (context, animatedValue, child) {
+        return Stack(
+          alignment: Alignment.bottomCenter,
           children: [
-            Text(
-              '${value.toInt()}%',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+            CustomPaint(
+              size: const Size(215, 117),
+              painter: _SemicircleChartPainter(
+                value: animatedValue,
+                gradientColors: gradientColors,
+                strokeWidth: strokeWidth,
+              ),
             ),
-            Space.h8,
-            Text(
-              'Completion Rate',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+            Column(
+              children: [
+                Text(
+                  '${value.toInt()}%',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+                ),
+                Space.h8,
+                Text(
+                  'Completion Rate',
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                ),
+              ],
             ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 }
@@ -81,7 +88,7 @@ class _SemicircleChartPainter extends CustomPainter {
     final thumbBackX = center.dx + radius * cos(thumbBackangle);
     final thumbBackY = center.dy + radius * sin(thumbBackangle);
 
-    final thumbBackPaint = Paint()..color = Colors.grey.shade300;
+    final thumbBackPaint = Paint()..color = Colors.grey.shade200;
     canvas.drawCircle(Offset(thumbBackX, thumbBackY), 20, thumbBackPaint);
 
     // Draw shadow arc separately

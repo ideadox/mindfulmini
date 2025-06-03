@@ -9,21 +9,18 @@ class TodayAnayl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        // image: DecorationImage(
-        //   fit: BoxFit.cover,
-        //   alignment: Alignment.bottomCenter,
-        //   image: AssetImage(Assets.vectors.todayAnaylBg.path),
-        // ),
-      ),
+      decoration: BoxDecoration(),
       child: Stack(
         alignment: Alignment.center,
         children: [
           Positioned(
             bottom: -300,
-            child: Image.asset(
-              Assets.vectors.todayAnaylBg.path,
-              fit: BoxFit.fill,
+            child: Opacity(
+              opacity: 0.6,
+              child: Image.asset(
+                Assets.vectors.todayAnaylBg.path,
+                fit: BoxFit.fill,
+              ),
             ),
           ),
           SingleChildScrollView(
