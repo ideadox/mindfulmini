@@ -35,6 +35,10 @@ class TodayHorizCalender extends StatelessWidget {
               date.month == today.month &&
               date.year == today.year;
 
+          final bool lessThanDay =
+              date.day <= DateTime.now().day &&
+              date.month == DateTime.now().month;
+
           return Container(
             width: width / 9,
             alignment: Alignment.center,
@@ -65,7 +69,7 @@ class TodayHorizCalender extends StatelessWidget {
                           ),
                         ),
                       GradientCircularIndicator(
-                        percent: 0.75,
+                        percent: !lessThanDay ? 0.0 : 0.75,
                         radius: 20,
                         lineWidth: 3,
                         gradientColors:
@@ -77,12 +81,17 @@ class TodayHorizCalender extends StatelessWidget {
                         ClipRRect(
                           borderRadius: BorderRadiusGeometry.circular(100),
                           child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 1.2, sigmaY: 1.2),
+                            filter:
+                                lessThanDay
+                                    ? ImageFilter.blur(sigmaX: 0.5, sigmaY: 0.5)
+                                    : ImageFilter.blur(sigmaX: 1, sigmaY: 1),
                             child: Container(
                               width: 40,
                               height: 40,
                               decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.6),
+                                color: Colors.white.withValues(
+                                  alpha: lessThanDay ? 0.5 : 0.5,
+                                ),
                               ),
                             ),
                           ),

@@ -31,6 +31,7 @@ import 'package:mindfulminis/features/yoga/screens/yoga_main.dart';
 import '../features/help_center/screens/help_center_screen.dart';
 import '../features/onbaord/screens/describe_yourself.dart';
 import '../features/sidhi/screens/shidi_chat_screen.dart';
+import '../features/terms_service/screens/terms_service.dart';
 
 // GoRouter configuration
 GoRouter buildRouter() {
@@ -192,6 +193,11 @@ GoRouter buildRouter() {
         path: HelpCenterScreen.routePath,
         name: HelpCenterScreen.routeName,
         builder: (context, state) => HelpCenterScreen(),
+      ),
+      GoRoute(
+        path: TermsService.routePath,
+        name: TermsService.routeName,
+        builder: (context, state) => TermsService(),
       ),
     ],
     // redirect: (context, state) {

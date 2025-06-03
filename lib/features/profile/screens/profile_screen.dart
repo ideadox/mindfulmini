@@ -121,6 +121,9 @@ class ProfileScreen extends StatelessWidget {
                                 if (index == 8) {
                                   provider.navigateToHelpCenter();
                                 }
+                                if (index == 11) {
+                                  provider.navigateToTermsService();
+                                }
                               },
                               title: Text(
                                 item['name'] ?? '',

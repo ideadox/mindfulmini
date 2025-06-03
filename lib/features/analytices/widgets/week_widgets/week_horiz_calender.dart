@@ -28,6 +28,15 @@ class WeekHorizCalender extends StatelessWidget {
         itemBuilder: (context, index) {
           DateTime date = startOfWeek.add(Duration(days: index));
 
+          DateTime today = DateTime.now();
+          bool isToday =
+              date.day == today.day &&
+              date.month == today.month &&
+              date.year == today.year;
+          final bool lessThanDay =
+              date.day <= DateTime.now().day &&
+              date.month == DateTime.now().month;
+
           return Container(
             width: width / 9,
             alignment: Alignment.center,
@@ -54,7 +63,7 @@ class WeekHorizCalender extends StatelessWidget {
                       width: 40,
                       height: 40,
                       child: GradientCircularIndicator(
-                        percent: 0.75,
+                        percent: !lessThanDay ? 0.0 : 0.75,
                         radius: 20,
                         lineWidth: 3,
                         gradientColors:
