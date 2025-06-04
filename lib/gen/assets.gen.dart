@@ -477,6 +477,10 @@ class $AssetsImagesGen {
   AssetGenImage get miniBodyScanRoutine =>
       const AssetGenImage('assets/images/mini_body_scan_routine.png');
 
+  /// File path: assets/images/myfav_img.png
+  AssetGenImage get myfavImg =>
+      const AssetGenImage('assets/images/myfav_img.png');
+
   /// File path: assets/images/onboard1.svg
   String get onboard1 => 'assets/images/onboard1.svg';
 
@@ -503,6 +507,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/recent_activity_backgrocd.png
   AssetGenImage get recentActivityBackgrocd =>
       const AssetGenImage('assets/images/recent_activity_backgrocd.png');
+
+  /// File path: assets/images/recently_watched.png
+  AssetGenImage get recentlyWatched =>
+      const AssetGenImage('assets/images/recently_watched.png');
 
   /// File path: assets/images/referal_bgm.png
   AssetGenImage get referalBgm =>
@@ -601,6 +609,7 @@ class $AssetsImagesGen {
     meditationRoutine,
     meditationTopHrader,
     miniBodyScanRoutine,
+    myfavImg,
     onboard1,
     onboard2,
     onboard3,
@@ -609,6 +618,7 @@ class $AssetsImagesGen {
     phoneverficationdailog,
     rainbow,
     recentActivityBackgrocd,
+    recentlyWatched,
     referalBgm,
     routineTopBackground,
     sadFeel,

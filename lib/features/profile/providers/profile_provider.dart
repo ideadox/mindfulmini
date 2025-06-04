@@ -9,6 +9,7 @@ import 'package:mindfulminis/features/terms_service/screens/terms_service.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
 
+import '../../library/screens/library_screen.dart';
 import '../screens/edit_profile_screen.dart';
 
 class ProfileProvider with ChangeNotifier {
@@ -50,7 +51,7 @@ class ProfileProvider with ChangeNotifier {
   }
 
   void navigateToLibrary() {
-    _navigationService.pushNamed(ReferalScreen.routeName);
+    _navigationService.pushNamed(LibraryScreen.routeName);
     return;
   }
 
