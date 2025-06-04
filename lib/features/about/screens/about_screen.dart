@@ -5,11 +5,11 @@ import 'package:mindfulminis/features/terms_service/models/terms_model.dart';
 
 import '../../../common/widgets/custom_back_button.dart';
 
-class TermsService extends StatelessWidget {
-  static String routeName = 'terms-service-screen';
-  static String routePath = '/terms-service-screen';
+class AboutScreen extends StatelessWidget {
+  static String routeName = 'about-screen';
+  static String routePath = '/about-screen';
 
-  const TermsService({super.key});
+  const AboutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class TermsService extends StatelessWidget {
         centerTitle: true,
         leading: CustomBackButton(),
         title: Text(
-          'Terms of Service',
+          'About',
           style: GoogleFonts.nunito(fontSize: 18, fontWeight: FontWeight.w600),
         ),
       ),

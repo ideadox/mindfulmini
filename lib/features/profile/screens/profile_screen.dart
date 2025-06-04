@@ -127,6 +127,9 @@ class ProfileScreen extends StatelessWidget {
                                 if (index == 8) {
                                   provider.navigateToHelpCenter();
                                 }
+                                if (index == 9) {
+                                  provider.navigateToAbout();
+                                }
                                 if (index == 10) {
                                   provider.navigateToPrivacyPolicy();
                                 }

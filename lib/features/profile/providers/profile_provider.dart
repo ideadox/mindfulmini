@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mindfulminis/features/about/screens/about_screen.dart';
 import 'package:mindfulminis/features/analytices/screens/analytic_screen.dart';
 import 'package:mindfulminis/features/help_center/screens/help_center_screen.dart';
 import 'package:mindfulminis/features/profile/screens/app_setting_screen.dart';
@@ -10,6 +11,7 @@ import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
 
 import '../../library/screens/library_screen.dart';
+import '../../privacy/screens/privacy_screen.dart';
 import '../screens/edit_profile_screen.dart';
 
 class ProfileProvider with ChangeNotifier {
@@ -56,7 +58,12 @@ class ProfileProvider with ChangeNotifier {
   }
 
   void navigateToPrivacyPolicy() {
-    _navigationService.pushNamed(ReferalScreen.routeName);
+    _navigationService.pushNamed(PrivacyScreen.routeName);
+    return;
+  }
+
+  void navigateToAbout() {
+    _navigationService.pushNamed(AboutScreen.routeName);
     return;
   }
 

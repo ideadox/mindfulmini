@@ -28,9 +28,11 @@ import 'package:mindfulminis/features/tab_view/screens/tab_view.dart';
 import 'package:mindfulminis/features/yoga/screens/yoga_list.dart';
 import 'package:mindfulminis/features/yoga/screens/yoga_main.dart';
 
+import '../features/about/screens/about_screen.dart';
 import '../features/help_center/screens/help_center_screen.dart';
 import '../features/library/screens/library_screen.dart';
 import '../features/onbaord/screens/describe_yourself.dart';
+import '../features/privacy/screens/privacy_screen.dart';
 import '../features/referals/screens/referal_screen.dart';
 import '../features/sidhi/screens/shidi_chat_screen.dart';
 import '../features/terms_service/screens/terms_service.dart';
@@ -210,6 +212,17 @@ GoRouter buildRouter() {
         path: LibraryScreen.routePath,
         name: LibraryScreen.routeName,
         builder: (context, state) => LibraryScreen(),
+      ),
+      GoRoute(
+        path: PrivacyScreen.routePath,
+        name: PrivacyScreen.routeName,
+        builder: (context, state) => PrivacyScreen(),
+      ),
+
+      GoRoute(
+        path: AboutScreen.routePath,
+        name: AboutScreen.routeName,
+        builder: (context, state) => AboutScreen(),
       ),
     ],
     // redirect: (context, state) {
