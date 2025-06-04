@@ -106,6 +106,12 @@ class ProfileScreen extends StatelessWidget {
                                   return;
                                 }
 
+                                if (index == 1) {
+                                  provider.navigateToReferal();
+                                }
+                                if (index == 2) {
+                                  provider.navigateToLibrary();
+                                }
                                 if (index == 3) {
                                   provider.navigateToAnalytices();
                                   return;
@@ -120,6 +126,9 @@ class ProfileScreen extends StatelessWidget {
                                 }
                                 if (index == 8) {
                                   provider.navigateToHelpCenter();
+                                }
+                                if (index == 10) {
+                                  provider.navigateToPrivacyPolicy();
                                 }
                                 if (index == 11) {
                                   provider.navigateToTermsService();

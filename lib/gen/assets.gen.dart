@@ -504,6 +504,10 @@ class $AssetsImagesGen {
   AssetGenImage get recentActivityBackgrocd =>
       const AssetGenImage('assets/images/recent_activity_backgrocd.png');
 
+  /// File path: assets/images/referal_bgm.png
+  AssetGenImage get referalBgm =>
+      const AssetGenImage('assets/images/referal_bgm.png');
+
   /// File path: assets/images/routine_top_background.png
   AssetGenImage get routineTopBackground =>
       const AssetGenImage('assets/images/routine_top_background.png');
@@ -605,6 +609,7 @@ class $AssetsImagesGen {
     phoneverficationdailog,
     rainbow,
     recentActivityBackgrocd,
+    referalBgm,
     routineTopBackground,
     sadFeel,
     sleepFeel,
