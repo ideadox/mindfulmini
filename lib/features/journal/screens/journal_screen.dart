@@ -40,18 +40,19 @@ class JournalScreen extends StatelessWidget {
                     alignment: Alignment.center,
                     children: [
                       Container(
-                        height: 515,
+                        height: 480,
                         decoration: BoxDecoration(
                           image: DecorationImage(
+                            alignment: Alignment.topCenter,
                             fit: BoxFit.cover,
                             image: AssetImage(
-                              Assets.images.journalTopBackground.path,
+                              Assets.images.journalTopBackground2.path,
                             ),
                           ),
                         ),
                       ),
                       Positioned(
-                        top: kToolbarHeight,
+                        top: kToolbarHeight - 15,
                         child: Container(
                           alignment: Alignment.center,
                           padding: EdgeInsets.symmetric(
@@ -76,7 +77,7 @@ class JournalScreen extends StatelessWidget {
                         ),
                       ),
                       Positioned(
-                        bottom: 60,
+                        bottom: 10,
                         child: Column(
                           children: [
                             Text(
@@ -124,10 +125,12 @@ class JournalScreen extends StatelessWidget {
                       ),
                     ],
                   ),
+
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Column(
                       children: [
+                        Space.h12,
                         Row(
                           children: [
                             Text(
@@ -142,7 +145,6 @@ class JournalScreen extends StatelessWidget {
                         Space.h12,
                         RecentEntryCard(),
                         Space.h20,
-
                         Space.h12,
                         CustomMonthCalender(provider: provider),
                       ],

@@ -457,6 +457,10 @@ class $AssetsImagesGen {
   AssetGenImage get journalBottomright =>
       const AssetGenImage('assets/images/journal_bottomright.png');
 
+  /// File path: assets/images/journal_top_background 2.png
+  AssetGenImage get journalTopBackground2 =>
+      const AssetGenImage('assets/images/journal_top_background 2.png');
+
   /// File path: assets/images/journal_top_background.png
   AssetGenImage get journalTopBackground =>
       const AssetGenImage('assets/images/journal_top_background.png');
@@ -612,6 +616,7 @@ class $AssetsImagesGen {
     journalBottom1,
     journalBottomleft,
     journalBottomright,
+    journalTopBackground2,
     journalTopBackground,
     meditationAvatar,
     meditationRoutine,

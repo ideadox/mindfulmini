@@ -11,60 +11,84 @@ import 'package:mindfulminis/features/home/widgets/stories/stories.dart';
 import 'package:mindfulminis/features/home/widgets/yoga_flow/yoga_flow.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 
+import '../widgets/create_routine_button/create_routine_button.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    bool hasRoutine = false;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              height: 300,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: AssetImage(Assets.images.header.path),
-                ),
-              ),
-              child: Column(
-                children: [
-                  SizedBox(height: kToolbarHeight),
-                  Stack(
-                    alignment: Alignment.center,
+            Stack(
+              children: [
+                Container(
+                  height: !hasRoutine ? 350 : 285,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      alignment: Alignment.topCenter,
+                      fit: BoxFit.contain,
+                      image: AssetImage(Assets.images.header.path),
+                    ),
+                  ),
+                  child: Column(
                     children: [
-                      Center(
-                        child: SvgPicture.asset(
-                          Assets.icons.homeTopLogo,
-                          width: 70,
-                          height: 40,
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      SizedBox(height: kToolbarHeight),
+                      Stack(
+                        alignment: Alignment.center,
                         children: [
-                          SizedBox(width: 48),
-                          IconButton(
-                            onPressed: () {},
-                            icon: SvgPicture.asset(Assets.icons.notification),
+                          Center(
+                            child: SvgPicture.asset(
+                              Assets.icons.homeTopLogo,
+                              width: 70,
+                              height: 40,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(width: 48),
+                              IconButton(
+                                onPressed: () {},
+                                icon: SvgPicture.asset(
+                                  Assets.icons.notification,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Column(
+                      children: [
+                        // CreateRoutineButton(),
+                        MyroutineSlider(),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Column(
                 children: [
-                  // CreateRoutineButton(),
-                  MyroutineSlider(),
-                  Space.h16,
+                  Space.h32,
                   DailyActivityWidget(),
                   Space.h16,
 
