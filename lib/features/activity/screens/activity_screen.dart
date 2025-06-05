@@ -89,7 +89,7 @@ class ActivityScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              Space.h12,
+              Space.h8,
 
               SizedBox(
                 height: 180,

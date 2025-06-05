@@ -76,7 +76,7 @@ class ProfileProvider with ChangeNotifier {
     },
 
     {
-      'name': 'Referral Friends Now',
+      'name': 'Referral Friends',
       'icon': Assets.profileIcons.referal,
       'divider': 'true',
       'trailing': 'true',
@@ -113,7 +113,7 @@ class ProfileProvider with ChangeNotifier {
       'hasButton': 'true',
     },
     {
-      'name': 'App Setting',
+      'name': 'App Settings',
       'icon': Assets.profileIcons.setting,
       'divider': 'true',
       'trailing': 'true',
@@ -143,7 +143,7 @@ class ProfileProvider with ChangeNotifier {
       'trailing': 'false',
     },
     {
-      'name': 'Log out',
+      'name': 'Log Out',
       'icon': Assets.profileIcons.logout,
       'divider': 'false',
       'trailing': 'false',
