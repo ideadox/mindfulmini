@@ -30,7 +30,7 @@ class DeleteAccount extends StatelessWidget {
                   Text(
                     textAlign: TextAlign.center,
 
-                    'Are you sure you want to say goodbye? 😔',
+                    'Are you sure you want\nto say goodbye? 😔',
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
                   ),
                   Space.h20,
@@ -38,7 +38,7 @@ class DeleteAccount extends StatelessWidget {
                     textAlign: TextAlign.center,
 
                     ' By confirming "Delete," your account will be permanently removed.',
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 16),
                   ),
                   Space.h20,
 
@@ -46,7 +46,11 @@ class DeleteAccount extends StatelessWidget {
                     textAlign: TextAlign.center,
 
                     'We’re sad to see you leave 😢, but we understand. If you’re ready to go, we’ll make it happen. If not, your calm and mindful space will always be here waiting for you! 🌈',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w100),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w300,
+                      color: Colors.black54,
+                    ),
                   ),
                   Space.h20,
 

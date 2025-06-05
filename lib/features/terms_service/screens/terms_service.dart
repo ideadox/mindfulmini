@@ -39,10 +39,7 @@ class TermsService extends StatelessWidget {
             children: [
               Text(
                 _terms[0].title,
-                style: GoogleFonts.nunito(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
               ),
               Space.h20,
               Text(_terms[0].body),

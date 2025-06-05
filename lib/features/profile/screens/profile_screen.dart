@@ -28,7 +28,8 @@ class ProfileScreen extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    HexColor('#9D9FE6'),
+                    HexColor('#9D9FE6').withValues(alpha: 0.4),
+                    HexColor('#FFFFFF'),
                     HexColor('#FFFFFF'),
                     HexColor('#FFFFFF'),
                     HexColor('#FFFFFF'),
@@ -78,15 +79,15 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
 
-                    Space.h12,
+                    Space.h8,
 
                     MiniPlusCard(),
 
-                    ListView.builder(
+                    ListView.separated(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: provider.items.length,
-
+                      separatorBuilder: (context, index) => SizedBox(height: 1),
                       itemBuilder: (context, index) {
                         var item = provider.items[index];
 
@@ -95,66 +96,64 @@ class ProfileScreen extends StatelessWidget {
 
                         bool hasTrailing =
                             item['trailing'] == 'true' ? true : false;
-                        bool hasDivider =
-                            item['divider'] == 'true' ? true : false;
-                        return Column(
-                          children: [
-                            ListTile(
-                              onTap: () {
-                                if (index == 0) {
-                                  provider.navigateToEditProfile();
-                                  return;
-                                }
 
-                                if (index == 1) {
-                                  provider.navigateToReferal();
-                                }
-                                if (index == 2) {
-                                  provider.navigateToLibrary();
-                                }
-                                if (index == 3) {
-                                  provider.navigateToAnalytices();
-                                  return;
-                                }
-                                if (index == 7) {
-                                  provider.navigateToAppSetting();
-                                  return;
-                                }
-                                if (index == 5) {
-                                  provider.navigateToLanguage();
-                                  return;
-                                }
-                                if (index == 8) {
-                                  provider.navigateToHelpCenter();
-                                }
-                                if (index == 9) {
-                                  provider.navigateToAbout();
-                                }
-                                if (index == 10) {
-                                  provider.navigateToPrivacyPolicy();
-                                }
-                                if (index == 11) {
-                                  provider.navigateToTermsService();
-                                }
-                              },
-                              title: Text(
-                                item['name'] ?? '',
-                                style: TextStyle(fontSize: 14),
-                              ),
-                              leading: SvgPicture.asset(item['icon'] ?? ''),
-                              trailing:
-                                  hasTrailing
-                                      ? hasButton
-                                          ? CupertinoSwitch(
-                                            value: false,
-                                            onChanged: (val) {},
-                                          )
-                                          : Icon(Icons.chevron_right)
-                                      : null,
+                        return Material(
+                          elevation: 1,
+
+                          shadowColor: Colors.black26,
+                          child: ListTile(
+                            onTap: () {
+                              if (index == 0) {
+                                provider.navigateToEditProfile();
+                                return;
+                              }
+
+                              if (index == 1) {
+                                provider.navigateToReferal();
+                              }
+                              if (index == 2) {
+                                provider.navigateToLibrary();
+                              }
+                              if (index == 3) {
+                                provider.navigateToAnalytices();
+                                return;
+                              }
+                              if (index == 7) {
+                                provider.navigateToAppSetting();
+                                return;
+                              }
+                              if (index == 5) {
+                                provider.navigateToLanguage();
+                                return;
+                              }
+                              if (index == 8) {
+                                provider.navigateToHelpCenter();
+                              }
+                              if (index == 9) {
+                                provider.navigateToAbout();
+                              }
+                              if (index == 10) {
+                                provider.navigateToPrivacyPolicy();
+                              }
+                              if (index == 11) {
+                                provider.navigateToTermsService();
+                              }
+                            },
+                            title: Text(
+                              item['name'] ?? '',
+                              style: TextStyle(fontSize: 14),
                             ),
-                            if (hasDivider)
-                              Divider(thickness: 0.4, color: AppColors.grey45),
-                          ],
+                            leading: SvgPicture.asset(item['icon'] ?? ''),
+                            trailing:
+                                hasTrailing
+                                    ? hasButton
+                                        ? CupertinoSwitch(
+                                          value: false,
+                                          onChanged: (val) {},
+                                        )
+                                        : Icon(Icons.chevron_right)
+                                    : null,
+                          ),
                         );
                       },
                     ),

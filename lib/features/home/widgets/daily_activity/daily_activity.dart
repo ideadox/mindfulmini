@@ -21,7 +21,7 @@ class DailyActivityWidget extends StatelessWidget {
         Space.h8,
         Text(
           textAlign: TextAlign.center,
-          'Choose a card and let the mindfulness fun begin!',
+          'Pick a card to begin your mindfulness adventure!',
           style: AppTextTheme.bodyTextStyle(context).bodyMedium,
         ),
         Space.h20,

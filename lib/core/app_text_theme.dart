@@ -44,7 +44,7 @@ class AppTextTheme {
       bodyMedium: base.bodyMedium?.copyWith(
         fontSize: 14,
         fontWeight: FontWeight.w400,
-        color: AppColors.grey45,
+        color: Colors.black54,
       ),
     );
   }

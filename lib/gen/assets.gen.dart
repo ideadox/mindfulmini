@@ -481,6 +481,14 @@ class $AssetsImagesGen {
   AssetGenImage get myfavImg =>
       const AssetGenImage('assets/images/myfav_img.png');
 
+  /// File path: assets/images/offline_background.png
+  AssetGenImage get offlineBackground =>
+      const AssetGenImage('assets/images/offline_background.png');
+
+  /// File path: assets/images/offline_img.png
+  AssetGenImage get offlineImg =>
+      const AssetGenImage('assets/images/offline_img.png');
+
   /// File path: assets/images/onboard1.svg
   String get onboard1 => 'assets/images/onboard1.svg';
 
@@ -610,6 +618,8 @@ class $AssetsImagesGen {
     meditationTopHrader,
     miniBodyScanRoutine,
     myfavImg,
+    offlineBackground,
+    offlineImg,
     onboard1,
     onboard2,
     onboard3,

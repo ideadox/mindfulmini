@@ -76,6 +76,7 @@ class CustomMonthCalender extends StatelessWidget {
               headerHeight: 0,
 
               todayHighlightColor: AppColors.primary,
+              
               cellBorderColor: Colors.transparent,
               monthViewSettings: MonthViewSettings(
                 dayFormat: 'EEE',

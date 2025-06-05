@@ -25,7 +25,7 @@ class ReferalScreen extends StatelessWidget {
         centerTitle: true,
         leading: CustomBackButton(),
         title: Text(
-          'Referral Friends Now',
+          'Referral Friends',
           // style: Texst(fontSize: 18, fontWeight: FontWeight.w600),
         ),
       ),

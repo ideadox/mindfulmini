@@ -3,8 +3,13 @@ import 'package:mindfulminis/core/app_colors.dart';
 
 class FiveStepProgressBar extends StatelessWidget {
   final double percentComplete;
+  final double height;
 
-  const FiveStepProgressBar({super.key, required this.percentComplete});
+  const FiveStepProgressBar({
+    super.key,
+    required this.percentComplete,
+    this.height = 10,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +25,10 @@ class FiveStepProgressBar extends StatelessWidget {
         return Expanded(
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 1),
-            height: 10,
+            height: height,
             decoration: BoxDecoration(
               gradient: !isFilled ? null : AppColors.primaryGradient,
-              color: isFilled ? null : Colors.grey.shade300,
+              color: isFilled ? null : Colors.grey.shade400,
               borderRadius: BorderRadius.horizontal(
                 left: index == 0 ? Radius.circular(30) : Radius.zero,
                 right:

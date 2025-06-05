@@ -34,7 +34,7 @@ class ActivityScreen extends StatelessWidget {
                 style: AppTextTheme.titleTextTheme(context).titleMedium
                     ?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
               ),
-              Space.h12,
+              Space.h4,
               Text(
                 'Your Path to Happiness Starts Here',
                 textAlign: TextAlign.center,
@@ -42,7 +42,7 @@ class ActivityScreen extends StatelessWidget {
                   context,
                 ).bodyMedium?.copyWith(fontSize: 12),
               ),
-              Space.h20,
+              Space.h16,
 
               SizedBox(
                 height: height * 0.5,
@@ -102,9 +102,8 @@ class ActivityScreen extends StatelessWidget {
                 ),
               ),
 
-              Space.h20,
+              Space.h16,
 
-              Divider(thickness: 1, color: AppColors.dividerColor),
               MiniBodyScanWidget(),
               SizedBox(height: kToolbarHeight + 40),
             ],

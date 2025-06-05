@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
@@ -30,56 +29,26 @@ class MiniPlusCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Unlock Mindful Mini Plus',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Space.w12,
-                      Container(
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          gradient: LinearGradient(
-                            colors: [
-                              HexColor('#6E40F9'),
-                              HexColor('#A569FB'),
-                              HexColor('#CE89FF'),
-                            ],
-                          ),
-                        ),
-                        child: Text(
-                          'PLUS',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
+                  Text(
+                    'Unlock MindfulMinis',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                   ),
-                  Space.h16,
+                  Space.h12,
                   Text(
                     textAlign: TextAlign.center,
-                    'Unlock Mindfulminis plus to access unlimited exclusive content. 7 days free trail.\nCancel anytime',
+                    'Unlock Mindfulminis to access unlimited exclusive content. 7 days free trial.\nCancel anytime',
                     style: AppTextTheme.bodyTextStyle(context).bodyMedium,
                   ),
                   Space.h20,
 
                   SizedBox(
-                    width: 110,
+                    width: 145,
                     height: 45,
                     child: GradientButton(
                       onPressed: () {},
                       child: Center(
                         child: Text(
-                          "Unlock",
+                          "Unlock Now",
                           style:
                               AppTextTheme.mainButtonTextStyle(
                                 context,
@@ -108,7 +77,7 @@ class MiniPlusCard extends StatelessWidget {
               child: Image.asset(Assets.profileIcons.bottomLeftPng.path),
             ),
             Positioned(
-              left: 0,
+              left: -20,
               bottom: 0,
               child: SvgPicture.asset(Assets.profileIcons.bottom),
             ),

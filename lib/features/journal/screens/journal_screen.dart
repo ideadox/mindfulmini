@@ -89,7 +89,7 @@ class JournalScreen extends StatelessWidget {
                                 fontSize: 18,
                               ),
                             ),
-                            Space.h8,
+                            Space.h4,
                             Text(
                               'A Daily Practice of Thankfulness',
                               textAlign: TextAlign.center,
@@ -99,7 +99,7 @@ class JournalScreen extends StatelessWidget {
                             ),
                             Space.h4,
                             SizedBox(
-                              width: 170,
+                              width: 173,
                               height: 48,
                               child: GradientButton(
                                 onPressed: () {
@@ -108,11 +108,13 @@ class JournalScreen extends StatelessWidget {
                                 },
                                 child: Center(
                                   child: Text(
-                                    'Start',
-                                    style:
-                                        AppTextTheme.mainButtonTextStyle(
-                                          context,
-                                        ).titleLarge,
+                                    'Start Journaling',
+                                    style: AppTextTheme.mainButtonTextStyle(
+                                      context,
+                                    ).titleLarge?.copyWith(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -140,17 +142,7 @@ class JournalScreen extends StatelessWidget {
                         Space.h12,
                         RecentEntryCard(),
                         Space.h20,
-                        Row(
-                          children: [
-                            Text(
-                              'Calender',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
+
                         Space.h12,
                         CustomMonthCalender(provider: provider),
                       ],

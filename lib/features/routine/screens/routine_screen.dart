@@ -47,15 +47,14 @@ class RoutineScreen extends StatelessWidget {
                           fontSize: 22,
                         ),
                       ),
-                      Space.h8,
+                      Space.h4,
                       Text(
                         'Create your mindful routine for a peaceful day.',
                         textAlign: TextAlign.center,
-                        style: AppTextTheme.bodyTextStyle(
-                          context,
-                        ).bodyMedium?.copyWith(fontSize: 14),
+                        style: AppTextTheme.bodyTextStyle(context).bodyMedium
+                            ?.copyWith(fontSize: 14, color: Colors.black54),
                       ),
-                      Space.h8,
+                      Space.h4,
                       SizedBox(
                         width: 170,
                         height: 48,
@@ -68,45 +67,31 @@ class RoutineScreen extends StatelessWidget {
                           child: Center(
                             child: Text(
                               'Create Now',
-                              style:
-                                  AppTextTheme.mainButtonTextStyle(
-                                    context,
-                                  ).titleLarge,
+                              style: AppTextTheme.mainButtonTextStyle(
+                                context,
+                              ).titleLarge?.copyWith(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         ),
                       ),
                       Space.h32,
-                      Text(
-                        'Ready to Create Task',
-                        textAlign: TextAlign.center,
-                        style: AppTextTheme.bodyTextStyle(
-                          context,
-                        ).bodyMedium?.copyWith(fontSize: 14),
-                      ),
-                      Space.h4,
 
-                      Text(
-                        'Get Started',
-                        style: AppTextTheme.titleTextTheme(
-                          context,
-                        ).titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                        ),
-                      ),
+                      Space.h4,
                     ],
                   ),
                 ),
               ],
             ),
-            Space.h40,
 
-            // Space.h40,
             HorizontalWeekCalendar(
               selectedDate: DateTime.now(),
               onDateSelected: (date) {},
             ),
+            Space.h40,
+            Space.h40,
           ],
         ),
       ),

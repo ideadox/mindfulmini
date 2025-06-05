@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mindfulminis/core/app_colors.dart';
+
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/home/widgets/add_feeling/add_feeling_widget.dart';
 import 'package:mindfulminis/features/home/widgets/breathing/breathing.dart';
 import 'package:mindfulminis/features/home/widgets/daily_activity/daily_activity.dart';
 import 'package:mindfulminis/features/home/widgets/meditation/meditation.dart';
+import 'package:mindfulminis/features/home/widgets/my_routine/myroutine_slider.dart';
 import 'package:mindfulminis/features/home/widgets/stories/stories.dart';
 import 'package:mindfulminis/features/home/widgets/yoga_flow/yoga_flow.dart';
-import 'package:mindfulminis/features/routine/widgets/myroutine_brief_card.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -63,42 +63,23 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 children: [
                   // CreateRoutineButton(),
-                  Text(
-                    'Your Routine',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                  Text(
-                    'Your own mindful routine for a calm and happy day',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.grey45,
-                    ),
-                  ),
-                  Space.h12,
-                  MyroutineBriefCard(formHome: true),
-                  Space.h20,
+                  MyroutineSlider(),
+                  Space.h16,
                   DailyActivityWidget(),
-                  Space.h20,
-                  Divider(thickness: 1, color: AppColors.dividerColor),
+                  Space.h16,
 
                   YogaFlowWidget(),
-                  Space.h20,
-                  Divider(thickness: 1, color: AppColors.dividerColor),
-                  Space.h20,
+                  Space.h16,
+                  Space.h16,
 
                   AddFeelingWidget(),
-                  Space.h20,
-                  Divider(thickness: 1, color: AppColors.dividerColor),
-                  MeditationWidget(),
-                  Space.h20,
+                  Space.h16,
 
-                  Divider(thickness: 1, color: AppColors.dividerColor),
+                  MeditationWidget(),
+                  Space.h16,
 
                   BreathingWidget(),
-                  Space.h20,
-
-                  Divider(thickness: 1, color: AppColors.dividerColor),
+                  Space.h16,
 
                   StoriesWidget(),
                   SizedBox(height: kToolbarHeight + 40),

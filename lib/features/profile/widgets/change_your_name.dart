@@ -19,7 +19,7 @@ class ChangeYourName extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'Change your name',
+            'Change Name',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
           ),
           Space.h40,
