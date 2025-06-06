@@ -11,6 +11,7 @@ import 'package:mindfulminis/features/home/widgets/stories/stories.dart';
 import 'package:mindfulminis/features/home/widgets/yoga_flow/yoga_flow.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 
+import '../widgets/add_feeling/feeling_bar_chart.dart';
 import '../widgets/create_routine_button/create_routine_button.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -94,9 +95,10 @@ class HomeScreen extends StatelessWidget {
 
                   YogaFlowWidget(),
                   Space.h16,
-                  Space.h16,
 
-                  AddFeelingWidget(),
+                  // AddFeelingWidget(),
+                  FeelingBarChart(),
+
                   Space.h16,
 
                   MeditationWidget(),
