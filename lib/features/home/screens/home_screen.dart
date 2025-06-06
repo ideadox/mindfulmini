@@ -90,6 +90,7 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 children: [
                   Space.h32,
+
                   DailyActivityWidget(),
                   Space.h16,
 

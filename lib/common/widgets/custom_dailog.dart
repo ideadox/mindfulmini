@@ -72,7 +72,7 @@ class CustomDailog extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
                   child: Text(
                     subTitle,
                     textAlign: TextAlign.center,

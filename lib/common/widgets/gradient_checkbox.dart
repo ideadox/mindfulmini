@@ -20,6 +20,7 @@ class GradientCheckbox extends StatelessWidget {
         child: Container(
           height: 20,
           width: 20,
+          alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
             gradient:
@@ -35,7 +36,7 @@ class GradientCheckbox extends StatelessWidget {
                     )
                     : null,
             border: Border.all(
-              color: value ? Colors.transparent : Colors.grey.shade400,
+              color: value ? Colors.transparent : Colors.grey.shade300,
               width: 2,
             ),
             color: value ? null : Colors.transparent,

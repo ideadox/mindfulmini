@@ -13,7 +13,6 @@ import 'package:mindfulminis/core/app_formate.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/routine/providers/create_routine_provider.dart';
-import 'package:mindfulminis/features/routine/screens/remainder_confirmation_screen.dart';
 import 'package:mindfulminis/features/routine/widgets/create_routine_conatiner.dart';
 import 'package:mindfulminis/features/routine/widgets/goal_routine_container.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
@@ -224,18 +223,6 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
                                   : () {
                                     _goToStep(currentStep + 1);
                                     return;
-                                    // showModalBottomSheet(
-                                    //   context: context,
-                                    //   isScrollControlled: true,
-                                    //   showDragHandle: true,
-                                    //   builder: (context) {
-                                    //     return RemainderConfirmationScreen(
-                                    //       provider: provider,
-                                    //     );
-                                    //   },
-                                    // );
-
-                                    // provider.showSuccessDailog();
                                   },
                           child: Center(
                             child: Text(
@@ -661,7 +648,7 @@ class BuildFifthPage extends StatelessWidget {
                     rProvider.updateTime(p0);
                   },
                 ),
-                Space.h40,
+                Space.h20,
                 Row(
                   children: [
                     Text('Select Day', style: TextStyle(color: Colors.black54)),

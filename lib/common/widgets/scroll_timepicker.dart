@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class ScrollTimePicker extends StatefulWidget {
   final Function(TimeOfDay) onTimeChanged;
@@ -14,7 +15,7 @@ class _ScrollTimePickerState extends State<ScrollTimePicker> {
   int _selectedMinute = 0;
   String _selectedPeriod = 'AM';
 
-  final itemExtent = 40.0;
+  final itemExtent = 50.0;
 
   final FixedExtentScrollController hourController =
       FixedExtentScrollController();
@@ -43,31 +44,35 @@ class _ScrollTimePickerState extends State<ScrollTimePicker> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: itemExtent * 5,
-      child: Stack(
-        alignment: Alignment.center,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Center Highlight Box
-          Positioned(
-            top: (itemExtent * 2),
-            left: 0,
-            right: 0,
-            height: itemExtent,
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 8),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ),
-
-          // Scrollable Pickers
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(child: Container()),
-              Expanded(
-                child: ListWheelScrollView.useDelegate(
+          Expanded(child: Container()),
+          Expanded(
+            flex: 2,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Positioned(
+                  top: (itemExtent * 2),
+                  left: 0,
+                  right: 0,
+                  height: itemExtent,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 2,
+                        decoration: BoxDecoration(color: HexColor('#CE89FF')),
+                      ),
+                      Spacer(),
+                      Container(
+                        height: 2,
+                        decoration: BoxDecoration(color: HexColor('#6E40F9')),
+                      ),
+                    ],
+                  ),
+                ),
+                ListWheelScrollView.useDelegate(
                   controller: hourController,
                   itemExtent: itemExtent,
                   perspective: 0.002,
@@ -83,13 +88,10 @@ class _ScrollTimePickerState extends State<ScrollTimePicker> {
                       final isSelected = index + 1 == _selectedHour;
                       return Center(
                         child: Text(
-                          '${index + 1}',
+                          (index + 1).toString().padLeft(2, '0'),
                           style: TextStyle(
-                            fontSize: 20,
-                            fontWeight:
-                                isSelected
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
+                            fontSize: isSelected ? 16 : 14,
+
                             color: isSelected ? Colors.black : Colors.grey,
                           ),
                         ),
@@ -98,10 +100,35 @@ class _ScrollTimePickerState extends State<ScrollTimePicker> {
                     childCount: 12,
                   ),
                 ),
-              ),
-
-              Expanded(
-                child: ListWheelScrollView.useDelegate(
+              ],
+            ),
+          ),
+          SizedBox(width: 16),
+          Expanded(
+            flex: 2,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Positioned(
+                  top: (itemExtent * 2),
+                  left: 0,
+                  right: 0,
+                  height: itemExtent,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 2,
+                        decoration: BoxDecoration(color: HexColor('#CE89FF')),
+                      ),
+                      Spacer(),
+                      Container(
+                        height: 2,
+                        decoration: BoxDecoration(color: HexColor('#6E40F9')),
+                      ),
+                    ],
+                  ),
+                ),
+                ListWheelScrollView.useDelegate(
                   controller: minuteController,
                   itemExtent: itemExtent,
                   perspective: 0.002,
@@ -119,11 +146,8 @@ class _ScrollTimePickerState extends State<ScrollTimePicker> {
                         child: Text(
                           index.toString().padLeft(2, '0'),
                           style: TextStyle(
-                            fontSize: 20,
-                            fontWeight:
-                                isSelected
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
+                            fontSize: isSelected ? 16 : 14,
+
                             color: isSelected ? Colors.black : Colors.grey,
                           ),
                         ),
@@ -132,11 +156,36 @@ class _ScrollTimePickerState extends State<ScrollTimePicker> {
                     childCount: 60,
                   ),
                 ),
-              ),
-
-              // AM/PM Picker
-              Expanded(
-                child: ListWheelScrollView.useDelegate(
+              ],
+            ),
+          ),
+          SizedBox(width: 16),
+          // AM/PM Picker
+          Expanded(
+            flex: 2,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Positioned(
+                  top: (itemExtent * 2),
+                  left: 0,
+                  right: 0,
+                  height: itemExtent,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 2,
+                        decoration: BoxDecoration(color: HexColor('#CE89FF')),
+                      ),
+                      Spacer(),
+                      Container(
+                        height: 2,
+                        decoration: BoxDecoration(color: HexColor('#6E40F9')),
+                      ),
+                    ],
+                  ),
+                ),
+                ListWheelScrollView.useDelegate(
                   controller: periodController,
                   itemExtent: itemExtent,
                   perspective: 0.002,
@@ -155,11 +204,8 @@ class _ScrollTimePickerState extends State<ScrollTimePicker> {
                             child: Text(
                               period,
                               style: TextStyle(
-                                fontSize: 20,
-                                fontWeight:
-                                    isSelected
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
+                                fontSize: isSelected ? 16 : 14,
+
                                 color: isSelected ? Colors.black : Colors.grey,
                               ),
                             ),
@@ -167,10 +213,10 @@ class _ScrollTimePickerState extends State<ScrollTimePicker> {
                         }).toList(),
                   ),
                 ),
-              ),
-              Expanded(child: Container()),
-            ],
+              ],
+            ),
           ),
+          Expanded(child: Container()),
         ],
       ),
     );

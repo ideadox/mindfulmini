@@ -63,7 +63,6 @@ class CreateRoutineProvider with ChangeNotifier {
           onNext: () {
             SmartDialog.dismiss();
             _navigationService.pop();
-            _navigationService.pop();
           },
           title: 'Your Routine is Ready!',
           subTitle:
