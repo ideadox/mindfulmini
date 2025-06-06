@@ -76,7 +76,7 @@ class ProfileProvider with ChangeNotifier {
     },
 
     {
-      'name': 'Referral Friends',
+      'name': 'Refer a Friend',
       'icon': Assets.profileIcons.referal,
       'divider': 'true',
       'trailing': 'true',

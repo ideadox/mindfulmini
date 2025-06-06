@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class RemainderRoutineProvider with ChangeNotifier {
   bool remainder = false;
-  TimeOfDay? selectedTime;
+  TimeOfDay? selectedTime = TimeOfDay(hour: 1, minute: 00);
 
   void updateTime(TimeOfDay time) {
     selectedTime = time;

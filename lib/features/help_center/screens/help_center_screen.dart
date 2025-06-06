@@ -30,19 +30,16 @@ class HelpCenterScreen extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                'Please enter a brief description of your issue or question and one of our team will be with you as soon as possible',
+                'Tell us a bit about your issue or question, and a member of our team will get back to you shortly.',
                 style: GoogleFonts.nunito(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   height: 1.5,
                 ),
               ),
-              Space.h16,
-              CommonTextFormField(hintText: 'Enter your name'),
-              Space.h20,
-              CommonTextFormField(hintText: 'Enter your email address'),
-              Space.h20,
-              CommonTextFormField(hintText: 'Your message', maxLines: 10),
+              Space.h12,
+
+              CommonTextFormField(hintText: 'Enter message', maxLines: 10),
             ],
           ),
         ),
@@ -53,7 +50,6 @@ class HelpCenterScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             GradientButton(
-              gradientColors: [HexColor("#CFC0FF"), HexColor('#9D9FE6')],
               onPressed: () {},
               child: Center(
                 child: Text(

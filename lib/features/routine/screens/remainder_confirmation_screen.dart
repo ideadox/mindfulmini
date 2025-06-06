@@ -14,6 +14,8 @@ import 'package:mindfulminis/features/routine/providers/remainder_routine_provid
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/create_week_days.dart';
+
 class RemainderConfirmationScreen extends StatelessWidget {
   final CreateRoutineProvider provider;
   const RemainderConfirmationScreen({super.key, required this.provider});
@@ -90,7 +92,7 @@ class RemainderConfirmationScreen extends StatelessWidget {
                 Row(children: [Text('Select Day')]),
                 Space.h24,
 
-                BuildWeekDay(rProvider: rProvider),
+                CreateWeekDays(rProvider: rProvider),
                 Space.h24,
 
                 Container(
@@ -156,61 +158,6 @@ class RemainderConfirmationScreen extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-}
-
-class BuildWeekDay extends StatelessWidget {
-  final RemainderRoutineProvider rProvider;
-  const BuildWeekDay({super.key, required this.rProvider});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children:
-          rProvider.weekDay.map((val) {
-            return InkWell(
-              borderRadius: BorderRadius.circular(100),
-              onTap: () {
-                rProvider.updateSelection(val);
-              },
-              child: Container(
-                height: 40,
-                width: 40,
-                alignment: Alignment.center,
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-
-                  gradient:
-                      !rProvider.selectedDay.contains(val)
-                          ? null
-                          : LinearGradient(
-                            begin: Alignment.bottomLeft,
-                            end: Alignment.topRight,
-                            colors: [
-                              HexColor('#6E40F9'),
-                              HexColor('#A569FB'),
-                              HexColor('#CE89FF'),
-                            ],
-                          ),
-                  border: Border.all(color: AppColors.purple, width: 1),
-                ),
-                child: Text(
-                  val[0],
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                    color:
-                        rProvider.selectedDay.contains(val)
-                            ? Colors.white
-                            : Colors.black87,
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
     );
   }
 }

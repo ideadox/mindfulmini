@@ -17,7 +17,7 @@ class AppSettingScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         leading: CustomBackButton(),
-        title: Text('App Setting'),
+        title: Text('App Settings'),
       ),
       body: SingleChildScrollView(
         child: Theme(
@@ -41,30 +41,53 @@ class AppSettingScreen extends StatelessWidget {
             child: Column(
               children: [
                 ListTile(
-                  title: Text('Meditation Reminder'),
+                  title: Text(
+                    'Meditation Reminder',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                  ),
                   trailing: CupertinoSwitch(
                     activeTrackColor: AppColors.purple,
                     value: true,
                     onChanged: (val) {},
                   ),
                 ),
-                Divider(thickness: 0.4, color: AppColors.grey45),
+                Divider(thickness: 1, color: Colors.grey.shade200),
 
                 ListTile(
-                  title: Text('Stay on track'),
+                  title: Text(
+                    'Stay on track',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                  ),
 
-                  subtitle: Text('Remember to never lose your streak'),
+                  subtitle: Text(
+                    'Stay motivated and keep your streak going',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black54,
+                    ),
+                  ),
                   trailing: CupertinoSwitch(
                     activeTrackColor: AppColors.purple,
                     value: true,
                     onChanged: (val) {},
                   ),
                 ),
-                Divider(thickness: 0.4, color: AppColors.grey45),
+                Divider(thickness: 1, color: Colors.grey.shade200),
 
                 ListTile(
-                  title: Text('Up to date'),
-                  subtitle: Text('We’ll recommend you new routine'),
+                  title: Text(
+                    'Up to date',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                  ),
+                  subtitle: Text(
+                    'We’ll recommend you new routine',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black54,
+                    ),
+                  ),
 
                   trailing: CupertinoSwitch(
                     activeTrackColor: AppColors.purple,
@@ -72,11 +95,21 @@ class AppSettingScreen extends StatelessWidget {
                     onChanged: (val) {},
                   ),
                 ),
-                Divider(thickness: 0.4, color: AppColors.grey45),
+                Divider(thickness: 1, color: Colors.grey.shade200),
 
                 ListTile(
-                  title: Text('Morning Activities'),
-                  subtitle: Text('Get inspired by daily insights'),
+                  title: Text(
+                    'Morning Activities',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                  ),
+                  subtitle: Text(
+                    'Get inspired by daily insights',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black54,
+                    ),
+                  ),
 
                   trailing: CupertinoSwitch(
                     activeTrackColor: AppColors.purple,

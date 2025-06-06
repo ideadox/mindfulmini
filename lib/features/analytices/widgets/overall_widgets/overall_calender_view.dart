@@ -13,7 +13,7 @@ class OverallCalenderView extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.purple.withValues(alpha: 0.18),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(

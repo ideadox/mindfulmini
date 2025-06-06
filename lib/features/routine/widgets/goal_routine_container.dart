@@ -53,11 +53,21 @@ class GoalRoutineContainer extends StatelessWidget {
               children: [
                 Image.asset(icon),
 
-                if (isSelected) CustomGradientText(text: title, isBold: true),
+                if (isSelected)
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: CustomGradientText(text: title, isBold: true),
+                  ),
                 if (!isSelected)
-                  Text(
-                    title,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
               ],
             ),

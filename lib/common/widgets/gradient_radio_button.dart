@@ -27,7 +27,7 @@ class GradientRadioButton<T> extends StatelessWidget {
         height: height,
         width: width,
         decoration: ShapeDecoration(
-          color: value == groupValue ? null : Colors.grey,
+          color: value == groupValue ? null : Colors.black26,
           shape: const CircleBorder(),
           gradient:
               value == groupValue
@@ -43,16 +43,14 @@ class GradientRadioButton<T> extends StatelessWidget {
                   : null,
         ),
         child: Padding(
-          padding: const EdgeInsets.all(3.0),
+          padding: const EdgeInsets.all(2.0),
           child: Container(
             decoration: ShapeDecoration(
               shape: const CircleBorder(),
               color: Colors.white,
             ),
             child: Padding(
-              padding: const EdgeInsets.all(
-                3.0,
-              ), // 👈 Inner padding to create separation
+              padding: const EdgeInsets.all(3.0),
               child: Container(
                 decoration: ShapeDecoration(
                   shape: const CircleBorder(),
@@ -63,8 +61,8 @@ class GradientRadioButton<T> extends StatelessWidget {
                             end: Alignment.topCenter,
                             colors: [
                               HexColor('#6E40F9'),
-                              HexColor('#9D9FE6'),
-                              HexColor('#CFC0FF'),
+                              HexColor('#A569FB'),
+                              HexColor('#CE89FF'),
                             ],
                           )
                           : null,
