@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/features/authentication/screens/verification_complete_dailog.dart';
 import 'package:mindfulminis/injection/injection.dart';
 
+import '../../signup/screens/create_account.dart';
 import '../screens/phone_verification.dart';
 
 class PhoneAuthhProvider with ChangeNotifier {
@@ -26,10 +27,12 @@ class PhoneAuthhProvider with ChangeNotifier {
 
   Future<void> phoneAuthSubmit() async {
     try {
+      sl<GoRouter>().pushNamed(CreateAccount.routeName);
+      
       if (countryCode == null || phoneNumerController.text.isEmpty) {
         return;
       }
-      sl<GoRouter>().pushNamed(PhoneVerification.routeName);
+      // sl<GoRouter>().pushNamed(PhoneVerification.routeName);
       String phoneNumber = countryCode! + phoneNumerController.text.trim();
       startTimer();
       await firebaseAuth.verifyPhoneNumber(

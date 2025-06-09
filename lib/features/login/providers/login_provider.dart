@@ -18,6 +18,8 @@ class LoginProvider with ChangeNotifier {
   }
 
   Future<void> login() async {
+    navigateToKid();
+    return;
     if (!formKey.currentState!.validate()) {
       return;
     }
