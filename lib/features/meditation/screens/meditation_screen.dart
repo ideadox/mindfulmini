@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mindfulminis/common/widgets/custom_back_button.dart';
-
-import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/meditation/providers/meditation_provider.dart';
@@ -28,19 +26,19 @@ class MeditationScreen extends StatelessWidget {
                 alignment: Alignment.center,
                 children: [
                   Container(
-                    height: 400,
+                    height: 300,
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         fit: BoxFit.cover,
                         image: AssetImage(
-                          Assets.images.meditationTopHrader.path,
+                          Assets.images.medatationTopBackground.path,
                         ),
                       ),
                     ),
                   ),
 
                   Positioned(
-                    bottom: 30,
+                    bottom: 0,
                     left: 0,
                     right: 0,
                     child: Column(
@@ -55,19 +53,10 @@ class MeditationScreen extends StatelessWidget {
                             fontSize: 22,
                           ),
                         ),
-                        Space.h8,
-                        Text(
-                          'Gentle exercises to help kids let go of negative emotions, nurturing their health, strength, and confidence.',
-                          textAlign: TextAlign.center,
-                          style: AppTextTheme.bodyTextStyle(
-                            context,
-                          ).bodyMedium?.copyWith(fontSize: 14),
-                        ),
-                        Space.h8,
+                        Space.h4,
                       ],
                     ),
                   ),
-
                   Positioned(
                     left: 12,
                     top: 50,
@@ -80,13 +69,16 @@ class MeditationScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Column(
                   children: [
+                    Text(
+                      'A gentle pause for peace, smiles, and self-love.',
+                      textAlign: TextAlign.center,
+                      style: AppTextTheme.bodyTextStyle(
+                        context,
+                      ).bodyMedium?.copyWith(fontSize: 14),
+                    ),
+                    Space.h8,
                     SuggestionWidgets(),
-
-                    Space.h20,
-                    Divider(thickness: 1, color: AppColors.dividerColor),
-
-                    Space.h20,
-
+                    Space.h16,
                     CategoryWidget(),
                   ],
                 ),

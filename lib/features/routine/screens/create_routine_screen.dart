@@ -644,6 +644,7 @@ class BuildFifthPage extends StatelessWidget {
                 ),
                 Space.h20,
                 ScrollTimePicker(
+                  disable: !rProvider.remainder,
                   onTimeChanged: (p0) {
                     rProvider.updateTime(p0);
                   },
@@ -656,7 +657,10 @@ class BuildFifthPage extends StatelessWidget {
                 ),
                 Space.h24,
 
-                CreateWeekDays(rProvider: rProvider),
+                CreateWeekDays(
+                  rProvider: rProvider,
+                  disable: !rProvider.remainder,
+                ),
                 Space.h24,
               ],
             ),

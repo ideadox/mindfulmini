@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mindfulminis/common/widgets/time_widget.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
 
+import '../../../common/widgets/views_widget.dart';
 import '../../play visuals/screen/play_visuals.dart';
 
 class StoriesCategories extends StatelessWidget {
@@ -17,14 +19,14 @@ class StoriesCategories extends StatelessWidget {
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(
-            'Stories Category',
+            'Story Collections',
             style: AppTextTheme.titleTextTheme(
               context,
             ).titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
           ),
           subtitle: Text(
-            'Quick Yoga sequence for kids to slow down',
-            style: TextStyle(color: Colors.black45),
+            'A handpicked set of calming, thoughtful tales',
+            style: TextStyle(color: Colors.black45, fontSize: 12),
           ),
         ),
         SizedBox(
@@ -51,6 +53,18 @@ class StoriesCategories extends StatelessWidget {
                       child: Image.asset(
                         Assets.dummy.meditationSuggestionCard.path,
                       ),
+                    ),
+
+                    Positioned(
+                      bottom: 10,
+                      right: 10,
+                      child: TimeWidget(totalTime: 5),
+                    ),
+
+                    Positioned(
+                      top: 10,
+                      right: 10,
+                      child: ViewsWidget(totalViews: 458),
                     ),
                   ],
                 ),

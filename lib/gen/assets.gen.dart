@@ -59,6 +59,10 @@ class $AssetsDummyGen {
   AssetGenImage get springYoga =>
       const AssetGenImage('assets/dummy/spring_yoga.png');
 
+  /// File path: assets/dummy/spring_yoga_card.png
+  AssetGenImage get springYogaCard =>
+      const AssetGenImage('assets/dummy/spring_yoga_card.png');
+
   /// File path: assets/dummy/starter_deck.png
   AssetGenImage get starterDeck =>
       const AssetGenImage('assets/dummy/starter_deck.png');
@@ -94,6 +98,7 @@ class $AssetsDummyGen {
     moralStoryActivity,
     scanActivity,
     springYoga,
+    springYogaCard,
     starterDeck,
     storty,
     story,
@@ -465,6 +470,10 @@ class $AssetsImagesGen {
   AssetGenImage get journalTopBackground =>
       const AssetGenImage('assets/images/journal_top_background.png');
 
+  /// File path: assets/images/medatation_top_background.png
+  AssetGenImage get medatationTopBackground =>
+      const AssetGenImage('assets/images/medatation_top_background.png');
+
   /// File path: assets/images/meditation_avatar.png
   AssetGenImage get meditationAvatar =>
       const AssetGenImage('assets/images/meditation_avatar.png');
@@ -472,10 +481,6 @@ class $AssetsImagesGen {
   /// File path: assets/images/meditation_routine.png
   AssetGenImage get meditationRoutine =>
       const AssetGenImage('assets/images/meditation_routine.png');
-
-  /// File path: assets/images/meditation_top_hrader.png
-  AssetGenImage get meditationTopHrader =>
-      const AssetGenImage('assets/images/meditation_top_hrader.png');
 
   /// File path: assets/images/mini_body_scan_routine.png
   AssetGenImage get miniBodyScanRoutine =>
@@ -550,10 +555,6 @@ class $AssetsImagesGen {
   /// File path: assets/images/splash_img1.svg
   String get splashImg1 => 'assets/images/splash_img1.svg';
 
-  /// File path: assets/images/stories_top_header.png
-  AssetGenImage get storiesTopHeader =>
-      const AssetGenImage('assets/images/stories_top_header.png');
-
   /// File path: assets/images/stories_tree.png
   AssetGenImage get storiesTree =>
       const AssetGenImage('assets/images/stories_tree.png');
@@ -561,6 +562,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/story_routine.png
   AssetGenImage get storyRoutine =>
       const AssetGenImage('assets/images/story_routine.png');
+
+  /// File path: assets/images/story_top_background.png
+  AssetGenImage get storyTopBackground =>
+      const AssetGenImage('assets/images/story_top_background.png');
 
   /// File path: assets/images/subscription_main.png
   AssetGenImage get subscriptionMain =>
@@ -579,13 +584,13 @@ class $AssetsImagesGen {
   /// File path: assets/images/white_shade.svg
   String get whiteShadeSvg => 'assets/images/white_shade.svg';
 
-  /// File path: assets/images/yoga_main_header.png
-  AssetGenImage get yogaMainHeader =>
-      const AssetGenImage('assets/images/yoga_main_header.png');
-
   /// File path: assets/images/yoga_routine.png
   AssetGenImage get yogaRoutine =>
       const AssetGenImage('assets/images/yoga_routine.png');
+
+  /// File path: assets/images/yoga_top_backgroud.png
+  AssetGenImage get yogaTopBackgroud =>
+      const AssetGenImage('assets/images/yoga_top_backgroud.png');
 
   /// List of all assets
   List<dynamic> get values => [
@@ -618,9 +623,9 @@ class $AssetsImagesGen {
     journalBottomright,
     journalTopBackground2,
     journalTopBackground,
+    medatationTopBackground,
     meditationAvatar,
     meditationRoutine,
-    meditationTopHrader,
     miniBodyScanRoutine,
     myfavImg,
     offlineBackground,
@@ -642,16 +647,16 @@ class $AssetsImagesGen {
     splash1,
     splashImg,
     splashImg1,
-    storiesTopHeader,
     storiesTree,
     storyRoutine,
+    storyTopBackground,
     subscriptionMain,
     subscriptionTop,
     verifiedlottie,
     whiteShadePng,
     whiteShadeSvg,
-    yogaMainHeader,
     yogaRoutine,
+    yogaTopBackgroud,
   ];
 }
 

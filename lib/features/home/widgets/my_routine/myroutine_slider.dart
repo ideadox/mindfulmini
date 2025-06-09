@@ -226,7 +226,7 @@ class MyRoutineCard extends StatelessWidget {
                             },
                             child: Center(
                               child: Text(
-                                'Go to Routine',
+                                'Get Started',
                                 style: AppTextTheme.mainButtonTextStyle(
                                   context,
                                 ).titleLarge?.copyWith(

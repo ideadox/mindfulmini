@@ -13,12 +13,11 @@ class CreateCalm extends StatelessWidget {
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(
-            'Create Clam',
+            'Create Calm',
             style: AppTextTheme.titleTextTheme(
               context,
             ).titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
           ),
-          trailing: Text('5 Minutes'),
         ),
         SizedBox(
           height: 268,

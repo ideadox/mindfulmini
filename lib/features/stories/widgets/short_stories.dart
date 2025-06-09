@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mindfulminis/core/app_colors.dart';
-import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 
+import '../../../common/widgets/time_widget.dart';
+import '../../../common/widgets/views_widget.dart';
 import '../../../injection/injection.dart';
 import '../../play visuals/screen/play_visuals.dart';
 
@@ -25,8 +24,8 @@ class ShortStories extends StatelessWidget {
             ).titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
           ),
           subtitle: Text(
-            'Quick Yoga sequence for kids to slow down',
-            style: TextStyle(color: Colors.black45),
+            'Short and soothing Stories for little minds',
+            style: TextStyle(color: Colors.black45, fontSize: 12),
           ),
         ),
         GridView.builder(
@@ -36,17 +35,16 @@ class ShortStories extends StatelessWidget {
           itemCount: 10,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            mainAxisExtent: 330,
-            crossAxisSpacing: 8,
+            mainAxisExtent: 268,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
           ),
           itemBuilder: (context, index) {
             return InkWell(
               onTap: () {
                 sl<GoRouter>().pushNamed(PlayVisuals.routeName);
               },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Stack(
                 children: [
                   Container(
                     height: 268,
@@ -56,29 +54,16 @@ class ShortStories extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Space.h16,
-                  Row(
-                    children: [
-                      Space.w12,
-                      Container(
-                        height: 24,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(color: AppColors.grey45),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            SvgPicture.asset(Assets.icons.timeCircle),
-                            Text(
-                              '5 minutes',
-                              style: TextStyle(color: Colors.black54),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  Positioned(
+                    bottom: 10,
+                    right: 10,
+                    child: TimeWidget(totalTime: 5),
+                  ),
+
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: ViewsWidget(totalViews: 458),
                   ),
                 ],
               ),

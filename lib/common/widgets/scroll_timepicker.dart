@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class ScrollTimePicker extends StatefulWidget {
+  final bool disable;
   final Function(TimeOfDay) onTimeChanged;
 
-  const ScrollTimePicker({super.key, required this.onTimeChanged});
+  const ScrollTimePicker({
+    super.key,
+    required this.onTimeChanged,
+    required this.disable,
+  });
 
   @override
   State<ScrollTimePicker> createState() => _ScrollTimePickerState();
@@ -62,12 +67,22 @@ class _ScrollTimePickerState extends State<ScrollTimePicker> {
                     children: [
                       Container(
                         height: 2,
-                        decoration: BoxDecoration(color: HexColor('#CE89FF')),
+                        decoration: BoxDecoration(
+                          color:
+                              widget.disable
+                                  ? Colors.grey.shade400
+                                  : HexColor('#CE89FF'),
+                        ),
                       ),
                       Spacer(),
                       Container(
                         height: 2,
-                        decoration: BoxDecoration(color: HexColor('#6E40F9')),
+                        decoration: BoxDecoration(
+                          color:
+                              widget.disable
+                                  ? Colors.grey.shade400
+                                  : HexColor('#6E40F9'),
+                        ),
                       ),
                     ],
                   ),
@@ -92,7 +107,12 @@ class _ScrollTimePickerState extends State<ScrollTimePicker> {
                           style: TextStyle(
                             fontSize: isSelected ? 16 : 14,
 
-                            color: isSelected ? Colors.black : Colors.grey,
+                            color:
+                                widget.disable
+                                    ? Colors.grey
+                                    : isSelected
+                                    ? Colors.black
+                                    : Colors.grey,
                           ),
                         ),
                       );
@@ -118,12 +138,22 @@ class _ScrollTimePickerState extends State<ScrollTimePicker> {
                     children: [
                       Container(
                         height: 2,
-                        decoration: BoxDecoration(color: HexColor('#CE89FF')),
+                        decoration: BoxDecoration(
+                          color:
+                              widget.disable
+                                  ? Colors.grey.shade400
+                                  : HexColor('#CE89FF'),
+                        ),
                       ),
                       Spacer(),
                       Container(
                         height: 2,
-                        decoration: BoxDecoration(color: HexColor('#6E40F9')),
+                        decoration: BoxDecoration(
+                          color:
+                              widget.disable
+                                  ? Colors.grey.shade400
+                                  : HexColor('#6E40F9'),
+                        ),
                       ),
                     ],
                   ),
@@ -148,7 +178,12 @@ class _ScrollTimePickerState extends State<ScrollTimePicker> {
                           style: TextStyle(
                             fontSize: isSelected ? 16 : 14,
 
-                            color: isSelected ? Colors.black : Colors.grey,
+                            color:
+                                widget.disable
+                                    ? Colors.grey
+                                    : isSelected
+                                    ? Colors.black
+                                    : Colors.grey,
                           ),
                         ),
                       );
@@ -175,12 +210,22 @@ class _ScrollTimePickerState extends State<ScrollTimePicker> {
                     children: [
                       Container(
                         height: 2,
-                        decoration: BoxDecoration(color: HexColor('#CE89FF')),
+                        decoration: BoxDecoration(
+                          color:
+                              widget.disable
+                                  ? Colors.grey.shade400
+                                  : HexColor('#CE89FF'),
+                        ),
                       ),
                       Spacer(),
                       Container(
                         height: 2,
-                        decoration: BoxDecoration(color: HexColor('#6E40F9')),
+                        decoration: BoxDecoration(
+                          color:
+                              widget.disable
+                                  ? Colors.grey.shade400
+                                  : HexColor('#6E40F9'),
+                        ),
                       ),
                     ],
                   ),
@@ -206,7 +251,12 @@ class _ScrollTimePickerState extends State<ScrollTimePicker> {
                               style: TextStyle(
                                 fontSize: isSelected ? 16 : 14,
 
-                                color: isSelected ? Colors.black : Colors.grey,
+                                color:
+                                    widget.disable
+                                        ? Colors.grey
+                                        : isSelected
+                                        ? Colors.black
+                                        : Colors.grey,
                               ),
                             ),
                           );

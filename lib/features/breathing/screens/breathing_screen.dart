@@ -40,7 +40,7 @@ class BreathingScreen extends StatelessWidget {
                   ),
 
                   Positioned(
-                    bottom: 30,
+                    bottom: 40,
                     left: 0,
                     right: 0,
                     child: Column(
@@ -55,15 +55,14 @@ class BreathingScreen extends StatelessWidget {
                             fontSize: 22,
                           ),
                         ),
-                        Space.h8,
+                        SizedBox(height: 2),
                         Text(
-                          'Gentle exercises to help kids let go of negative emotions, nurturing their health, strength, and confidence.',
+                          'Blow away worries with each mindful breath.',
                           textAlign: TextAlign.center,
                           style: AppTextTheme.bodyTextStyle(
                             context,
                           ).bodyMedium?.copyWith(fontSize: 14),
                         ),
-                        Space.h8,
                       ],
                     ),
                   ),
@@ -82,12 +81,10 @@ class BreathingScreen extends StatelessWidget {
                   children: [
                     BreathingSuggestion(),
 
-                    Space.h20,
-                    Divider(thickness: 1, color: AppColors.dividerColor),
-
-                    Space.h20,
+                    Space.h16,
 
                     BreathingCategory(),
+                    Space.h20,
                   ],
                 ),
               ),

@@ -13,12 +13,11 @@ class WarmUp extends StatelessWidget {
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(
-            'Warm -Up ',
+            'Warm - Up',
             style: AppTextTheme.titleTextTheme(
               context,
             ).titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
           ),
-          trailing: Text('5 Minutes'),
         ),
         SizedBox(
           height: 268,

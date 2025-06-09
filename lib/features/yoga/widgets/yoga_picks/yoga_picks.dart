@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mindfulminis/core/app_spacing.dart';
-import 'package:mindfulminis/core/app_text_theme.dart';
-import 'package:mindfulminis/features/yoga/screens/yoga_list.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
 
-class FeaturedCollection extends StatelessWidget {
-  const FeaturedCollection({super.key});
+import '../../../../core/app_spacing.dart';
+import '../../../../core/app_text_theme.dart';
+import '../../../../injection/injection.dart';
+import '../../screens/yoga_list.dart';
+
+class YogaPicks extends StatelessWidget {
+  const YogaPicks({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class FeaturedCollection extends StatelessWidget {
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(
-            'Featured Flow',
+            'Yoga Picks Just for You',
             style: AppTextTheme.titleTextTheme(
               context,
             ).titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),

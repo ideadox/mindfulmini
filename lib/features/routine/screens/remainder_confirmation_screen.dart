@@ -84,6 +84,7 @@ class RemainderConfirmationScreen extends StatelessWidget {
                 ),
                 Space.h40,
                 ScrollTimePicker(
+                  disable: rProvider.remainder,
                   onTimeChanged: (p0) {
                     rProvider.updateTime(p0);
                   },

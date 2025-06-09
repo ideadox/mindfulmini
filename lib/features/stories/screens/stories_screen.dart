@@ -23,41 +23,12 @@ class StoriesScreen extends StatelessWidget {
               alignment: Alignment.center,
               children: [
                 Container(
-                  height: 400,
+                  height: 300,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: AssetImage(Assets.images.storiesTopHeader.path),
+                      image: AssetImage(Assets.images.storyTopBackground.path),
                     ),
-                  ),
-                ),
-
-                Positioned(
-                  bottom: 30,
-                  left: 0,
-                  right: 0,
-                  child: Column(
-                    children: [
-                      Text(
-                        'Stories',
-                        textAlign: TextAlign.center,
-                        style: AppTextTheme.titleTextTheme(
-                          context,
-                        ).titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 22,
-                        ),
-                      ),
-                      Space.h8,
-                      Text(
-                        'Engage your mind and heart with mindful tales!',
-                        textAlign: TextAlign.center,
-                        style: AppTextTheme.bodyTextStyle(
-                          context,
-                        ).bodyMedium?.copyWith(fontSize: 14),
-                      ),
-                      Space.h8,
-                    ],
                   ),
                 ),
 
@@ -73,25 +44,29 @@ class StoriesScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Column(
                 children: [
+                  Text(
+                    'Stories',
+                    textAlign: TextAlign.center,
+                    style: AppTextTheme.titleTextTheme(context).titleMedium
+                        ?.copyWith(fontWeight: FontWeight.w600, fontSize: 22),
+                  ),
+                  Space.h4,
+                  Text(
+                    'Spark imagination, curiosity, and emotional learning through tales.',
+                    textAlign: TextAlign.center,
+                    style: AppTextTheme.bodyTextStyle(
+                      context,
+                    ).bodyMedium?.copyWith(fontSize: 14),
+                  ),
+                  Space.h8,
                   SuggestionWidget(),
-                  Space.h20,
+                  Space.h16,
                   StoriesCategories(),
 
-                  Space.h20,
+                  Space.h16,
 
                   ShortStories(),
-                  // Divider(thickness: 1, color: AppColors.dividerColor),
 
-                  // StarterDeck(),
-                  // Space.h20,
-                  // Divider(thickness: 1, color: AppColors.dividerColor),
-                  // WarmUp(),
-                  // Space.h20,
-                  // Divider(thickness: 1, color: AppColors.dividerColor),
-                  // CreateCalm(),
-                  // Space.h20,
-                  // Divider(thickness: 1, color: AppColors.dividerColor),
-                  // DeepSleep(),
                   Space.h20,
                 ],
               ),

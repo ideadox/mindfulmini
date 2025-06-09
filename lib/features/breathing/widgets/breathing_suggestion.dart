@@ -6,6 +6,8 @@ import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
 
+import '../../../common/widgets/time_widget.dart';
+import '../../../common/widgets/views_widget.dart';
 import '../../play visuals/screen/play_visuals.dart';
 
 class BreathingSuggestion extends StatelessWidget {
@@ -18,14 +20,14 @@ class BreathingSuggestion extends StatelessWidget {
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(
-            'Suggest for you',
+            'Suggested For You',
             style: AppTextTheme.titleTextTheme(
               context,
             ).titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
           ),
           subtitle: Text(
-            'Quick Yoga sequence for kids to slow down',
-            style: TextStyle(color: Colors.black45),
+            'Short breathing exercises to help kids slow down and feel peaceful',
+            style: TextStyle(color: Colors.black45, fontSize: 12),
           ),
         ),
         SizedBox(
@@ -52,6 +54,18 @@ class BreathingSuggestion extends StatelessWidget {
                       child: Image.asset(
                         Assets.dummy.meditationSuggestionCard.path,
                       ),
+                    ),
+
+                    Positioned(
+                      right: 10,
+                      bottom: 10,
+                      child: TimeWidget(totalTime: 5),
+                    ),
+
+                    Positioned(
+                      right: 10,
+                      top: 10,
+                      child: ViewsWidget(totalViews: 122),
                     ),
                   ],
                 ),

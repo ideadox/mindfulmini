@@ -17,14 +17,14 @@ class SuggestionWidgets extends StatelessWidget {
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(
-            'Suggest for you',
+            'Suggested For You',
             style: AppTextTheme.titleTextTheme(
               context,
             ).titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
           ),
           subtitle: Text(
-            'Quick Yoga sequence for kids to slow down',
-            style: TextStyle(color: Colors.black45),
+            'Short meditations to help kids slow down and feel calm',
+            style: TextStyle(color: Colors.black45, fontSize: 12),
           ),
         ),
         SizedBox(

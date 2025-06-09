@@ -97,7 +97,7 @@ class MyroutineBriefCard extends StatelessWidget {
                                     children: [
                                       CustomGradientText(text: '3'),
                                       Space.w4,
-                                      Text('Task'),
+                                      Text('Tasks'),
                                       Space.w4,
                                       SizedBox(
                                         height: 18,
@@ -112,7 +112,7 @@ class MyroutineBriefCard extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                Space.w16,
+                                Space.w8,
                                 Text(
                                   "Day 1",
                                   style: TextStyle(fontWeight: FontWeight.w600),
@@ -126,26 +126,6 @@ class MyroutineBriefCard extends StatelessWidget {
                         flex: 1,
                         child: Builder(
                           builder: (context) {
-                            if (formHome) {
-                              return SizedBox(
-                                height: 42,
-                                child: GradientButton(
-                                  onPressed: () {
-                                    sl<GoRouter>().pushNamed(
-                                      MyRoutineScreen.routeName,
-                                    );
-                                  },
-                                  child: Center(
-                                    child: Text(
-                                      'Go to routine',
-                                      style: AppTextTheme.mainButtonTextStyle(
-                                        context,
-                                      ).titleLarge?.copyWith(fontSize: 12),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }
                             return Container(
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
@@ -163,8 +143,11 @@ class MyroutineBriefCard extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 child: Text(
-                                  'Go To Routine',
-                                  style: TextStyle(fontSize: 12),
+                                  'Get Started',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                             );
@@ -177,7 +160,7 @@ class MyroutineBriefCard extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(child: FiveStepProgressBar(percentComplete: 20)),
-                      Space.w20,
+                      Space.w8,
                       Text('10%'),
                       Expanded(child: Container()),
                     ],

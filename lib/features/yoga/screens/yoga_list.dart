@@ -23,7 +23,7 @@ class YogaList extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Space.h32,
+            Space.h40,
             Stack(
               alignment: Alignment.center,
               children: [
@@ -40,39 +40,19 @@ class YogaList extends StatelessWidget {
                   ],
                 ),
                 Center(
-                  child: Text('Morning yoga', style: TextStyle(fontSize: 17)),
+                  child: Text(
+                    'Spring Yoga',
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                  ),
                 ),
               ],
             ),
             Padding(
-              padding: EdgeInsets.all(12),
+              padding: EdgeInsets.symmetric(horizontal: 12),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Spring Yoga',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-                  ),
-                  Space.h8,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Gentle Stretches to Start Your Day',
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                      Text(
-                        'Total 10 min',
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                    ],
-                  ),
-                  Space.h20,
-                  VerticalStepperList(),
-                  Space.h40,
-                  Space.h40,
-                ],
+                children: [VerticalStepperList(), Space.h40, Space.h40],
               ),
             ),
           ],
@@ -102,113 +82,191 @@ class VerticalStepperList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double cardHeight = 170;
-    const double stepperWidth = 30;
-    const int stepCount = 4;
-    const int activeIndex = 1;
+    const double cardHeight = 106 + 30;
 
-    return ListView.builder(
-      itemCount: stepCount,
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        final isFirst = index == 0;
-        final isLast = index == stepCount - 1;
-        final bool isActive = index <= activeIndex;
-        return SizedBox(
-          height: cardHeight,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+    const int stepCount = 6;
+    const int activeIndex = 2;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Column(
             children: [
-              // Stepper line and dot
-              SizedBox(
-                width: stepperWidth,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    // Stepper line
-                    Positioned.fill(
-                      top: isFirst ? cardHeight / 2 + 9 : 0,
-                      bottom: isLast ? cardHeight / 2 + 9 : 0,
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Container(
-                          width: 4,
+              Space.h20,
+              ListView.builder(
+                itemCount: stepCount,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  final isLast = index == stepCount - 1;
+                  final bool isActive = index < activeIndex;
+                  return Column(
+                    children: [
+                      Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(shape: BoxShape.circle),
+                        child:
+                            activeIndex == index
+                                ? SvgPicture.asset(
+                                  Assets.icons.currentLevelIcon,
+                                )
+                                : index < activeIndex
+                                ? SvgPicture.asset(
+                                  Assets.icons.completedLevelIcon,
+                                )
+                                : SvgPicture.asset(
+                                  Assets.icons.upcomingLevelIcon,
+                                ),
+                      ),
+                      if (!isLast)
+                        Container(
+                          width: 2,
+                          height: cardHeight - 30,
                           decoration: BoxDecoration(
-                            gradient: isActive
-                                ? LinearGradient(
-                                    colors: [
-                                      HexColor(
-                                        '#6E40F9',
-                                      ).withValues(alpha: 0.8),
-                                      HexColor(
-                                        '#A569FB',
-                                      ).withValues(alpha: 0.8),
-                                      HexColor(
-                                        '#CE89FF',
-                                      ).withValues(alpha: 0.8),
-                                    ],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                  )
-                                : null,
+                            gradient:
+                                isActive
+                                    ? LinearGradient(
+                                      colors: [
+                                        HexColor(
+                                          '#6E40F9',
+                                        ).withValues(alpha: 0.8),
+                                        HexColor(
+                                          '#A569FB',
+                                        ).withValues(alpha: 0.8),
+                                        HexColor(
+                                          '#CE89FF',
+                                        ).withValues(alpha: 0.8),
+                                      ],
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                    )
+                                    : null,
                             color: isActive ? null : Colors.grey.shade300,
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                      ),
-                    ),
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
 
-                    // Stepper Dot
-                    Center(
+        const SizedBox(width: 12),
+        Expanded(
+          flex: 10,
+          child: ListView.builder(
+            itemCount: stepCount,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              final isFirst = index == 0;
+              final isLast = index == stepCount - 1;
+              final bool isActive = index <= activeIndex;
+              return SizedBox(
+                height: cardHeight,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Stepper line and dot
+                    // SizedBox(
+                    //   width: stepperWidth,
+                    //   child: Stack(
+                    //     alignment: Alignment.center,
+                    //     children: [
+                    //       // Stepper line
+                    //       Positioned.fill(
+                    //         top: isFirst ? cardHeight / 2 + 9 : 0,
+                    //         bottom: isLast ? cardHeight / 2 + 9 : 0,
+                    //         child: Align(
+                    //           alignment: Alignment.center,
+                    //           child: Container(
+                    //             width: 4,
+                    //             decoration: BoxDecoration(
+                    //               gradient:
+                    //                   isActive
+                    //                       ? LinearGradient(
+                    //                         colors: [
+                    //                           HexColor(
+                    //                             '#6E40F9',
+                    //                           ).withValues(alpha: 0.8),
+                    //                           HexColor(
+                    //                             '#A569FB',
+                    //                           ).withValues(alpha: 0.8),
+                    //                           HexColor(
+                    //                             '#CE89FF',
+                    //                           ).withValues(alpha: 0.8),
+                    //                         ],
+                    //                         begin: Alignment.topCenter,
+                    //                         end: Alignment.bottomCenter,
+                    //                       )
+                    //                       : null,
+                    //               color: isActive ? null : Colors.grey.shade300,
+                    //               borderRadius: BorderRadius.circular(12),
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ),
+
+                    //       // Stepper Dot
+                    //       Center(
+                    //         child: Container(
+                    //           width: 32,
+                    //           height: 32,
+                    //           decoration: BoxDecoration(shape: BoxShape.circle),
+                    //           child:
+                    //               activeIndex == index
+                    //                   ? SvgPicture.asset(
+                    //                     Assets.icons.currentLevelIcon,
+                    //                   )
+                    //                   : index < activeIndex
+                    //                   ? SvgPicture.asset(
+                    //                     Assets.icons.completedLevelIcon,
+                    //                   )
+                    //                   : SvgPicture.asset(
+                    //                     Assets.icons.upcomingLevelIcon,
+                    //                   ),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+
+                    // const SizedBox(width: 12),
+
+                    // Card content
+                    Expanded(
                       child: Container(
-                        width: 32,
-                        height: 32,
-                        decoration: BoxDecoration(shape: BoxShape.circle),
-                        child: activeIndex == index
-                            ? SvgPicture.asset(
-                                Assets.icons.currentLevelIcon,
-                              )
-                            : index < activeIndex
-                                ? SvgPicture.asset(
-                                    Assets.icons.completedLevelIcon,
-                                  )
-                                : SvgPicture.asset(
-                                    Assets.icons.upcomingLevelIcon,
-                                  ),
+                        height: 106 + 30,
+                        margin: const EdgeInsets.only(bottom: 30),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.04),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage(Assets.dummy.springYogaCard.path),
+                          ),
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ),
-
-              const SizedBox(width: 12),
-
-              // Card content
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 30),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.04),
-                        blurRadius: 6,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage(Assets.dummy.springYoga.path),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+              );
+            },
           ),
-        );
-      },
+        ),
+      ],
     );
   }
 }

@@ -5,8 +5,13 @@ import 'package:mindfulminis/core/app_colors.dart';
 import '../providers/remainder_routine_provider.dart';
 
 class CreateWeekDays extends StatelessWidget {
+  final bool disable;
   final RemainderRoutineProvider rProvider;
-  const CreateWeekDays({super.key, required this.rProvider});
+  const CreateWeekDays({
+    super.key,
+    required this.rProvider,
+    this.disable = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +21,12 @@ class CreateWeekDays extends StatelessWidget {
           rProvider.weekDay.map((val) {
             return InkWell(
               borderRadius: BorderRadius.circular(100),
-              onTap: () {
-                rProvider.updateSelection(val);
-              },
+              onTap:
+                  disable
+                      ? null
+                      : () {
+                        rProvider.updateSelection(val);
+                      },
               child: Container(
                 height: 40,
                 width: 40,

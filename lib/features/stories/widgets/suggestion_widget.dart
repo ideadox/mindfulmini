@@ -5,6 +5,7 @@ import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
 
+import '../../../common/widgets/play_now_button.dart';
 import '../../play visuals/screen/play_visuals.dart';
 
 class SuggestionWidget extends StatelessWidget {
@@ -17,14 +18,14 @@ class SuggestionWidget extends StatelessWidget {
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(
-            'Suggest for you',
+            'Suggested For You',
             style: AppTextTheme.titleTextTheme(
               context,
             ).titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
           ),
           subtitle: Text(
-            'Quick Yoga sequence for kids to slow down',
-            style: TextStyle(color: Colors.black45),
+            'Short mindful stories to calm and inspire kids',
+            style: TextStyle(color: Colors.black45, fontSize: 12),
           ),
         ),
         SizedBox(
@@ -42,6 +43,7 @@ class SuggestionWidget extends StatelessWidget {
                   sl<GoRouter>().pushNamed(PlayVisuals.routeName);
                 },
                 child: Stack(
+                  alignment: Alignment.bottomCenter,
                   children: [
                     Container(
                       width: 216,
@@ -53,6 +55,8 @@ class SuggestionWidget extends StatelessWidget {
                         Assets.dummy.meditationSuggestionCard.path,
                       ),
                     ),
+
+                    Positioned(bottom: 10, child: PlayNowButton()),
                   ],
                 ),
               );

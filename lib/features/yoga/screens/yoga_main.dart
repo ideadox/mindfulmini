@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindfulminis/common/widgets/custom_back_button.dart';
-import 'package:mindfulminis/core/app_colors.dart';
+
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/yoga/widgets/create_calm/create_calm.dart';
@@ -9,6 +9,7 @@ import 'package:mindfulminis/features/yoga/widgets/featured_collection/featured_
 import 'package:mindfulminis/features/yoga/widgets/recent_collection/recent_collection.dart';
 import 'package:mindfulminis/features/yoga/widgets/starter_deck/starter_deck.dart';
 import 'package:mindfulminis/features/yoga/widgets/warm-up/warm_up.dart';
+import 'package:mindfulminis/features/yoga/widgets/yoga_picks/yoga_picks.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 
 class YogaMain extends StatelessWidget {
@@ -27,41 +28,12 @@ class YogaMain extends StatelessWidget {
               alignment: Alignment.center,
               children: [
                 Container(
-                  height: 400,
+                  height: 300,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: AssetImage(Assets.images.yogaMainHeader.path),
+                      image: AssetImage(Assets.images.yogaTopBackgroud.path),
                     ),
-                  ),
-                ),
-
-                Positioned(
-                  bottom: 30,
-                  left: 0,
-                  right: 0,
-                  child: Column(
-                    children: [
-                      Text(
-                        'Yoga',
-                        textAlign: TextAlign.center,
-                        style: AppTextTheme.titleTextTheme(
-                          context,
-                        ).titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 22,
-                        ),
-                      ),
-                      Space.h8,
-                      Text(
-                        'Gentle exercises to help kids let go of negative emotions, nurturing their health, strength, and confidence.',
-                        textAlign: TextAlign.center,
-                        style: AppTextTheme.bodyTextStyle(
-                          context,
-                        ).bodyMedium?.copyWith(fontSize: 14),
-                      ),
-                      Space.h8,
-                    ],
                   ),
                 ),
 
@@ -77,23 +49,39 @@ class YogaMain extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Column(
                 children: [
+                  Text(
+                    'Yoga',
+                    textAlign: TextAlign.center,
+                    style: AppTextTheme.titleTextTheme(context).titleMedium
+                        ?.copyWith(fontWeight: FontWeight.w600, fontSize: 22),
+                  ),
+                  Space.h8,
+                  Text(
+                    'Inspire movement, balance, and joyful focus through playful poses.',
+                    textAlign: TextAlign.center,
+                    style: AppTextTheme.bodyTextStyle(
+                      context,
+                    ).bodyMedium?.copyWith(fontSize: 14),
+                  ),
+                  Space.h12,
                   RecentCollection(),
-                  Space.h20,
+                  Space.h16,
+                  YogaPicks(),
+                  Space.h16,
                   FeaturedCollection(),
-                  Space.h20,
-                  Divider(thickness: 1, color: AppColors.dividerColor),
+                  Space.h16,
 
                   StarterDeck(),
-                  Space.h20,
-                  Divider(thickness: 1, color: AppColors.dividerColor),
+                  Space.h16,
+
                   WarmUp(),
-                  Space.h20,
-                  Divider(thickness: 1, color: AppColors.dividerColor),
+                  Space.h16,
+
                   CreateCalm(),
-                  Space.h20,
-                  Divider(thickness: 1, color: AppColors.dividerColor),
+                  Space.h16,
+
                   DeepSleep(),
-                  Space.h20,
+                  Space.h16,
                 ],
               ),
             ),

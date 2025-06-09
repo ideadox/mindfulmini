@@ -18,7 +18,6 @@ class DeepSleep extends StatelessWidget {
               context,
             ).titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
           ),
-          trailing: Text('5 Minutes'),
         ),
         SizedBox(
           height: 268,

@@ -23,7 +23,7 @@ class RecentCollection extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 268,
+          height: 303,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: 10,
@@ -31,90 +31,97 @@ class RecentCollection extends StatelessWidget {
               return Space.w16;
             },
             itemBuilder: (context, index) {
-              return Stack(
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    width: 296,
-                    height: 268,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                  Stack(
+                    children: [
+                      Container(
+                        width: 296,
+                        height: 268,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
 
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: SvgPicture.asset(Assets.dummy.frame2043683273),
-                    ),
-                  ),
-
-                  Container(
-                    width: 296,
-                    height: 268,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [
-                          Colors.black.withOpacity(0.7),
-                          Colors.black.withOpacity(0.5),
-
-                          Colors.transparent,
-                        ],
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: SvgPicture.asset(Assets.dummy.frame2043683273),
+                        ),
                       ),
-                    ),
-                  ),
 
-                  Positioned(
-                    bottom: 10,
-                    left: 12,
-                    right: 12,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
+                      Container(
+                        width: 296,
+                        height: 268,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            colors: [
+                              Colors.black.withOpacity(0.7),
+                              Colors.black.withOpacity(0.5),
+
+                              Colors.transparent,
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      Positioned(
+                        bottom: 10,
+                        left: 12,
+                        right: 12,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SvgPicture.asset(
-                              Assets.icons.timer,
-                              height: 16,
-                              width: 16,
-                              colorFilter: ColorFilter.mode(
-                                Colors.white,
-                                BlendMode.srcIn,
-                              ),
+                            Row(
+                              children: [
+                                SvgPicture.asset(
+                                  Assets.icons.timer,
+                                  height: 16,
+                                  width: 16,
+                                  colorFilter: ColorFilter.mode(
+                                    Colors.white,
+                                    BlendMode.srcIn,
+                                  ),
+                                ),
+                                Space.w4,
+                                Text(
+                                  '5 min left',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Space.w4,
-                            Text(
-                              '5 min left',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.white,
+                            Space.h8,
+                            VideoProgressBar(progress: 0.3),
+                            Space.h8,
+                            SizedBox(
+                              height: 29,
+                              width: 76,
+                              child: GradientButton(
+                                hasShadow: false,
+                                onPressed: () {},
+                                child: Center(
+                                  child: Text(
+                                    'Resume',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ],
                         ),
-                        Space.h8,
-                        VideoProgressBar(progress: 0.3),
-                        Space.h8,
-                        SizedBox(
-                          height: 29,
-                          width: 76,
-                          child: GradientButton(
-                            hasShadow: false,
-                            onPressed: () {},
-                            child: Center(
-                              child: Text(
-                                'Resume',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
+                  Text('6 Poses', style: TextStyle(color: Colors.black45)),
                 ],
               );
             },
