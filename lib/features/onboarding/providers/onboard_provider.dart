@@ -1,26 +1,54 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 
 class OnboardProvider with ChangeNotifier {
   final PageController _pageController = PageController();
   int _currentPage = 0;
+  late Timer _timer;
 
   PageController get controller => _pageController;
   int get currentPage => _currentPage;
 
   OnboardProvider() {
+    runAnimation();
     // _pageController.addListener(() {
     //   _currentPage = _pageController.page?.toInt() ?? 0;
     // });
   }
 
-  void jumpToPage() {
+  runAnimation() {
+    _timer = Timer.periodic(Duration(seconds: 3), (timer) {
+      jumpToPage(timer);
+    });
+  }
+
+  void jumpToPage(Timer timer) {
     _currentPage = _currentPage + 1;
-    _pageController.jumpToPage(_currentPage);
+    _pageController.animateToPage(
+      _currentPage,
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeIn,
+    );
+    if (_currentPage == 2) {
+      timer.cancel();
+    }
+    // if (_currentPage == 2) {
+    //   _currentPage = 0;
+    //   _pageController.jumpToPage(_currentPage);
+    // }
   }
 
   void pageChanged(page) {
     _currentPage = page;
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+
+    super.dispose();
   }
 
   List<Map<String, String>> pageData = [

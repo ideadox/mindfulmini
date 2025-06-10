@@ -180,6 +180,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/forward_10.svg
   String get forward10 => 'assets/icons/forward_10.svg';
 
+  /// File path: assets/icons/full_sun_grad_ornage.svg
+  String get fullSunGradOrnage => 'assets/icons/full_sun_grad_ornage.svg';
+
   /// File path: assets/icons/full_sun_icon.svg
   String get fullSunIcon => 'assets/icons/full_sun_icon.svg';
 
@@ -323,6 +326,7 @@ class $AssetsIconsGen {
     floatingButton,
     floatingIcon,
     forward10,
+    fullSunGradOrnage,
     fullSunIcon,
     happy,
     homeSelected,

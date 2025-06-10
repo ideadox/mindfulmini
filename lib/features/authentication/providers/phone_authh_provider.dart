@@ -15,7 +15,7 @@ class PhoneAuthhProvider with ChangeNotifier {
   final navigationService = sl<GoRouter>();
 
   TextEditingController phoneNumerController = TextEditingController();
-  String? countryCode;
+  String? countryCode = '+91';
   String? code;
   final bool _isLoading = false;
   String? error;
@@ -27,12 +27,13 @@ class PhoneAuthhProvider with ChangeNotifier {
 
   Future<void> phoneAuthSubmit() async {
     try {
-      sl<GoRouter>().pushNamed(CreateAccount.routeName);
-      
+      sl<GoRouter>().pushNamed(PhoneVerification.routeName);
+      return;
+
       if (countryCode == null || phoneNumerController.text.isEmpty) {
         return;
       }
-      // sl<GoRouter>().pushNamed(PhoneVerification.routeName);
+      sl<GoRouter>().pushNamed(PhoneVerification.routeName);
       String phoneNumber = countryCode! + phoneNumerController.text.trim();
       startTimer();
       await firebaseAuth.verifyPhoneNumber(
@@ -75,6 +76,8 @@ class PhoneAuthhProvider with ChangeNotifier {
   }
 
   Future<void> onPhoneAuthVerificationCodeSubmit() async {
+    showVerificationDailog();
+    return;
     if (code == null) {
       return;
     }

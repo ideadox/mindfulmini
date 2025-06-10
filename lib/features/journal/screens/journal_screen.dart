@@ -9,6 +9,8 @@ import 'package:mindfulminis/features/journal/widgets/recent_entry_card.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:provider/provider.dart';
 
+import 'journal_detail1_screen.dart';
+
 class JournalScreen extends StatelessWidget {
   const JournalScreen({super.key});
 
@@ -143,7 +145,19 @@ class JournalScreen extends StatelessWidget {
                           ],
                         ),
                         Space.h12,
-                        RecentEntryCard(),
+                        RecentEntryCard(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return JournalDetail1Screen();
+                                },
+                              ),
+                            );
+                            return;
+                          },
+                        ),
                         Space.h20,
                         Space.h12,
                         CustomMonthCalender(provider: provider),

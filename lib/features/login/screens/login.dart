@@ -6,6 +6,7 @@ import 'package:mindfulminis/common/widgets/gradient_scaffold.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/features/authentication/screens/auth_main.dart';
 import 'package:mindfulminis/features/forgot_password/screens/forgot_password.dart';
+import 'package:mindfulminis/features/signup/screens/create_account.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
 import 'package:provider/provider.dart';
@@ -141,7 +142,7 @@ class Login extends StatelessWidget {
                         TextButton(
                           onPressed: () {
                             sl<GoRouter>().pushReplacementNamed(
-                              AuthMain.routeName,
+                              CreateAccount.routeName,
                             );
                           },
                           child: Text('Register Now'),

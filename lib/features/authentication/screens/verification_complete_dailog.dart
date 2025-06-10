@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import 'package:mindfulminis/features/onbaord/screens/kid_name.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
 
@@ -53,7 +54,7 @@ class VerificationCompleteDailog extends StatelessWidget {
             height: 45,
             child: GradientButton(
               onPressed: () {
-                sl<GoRouter>().pushNamed(CreateAccount.routeName);
+                sl<GoRouter>().pushNamed(KidName.routeName);
               },
               child: Center(
                 child: Text(

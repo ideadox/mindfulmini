@@ -82,13 +82,10 @@ class OnboardScreen extends StatelessWidget {
                         width: width * 0.7,
                         child: GradientButton(
                           onPressed: () {
-                            if (op.currentPage == 2) {
-                              sl<GoRouter>().pushReplacementNamed(
-                                AuthMain.routeName,
-                              );
-                              return;
-                            }
-                            context.read<OnboardProvider>().jumpToPage();
+                            sl<GoRouter>().pushReplacementNamed(
+                              AuthMain.routeName,
+                            );
+                            return;
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,

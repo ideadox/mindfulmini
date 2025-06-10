@@ -5,16 +5,17 @@ import 'package:mindfulminis/common/widgets/custom_gradient_text.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 
+import '../../models/week_anayl_design.dart';
 import 'week_horiz_calender.dart';
 
 class WeekAnaylCard extends StatelessWidget {
   final String type, icon;
-  final List<Color> gradientColors;
+  final WeekAnaylDesign design;
   const WeekAnaylCard({
     super.key,
     required this.type,
     required this.icon,
-    required this.gradientColors,
+    required this.design,
   });
 
   @override
@@ -24,8 +25,8 @@ class WeekAnaylCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            offset: Offset(0, 2),
+            color: Colors.black12,
+            offset: Offset(0, 1),
             blurRadius: 1,
             spreadRadius: 0,
           ),
@@ -33,7 +34,7 @@ class WeekAnaylCard extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: gradientColors,
+          colors: design.gradientColors,
         ),
       ),
       child: Stack(
@@ -49,9 +50,35 @@ class WeekAnaylCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SvgPicture.asset(icon),
+                    SvgPicture.asset(
+                      height: 20,
+                      width: 20,
+                      icon,
+                      colorFilter: ColorFilter.mode(
+                        design.titleColors.first,
+                        BlendMode.srcIn,
+                      ),
+                    ),
                     Space.w8,
-                    CustomGradientText(text: type, isBold: true, fontSize: 12),
+                    ShaderMask(
+                      blendMode: BlendMode.srcIn,
+                      shaderCallback:
+                          (bounds) => LinearGradient(
+                            colors: design.titleColors,
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                          ).createShader(
+                            Rect.fromLTWH(0, 0, bounds.width, bounds.height),
+                          ),
+                      child: Text(
+                        type,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+
                     Spacer(),
                     Text('Activity', style: TextStyle(color: Colors.black54)),
                     Space.w8,
@@ -65,7 +92,7 @@ class WeekAnaylCard extends StatelessWidget {
                       width: 150,
                       padding: EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                        color: HexColor('#CE89FF').withValues(alpha: 0.2),
+                        color: Colors.white.withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(300),
                       ),
                       child: Row(

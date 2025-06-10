@@ -6,82 +6,86 @@ import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 
 class RecentEntryCard extends StatelessWidget {
-  const RecentEntryCard({super.key});
+  final VoidCallback onPressed;
+  const RecentEntryCard({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.grey45),
-        borderRadius: BorderRadius.circular(16),
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: AssetImage(Assets.images.recentActivityBackgrocd.path),
+    return InkWell(
+      onTap: onPressed,
+      child: Container(
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColors.grey45),
+          borderRadius: BorderRadius.circular(16),
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: AssetImage(Assets.images.recentActivityBackgrocd.path),
+          ),
         ),
-      ),
 
-      child: Row(
-        children: [
-          Space.w12,
-          Container(
-            alignment: Alignment.centerLeft,
+        child: Row(
+          children: [
+            Space.w12,
+            Container(
+              alignment: Alignment.centerLeft,
 
-            child: SvgPicture.asset(Assets.icons.amazingEmoji),
-          ),
-          Space.w20,
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: HexColor('#FFEEF9'),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: Text(
-                    'Amazing',
-                    style: TextStyle(color: HexColor('#FC09A3')),
-                  ),
-                ),
-                Space.h8,
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Feb 2, 2025',
-                      style: TextStyle(fontSize: 12, color: Colors.black87),
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      '•',
-                      style: TextStyle(fontSize: 12, color: Colors.black87),
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      '02:22 AM',
-                      style: TextStyle(fontSize: 12, color: Colors.black87),
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      '•',
-                      style: TextStyle(fontSize: 12, color: Colors.black87),
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      '80 Words',
-                      style: TextStyle(fontSize: 12, color: Colors.black87),
-                    ),
-                  ],
-                ),
-                Space.h8,
-                Text('Feeling Amazing Today! 😊'),
-              ],
+              child: SvgPicture.asset(Assets.icons.amazingEmoji),
             ),
-          ),
-        ],
+            Space.w20,
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: HexColor('#FFEEF9'),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Text(
+                      'Amazing',
+                      style: TextStyle(color: HexColor('#FC09A3')),
+                    ),
+                  ),
+                  Space.h8,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Feb 2, 2025',
+                        style: TextStyle(fontSize: 12, color: Colors.black87),
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        '•',
+                        style: TextStyle(fontSize: 12, color: Colors.black87),
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        '02:22 AM',
+                        style: TextStyle(fontSize: 12, color: Colors.black87),
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        '•',
+                        style: TextStyle(fontSize: 12, color: Colors.black87),
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        '80 Words',
+                        style: TextStyle(fontSize: 12, color: Colors.black87),
+                      ),
+                    ],
+                  ),
+                  Space.h8,
+                  Text('Feeling Amazing Today! 😊'),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

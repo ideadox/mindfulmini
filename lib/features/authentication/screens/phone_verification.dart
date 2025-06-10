@@ -41,7 +41,7 @@ class PhoneVerification extends StatelessWidget {
                     ),
                     SizedBox(height: 20),
                     Text(
-                      'We’ve send you the verification code on  ${provider.phoneNumber}',
+                      'We’ve send you the verification code on \n${provider.phoneNumber}',
                       style: TextStyle(color: AppColors.grey45),
                     ),
                     SizedBox(height: 30),
