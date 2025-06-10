@@ -13,28 +13,28 @@ class WeekAnayl extends StatelessWidget {
     Map<String, WeekAnaylDesign> designMap = {
       'Morning Routine': WeekAnaylDesign(
         gradientColors: [
-          HexColor('#C0D5FF').withValues(alpha: 0.5),
+          HexColor('#C0D5FF').withValues(alpha: 0.7),
           HexColor('#DDE4EA'),
         ],
         titleColors: [HexColor('#2D5BFF'), HexColor('#2D5BFF')],
       ),
       'Afternoon Routine': WeekAnaylDesign(
         gradientColors: [
-          HexColor('#FFE6B3').withValues(alpha: 0.5),
+          HexColor('#FFE6B3').withValues(alpha: 0.7),
           HexColor('#FFFFFF'),
         ],
         titleColors: [HexColor('#F95D11'), HexColor('#FCCB6C')],
       ),
       'Evening Routine': WeekAnaylDesign(
         gradientColors: [
-          HexColor('#FFDACF').withValues(alpha: 0.5),
+          HexColor('#FFDACF').withValues(alpha: 0.7),
           HexColor('#EBC4FF').withValues(alpha: 0.2),
         ],
         titleColors: [HexColor('#9F33F4'), HexColor('#D23BD5')],
       ),
       'Dreamland Serenity': WeekAnaylDesign(
         gradientColors: [
-          HexColor('#BEA6FF').withValues(alpha: 0.5),
+          HexColor('#BEA6FF').withValues(alpha: 0.7),
           HexColor('#FFFFFF'),
         ],
         titleColors: [HexColor('#F6F6F6'), HexColor('#F6F6F6')],
