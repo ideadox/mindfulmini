@@ -892,6 +892,10 @@ class $AssetsVectorsGen {
   AssetGenImage get anaylBackg =>
       const AssetGenImage('assets/vectors/anayl_backg.png');
 
+  /// File path: assets/vectors/anaylaytic_card_backgroud.png
+  AssetGenImage get anaylayticCardBackgroud =>
+      const AssetGenImage('assets/vectors/anaylaytic_card_backgroud.png');
+
   /// File path: assets/vectors/bird_flying.json
   String get birdFlying => 'assets/vectors/bird_flying.json';
 
@@ -1034,6 +1038,7 @@ class $AssetsVectorsGen {
     affirWhiteCurve,
     affriSeed,
     anaylBackg,
+    anaylayticCardBackgroud,
     birdFlying,
     birdsFlying,
     blurFilter,

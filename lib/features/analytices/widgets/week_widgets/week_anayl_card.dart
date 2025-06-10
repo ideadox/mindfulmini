@@ -9,7 +9,13 @@ import 'week_horiz_calender.dart';
 
 class WeekAnaylCard extends StatelessWidget {
   final String type, icon;
-  const WeekAnaylCard({super.key, required this.type, required this.icon});
+  final List<Color> gradientColors;
+  const WeekAnaylCard({
+    super.key,
+    required this.type,
+    required this.icon,
+    required this.gradientColors,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,28 +31,16 @@ class WeekAnaylCard extends StatelessWidget {
           ),
         ],
         gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            HexColor('#FEFFCD').withValues(alpha: 0.5),
-            HexColor('#E2C7FF').withValues(alpha: 0.5),
-          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: gradientColors,
         ),
       ),
       child: Stack(
-        alignment: Alignment.center,
+        alignment: Alignment.bottomCenter,
         children: [
-          Positioned(
-            bottom: 0,
-            right: 0,
-            top: 0,
-            child: Image.asset(Assets.vectors.weekAnaylLayer1.path),
-          ),
-          Positioned(
-            right: 0,
+          Image.asset(Assets.vectors.anaylayticCardBackgroud.path),
 
-            child: Image.asset(Assets.vectors.weekAnaylLayer2.path),
-          ),
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
