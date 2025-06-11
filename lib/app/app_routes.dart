@@ -32,6 +32,7 @@ import 'package:mindfulminis/features/yoga/screens/yoga_main.dart';
 import '../features/about/screens/about_screen.dart';
 import '../features/help_center/screens/help_center_screen.dart';
 import '../features/library/screens/library_screen.dart';
+import '../features/notifications/screens/notification_screen.dart';
 import '../features/onbaord/screens/describe_yourself.dart';
 import '../features/privacy/screens/privacy_screen.dart';
 import '../features/referals/screens/referal_screen.dart';
@@ -224,6 +225,11 @@ GoRouter buildRouter() {
         path: AboutScreen.routePath,
         name: AboutScreen.routeName,
         builder: (context, state) => AboutScreen(),
+      ),
+      GoRoute(
+        path: NotificationScreen.routePath,
+        name: NotificationScreen.routeName,
+        builder: (context, state) => NotificationScreen(),
       ),
     ],
     // redirect: (context, state) {

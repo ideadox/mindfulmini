@@ -8,6 +8,7 @@ class OnboardProvider with ChangeNotifier {
   int _currentPage = 0;
   late Timer _timer;
 
+  final int totalPages = 3;
   PageController get controller => _pageController;
   int get currentPage => _currentPage;
 
@@ -25,19 +26,16 @@ class OnboardProvider with ChangeNotifier {
   }
 
   void jumpToPage(Timer timer) {
-    _currentPage = _currentPage + 1;
+    if (_currentPage < totalPages - 1) {
+      _currentPage++;
+    } else {
+      _currentPage = 0;
+    }
     _pageController.animateToPage(
       _currentPage,
       duration: Duration(milliseconds: 500),
-      curve: Curves.easeIn,
+      curve: Curves.easeInOut,
     );
-    if (_currentPage == 2) {
-      timer.cancel();
-    }
-    // if (_currentPage == 2) {
-    //   _currentPage = 0;
-    //   _pageController.jumpToPage(_currentPage);
-    // }
   }
 
   void pageChanged(page) {
@@ -46,6 +44,7 @@ class OnboardProvider with ChangeNotifier {
 
   @override
   void dispose() {
+    _pageController.dispose();
     _timer.cancel();
 
     super.dispose();

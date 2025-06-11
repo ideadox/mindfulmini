@@ -5,6 +5,7 @@ import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_screen_size.dart';
 
 import 'package:mindfulminis/features/authentication/providers/phone_authh_provider.dart';
+import 'package:mindfulminis/features/home/providers/rating_provider.dart';
 import 'package:mindfulminis/features/offline_status/providers/offline_status_provider.dart';
 import 'package:mindfulminis/features/onbaord/providers/onboards_provider.dart';
 import 'package:mindfulminis/injection/injection.dart';
@@ -24,6 +25,8 @@ class Mindfulminis extends StatelessWidget {
           lazy: false,
           create: (context) => OfflineStatusProvider(),
         ),
+
+        ChangeNotifierProvider(create: (context) => RatingProvider()),
       ],
       child: MaterialApp.router(
         builder: FlutterSmartDialog.init(

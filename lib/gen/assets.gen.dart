@@ -170,6 +170,13 @@ class $AssetsIconsGen {
   /// File path: assets/icons/dob_icon.svg
   String get dobIcon => 'assets/icons/dob_icon.svg';
 
+  /// File path: assets/icons/filter_notifcation.svg
+  String get filterNotifcation => 'assets/icons/filter_notifcation.svg';
+
+  /// File path: assets/icons/five_star_rating.png
+  AssetGenImage get fiveStarRating =>
+      const AssetGenImage('assets/icons/five_star_rating.png');
+
   /// File path: assets/icons/floating_button.png
   AssetGenImage get floatingButton =>
       const AssetGenImage('assets/icons/floating_button.png');
@@ -179,6 +186,10 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/forward_10.svg
   String get forward10 => 'assets/icons/forward_10.svg';
+
+  /// File path: assets/icons/four_star_rating.png
+  AssetGenImage get fourStarRating =>
+      const AssetGenImage('assets/icons/four_star_rating.png');
 
   /// File path: assets/icons/full_sun_grad_ornage.svg
   String get fullSunGradOrnage => 'assets/icons/full_sun_grad_ornage.svg';
@@ -225,8 +236,20 @@ class $AssetsIconsGen {
   /// File path: assets/icons/morning_icon.svg
   String get morningIcon => 'assets/icons/morning_icon.svg';
 
+  /// File path: assets/icons/no_rating.png
+  AssetGenImage get noRating =>
+      const AssetGenImage('assets/icons/no_rating.png');
+
   /// File path: assets/icons/notification.svg
   String get notification => 'assets/icons/notification.svg';
+
+  /// File path: assets/icons/notification_card_icon.png
+  AssetGenImage get notificationCardIcon =>
+      const AssetGenImage('assets/icons/notification_card_icon.png');
+
+  /// File path: assets/icons/one_star_rating.png
+  AssetGenImage get oneStarRating =>
+      const AssetGenImage('assets/icons/one_star_rating.png');
 
   /// File path: assets/icons/pass_lock.svg
   String get passLock => 'assets/icons/pass_lock.svg';
@@ -278,8 +301,16 @@ class $AssetsIconsGen {
   /// File path: assets/icons/sun_icon.svg
   String get sunIcon => 'assets/icons/sun_icon.svg';
 
+  /// File path: assets/icons/three_star_rating.png
+  AssetGenImage get threeStarRating =>
+      const AssetGenImage('assets/icons/three_star_rating.png');
+
   /// File path: assets/icons/timer.svg
   String get timer => 'assets/icons/timer.svg';
+
+  /// File path: assets/icons/two_star_rating.png
+  AssetGenImage get twoStarRating =>
+      const AssetGenImage('assets/icons/two_star_rating.png');
 
   /// File path: assets/icons/undo.svg
   String get undo => 'assets/icons/undo.svg';
@@ -323,9 +354,12 @@ class $AssetsIconsGen {
     confushedEmoji,
     currentLevelIcon,
     dobIcon,
+    filterNotifcation,
+    fiveStarRating,
     floatingButton,
     floatingIcon,
     forward10,
+    fourStarRating,
     fullSunGradOrnage,
     fullSunIcon,
     happy,
@@ -341,7 +375,10 @@ class $AssetsIconsGen {
     mic,
     moonIcon,
     morningIcon,
+    noRating,
     notification,
+    notificationCardIcon,
+    oneStarRating,
     passLock,
     playButton,
     profileSelected,
@@ -358,7 +395,9 @@ class $AssetsIconsGen {
     shidiVoice,
     sunDimIcon,
     sunIcon,
+    threeStarRating,
     timer,
+    twoStarRating,
     undo,
     upcomingLevelIcon,
     upsetEmoji,
@@ -983,6 +1022,17 @@ class $AssetsVectorsGen {
   AssetGenImage get purpleVector2 =>
       const AssetGenImage('assets/vectors/purple_vector_2.png');
 
+  /// File path: assets/vectors/rating_bottom_vector.png
+  AssetGenImage get ratingBottomVector =>
+      const AssetGenImage('assets/vectors/rating_bottom_vector.png');
+
+  /// File path: assets/vectors/rating_star_color.svg
+  String get ratingStarColor => 'assets/vectors/rating_star_color.svg';
+
+  /// File path: assets/vectors/rating_top_vectot.png
+  AssetGenImage get ratingTopVectot =>
+      const AssetGenImage('assets/vectors/rating_top_vectot.png');
+
   /// File path: assets/vectors/shidi_chat_vector.json
   String get shidiChatVector => 'assets/vectors/shidi_chat_vector.json';
 
@@ -1008,6 +1058,9 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/today_anayl_bg.png
   AssetGenImage get todayAnaylBg =>
       const AssetGenImage('assets/vectors/today_anayl_bg.png');
+
+  /// File path: assets/vectors/uncolor_star.svg
+  String get uncolorStar => 'assets/vectors/uncolor_star.svg';
 
   /// File path: assets/vectors/week_anayl_layer1.png
   AssetGenImage get weekAnaylLayer1 =>
@@ -1066,6 +1119,9 @@ class $AssetsVectorsGen {
     playRedRight,
     playYellowTopLeft,
     purpleVector2,
+    ratingBottomVector,
+    ratingStarColor,
+    ratingTopVectot,
     shidiChatVector,
     shidiCircularAnimation,
     shidiCircularShade,
@@ -1073,6 +1129,7 @@ class $AssetsVectorsGen {
     storiesRight,
     storiesTop,
     todayAnaylBg,
+    uncolorStar,
     weekAnaylLayer1,
     weekAnaylLayer2,
   ];

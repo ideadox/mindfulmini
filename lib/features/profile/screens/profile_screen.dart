@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/profile/providers/profile_provider.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/log_out.dart';
 import '../widgets/mini_plus_card.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -137,6 +137,19 @@ class ProfileScreen extends StatelessWidget {
                               }
                               if (index == 11) {
                                 provider.navigateToTermsService();
+                              }
+
+                              if (index == 12) {
+                                showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  barrierColor: Colors.black54,
+                                  context: context,
+
+                                  builder: (context) {
+                                    return LogOut();
+                                  },
+                                );
                               }
                             },
                             title: Text(

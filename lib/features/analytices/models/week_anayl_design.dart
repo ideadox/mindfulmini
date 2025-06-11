@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class WeekAnaylDesign {
-  final List<Color> gradientColors;
-  final List<Color> titleColors;
+  final LinearGradient linearGradient;
 
-  WeekAnaylDesign({required this.gradientColors, required this.titleColors});
+  WeekAnaylDesign({required this.linearGradient});
 }
