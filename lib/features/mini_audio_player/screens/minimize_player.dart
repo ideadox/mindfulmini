@@ -32,7 +32,7 @@ class MiniAudioPlayer extends StatelessWidget {
           Hero(
             tag: 'audio',
             child: Container(
-              height: MediaQuery.sizeOf(context).height * 0.1,
+              height: MediaQuery.sizeOf(context).height * 0.11,
 
               decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 217, 252, 238),
