@@ -312,7 +312,7 @@ class BuildStar extends StatelessWidget {
       onTap: onPressedl,
       child:
           isColor
-              ? SvgPicture.asset(Assets.vectors.ratingStarColor)
+              ? SvgPicture.asset(Assets.icons.starYellow)
               : SvgPicture.asset(Assets.vectors.uncolorStar),
     );
   }

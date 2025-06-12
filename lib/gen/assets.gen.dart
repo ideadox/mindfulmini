@@ -73,6 +73,10 @@ class $AssetsDummyGen {
   /// File path: assets/dummy/story.png
   AssetGenImage get story => const AssetGenImage('assets/dummy/story.png');
 
+  /// File path: assets/dummy/upcoming_acti.png
+  AssetGenImage get upcomingActi =>
+      const AssetGenImage('assets/dummy/upcoming_acti.png');
+
   /// File path: assets/dummy/yoga.png
   AssetGenImage get yogaPng => const AssetGenImage('assets/dummy/yoga.png');
 
@@ -102,6 +106,7 @@ class $AssetsDummyGen {
     starterDeck,
     storty,
     story,
+    upcomingActi,
     yogaPng,
     yogaSvg,
     yogaActivity,
@@ -295,6 +300,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/shidi_voice.svg
   String get shidiVoice => 'assets/icons/shidi_voice.svg';
 
+  /// File path: assets/icons/star_yellow.svg
+  String get starYellow => 'assets/icons/star_yellow.svg';
+
   /// File path: assets/icons/sun_dim_icon.svg
   String get sunDimIcon => 'assets/icons/sun_dim_icon.svg';
 
@@ -393,6 +401,7 @@ class $AssetsIconsGen {
     shidiIcon,
     shidiListeningActive,
     shidiVoice,
+    starYellow,
     sunDimIcon,
     sunIcon,
     threeStarRating,
@@ -939,6 +948,10 @@ class $AssetsVectorsGen {
   AssetGenImage get anaylayticCardBackgroud =>
       const AssetGenImage('assets/vectors/anaylaytic_card_backgroud.png');
 
+  /// File path: assets/vectors/apactmain.png
+  AssetGenImage get apactmain =>
+      const AssetGenImage('assets/vectors/apactmain.png');
+
   /// File path: assets/vectors/bird_flying.json
   String get birdFlying => 'assets/vectors/bird_flying.json';
 
@@ -1026,9 +1039,6 @@ class $AssetsVectorsGen {
   AssetGenImage get ratingBottomVector =>
       const AssetGenImage('assets/vectors/rating_bottom_vector.png');
 
-  /// File path: assets/vectors/rating_star_color.svg
-  String get ratingStarColor => 'assets/vectors/rating_star_color.svg';
-
   /// File path: assets/vectors/rating_top_vectot.png
   AssetGenImage get ratingTopVectot =>
       const AssetGenImage('assets/vectors/rating_top_vectot.png');
@@ -1061,6 +1071,39 @@ class $AssetsVectorsGen {
 
   /// File path: assets/vectors/uncolor_star.svg
   String get uncolorStar => 'assets/vectors/uncolor_star.svg';
+
+  /// File path: assets/vectors/upact_.rightgif.gif
+  AssetGenImage get upactRightgif =>
+      const AssetGenImage('assets/vectors/upact_.rightgif.gif');
+
+  /// File path: assets/vectors/upact_butterfly.svg
+  String get upactButterfly => 'assets/vectors/upact_butterfly.svg';
+
+  /// File path: assets/vectors/upact_green.png
+  AssetGenImage get upactGreen =>
+      const AssetGenImage('assets/vectors/upact_green.png');
+
+  /// File path: assets/vectors/upact_left.gif
+  AssetGenImage get upactLeft =>
+      const AssetGenImage('assets/vectors/upact_left.gif');
+
+  /// File path: assets/vectors/upact_red.png
+  AssetGenImage get upactRed =>
+      const AssetGenImage('assets/vectors/upact_red.png');
+
+  /// File path: assets/vectors/upact_star1.svg
+  String get upactStar1 => 'assets/vectors/upact_star1.svg';
+
+  /// File path: assets/vectors/upactmoon.svg
+  String get upactmoon => 'assets/vectors/upactmoon.svg';
+
+  /// File path: assets/vectors/upactpurple.png
+  AssetGenImage get upactpurple =>
+      const AssetGenImage('assets/vectors/upactpurple.png');
+
+  /// File path: assets/vectors/upactripple.png
+  AssetGenImage get upactripple =>
+      const AssetGenImage('assets/vectors/upactripple.png');
 
   /// File path: assets/vectors/week_anayl_layer1.png
   AssetGenImage get weekAnaylLayer1 =>
@@ -1096,6 +1139,7 @@ class $AssetsVectorsGen {
     affriSeed,
     anaylBackg,
     anaylayticCardBackgroud,
+    apactmain,
     birdFlying,
     birdsFlying,
     blurFilter,
@@ -1120,7 +1164,6 @@ class $AssetsVectorsGen {
     playYellowTopLeft,
     purpleVector2,
     ratingBottomVector,
-    ratingStarColor,
     ratingTopVectot,
     shidiChatVector,
     shidiCircularAnimation,
@@ -1130,6 +1173,15 @@ class $AssetsVectorsGen {
     storiesTop,
     todayAnaylBg,
     uncolorStar,
+    upactRightgif,
+    upactButterfly,
+    upactGreen,
+    upactLeft,
+    upactRed,
+    upactStar1,
+    upactmoon,
+    upactpurple,
+    upactripple,
     weekAnaylLayer1,
     weekAnaylLayer2,
   ];

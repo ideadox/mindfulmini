@@ -20,7 +20,7 @@ class OnboardProvider with ChangeNotifier {
   }
 
   runAnimation() {
-    _timer = Timer.periodic(Duration(seconds: 3), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 2), (timer) {
       jumpToPage(timer);
     });
   }

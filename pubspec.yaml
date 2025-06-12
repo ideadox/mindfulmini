@@ -61,6 +61,7 @@ dependencies:
   internet_connection_checker_plus: ^2.7.2
   carousel_slider: ^5.0.0
   visibility_detector: ^0.4.0+2
+  just_audio: ^0.10.4
   # custom_navigation_bar: ^0.8.2
 
 dev_dependencies:

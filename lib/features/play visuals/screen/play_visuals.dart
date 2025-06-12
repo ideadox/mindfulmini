@@ -1,9 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
+import 'package:mindfulminis/common/screens/upcoming_activity.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/play%20visuals/models/audolyric.dart';
@@ -124,15 +124,18 @@ class _PlayVisualsState extends State<PlayVisuals>
                 top: 0,
                 right: 0,
                 bottom: MediaQuery.sizeOf(context).height * 0.1,
-                child: Lottie.asset(
-                  // width: double.infinity,
-                  backgroundLoading: true,
-                  fit: BoxFit.fill,
-                  Assets.vectors.flow146, // Your Lottie path
-                  controller: _lottiController,
-                  onLoaded: (composition) {
-                    _lottiController.duration = composition.duration;
-                  },
+                child: Hero(
+                  tag: 'audio',
+                  child: Lottie.asset(
+                    // width: double.infinity,
+                    backgroundLoading: true,
+                    fit: BoxFit.fill,
+                    Assets.vectors.flow146, // Your Lottie path
+                    controller: _lottiController,
+                    onLoaded: (composition) {
+                      _lottiController.duration = composition.duration;
+                    },
+                  ),
                 ),
               ),
 
@@ -185,7 +188,7 @@ class _PlayVisualsState extends State<PlayVisuals>
                 ],
               ),
             ),
-//lyricess text
+            //lyricess text
             Positioned(
               top: 110,
               left: 0,
@@ -203,7 +206,7 @@ class _PlayVisualsState extends State<PlayVisuals>
               ),
             ),
 
-//content
+            //content
             Positioned(
               left: 0,
               right: 0,
@@ -241,15 +244,27 @@ class _PlayVisualsState extends State<PlayVisuals>
                       ],
                     ),
                   ),
+
                   AnimatedOpacity(
                     opacity: !startAnimation ? 0 : 1,
                     duration: Duration(milliseconds: 600),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: AudioProgressWithLyrics(
-                        totalDuration: Duration(seconds: 90),
+                        totalDuration: Duration(seconds: 10),
                         chapterTimestamps: chapters,
                         lyrics: lyrics,
+                        onComplete: () {
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            // showDragHandle: true,
+                            enableDrag: true,
+                            context: context,
+                            builder: (context) {
+                              return UpcomingActivity();
+                            },
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -350,22 +365,22 @@ class _PlayVisualsState extends State<PlayVisuals>
     AudioChapter(
       title: 'Intro',
       start: Duration(seconds: 0),
-      end: Duration(seconds: 10),
+      end: Duration(seconds: 2),
     ),
     AudioChapter(
       title: 'Verse 1',
-      start: Duration(seconds: 10),
-      end: Duration(seconds: 30),
+      start: Duration(seconds: 3),
+      end: Duration(seconds: 5),
     ),
     AudioChapter(
       title: 'Chorus',
-      start: Duration(seconds: 30),
-      end: Duration(seconds: 50),
+      start: Duration(seconds: 5),
+      end: Duration(seconds: 8),
     ),
     AudioChapter(
       title: 'Verse 2',
-      start: Duration(seconds: 50),
-      end: Duration(seconds: 90),
+      start: Duration(seconds: 8),
+      end: Duration(seconds: 10),
     ),
   ];
 

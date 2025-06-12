@@ -8,12 +8,14 @@ class AudioProgressWithLyrics extends StatefulWidget {
   final Duration totalDuration;
   final List<AudioChapter> chapterTimestamps;
   final List<LyricLine> lyrics;
+  final VoidCallback? onComplete;
 
   const AudioProgressWithLyrics({
     super.key,
     required this.totalDuration,
     required this.chapterTimestamps,
     required this.lyrics,
+    this.onComplete,
   });
 
   @override
@@ -35,6 +37,7 @@ class _AudioProgressWithLyricsState extends State<AudioProgressWithLyrics> {
           currentPosition += const Duration(seconds: 1);
         } else {
           _timer?.cancel();
+          widget.onComplete?.call();
         }
       });
     });
@@ -73,7 +76,8 @@ class _AudioProgressWithLyricsState extends State<AudioProgressWithLyrics> {
 
             final index = i ~/ 2;
             final chapter = widget.chapterTimestamps[index];
-            final isActive = currentPosition >= chapter.start &&
+            final isActive =
+                currentPosition >= chapter.start &&
                 currentPosition < chapter.end;
             final isCompleted = currentPosition >= chapter.end;
 
@@ -116,12 +120,13 @@ class _AudioProgressWithLyricsState extends State<AudioProgressWithLyrics> {
                         if (isCompleted || isActive)
                           FractionallySizedBox(
                             alignment: Alignment.centerLeft,
-                            widthFactor: isCompleted
-                                ? 1.0
-                                : (indicatorLeft / chapterWidth).clamp(
-                                    0.0,
-                                    1.0,
-                                  ),
+                            widthFactor:
+                                isCompleted
+                                    ? 1.0
+                                    : (indicatorLeft / chapterWidth).clamp(
+                                      0.0,
+                                      1.0,
+                                    ),
                             child: Container(
                               height: 4,
                               decoration: BoxDecoration(
@@ -138,9 +143,10 @@ class _AudioProgressWithLyricsState extends State<AudioProgressWithLyrics> {
                               width: 12,
                               height: 12,
                               decoration: BoxDecoration(
-                                  shape: BoxShape.circle, color: Colors.black
-                                  // gradient: AppColors.primaryGradient,
-                                  ),
+                                shape: BoxShape.circle,
+                                color: Colors.black,
+                                // gradient: AppColors.primaryGradient,
+                              ),
                             ),
                           ),
                       ],
@@ -155,9 +161,7 @@ class _AudioProgressWithLyricsState extends State<AudioProgressWithLyrics> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              AppFormate.formatDuration(
-                currentPosition,
-              ),
+              AppFormate.formatDuration(currentPosition),
               style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
             ),
             Text(
@@ -173,10 +177,11 @@ class _AudioProgressWithLyricsState extends State<AudioProgressWithLyrics> {
   List<int> _calculateChapterWidths() {
     return widget.chapterTimestamps.map((chapter) {
       final segmentDuration = chapter.end - chapter.start;
-      final flex = (segmentDuration.inMilliseconds /
-              widget.totalDuration.inMilliseconds *
-              100)
-          .round();
+      final flex =
+          (segmentDuration.inMilliseconds /
+                  widget.totalDuration.inMilliseconds *
+                  100)
+              .round();
       return flex;
     }).toList();
   }
@@ -223,9 +228,10 @@ class _LyricLineBuilderState extends State<LyricLineBuilder> {
   int get currentLyricIndex {
     for (int i = 0; i < widget.lyrics.length; i++) {
       final current = widget.lyrics[i].timestamp;
-      final next = (i + 1 < widget.lyrics.length)
-          ? widget.lyrics[i + 1].timestamp
-          : widget.totalDuration;
+      final next =
+          (i + 1 < widget.lyrics.length)
+              ? widget.lyrics[i + 1].timestamp
+              : widget.totalDuration;
       if (currentPosition >= current && currentPosition < next) {
         return i;
       }

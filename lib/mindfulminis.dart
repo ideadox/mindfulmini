@@ -11,6 +11,8 @@ import 'package:mindfulminis/features/onbaord/providers/onboards_provider.dart';
 import 'package:mindfulminis/injection/injection.dart';
 import 'package:provider/provider.dart';
 
+import 'common/providers/audio_manager.dart';
+
 class Mindfulminis extends StatelessWidget {
   const Mindfulminis({super.key});
 
@@ -25,6 +27,7 @@ class Mindfulminis extends StatelessWidget {
           lazy: false,
           create: (context) => OfflineStatusProvider(),
         ),
+        ChangeNotifierProvider(create: (context) => AudioManager()),
 
         ChangeNotifierProvider(create: (context) => RatingProvider()),
       ],
