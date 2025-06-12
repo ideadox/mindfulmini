@@ -4,14 +4,39 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:lottie/lottie.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/play%20visuals/screen/play_visuals.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
+import 'package:video_player/video_player.dart';
 
-class UpcomingActivity extends StatelessWidget {
+class UpcomingActivity extends StatefulWidget {
   const UpcomingActivity({super.key});
+
+  @override
+  State<UpcomingActivity> createState() => _UpcomingActivityState();
+}
+
+class _UpcomingActivityState extends State<UpcomingActivity> {
+  late VideoPlayerController _videoPlayerController;
+
+  @override
+  void initState() {
+    _videoPlayerController =
+        VideoPlayerController.asset(Assets.vectors.a202502121524117946638)
+          ..initialize()
+          ..play();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _videoPlayerController.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,17 +60,25 @@ class UpcomingActivity extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          // Positioned(
-          //   left: 0,
-          //   child: Image.asset(Assets.vectors.upactLeft.path),
-          // ),
-          // Positioned(
-          //   right: 0,
-          //   child: Opacity(
-          //     opacity: 0.5,
-          //     child: Image.asset(Assets.vectors.upactRightgif.path),
-          //   ),
-          // ),
+          Positioned(
+            bottom: 0,
+            child: Image.asset(Assets.vectors.rectangle161124287.path),
+          ),
+          Positioned(bottom: 0, child: Image.asset(Assets.vectors.vector.path)),
+          Positioned(
+            top: 140,
+            child: Image.asset(Assets.images.whiteShadePng.path),
+          ),
+          Positioned(
+            child: Opacity(
+              opacity: 0.5,
+              child: AspectRatio(
+                aspectRatio: _videoPlayerController.value.aspectRatio,
+                child: VideoPlayer(_videoPlayerController),
+              ),
+            ),
+          ),
+
           Positioned(
             bottom: 0,
             child: Image.asset(Assets.vectors.apactmain.path),
@@ -76,9 +109,33 @@ class UpcomingActivityContent extends StatelessWidget {
           ),
         ),
         Space.h20,
-        BuildSteps(totalSteps: 4, currentStep: 2),
-        Space.h20,
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            BuildSteps(totalSteps: 4, currentStep: 2),
+            Positioned(
+              right: 0,
+              child: Row(
+                children: [
+                  TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      'Skip',
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Space.w8,
+                ],
+              ),
+            ),
+          ],
+        ),
 
+        Space.h20,
         Text(
           '🦋 Flutter Like a Butterfly!',
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
@@ -100,8 +157,8 @@ class UpcomingActivityContent extends StatelessWidget {
         CountdownCircle(
           duration: const Duration(seconds: 5),
           onComplete: () {
-            sl<GoRouter>().pop();
-            sl<GoRouter>().pushReplacementNamed(PlayVisuals.routeName);
+            // sl<GoRouter>().pop();
+            // sl<GoRouter>().pushReplacementNamed(PlayVisuals.routeName);
           },
         ),
 
@@ -239,7 +296,7 @@ class _CountdownCircleState extends State<CountdownCircle>
       alignment: Alignment.center,
       children: [
         CustomPaint(
-          size: const Size(110, 110),
+          size: const Size(100, 100),
           painter: ProgressPainter(0.0 + _controller.value),
         ),
 

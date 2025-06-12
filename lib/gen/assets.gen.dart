@@ -868,6 +868,13 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/Flow 146.json
   String get flow146 => 'assets/vectors/Flow 146.json';
 
+  /// File path: assets/vectors/Rectangle 161124287.png
+  AssetGenImage get rectangle161124287 =>
+      const AssetGenImage('assets/vectors/Rectangle 161124287.png');
+
+  /// File path: assets/vectors/Vector.png
+  AssetGenImage get vector => const AssetGenImage('assets/vectors/Vector.png');
+
   /// File path: assets/vectors/affir_blue_oval.png
   AssetGenImage get affirBlueOval =>
       const AssetGenImage('assets/vectors/affir_blue_oval.png');
@@ -1118,6 +1125,8 @@ class $AssetsVectorsGen {
     a202502121524117946638,
     a,
     flow146,
+    rectangle161124287,
+    vector,
     affirBlueOval,
     affirBottomGreenLayer,
     affirBottomLeftLeafs,
