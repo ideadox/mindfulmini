@@ -35,20 +35,20 @@ class ChangePassword extends StatelessWidget {
             CommonTextFormField(hintText: 'New Password'),
             Space.h12,
 
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 12),
-            //   child: Text(
-            //     'Your password reset has expired. Please re-enter email to try again.',
-            //     style: TextStyle(color: Colors.red),
-            //   ),
-            // ),
-            Center(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Text(
-                'Your password has been changed.',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.green),
+                'Your password reset has expired. Please re-enter email to try again.',
+                style: TextStyle(color: Colors.red),
               ),
             ),
+            // Center(
+            //   child: Text(
+            //     'Your password has been changed.',
+            //     textAlign: TextAlign.center,
+            //     style: TextStyle(color: Colors.green),
+            //   ),
+            // ),
             Space.h20,
             GradientButton(
               onPressed: () {},

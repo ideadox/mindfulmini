@@ -85,6 +85,12 @@ class OnboardsProvider with ChangeNotifier {
     );
   }
 
+  isValidAge() {
+  
+    int age = AppFormate.calculateAge(selectedDob!);
+    return isAgeBetween3And10(age);
+  }
+
   bool isAgeBetween3And10(int age) {
     return age >= 3 && age <= 10;
   }

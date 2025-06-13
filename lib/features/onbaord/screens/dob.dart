@@ -97,37 +97,46 @@ class Dob extends StatelessWidget {
                   ],
                 ),
                 Space.h20,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Age : '),
+                if (provider.selectedDob != null)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Age : '),
 
-                    if (provider.selectedDob != null)
-                      CustomGradientText(
-                        text:
-                            '${AppFormate.calculateAge(provider.selectedDob!)} Year old',
-                        isBold: true,
+                      if (provider.selectedDob != null)
+                        CustomGradientText(
+                          text:
+                              '${AppFormate.calculateAge(provider.selectedDob!)} Year old',
+                          isBold: true,
+                        ),
+                    ],
+                  ),
+
+                if (provider.selectedDob != null && !provider.isValidAge()) ...[
+                  Space.h12,
+                  Center(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 30,
                       ),
-                  ],
-                ),
-                Space.h12,
-                Center(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      color: AppColors.purple.withValues(alpha: 0.1),
-                    ),
-                    child: Text(
-                      "This app works best for  5-10 year old's",
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.red, width: 1),
+                        borderRadius: BorderRadius.circular(30),
+                        color: AppColors.purple.withValues(alpha: 0.1),
+                      ),
+                      child: Text(
+                        "This app works best for  5-10 year old's",
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
+
                 Spacer(flex: 3),
                 GradientButton(
                   onPressed: () {
