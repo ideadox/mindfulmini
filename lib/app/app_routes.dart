@@ -5,6 +5,7 @@ import 'package:mindfulminis/features/analytices/screens/analytic_screen.dart';
 import 'package:mindfulminis/features/authentication/screens/auth_main.dart';
 import 'package:mindfulminis/features/authentication/screens/phone_verification.dart';
 import 'package:mindfulminis/features/breathing/screens/breathing_screen.dart';
+import 'package:mindfulminis/features/forgot_password/screens/change_password.dart';
 import 'package:mindfulminis/features/forgot_password/screens/forgot_password.dart';
 import 'package:mindfulminis/features/journal/screens/create_journal_screen.dart';
 import 'package:mindfulminis/features/journal/screens/journal_detail_screen.dart';
@@ -43,12 +44,12 @@ import '../features/terms_service/screens/terms_service.dart';
 GoRouter buildRouter() {
   return GoRouter(
     routes: [
-      GoRoute(path: '/', name: '/', builder: (context, state) => TabView()),
-      // GoRoute(
-      //   path: SplashScreen.routePath,
-      //   name: SplashScreen.routeName,
-      //   builder: (context, state) => SplashScreen(),
-      // ),
+      // GoRoute(path: '/', name: '/', builder: (context, state) => TabView()),
+      GoRoute(
+        path: SplashScreen.routePath,
+        name: SplashScreen.routeName,
+        builder: (context, state) => SplashScreen(),
+      ),
       GoRoute(
         path: OnboardScreen.routePath,
         name: OnboardScreen.routeName,
@@ -230,6 +231,12 @@ GoRouter buildRouter() {
         path: NotificationScreen.routePath,
         name: NotificationScreen.routeName,
         builder: (context, state) => NotificationScreen(),
+      ),
+
+      GoRoute(
+        path: ChangePassword.routePath,
+        name: ChangePassword.routeName,
+        builder: (context, state) => ChangePassword(),
       ),
     ],
     // redirect: (context, state) {

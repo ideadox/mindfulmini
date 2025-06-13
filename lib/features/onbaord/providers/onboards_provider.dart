@@ -1,10 +1,13 @@
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:mindfulminis/core/app_formate.dart';
 import 'package:mindfulminis/features/onbaord/screens/describe_yourself.dart';
+import 'package:mindfulminis/features/onbaord/widgets/agelimitdailog.dart';
 import 'package:mindfulminis/features/onbaord/widgets/allset_dailog.dart';
 import 'package:mindfulminis/features/tab_view/screens/tab_view.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
@@ -37,7 +40,7 @@ class OnboardsProvider with ChangeNotifier {
   }
 
   void onDateOfBirthSave() {
-    _navigation.pushNamed(FellingToday.routeName);
+    showAgeLimitDailog();
   }
 
   void onFeelingSave() {
@@ -67,11 +70,54 @@ class OnboardsProvider with ChangeNotifier {
     SmartDialog.show(
       clickMaskDismiss: false,
       backType: SmartBackType.block,
+      maskWidget: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(color: Colors.black12),
+      ),
       builder: (context) {
         return AllsetDailog(
           onCancel: () {},
           onGoToHome: () {
             sl<GoRouter>().goNamed(TabView.routeName);
+          },
+        );
+      },
+    );
+  }
+
+  bool isAgeBetween3And10(int age) {
+    return age >= 3 && age <= 10;
+  }
+
+  void showAgeLimitDailog() {
+    if (selectedDob == null) {
+      return;
+    }
+
+    int age = AppFormate.calculateAge(selectedDob!);
+    bool isValied = isAgeBetween3And10(age);
+    if (isValied) {
+      _navigation.pushNamed(FellingToday.routeName);
+
+      return;
+    }
+    SmartDialog.show(
+      clickMaskDismiss: false,
+      backType: SmartBackType.block,
+      maskWidget: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(color: Colors.black12),
+      ),
+      builder: (context) {
+        return Agelimitdailog(
+          onCancel: () {
+            SmartDialog.dismiss();
+            return;
+          },
+          onContinue: () {
+            _navigation.pushNamed(FellingToday.routeName);
+            SmartDialog.dismiss();
+            return;
           },
         );
       },

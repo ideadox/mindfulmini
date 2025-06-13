@@ -60,7 +60,7 @@ class PhoneVerification extends StatelessWidget {
                       numberOfFields: 6,
                       disabledBorderColor: AppColors.grey45,
                       enabledBorderColor:
-                          provider.error != null ? Colors.red : Colors.black26,
+                          provider.error == null ? Colors.red : Colors.black26,
                       borderColor: AppColors.primary,
 
                       showFieldAsBox: true,
@@ -73,6 +73,12 @@ class PhoneVerification extends StatelessWidget {
                       onSubmit: (String verificationCode) {
                         provider.code = verificationCode;
                       },
+                    ),
+
+                    Text(
+                      'Incorrect code. Please recheck and enter the correct OTP.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 12, color: Colors.red),
                     ),
                     SizedBox(height: 20),
                     GradientButton(
@@ -131,7 +137,7 @@ class PhoneVerification extends StatelessWidget {
                                         ..onTap = () {
                                           provider.phoneAuthSubmit();
                                         },
-                                  text: 'Resend',
+                                  text: 'Resend code',
                                   style: TextStyle(
                                     color: AppColors.primary,
                                     fontWeight: FontWeight.bold,

@@ -947,6 +947,10 @@ class $AssetsVectorsGen {
   /// File path: assets/vectors/affri_seed.svg
   String get affriSeed => 'assets/vectors/affri_seed.svg';
 
+  /// File path: assets/vectors/agelimitbgm.png
+  AssetGenImage get agelimitbgm =>
+      const AssetGenImage('assets/vectors/agelimitbgm.png');
+
   /// File path: assets/vectors/anayl_backg.png
   AssetGenImage get anaylBackg =>
       const AssetGenImage('assets/vectors/anayl_backg.png');
@@ -1146,6 +1150,7 @@ class $AssetsVectorsGen {
     affirTopRightCloud,
     affirWhiteCurve,
     affriSeed,
+    agelimitbgm,
     anaylBackg,
     anaylayticCardBackgroud,
     apactmain,

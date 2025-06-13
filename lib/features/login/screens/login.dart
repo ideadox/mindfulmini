@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/common/widgets/gradient_scaffold.dart';
 import 'package:mindfulminis/core/app_colors.dart';
+import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/authentication/screens/auth_main.dart';
 import 'package:mindfulminis/features/forgot_password/screens/forgot_password.dart';
 import 'package:mindfulminis/features/signup/screens/create_account.dart';
@@ -90,6 +91,17 @@ class Login extends StatelessWidget {
                         }
                         return null;
                       },
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Text(
+                          'Oops, the email and password you entered don’t our recards',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 12, color: Colors.red),
+                        ),
+                      ),
                     ),
                     SizedBox(height: 30),
 

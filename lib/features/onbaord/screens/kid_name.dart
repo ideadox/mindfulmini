@@ -58,12 +58,13 @@ class KidName extends StatelessWidget {
                     prefixIcon: SvgPicture.asset(Assets.icons.user),
                     keyboardType: TextInputType.name,
                     hintText: 'Enter Name',
+                    
                     validator: (p0) {
                       if (p0!.isEmpty) {
                         return 'Please enter name.';
                       }
                       if (p0.length < 3) {
-                        return 'Name must be atleast three char long.';
+                        return 'Please enter a name with at least 3 alphabetic characters.';
                       }
                       return null;
                     },

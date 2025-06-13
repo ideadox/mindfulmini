@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:mindfulminis/common/widgets/common_text_form_field.dart';
+import 'package:mindfulminis/common/widgets/custom_gradient_text.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/common/widgets/gradient_scaffold.dart';
+import 'package:mindfulminis/core/app_colors.dart';
+import 'package:mindfulminis/core/app_formate.dart';
+import 'package:mindfulminis/core/app_spacing.dart';
 
 import 'package:mindfulminis/gen/assets.gen.dart';
 
@@ -86,20 +90,45 @@ class Dob extends StatelessWidget {
                           onDateTimeChanged: (DateTime newDate) {
                             provider.onChangeDob(newDate);
                           },
-                          // selectionOverlayBuilder: (
-                          //   context, {
-                          //   required columnCount,
-                          //   required selectedIndex,
-                          // }) {
-                          //   return Container(color: Colors.transparent);
-                          // },
                         ),
                       ),
                     ),
                     SizedBox(width: 10),
                   ],
                 ),
-                Spacer(flex: 2),
+                Space.h20,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Age : '),
+
+                    if (provider.selectedDob != null)
+                      CustomGradientText(
+                        text:
+                            '${AppFormate.calculateAge(provider.selectedDob!)} Year old',
+                        isBold: true,
+                      ),
+                  ],
+                ),
+                Space.h12,
+                Center(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: AppColors.purple.withValues(alpha: 0.1),
+                    ),
+                    child: Text(
+                      "This app works best for  5-10 year old's",
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+                Spacer(flex: 3),
                 GradientButton(
                   onPressed: () {
                     if (dobFormKey.currentState!.validate()) {

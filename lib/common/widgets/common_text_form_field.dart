@@ -34,6 +34,7 @@ class CommonTextFormField extends StatelessWidget {
       readOnly: readOnly,
       maxLines: maxLines,
       minLines: minLines,
+
       autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: controller,
       decoration: InputDecoration(

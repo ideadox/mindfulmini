@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/widgets/custom_back_button.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/common/widgets/gradient_scaffold.dart';
+import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/login/screens/login.dart';
 import 'package:mindfulminis/features/signup/providers/create_account_provoider.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
@@ -68,6 +69,7 @@ class CreateAccount extends StatelessWidget {
                         return null;
                       },
                     ),
+
                     SizedBox(height: 20),
 
                     CommonTextFormField(
@@ -95,6 +97,16 @@ class CreateAccount extends StatelessWidget {
                         }
                         return null;
                       },
+                    ),
+
+                    Space.h8,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        "Oops, an account already exists with this email. Try signing in.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 12, color: Colors.red),
+                      ),
                     ),
                     Spacer(),
 

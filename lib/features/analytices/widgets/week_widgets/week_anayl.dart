@@ -38,9 +38,8 @@ class WeekAnayl extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            HexColor('#FFB888').withValues(alpha: 0.5),
-            // HexColor('#FFB888').withValues(alpha: 0.3),
-            HexColor('#E2C7FF').withValues(alpha: 0.6),
+            const Color.fromARGB(255, 253, 226, 199),
+            const Color.fromARGB(255, 243, 237, 255),
           ],
         ),
       ),
@@ -49,8 +48,8 @@ class WeekAnayl extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            HexColor('#AC88FF').withValues(alpha: 0.4),
-            HexColor('#E2C7FF').withValues(alpha: 0.4),
+            const Color.fromARGB(255, 216, 203, 255),
+            const Color.fromARGB(255, 243, 240, 252),
           ],
         ),
       ),
