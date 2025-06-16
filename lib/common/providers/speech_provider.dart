@@ -21,6 +21,21 @@ class SpeechProvider with ChangeNotifier {
   String? get error => _error;
   bool shidiChat = false;
   ShidiChatProvider? shidiChatProvider;
+
+  bool isEmpty = true;
+
+  void startLis() {
+    textController.addListener(() {
+      if (textController.text.isNotEmpty) {
+        isEmpty = false;
+        notifyListeners();
+      } else {
+        isEmpty = true;
+        notifyListeners();
+      }
+    });
+  }
+
   Future<void> initSpeech({
     bool shidi = false,
     ShidiChatProvider? scProvider,

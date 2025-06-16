@@ -30,9 +30,14 @@ class _DescribeYourselfState extends State<DescribeYourself> {
   @override
   Widget build(BuildContext context) {
     GlobalKey<FormState> describeFormKey = GlobalKey();
+
     return ChangeNotifierProvider(
       lazy: false,
-      create: (context) => SpeechProvider()..initSpeech(),
+      create:
+          (context) =>
+              SpeechProvider()
+                ..initSpeech()
+                ..startLis(),
       child: Consumer2<OnboardsProvider, SpeechProvider>(
         builder: (context, provider, speechProvider, _) {
           return GradientScaffold(
@@ -119,11 +124,14 @@ class _DescribeYourselfState extends State<DescribeYourself> {
                   Spacer(),
 
                   GradientButton(
-                    onPressed: () {
-                      if (describeFormKey.currentState!.validate()) {
-                        describeFormKey.currentState!.save();
-                      }
-                    },
+                    onPressed:
+                        speechProvider.isEmpty
+                            ? null
+                            : () {
+                              if (describeFormKey.currentState!.validate()) {
+                                describeFormKey.currentState!.save();
+                              }
+                            },
                     child: Center(
                       child: Text(
                         'Continue',

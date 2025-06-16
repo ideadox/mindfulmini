@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/home/providers/home_provider.dart';
-import 'package:mindfulminis/features/home/providers/rating_provider.dart';
 import 'package:mindfulminis/features/home/widgets/add_feeling/add_feeling_widget.dart';
 import 'package:mindfulminis/features/home/widgets/breathing/breathing.dart';
 import 'package:mindfulminis/features/home/widgets/daily_activity/daily_activity.dart';
@@ -19,7 +18,6 @@ import 'package:mindfulminis/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/add_feeling/feeling_bar_chart.dart';
-import '../widgets/create_routine_button/create_routine_button.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -27,7 +25,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool hasRoutine = false;
-    context.read<RatingProvider>().showRatingDailog();
+    // context.read<RatingProvider>().showRatingDailog();
 
     return ChangeNotifierProvider(
       create: (context) => HomeProvider(),
@@ -36,73 +34,55 @@ class HomeScreen extends StatelessWidget {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Stack(
-                children: [
-                  Container(
-                    height: !hasRoutine ? 350 : 285,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        alignment: Alignment.topCenter,
-                        fit: BoxFit.contain,
-                        image: AssetImage(Assets.images.header.path),
-                      ),
-                    ),
-                    child: Column(
+              Container(
+                height: 250,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    alignment: Alignment.topCenter,
+                    fit: BoxFit.cover,
+                    image: AssetImage(Assets.images.header.path),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(height: kToolbarHeight),
+                    Stack(
+                      alignment: Alignment.center,
                       children: [
-                        SizedBox(height: kToolbarHeight),
-                        Stack(
-                          alignment: Alignment.center,
+                        Center(
+                          child: SvgPicture.asset(
+                            Assets.icons.homeTopLogo,
+                            width: 70,
+                            height: 40,
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Center(
-                              child: SvgPicture.asset(
-                                Assets.icons.homeTopLogo,
-                                width: 70,
-                                height: 40,
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(width: 48),
-                                IconButton(
-                                  onPressed: () {
-                                    sl<GoRouter>().pushNamed(
-                                      NotificationScreen.routeName,
-                                    );
-                                  },
-                                  icon: SvgPicture.asset(
-                                    Assets.icons.notification,
-                                  ),
-                                ),
-                              ],
+                            SizedBox(width: 48),
+                            IconButton(
+                              onPressed: () {
+                                sl<GoRouter>().pushNamed(
+                                  NotificationScreen.routeName,
+                                );
+                              },
+                              icon: SvgPicture.asset(Assets.icons.notification),
                             ),
                           ],
                         ),
                       ],
                     ),
-                  ),
-
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Column(
-                        children: [
-                          // CreateRoutineButton(),
-                          MyroutineSlider(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Column(
                   children: [
+                    Space.h12,
+                    // CreateRoutineButton(),
+                    MyroutineSlider(),
                     Space.h32,
 
                     DailyActivityWidget(),
