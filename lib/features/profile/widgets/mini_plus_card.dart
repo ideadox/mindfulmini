@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
+import 'package:mindfulminis/features/subscription/widgets/subscription_sheet.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 
 class MiniPlusCard extends StatelessWidget {
@@ -45,7 +46,16 @@ class MiniPlusCard extends StatelessWidget {
                     width: 145,
                     height: 45,
                     child: GradientButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (context) {
+                            return SubscriptionSheet();
+                          },
+                        );
+                      },
                       child: Center(
                         child: Text(
                           "Unlock Now",

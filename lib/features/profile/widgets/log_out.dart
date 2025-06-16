@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
+import 'package:mindfulminis/features/authentication/screens/auth_main.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
+import 'package:mindfulminis/injection/injection.dart';
 
 class LogOut extends StatelessWidget {
   const LogOut({super.key});
@@ -40,7 +43,9 @@ class LogOut extends StatelessWidget {
                   Space.h20,
 
                   GradientButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      sl<GoRouter>().goNamed(AuthMain.routeName);
+                    },
                     child: Center(
                       child: Text(
                         'Yes, Log Me Out',
@@ -62,7 +67,9 @@ class LogOut extends StatelessWidget {
                             foregroundColor: Colors.black,
                             side: BorderSide(color: AppColors.purple),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            sl<GoRouter>().pop();
+                          },
                           child: Text('Stay Logged In'),
                         ),
                       ),

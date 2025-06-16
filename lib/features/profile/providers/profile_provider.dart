@@ -6,6 +6,7 @@ import 'package:mindfulminis/features/help_center/screens/help_center_screen.dar
 import 'package:mindfulminis/features/profile/screens/app_setting_screen.dart';
 import 'package:mindfulminis/features/profile/screens/language_screen.dart';
 import 'package:mindfulminis/features/referals/screens/referal_screen.dart';
+import 'package:mindfulminis/features/subscription/screens/manage_subscription.dart';
 import 'package:mindfulminis/features/terms_service/screens/terms_service.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
@@ -24,6 +25,11 @@ class ProfileProvider with ChangeNotifier {
 
   void navigateToAnalytices() {
     _navigationService.pushNamed(AnalyticScreen.routeName);
+    return;
+  }
+
+  void navigateToSubscrption() {
+    _navigationService.pushNamed(ManageSubscription.routeName);
     return;
   }
 

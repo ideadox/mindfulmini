@@ -43,15 +43,6 @@ class TabView extends StatelessWidget {
                         : provider.screens[provider.currentIndex],
                 floatingActionButton: IconButton(
                   onPressed: () {
-                    // showModalBottomSheet(
-                    //   context: context,
-                    //   isScrollControlled: true,
-                    //   backgroundColor: Colors.transparent,
-                    //   builder: (context) {
-                    //     return SubscriptionSheet();
-                    //   },
-                    // );
-
                     sl<GoRouter>().pushNamed(ShidiChatScreen.routeName);
                   },
                   icon: Image.asset(Assets.icons.floatingButton.path),

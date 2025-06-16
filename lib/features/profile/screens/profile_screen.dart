@@ -118,6 +118,10 @@ class ProfileScreen extends StatelessWidget {
                                 provider.navigateToAnalytices();
                                 return;
                               }
+                              if (index == 4) {
+                                provider.navigateToSubscrption();
+                                return;
+                              }
                               if (index == 7) {
                                 provider.navigateToAppSetting();
                                 return;

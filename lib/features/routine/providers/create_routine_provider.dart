@@ -37,9 +37,9 @@ class CreateRoutineProvider with ChangeNotifier {
     if (routineTypes.contains(val)) {
       routineTypes.remove(val);
     } else {
-      if (routineTypes.length == 3) {
-        return;
-      }
+      // if (routineTypes.length == 3) {
+      //   return;
+      // }
       routineTypes.add(val);
     }
     notifyListeners();

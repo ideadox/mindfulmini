@@ -218,7 +218,7 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
                       if (currentStep == 3) {
                         return GradientButton(
                           onPressed:
-                              provider.routineTypes.length != 3
+                              provider.routineTypes.length < 3
                                   ? null
                                   : () {
                                     _goToStep(currentStep + 1);
@@ -226,11 +226,11 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
                                   },
                           child: Center(
                             child: Text(
-                              provider.routineTypes.length != 3
+                              provider.routineTypes.length < 3
                                   ? 'Select ${3 - provider.routineTypes.length} More Activities'
                                   : 'Continue',
                               style:
-                                  provider.routineTypes.length != 3
+                                  provider.routineTypes.length < 3
                                       ? null
                                       : AppTextTheme.mainButtonTextStyle(
                                         context,

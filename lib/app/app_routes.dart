@@ -38,18 +38,19 @@ import '../features/onbaord/screens/describe_yourself.dart';
 import '../features/privacy/screens/privacy_screen.dart';
 import '../features/referals/screens/referal_screen.dart';
 import '../features/sidhi/screens/shidi_chat_screen.dart';
+import '../features/subscription/screens/manage_subscription.dart';
 import '../features/terms_service/screens/terms_service.dart';
 
 // GoRouter configuration
 GoRouter buildRouter() {
   return GoRouter(
     routes: [
-      // GoRoute(path: '/', name: '/', builder: (context, state) => TabView()),
-      GoRoute(
-        path: SplashScreen.routePath,
-        name: SplashScreen.routeName,
-        builder: (context, state) => SplashScreen(),
-      ),
+      GoRoute(path: '/', name: '/', builder: (context, state) => TabView()),
+      // GoRoute(
+      //   path: SplashScreen.routePath,
+      //   name: SplashScreen.routeName,
+      //   builder: (context, state) => SplashScreen(),
+      // ),
       GoRoute(
         path: OnboardScreen.routePath,
         name: OnboardScreen.routeName,
@@ -237,6 +238,12 @@ GoRouter buildRouter() {
         path: ChangePassword.routePath,
         name: ChangePassword.routeName,
         builder: (context, state) => ChangePassword(),
+      ),
+
+      GoRoute(
+        path: ManageSubscription.routePath,
+        name: ManageSubscription.routeName,
+        builder: (context, state) => ManageSubscription(),
       ),
     ],
     // redirect: (context, state) {

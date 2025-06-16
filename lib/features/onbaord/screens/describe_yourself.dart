@@ -85,12 +85,6 @@ class _DescribeYourselfState extends State<DescribeYourself> {
                             provider.onDescribeSave(newValue ?? "");
                           },
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter something.';
-                            }
-                            return null;
-                          },
                         ),
                       ),
                       Positioned(
