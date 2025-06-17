@@ -45,12 +45,12 @@ import '../features/terms_service/screens/terms_service.dart';
 GoRouter buildRouter() {
   return GoRouter(
     routes: [
-      GoRoute(path: '/', name: '/', builder: (context, state) => TabView()),
-      // GoRoute(
-      //   path: SplashScreen.routePath,
-      //   name: SplashScreen.routeName,
-      //   builder: (context, state) => SplashScreen(),
-      // ),
+      // GoRoute(path: '/', name: '/', builder: (context, state) => TabView()),
+      GoRoute(
+        path: SplashScreen.routePath,
+        name: SplashScreen.routeName,
+        builder: (context, state) => SplashScreen(),
+      ),
       GoRoute(
         path: OnboardScreen.routePath,
         name: OnboardScreen.routeName,
