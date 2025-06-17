@@ -16,7 +16,7 @@ void main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  PushNotificationService().initToken();
+
   await setupInjection();
   runApp(const Mindfulminis());
 }

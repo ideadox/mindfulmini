@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 
 import '../../../common/bottom_bar/src/custom_navigation_bar_item.dart';
 import '../../../common/bottom_bar/src/custome_navigation_bar.dart';
+import '../../../services/push_notification_service.dart';
 import '../../home/widgets/feedback/feedback_dailog.dart';
 import '../../offline_status/screens/offline_screen.dart';
 import '../../sidhi/screens/shidi_chat_screen.dart';
@@ -18,10 +19,21 @@ import '../../subscription/widgets/subscription_sheet.dart';
 import '../providers/tab_view_provider.dart';
 import '../widgets/tab_text.dart';
 
-class TabView extends StatelessWidget {
+class TabView extends StatefulWidget {
   static String routeName = 'tab-view';
   static String routePath = '/tab-view';
   const TabView({super.key});
+
+  @override
+  State<TabView> createState() => _TabViewState();
+}
+
+class _TabViewState extends State<TabView> {
+  @override
+  void initState() {
+    PushNotificationService().initToken();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
