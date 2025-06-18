@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:mindfulminis/injection/injection.dart';
-import 'package:mindfulminis/services/push_notification_service.dart';
 import 'firebase_options.dart';
 import 'package:mindfulminis/mindfulminis.dart';
 

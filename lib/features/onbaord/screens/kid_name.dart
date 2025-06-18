@@ -45,7 +45,7 @@ class KidName extends StatelessWidget {
                 Text(
                   'Enter any cute or funny name that your kids like the most',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontSize: 12,
+                    fontSize: 14,
                     color: AppColors.grey45,
                   ),
                 ),
@@ -58,7 +58,7 @@ class KidName extends StatelessWidget {
                     prefixIcon: SvgPicture.asset(Assets.icons.user),
                     keyboardType: TextInputType.name,
                     hintText: 'Enter Name',
-                    
+
                     validator: (p0) {
                       if (p0!.isEmpty) {
                         return 'Please enter name.';

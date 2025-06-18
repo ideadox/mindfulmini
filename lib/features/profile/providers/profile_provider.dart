@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/features/about/screens/about_screen.dart';
@@ -17,6 +18,10 @@ import '../screens/edit_profile_screen.dart';
 
 class ProfileProvider with ChangeNotifier {
   final _navigationService = sl<GoRouter>();
+
+  Future<void> logOutUser() async {
+    await FirebaseAuth.instance.signOut();
+  }
 
   void navigateToEditProfile() {
     _navigationService.pushNamed(EditProfileScreen.routeName);

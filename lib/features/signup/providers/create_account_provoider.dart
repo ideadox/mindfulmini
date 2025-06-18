@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/features/onbaord/screens/kid_name.dart';
 import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/services/exceptions.dart';
 
 class CreateAccountProvoider with ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey();
@@ -21,41 +22,40 @@ class CreateAccountProvoider with ChangeNotifier {
 
   bool loading = false;
 
+  String? error;
+
+  void resetError() {
+    error = null;
+  }
+
   Future<void> signUp() async {
-    sl<GoRouter>().pushReplacementNamed(KidName.routeName);
-    return;
+    // sl<GoRouter>().pushReplacementNamed(KidName.routeName);
+    // return;
+    resetError();
     if (!formKey.currentState!.validate()) {
       return;
     }
     try {
       loading = true;
       notifyListeners();
-      // Create email/password credential
-      final credential = EmailAuthProvider.credential(
+
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
 
       User? user = FirebaseAuth.instance.currentUser;
-      // Ensure user is signed in
+
       if (user != null) {
-        // Link the credential
-        await user.linkWithCredential(credential);
         await user.updateDisplayName(nameController.text.trim());
-        print('Email/password linked successfully!');
+        sl<GoRouter>().goNamed(KidName.routeName);
       } else {
-        print('No user is signed in.');
+        error = 'Something went wrong';
       }
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'provider-already-linked') {
-        print('The provider is already linked to the user.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The email is already linked to another account.');
-      } else {
-        print('Error: ${e.message}');
-      }
+      error = ResolveError.resolve(e.code);
     } catch (e) {
-      log(e.toString());
+      error = 'Something went wrong';
     } finally {
       loading = false;
       notifyListeners();

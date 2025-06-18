@@ -8,8 +8,11 @@ import 'package:mindfulminis/features/authentication/screens/auth_main.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
 
+import '../providers/profile_provider.dart';
+
 class LogOut extends StatelessWidget {
-  const LogOut({super.key});
+  final ProfileProvider profileProvider;
+  const LogOut({super.key, required this.profileProvider});
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +47,7 @@ class LogOut extends StatelessWidget {
 
                   GradientButton(
                     onPressed: () {
+                      profileProvider.logOutUser();
                       sl<GoRouter>().goNamed(AuthMain.routeName);
                     },
                     child: Center(

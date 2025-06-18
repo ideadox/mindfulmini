@@ -5,16 +5,19 @@ class GradientScaffold extends StatelessWidget {
   final Widget? appbar;
   final Widget? body;
   final bool hasGradient;
+  final bool resizeToAvoidBottomInset;
   const GradientScaffold({
     super.key,
     this.body,
     this.appbar,
     this.hasGradient = true,
+    this.resizeToAvoidBottomInset = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       body: Container(
         height: double.infinity,
         width: double.infinity,

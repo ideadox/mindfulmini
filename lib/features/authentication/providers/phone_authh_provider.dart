@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,6 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/features/authentication/screens/verification_complete_dailog.dart';
 import 'package:mindfulminis/injection/injection.dart';
 
-import '../../signup/screens/create_account.dart';
 import '../screens/phone_verification.dart';
 
 class PhoneAuthhProvider with ChangeNotifier {
@@ -25,11 +25,15 @@ class PhoneAuthhProvider with ChangeNotifier {
   int? resendToken;
   List<TextEditingController?> otpControllers = [];
 
+  void resetError() {
+    error = null;
+  }
+
   Future<void> phoneAuthSubmit() async {
     try {
-      sl<GoRouter>().pushNamed(PhoneVerification.routeName);
-      return;
-
+      // sl<GoRouter>().pushNamed(PhoneVerification.routeName);
+      // return;
+      resetError();
       if (countryCode == null || phoneNumerController.text.isEmpty) {
         return;
       }
@@ -76,8 +80,9 @@ class PhoneAuthhProvider with ChangeNotifier {
   }
 
   Future<void> onPhoneAuthVerificationCodeSubmit() async {
-    showVerificationDailog();
-    return;
+    // showVerificationDailog();
+    // return;
+    resetError();
     if (code == null) {
       return;
     }
@@ -106,6 +111,11 @@ class PhoneAuthhProvider with ChangeNotifier {
         error = 'Something went wrong, Please restart verification process.';
       }
     } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-verification-code') {
+        error = 'Incorrect code. Please recheck and enter the correct OTP.';
+        return;
+      }
+      log(e.toString());
       error = e.message ?? '';
     } catch (e) {
       error = 'Something went wrong';
@@ -115,11 +125,13 @@ class PhoneAuthhProvider with ChangeNotifier {
     }
   }
 
-  onCodeChanged() {
+  onCodeChanged(String code) {
+    log(code);
     if (error != null) {
-      error = null;
-      notifyListeners();
+      resetError();
     }
+
+    notifyListeners();
   }
 
   void fillOtpFields(String code) {

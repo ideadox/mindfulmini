@@ -151,7 +151,7 @@ class ProfileScreen extends StatelessWidget {
                                   context: context,
 
                                   builder: (context) {
-                                    return LogOut();
+                                    return LogOut(profileProvider: provider);
                                   },
                                 );
                               }

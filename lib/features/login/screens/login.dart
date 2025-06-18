@@ -92,17 +92,17 @@ class Login extends StatelessWidget {
                         return null;
                       },
                     ),
-
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(
-                        child: Text(
-                          'Oops, the email and password you entered don’t our recards',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 12, color: Colors.red),
+                    if (cap.error != null)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: Text(
+                            cap.error ?? '',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 12, color: Colors.red),
+                          ),
                         ),
                       ),
-                    ),
                     SizedBox(height: 30),
 
                     Center(

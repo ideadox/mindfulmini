@@ -16,7 +16,7 @@ class RecentEntryCard extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.grey45),
+          border: Border.all(color: Colors.grey.shade400),
           borderRadius: BorderRadius.circular(16),
           image: DecorationImage(
             fit: BoxFit.cover,

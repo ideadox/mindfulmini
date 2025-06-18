@@ -100,14 +100,15 @@ class CreateAccount extends StatelessWidget {
                     ),
 
                     Space.h8,
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        "Oops, an account already exists with this email. Try signing in.",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 12, color: Colors.red),
+                    if (cap.error != null)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          cap.error ?? '',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 12, color: Colors.red),
+                        ),
                       ),
-                    ),
                     Spacer(),
 
                     GradientButton(

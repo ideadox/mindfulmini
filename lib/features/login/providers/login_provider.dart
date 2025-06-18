@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mindfulminis/features/onbaord/screens/kid_name.dart';
+import 'package:mindfulminis/features/tab_view/screens/tab_view.dart';
+import 'package:mindfulminis/services/exceptions.dart';
 
 import '../../../injection/injection.dart';
 
@@ -11,6 +12,10 @@ class LoginProvider with ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey();
   bool isVisible = false;
   bool isLoading = false;
+  String? error;
+  resetError() {
+    error = null;
+  }
 
   void toogleVisiblity() {
     isVisible = !isVisible;
@@ -18,8 +23,7 @@ class LoginProvider with ChangeNotifier {
   }
 
   Future<void> login() async {
-    navigateToKid();
-    return;
+    resetError();
     if (!formKey.currentState!.validate()) {
       return;
     }
@@ -32,7 +36,7 @@ class LoginProvider with ChangeNotifier {
       );
       navigateToKid();
     } on FirebaseAuthException catch (e) {
-      throw e.message ?? '';
+      error = ResolveError.resolve(e.code);
     } catch (e) {
       rethrow;
     } finally {
@@ -42,7 +46,7 @@ class LoginProvider with ChangeNotifier {
   }
 
   void navigateToKid() {
-    sl<GoRouter>().goNamed(KidName.routeName);
+    sl<GoRouter>().goNamed(TabView.routeName);
     return;
   }
 }

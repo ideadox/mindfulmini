@@ -7,7 +7,6 @@ import 'package:mindfulminis/injection/injection.dart';
 
 import '../../../common/widgets/close_button_dailog.dart';
 import '../../../common/widgets/gradient_button.dart';
-import '../../signup/screens/create_account.dart';
 
 class VerificationCompleteDailog extends StatelessWidget {
   const VerificationCompleteDailog({super.key});
@@ -39,19 +38,23 @@ class VerificationCompleteDailog extends StatelessWidget {
             'Successfully Verified',
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22),
           ),
-          SizedBox(height: 20),
-          Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(text: 'Get ready to onboard our  mindful moments.'),
-              ],
+          SizedBox(height: 18),
+          SizedBox(
+            width: width * 0.5,
+            child: Text.rich(
+              textAlign: TextAlign.center,
+              TextSpan(
+                children: [
+                  TextSpan(text: 'Get ready to onboard our mindful moments.'),
+                ],
+              ),
             ),
           ),
           SizedBox(height: 20),
 
           SizedBox(
-            width: width * 0.3,
-            height: 45,
+            width: width * 0.4,
+            height: 48,
             child: GradientButton(
               onPressed: () {
                 sl<GoRouter>().pushNamed(KidName.routeName);
@@ -59,9 +62,10 @@ class VerificationCompleteDailog extends StatelessWidget {
               child: Center(
                 child: Text(
                   'Next',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleLarge?.copyWith(color: Colors.white),
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Colors.white,
+                    fontSize: 14,
+                  ),
                 ),
               ),
             ),

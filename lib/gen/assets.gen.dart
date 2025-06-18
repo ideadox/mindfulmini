@@ -836,6 +836,9 @@ class $AssetsProfileIconsGen {
 class $AssetsTabiconsGen {
   const $AssetsTabiconsGen();
 
+  /// File path: assets/tabicons/activity_lottie.json
+  String get activityLottie => 'assets/tabicons/activity_lottie.json';
+
   /// File path: assets/tabicons/home1.svg
   String get home1 => 'assets/tabicons/home1.svg';
 
@@ -851,8 +854,31 @@ class $AssetsTabiconsGen {
   /// File path: assets/tabicons/home5.svg
   String get home5 => 'assets/tabicons/home5.svg';
 
+  /// File path: assets/tabicons/home_tab_lottine.json
+  String get homeTabLottine => 'assets/tabicons/home_tab_lottine.json';
+
+  /// File path: assets/tabicons/journal_lottie.json
+  String get journalLottie => 'assets/tabicons/journal_lottie.json';
+
+  /// File path: assets/tabicons/profile_lottie.json
+  String get profileLottie => 'assets/tabicons/profile_lottie.json';
+
+  /// File path: assets/tabicons/routine_lottie.json
+  String get routineLottie => 'assets/tabicons/routine_lottie.json';
+
   /// List of all assets
-  List<String> get values => [home1, home2, home3, home4, home5];
+  List<String> get values => [
+    activityLottie,
+    home1,
+    home2,
+    home3,
+    home4,
+    home5,
+    homeTabLottine,
+    journalLottie,
+    profileLottie,
+    routineLottie,
+  ];
 }
 
 class $AssetsVectorsGen {

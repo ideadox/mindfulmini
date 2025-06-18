@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:mindfulminis/common/providers/speech_provider.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/common/widgets/gradient_scaffold.dart';
@@ -79,7 +80,18 @@ class _DescribeYourselfState extends State<DescribeYourself> {
                                     ? "Listening..."
                                     : 'Enter here...',
                             hintStyle: TextStyle(color: Colors.grey),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: HexColor(
+                                  '#ACADBC',
+                                ).withValues(alpha: 0.86),
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(20.0),
+                              ),
+                            ),
                             border: OutlineInputBorder(
+                              // borderSide: BorderSide(color: Colors.black12),
                               borderRadius: BorderRadius.all(
                                 Radius.circular(20.0),
                               ),

@@ -60,13 +60,13 @@ class PhoneVerification extends StatelessWidget {
                       numberOfFields: 6,
                       disabledBorderColor: AppColors.grey45,
                       enabledBorderColor:
-                          provider.error == null ? Colors.red : Colors.black26,
+                          provider.error != null ? Colors.red : Colors.black26,
                       borderColor: AppColors.primary,
 
                       showFieldAsBox: true,
 
                       onCodeChanged: (String code) {
-                        provider.onCodeChanged();
+                        provider.onCodeChanged(code);
                       },
                       borderRadius: BorderRadius.circular(10),
 
@@ -75,11 +75,12 @@ class PhoneVerification extends StatelessWidget {
                       },
                     ),
 
-                    Text(
-                      'Incorrect code. Please recheck and enter the correct OTP.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 12, color: Colors.red),
-                    ),
+                    if (provider.error != null)
+                      Text(
+                        provider.error ?? "",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 12, color: Colors.red),
+                      ),
                     SizedBox(height: 20),
                     GradientButton(
                       onPressed: () {
@@ -105,15 +106,6 @@ class PhoneVerification extends StatelessWidget {
                       ),
                     ),
 
-                    if (provider.error != null) ...[
-                      SizedBox(height: 20),
-                      Text(
-                        provider.error ?? '',
-                        style: Theme.of(
-                          context,
-                        ).textTheme.bodyMedium?.copyWith(color: Colors.red),
-                      ),
-                    ],
                     SizedBox(height: 20),
 
                     Row(

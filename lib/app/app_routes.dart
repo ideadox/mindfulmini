@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/screens/splash_screen.dart';
@@ -45,12 +46,12 @@ import '../features/terms_service/screens/terms_service.dart';
 GoRouter buildRouter() {
   return GoRouter(
     routes: [
-      GoRoute(path: '/', name: '/', builder: (context, state) => TabView()),
-      // GoRoute(
-      //   path: SplashScreen.routePath,
-      //   name: SplashScreen.routeName,
-      //   builder: (context, state) => SplashScreen(),
-      // ),
+      // GoRoute(path: '/', name: '/', builder: (context, state) => TabView()),
+      GoRoute(
+        path: SplashScreen.routePath,
+        name: SplashScreen.routeName,
+        builder: (context, state) => SplashScreen(),
+      ),
       GoRoute(
         path: OnboardScreen.routePath,
         name: OnboardScreen.routeName,
@@ -246,9 +247,20 @@ GoRouter buildRouter() {
         builder: (context, state) => ManageSubscription(),
       ),
     ],
-    // redirect: (context, state) {
-    //   return TabView.routePath;
-    // },
+    redirect: (context, state) {
+      bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
+
+      if (isLoggedIn && state.matchedLocation == '/') {
+        return TabView.routePath;
+      }
+      if (isLoggedIn && state.matchedLocation == CreateAccount.routePath) {
+        return null;
+      }
+      //  if (isLoggedIn && state.matchedLocation == CreateAccount.routePath) {
+      //   return null;
+      // }
+      return null;
+    },
     observers: [FlutterSmartDialog.observer],
   );
 }
