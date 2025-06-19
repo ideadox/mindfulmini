@@ -17,6 +17,7 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   await setupInjection();
+  await sl.allReady();
   runApp(const Mindfulminis());
 }
 

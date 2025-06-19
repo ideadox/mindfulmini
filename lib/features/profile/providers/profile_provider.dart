@@ -11,13 +11,30 @@ import 'package:mindfulminis/features/subscription/screens/manage_subscription.d
 import 'package:mindfulminis/features/terms_service/screens/terms_service.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/services/shared_prefs.dart';
 
 import '../../library/screens/library_screen.dart';
 import '../../privacy/screens/privacy_screen.dart';
+import '../profile_data/profile_data.dart';
 import '../screens/edit_profile_screen.dart';
 
 class ProfileProvider with ChangeNotifier {
   final _navigationService = sl<GoRouter>();
+  final _profileData = sl<ProfileData>();
+  final SharedPrefs _sharedPrefs = sl<SharedPrefs>();
+
+  late String? userId;
+  ProfileProvider() {
+    userId = _sharedPrefs.getUserId();
+    getUser();
+  }
+  Future<void> getUser() async {
+    try {
+      _profileData.getUser(userId ?? '');
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   Future<void> logOutUser() async {
     await FirebaseAuth.instance.signOut();

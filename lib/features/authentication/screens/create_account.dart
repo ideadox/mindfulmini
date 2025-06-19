@@ -5,8 +5,8 @@ import 'package:mindfulminis/common/widgets/custom_back_button.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/common/widgets/gradient_scaffold.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
-import 'package:mindfulminis/features/login/screens/login.dart';
-import 'package:mindfulminis/features/signup/providers/create_account_provoider.dart';
+import 'package:mindfulminis/features/authentication/screens/login.dart';
+import 'package:mindfulminis/features/authentication/providers/create_account_provider.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:provider/provider.dart';
 

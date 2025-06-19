@@ -65,6 +65,7 @@ dependencies:
   firebase_messaging: ^15.2.7
   flutter_local_notifications: ^19.2.1
   http: ^1.4.0
+  shared_preferences: ^2.5.3
   # custom_navigation_bar: ^0.8.2
 
 dev_dependencies:

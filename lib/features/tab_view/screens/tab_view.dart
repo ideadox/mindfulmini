@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mindfulminis/features/offline_status/providers/offline_status_provider.dart';
+import 'package:mindfulminis/features/profile/providers/profile_provider.dart';
 
 import 'package:mindfulminis/features/tab_view/widgets/icon_animate_switcher.dart';
 
@@ -54,7 +55,6 @@ class _TabViewState extends State<TabView> with TickerProviderStateMixin {
 
   void _onItemTapped(int index) {
     setState(() {
-      // Reset other animations
       for (int i = 0; i < _controllers.length; i++) {
         if (i == index) {
           _controllers[i].forward(from: 0);
@@ -75,8 +75,15 @@ class _TabViewState extends State<TabView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => TabViewProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => TabViewProvider()),
+        ChangeNotifierProvider(
+          create: (context) => ProfileProvider(),
+          lazy: false,
+        ),
+      ],
+
       child: Consumer2<TabViewProvider, OfflineStatusProvider>(
         builder: (context, provider, osp, _) {
           return Stack(

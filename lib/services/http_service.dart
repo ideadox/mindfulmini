@@ -6,8 +6,8 @@ import 'exceptions.dart';
 import 'dart:async';
 
 class HttpService {
-  static const Duration _timeOutDuration = Duration(hours: 1);
-  static Future<dynamic> get(String url, {Map<String, String>? headers}) async {
+  final Duration _timeOutDuration = Duration(hours: 1);
+  Future<dynamic> get(String url, {Map<String, String>? headers}) async {
     try {
       final response = await http
           .get(Uri.parse(url), headers: headers)
@@ -19,7 +19,7 @@ class HttpService {
     }
   }
 
-  static Future<dynamic> patch(
+  Future<dynamic> patch(
     String url, {
     Map<String, String>? headers,
     dynamic body,
@@ -33,7 +33,7 @@ class HttpService {
     return _returnResponse(response);
   }
 
-  static Future<dynamic> post(
+  Future<dynamic> post(
     String url, {
     Map<String, String>? headers,
     dynamic body,
@@ -51,7 +51,7 @@ class HttpService {
     }
   }
 
-  static Future<dynamic> put(
+  Future<dynamic> put(
     String url, {
     Map<String, String>? headers,
     dynamic body,
@@ -67,7 +67,7 @@ class HttpService {
     }
   }
 
-  static Future<dynamic> delete(
+  Future<dynamic> delete(
     String url, {
     Map<String, String>? headers,
     dynamic body,
@@ -83,7 +83,7 @@ class HttpService {
     }
   }
 
-  static dynamic _returnResponse(http.Response response) {
+  dynamic _returnResponse(http.Response response) {
     // log(response.body.toString());
     switch (response.statusCode) {
       case 200:

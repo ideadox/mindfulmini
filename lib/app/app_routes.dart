@@ -10,7 +10,7 @@ import 'package:mindfulminis/features/forgot_password/screens/change_password.da
 import 'package:mindfulminis/features/forgot_password/screens/forgot_password.dart';
 import 'package:mindfulminis/features/journal/screens/create_journal_screen.dart';
 import 'package:mindfulminis/features/journal/screens/journal_detail_screen.dart';
-import 'package:mindfulminis/features/login/screens/login.dart';
+import 'package:mindfulminis/features/authentication/screens/login.dart';
 import 'package:mindfulminis/features/meditation/screens/meditation_screen.dart';
 import 'package:mindfulminis/features/onbaord/screens/dob.dart';
 import 'package:mindfulminis/features/onbaord/screens/felling_today.dart';
@@ -24,7 +24,7 @@ import 'package:mindfulminis/features/routine/screens/affirmation_screen.dart';
 import 'package:mindfulminis/features/routine/screens/create_routine_screen.dart';
 import 'package:mindfulminis/features/routine/screens/my_routine_screen.dart';
 import 'package:mindfulminis/features/routine/screens/routine_detail_screen.dart';
-import 'package:mindfulminis/features/signup/screens/create_account.dart';
+import 'package:mindfulminis/features/authentication/screens/create_account.dart';
 import 'package:mindfulminis/features/stories/screens/stories_download.dart';
 import 'package:mindfulminis/features/stories/screens/stories_screen.dart';
 import 'package:mindfulminis/features/tab_view/screens/tab_view.dart';

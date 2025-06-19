@@ -6,7 +6,7 @@ import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/common/widgets/gradient_scaffold.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
-import 'package:mindfulminis/features/login/screens/login.dart';
+import 'package:mindfulminis/features/authentication/screens/login.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
 import 'package:provider/provider.dart';
