@@ -66,6 +66,8 @@ dependencies:
   flutter_local_notifications: ^19.2.1
   http: ^1.4.0
   shared_preferences: ^2.5.3
+  image_picker: ^1.1.2
+  another_flushbar: ^1.12.30
   # custom_navigation_bar: ^0.8.2
 
 dev_dependencies:

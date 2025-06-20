@@ -12,17 +12,22 @@ import 'package:mindfulminis/features/onbaord/widgets/allset_dailog.dart';
 import 'package:mindfulminis/features/tab_view/screens/tab_view.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/services/shared_prefs.dart';
 
+import '../onboard_data/onboard_data.dart';
 import '../screens/dob.dart';
 import '../screens/felling_today.dart';
 
 class OnboardsProvider with ChangeNotifier {
   final _navigation = sl<GoRouter>();
+  final _onBoardData = sl<OnboardData>();
+  final _sharedPrefs = sl<SharedPrefs>();
   DateTime? selectedDob;
   String? feeling;
   TextEditingController dobController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController describeController = TextEditingController();
+  bool loading = false;
 
   onChangeDob(dob) {
     selectedDob = dob;
@@ -40,7 +45,18 @@ class OnboardsProvider with ChangeNotifier {
   }
 
   void onDateOfBirthSave() {
-    showAgeLimitDailog();
+    // if (selectedDob == null) {
+    //   return;
+    // }
+
+    // int age = AppFormate.calculateAge(selectedDob!);
+    // bool isValied = isAgeBetween3And10(age);
+    // if (isValied) {
+    //   _navigation.pushNamed(FellingToday.routeName);
+
+    //   return;
+    // }
+    // showAgeLimitDailog();
   }
 
   void onFeelingSave() {
@@ -55,6 +71,27 @@ class OnboardsProvider with ChangeNotifier {
 
   void onSkipFeeling() {
     _navigation.pushNamed(DescribeYourself.routeName);
+  }
+
+  Future<void> addProfile() async {
+    try {
+      loading = true;
+      notifyListeners();
+      final userId = _sharedPrefs.getUserId();
+      var map = {
+        "userId": userId,
+        "kidName": nameController.text.trim(),
+        "firstName": nameController.text.trim(),
+        "dateOfBirth": selectedDob?.toIso8601String(),
+      };
+      await _onBoardData.addUser(map);
+      _navigation.pushNamed(FellingToday.routeName);
+    } catch (e) {
+      rethrow;
+    } finally {
+      loading = false;
+      notifyListeners();
+    }
   }
 
   List<Map<String, String>> feelList = [
@@ -86,7 +123,6 @@ class OnboardsProvider with ChangeNotifier {
   }
 
   isValidAge() {
-  
     int age = AppFormate.calculateAge(selectedDob!);
     return isAgeBetween3And10(age);
   }
@@ -95,6 +131,7 @@ class OnboardsProvider with ChangeNotifier {
     return age >= 3 && age <= 10;
   }
 
+  //age limit dailog
   void showAgeLimitDailog() {
     if (selectedDob == null) {
       return;

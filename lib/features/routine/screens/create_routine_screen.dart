@@ -16,6 +16,7 @@ import 'package:mindfulminis/features/routine/providers/create_routine_provider.
 import 'package:mindfulminis/features/routine/widgets/create_routine_conatiner.dart';
 import 'package:mindfulminis/features/routine/widgets/goal_routine_container.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
+import 'package:mindfulminis/utiles/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/widgets/scroll_timepicker.dart';
@@ -242,18 +243,32 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
 
                       if (currentStep == 4) {
                         return GradientButton(
-                          onPressed: () {
-                            provider.showSuccessDailog();
-                            return;
-                          },
+                          onPressed:
+                              provider.creating
+                                  ? null
+                                  : () async {
+                                    try {
+                                      await provider.createRoutine();
+                                    } catch (e) {
+                                      if (context.mounted) {
+                                        CustomSnackbar.showSnackBar(
+                                          context,
+                                          Text(e.toString()),
+                                        );
+                                      }
+                                    }
+                                  },
                           child: Center(
-                            child: Text(
-                              'Continue',
-                              style:
-                                  AppTextTheme.mainButtonTextStyle(
-                                    context,
-                                  ).titleLarge,
-                            ),
+                            child:
+                                provider.creating
+                                    ? CircularProgressIndicator()
+                                    : Text(
+                                      'Continue',
+                                      style:
+                                          AppTextTheme.mainButtonTextStyle(
+                                            context,
+                                          ).titleLarge,
+                                    ),
                           ),
                         );
                       }
@@ -396,7 +411,7 @@ class BuildThirdPage extends StatelessWidget {
                   icon: item['icon'] ?? '',
                   title: item['title'] ?? '',
                   subtitle: item['subtitle'] ?? '',
-                  radioValue: item['title'] ?? "",
+                  radioValue: item['time'].toString(),
                   groupValue: provider.routineSpendTime ?? "",
                   onChanged: (p0) {
                     provider.onChangeSpendTime(p0);
@@ -647,6 +662,7 @@ class BuildFifthPage extends StatelessWidget {
                   disable: !rProvider.remainder,
                   onTimeChanged: (p0) {
                     rProvider.updateTime(p0);
+                    provider.updateTime(p0);
                   },
                 ),
                 Space.h20,
@@ -660,6 +676,9 @@ class BuildFifthPage extends StatelessWidget {
                 CreateWeekDays(
                   rProvider: rProvider,
                   disable: !rProvider.remainder,
+                  onSelect: (val) {
+                    provider.updateSelection(val);
+                  },
                 ),
                 Space.h24,
               ],

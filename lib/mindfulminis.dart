@@ -8,6 +8,7 @@ import 'package:mindfulminis/features/authentication/providers/phone_authh_provi
 import 'package:mindfulminis/features/home/providers/rating_provider.dart';
 import 'package:mindfulminis/features/offline_status/providers/offline_status_provider.dart';
 import 'package:mindfulminis/features/onbaord/providers/onboards_provider.dart';
+import 'package:mindfulminis/features/profile/providers/profile_provider.dart';
 import 'package:mindfulminis/injection/injection.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +23,11 @@ class Mindfulminis extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => PhoneAuthhProvider()),
+        ChangeNotifierProvider(
+          lazy: false,
+          create: (context) => ProfileProvider(),
+        ),
+
         ChangeNotifierProvider(create: (context) => OnboardsProvider()),
         ChangeNotifierProvider(
           lazy: false,

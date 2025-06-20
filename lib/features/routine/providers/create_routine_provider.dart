@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -8,46 +9,104 @@ import 'package:mindfulminis/common/widgets/custom_dailog.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
 
+import '../../../services/shared_prefs.dart';
+import '../routine_data/routine_data.dart';
+
 class CreateRoutineProvider with ChangeNotifier {
   final _navigationService = sl<GoRouter>();
+  final _routineData = sl<RoutineData>();
+  final _sharedPrefs = sl<SharedPrefs>();
 
   String? routineTimeLine;
   String? routineTime;
   String? routineSpendTime;
-  List<String> routineTypes = [];
+  List<String> routineTypes = ['Affirmation'];
 
   bool remainder = false;
+  bool loading = false;
+  bool creating = false;
 
+  //peroid
   void onChangeTimeLine(val) {
+    log(val.toString());
     routineTimeLine = val;
     notifyListeners();
   }
 
+  //session
   void onChangeTime(val) {
+    log(val.toString());
+
     routineTime = val;
     notifyListeners();
   }
 
+  //duration
   void onChangeSpendTime(val) {
+    log(val.toString());
+
     routineSpendTime = val;
     notifyListeners();
   }
 
+  //goals
   void onChangeType(val) {
+    log(val.toString());
+
     if (routineTypes.contains(val)) {
       routineTypes.remove(val);
     } else {
-      // if (routineTypes.length == 3) {
-      //   return;
-      // }
       routineTypes.add(val);
     }
     notifyListeners();
   }
 
+  //remainder
   void toogleRemaider() {
     remainder = !remainder;
     notifyListeners();
+  }
+
+  TimeOfDay? selectedTime = TimeOfDay(hour: 1, minute: 00);
+  final List<String> selectedDay = [];
+
+  void updateTime(TimeOfDay time) {
+    selectedTime = time;
+  }
+
+  void updateSelection(val) {
+    if (selectedDay.contains(val)) {
+      selectedDay.remove(val);
+    } else {
+      selectedDay.add(val);
+    }
+  }
+
+  Future<void> createRoutine() async {
+    try {
+      creating = true;
+      notifyListeners();
+      var map = {
+        "profileId": _sharedPrefs.getUserId(),
+        "period": routineTimeLine,
+        "session": routineTime,
+        "goals": routineTypes,
+        "duration": int.parse(routineSpendTime ?? ""),
+        "reminder": {
+          "days": selectedDay,
+          "time":
+              "${selectedTime!.hour.toString().padLeft(2, '0')}:${selectedTime!.minute.toString().padLeft(2, '0')}",
+        },
+      };
+      log(map.toString());
+      await _routineData.createRoutine(map);
+      showSuccessDailog();
+    } catch (e) {
+      rethrow;
+    } finally {
+      creating = false;
+      notifyListeners();
+    }
   }
 
   showSuccessDailog() {
@@ -117,22 +176,38 @@ class CreateRoutineProvider with ChangeNotifier {
       'subtitle': 'Bed Time',
     },
   ];
-  List<Map<String, String>> thirdPageData = [
-    {'icon': Assets.icons.alarm, 'title': 'Quick', 'subtitle': '20-Min'},
-    {'icon': Assets.icons.alarm, 'title': 'Focused', 'subtitle': '30-Min'},
-    {'icon': Assets.icons.alarm, 'title': 'Productive', 'subtitle': '45-Min'},
+  List<Map<String, dynamic>> thirdPageData = [
+    {
+      'icon': Assets.icons.alarm,
+      'title': 'Quick',
+      'subtitle': '20-Min',
+      'time': 20,
+    },
+    {
+      'icon': Assets.icons.alarm,
+      'title': 'Focused',
+      'subtitle': '30-Min',
+      'time': 30,
+    },
+    {
+      'icon': Assets.icons.alarm,
+      'title': 'Productive',
+      'subtitle': '45-Min',
+      'time': 45,
+    },
     {
       'icon': Assets.icons.alarm,
       'title': "Mindful Mastery",
       'subtitle': '60-Min',
+      'time': 60,
     },
   ];
 
   List<Map<String, String>> fourthPageData = [
     {'icon': Assets.images.meditationRoutine.path, 'title': 'Meditation'},
     {'icon': Assets.images.yogaRoutine.path, 'title': 'Yoga'},
-    {'icon': Assets.images.breathRoutine.path, 'title': 'Breath'},
-    {'icon': Assets.images.storyRoutine.path, 'title': "Story"},
+    {'icon': Assets.images.breathRoutine.path, 'title': 'Breathing'},
+    {'icon': Assets.images.storyRoutine.path, 'title': "Stories"},
     {'icon': Assets.images.miniBodyScanRoutine.path, 'title': "Mini Body Scan"},
   ];
 }

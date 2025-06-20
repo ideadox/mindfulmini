@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mindfulminis/common/widgets/custom_gradient_text.dart';
-import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
-import 'package:mindfulminis/core/app_text_theme.dart';
-import 'package:mindfulminis/features/routine/screens/my_routine_screen.dart';
+import 'package:mindfulminis/features/routine/models/routine_model.dart';
 import 'package:mindfulminis/features/routine/widgets/five_step_progressbar.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
 
 class MyroutineBriefCard extends StatelessWidget {
-  final bool formHome;
-  const MyroutineBriefCard({super.key, this.formHome = false});
+  final RoutineModel routineModel;
+  const MyroutineBriefCard({super.key, required this.routineModel});
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +58,7 @@ class MyroutineBriefCard extends StatelessWidget {
                     children: [
                       SvgPicture.asset(Assets.icons.sunIcon),
                       Space.w8,
-                      Text('Morning Routine'),
+                      Text(routineModel.session),
                     ],
                   ),
                   Space.h12,
@@ -74,7 +70,7 @@ class MyroutineBriefCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '7-Day Kickstart',
+                              '${7}-Day ${routineModel.period}',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
@@ -95,7 +91,11 @@ class MyroutineBriefCard extends StatelessWidget {
                                   ),
                                   child: Row(
                                     children: [
-                                      CustomGradientText(text: '3'),
+                                      CustomGradientText(
+                                        text:
+                                            routineModel.goals.length
+                                                .toString(),
+                                      ),
                                       Space.w4,
                                       Text('Tasks'),
                                       Space.w4,
@@ -106,7 +106,9 @@ class MyroutineBriefCard extends StatelessWidget {
                                           color: Colors.black,
                                         ),
                                       ),
-                                      CustomGradientText(text: '40'),
+                                      CustomGradientText(
+                                        text: routineModel.duration.toString(),
+                                      ),
                                       Space.w4,
                                       Text('Min'),
                                     ],

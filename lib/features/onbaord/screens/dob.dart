@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -138,20 +140,39 @@ class Dob extends StatelessWidget {
                 ],
 
                 Spacer(flex: 3),
-                GradientButton(
-                  onPressed: () {
-                    if (dobFormKey.currentState!.validate()) {
-                      provider.onDateOfBirthSave();
-                    }
-                  },
-                  child: Center(
-                    child: Text(
-                      'Save',
+                Consumer<OnboardsProvider>(
+                  builder: (context, obp, _) {
+                    return GradientButton(
+                      onPressed:
+                          obp.loading
+                              ? null
+                              : () async {
+                                if (dobFormKey.currentState!.validate()) {
+                                  try {
+                                    // provider.onDateOfBirthSave();
+                                    await obp.addProfile();
+                                  } catch (e) {
+                                    if (context.mounted) {
+                                      log(e.toString());
+                                    }
+                                  }
+                                }
+                              },
+                      child: Center(
+                        child:
+                            obp.loading
+                                ? CircularProgressIndicator()
+                                : Text(
+                                  'Save',
 
-                      style:
-                          AppTextTheme.mainButtonTextStyle(context).titleLarge,
-                    ),
-                  ),
+                                  style:
+                                      AppTextTheme.mainButtonTextStyle(
+                                        context,
+                                      ).titleLarge,
+                                ),
+                      ),
+                    );
+                  },
                 ),
               ],
             );

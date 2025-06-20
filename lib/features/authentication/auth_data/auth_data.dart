@@ -10,7 +10,7 @@ class AuthData {
   Future<String> createUser(var map) async {
     try {
       final res = await httpService.post(
-        ApiConstants.createUser,
+        ApiConstants.createUserUrl,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(map),
       );

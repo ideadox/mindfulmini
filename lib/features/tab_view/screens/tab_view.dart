@@ -78,10 +78,6 @@ class _TabViewState extends State<TabView> with TickerProviderStateMixin {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => TabViewProvider()),
-        ChangeNotifierProvider(
-          create: (context) => ProfileProvider(),
-          lazy: false,
-        ),
       ],
 
       child: Consumer2<TabViewProvider, OfflineStatusProvider>(

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -67,6 +69,7 @@ class CreateAccountProvoider with ChangeNotifier {
         error = 'Something went wrong';
       }
     } on FirebaseAuthException catch (e) {
+      log(e.toString());
       error = ResolveError.resolve(e.code);
     } catch (e) {
       error = 'Something went wrong';

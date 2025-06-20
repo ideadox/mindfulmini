@@ -7,9 +7,12 @@ import '../providers/remainder_routine_provider.dart';
 class CreateWeekDays extends StatelessWidget {
   final bool disable;
   final RemainderRoutineProvider rProvider;
+  final Function(String) onSelect;
+
   const CreateWeekDays({
     super.key,
     required this.rProvider,
+    required this.onSelect,
     this.disable = false,
   });
 
@@ -26,7 +29,9 @@ class CreateWeekDays extends StatelessWidget {
                       ? null
                       : () {
                         rProvider.updateSelection(val);
+                        onSelect(val);
                       },
+
               child: Container(
                 height: 40,
                 width: 40,
