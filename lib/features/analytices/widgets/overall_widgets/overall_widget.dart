@@ -3,7 +3,6 @@ import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 
 import 'overall_anayl_card.dart';
-import 'overall_build_routine_card.dart';
 
 class OverallWidget extends StatelessWidget {
   const OverallWidget({super.key});

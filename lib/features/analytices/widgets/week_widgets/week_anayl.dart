@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/analytices/models/week_anayl_design.dart';
 import 'package:mindfulminis/features/analytices/widgets/week_widgets/week_anayl_card.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
@@ -55,7 +54,7 @@ class WeekAnayl extends StatelessWidget {
       ),
     };
 
-    List<WeekAnaylModel> _items = [
+    List<WeekAnaylModel> items = [
       WeekAnaylModel(title: 'Morning Routine', icon: Assets.icons.sunIcon),
       WeekAnaylModel(
         title: 'Afternoon Routine',
@@ -66,10 +65,10 @@ class WeekAnayl extends StatelessWidget {
     ];
     return ListView.separated(
       padding: EdgeInsets.all(12),
-      itemCount: _items.length,
+      itemCount: items.length,
       separatorBuilder: (context, index) => SizedBox(height: 20),
       itemBuilder: (context, index) {
-        final item = _items[index];
+        final item = items[index];
         return WeekAnaylCard(
           type: item.title,
           icon: item.icon,

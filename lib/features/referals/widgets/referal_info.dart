@@ -7,7 +7,7 @@ class ReferalInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> _items = [
+    List<String> items = [
       'Download Mindful Minis using your unique referral link',
       'Sign in and purchase a subscription',
     ];
@@ -29,14 +29,14 @@ class ReferalInfo extends StatelessWidget {
             ),
           ),
           ListView.builder(
-            itemCount: _items.length,
+            itemCount: items.length,
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               return ListTile(
                 leading: ValueBuild(value: (index + 1).toString()),
                 title: Text(
-                  _items[index],
+                  items[index],
                   style: GoogleFonts.nunito(color: Colors.black87),
                 ),
               );

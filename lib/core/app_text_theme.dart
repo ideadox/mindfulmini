@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mindfulminis/core/app_colors.dart';
 
 class AppTextTheme {
   static TextTheme titleTextTheme(BuildContext context) {

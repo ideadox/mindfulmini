@@ -13,7 +13,7 @@ class TermsService extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<TermsModel> _terms = [
+    List<TermsModel> terms = [
       TermsModel(
         title: 'What is Lorem Ipsum?',
         body:
@@ -38,11 +38,11 @@ class TermsService extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                _terms[0].title,
+                terms[0].title,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
               ),
               Space.h20,
-              Text(_terms[0].body),
+              Text(terms[0].body),
             ],
           );
         },

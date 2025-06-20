@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mindfulminis/common/widgets/custom_back_button.dart';
 
-import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/breathing/providers/breathing_provider.dart';

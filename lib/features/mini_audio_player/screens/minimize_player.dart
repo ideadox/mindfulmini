@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:mindfulminis/common/widgets/custom_gradient_text.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/mini_audio_player/components/gradinet_slider.dart';

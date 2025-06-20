@@ -4,8 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/common/widgets/gradient_scaffold.dart';
 import 'package:mindfulminis/core/app_colors.dart';
-import 'package:mindfulminis/core/app_spacing.dart';
-import 'package:mindfulminis/features/authentication/screens/auth_main.dart';
 import 'package:mindfulminis/features/forgot_password/screens/forgot_password.dart';
 import 'package:mindfulminis/features/authentication/screens/create_account.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';

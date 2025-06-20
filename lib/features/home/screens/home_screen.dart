@@ -7,7 +7,6 @@ import 'package:mindfulminis/features/home/providers/home_provider.dart';
 import 'package:mindfulminis/features/home/widgets/add_feeling/add_feeling_widget.dart';
 import 'package:mindfulminis/features/home/widgets/breathing/breathing.dart';
 import 'package:mindfulminis/features/home/widgets/daily_activity/daily_activity.dart';
-import 'package:mindfulminis/features/home/widgets/feedback/feedback_dailog.dart';
 import 'package:mindfulminis/features/home/widgets/meditation/meditation.dart';
 import 'package:mindfulminis/features/home/widgets/my_routine/myroutine_slider.dart';
 import 'package:mindfulminis/features/home/widgets/stories/stories.dart';

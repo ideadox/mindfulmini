@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:mindfulminis/common/widgets/common_text_form_field.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/home/providers/rating_provider.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../common/widgets/close_button_dailog.dart';
-import '../../../../core/app_colors.dart';
 
 class FeedbackDailog extends StatelessWidget {
   const FeedbackDailog({super.key});

@@ -9,7 +9,6 @@ import 'package:mindfulminis/features/yoga/screens/yoga_main.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
 
-import '../../../core/app_colors.dart';
 import '../../../core/app_text_theme.dart';
 import '../widgets/mini_scan/mini_body_scan_widget.dart';
 

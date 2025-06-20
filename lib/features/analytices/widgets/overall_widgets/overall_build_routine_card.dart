@@ -9,7 +9,7 @@ class OverallBuildRoutineCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<RoutineLevelModel> _levelData = [
+    List<RoutineLevelModel> levelData = [
       RoutineLevelModel(
         icon: Assets.images.gratitueAvatar.path,
         subtitle: 'Gratitude Journal',
@@ -36,7 +36,7 @@ class OverallBuildRoutineCard extends StatelessWidget {
       ),
     ];
     return GridView.builder(
-      itemCount: _levelData.length,
+      itemCount: levelData.length,
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -46,7 +46,7 @@ class OverallBuildRoutineCard extends StatelessWidget {
         childAspectRatio: 2,
       ),
       itemBuilder: (context, index) {
-        final item = _levelData[index];
+        final item = levelData[index];
         return RoutineInfoCard(
           icon: item.icon,
           title: item.title,
