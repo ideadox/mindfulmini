@@ -38,7 +38,7 @@ class UserProfile {
       'userId': userId,
       'firstName': firstName,
       'dateOfBirth': dateOfBirth.toIso8601String(),
-      'profileImage': profileImage,
+      if (profileImage != null) 'profileImage': profileImage,
     };
   }
 

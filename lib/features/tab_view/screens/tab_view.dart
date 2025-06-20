@@ -50,6 +50,7 @@ class _TabViewState extends State<TabView> with TickerProviderStateMixin {
     );
 
     PushNotificationService().initToken();
+    context.read<ProfileProvider>().getUser();
     super.initState();
   }
 

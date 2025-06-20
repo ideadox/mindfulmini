@@ -55,7 +55,9 @@ class _ChangeYourNameState extends State<ChangeYourName> {
                         : () async {
                           try {
                             UserProfile updatedProfile = provider.userProfile
-                                .copyWith(firstName: nameController.text);
+                                .copyWith(
+                                  firstName: nameController.text.trim(),
+                                );
                             await provider.updateProfile(updatedProfile);
                           } catch (e) {
                             log(e.toString());
