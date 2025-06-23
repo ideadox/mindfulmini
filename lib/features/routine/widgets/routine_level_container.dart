@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/widgets/custom_level_percent_indicator.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/features/journal/screens/create_journal_screen.dart';
+import 'package:mindfulminis/features/routine/models/activity_content_model.dart';
 import 'package:mindfulminis/features/routine/screens/affirmation_screen.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
@@ -11,11 +12,13 @@ class RoutineLevelContainer extends StatelessWidget {
   final int index;
   final bool isCompleted;
   final bool currentLevel;
+  final ActivityContentModel activityContentModel;
   const RoutineLevelContainer({
     super.key,
     this.isCompleted = false,
     this.currentLevel = false,
     required this.index,
+    required this.activityContentModel,
   });
 
   @override
@@ -24,12 +27,12 @@ class RoutineLevelContainer extends StatelessWidget {
       onTap: () {
         // sl<GoRouter>().pushNamed(CreateJournalScreen.routeName);
 
-        if (index == 0) {
-          sl<GoRouter>().pushNamed(CreateJournalScreen.routeName);
-        }
-        if (index == 1) {
-          sl<GoRouter>().pushNamed(AffirmationScreen.routeName);
-        }
+        // if (index == 0) {
+        //   sl<GoRouter>().pushNamed(CreateJournalScreen.routeName);
+        // }
+        // if (index == 1) {
+        //   sl<GoRouter>().pushNamed(AffirmationScreen.routeName);
+        // }
         // Add more conditions for other indices if needed
       },
       child: Container(
@@ -56,7 +59,7 @@ class RoutineLevelContainer extends StatelessWidget {
               ),
             ),
             title: Text(
-              'Breath',
+              activityContentModel.goal,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -70,12 +73,7 @@ class RoutineLevelContainer extends StatelessWidget {
               ),
             ),
             trailing: CustomLevelPercentIndicator(
-              percent:
-                  isCompleted
-                      ? 1
-                      : currentLevel
-                      ? 0.3
-                      : 0,
+              percent: activityContentModel.progressStatus.toDouble() / 100,
             ),
           ),
         ),

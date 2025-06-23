@@ -49,6 +49,7 @@ class MyRoutineScreen extends StatelessWidget {
                         onTap: () {
                           sl<GoRouter>().pushNamed(
                             RoutineDetailScreen.routeName,
+                            pathParameters: {'routineId': routineModel.id},
                           );
                         },
                         child: MyroutineBriefCard(routineModel: routineModel),

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:mindfulminis/core/api_constants.dart';
+import 'package:mindfulminis/features/routine/models/activity_model.dart';
 
 import 'package:mindfulminis/services/http_service.dart';
 
@@ -38,6 +39,32 @@ class RoutineData {
         }
       }
       return routines;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<ActivityModel> getRoutineActivity(String id, String date) async {
+    try {
+      final res = await httpService.post(
+        ApiConstants.getRoutineActivityUrl,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({"routineId": id, "date": date}),
+      );
+
+      return ActivityModel.fromJson(res['data']['activity']);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> updateRoutineActivityPercent(String id, int progress) async {
+    try {
+      await httpService.post(
+        ApiConstants.updateRoutineActivityPercentUrl + id,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({"progressStatus": progress}),
+      );
     } catch (e) {
       rethrow;
     }

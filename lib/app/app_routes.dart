@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
@@ -145,7 +147,11 @@ GoRouter buildRouter() {
       GoRoute(
         path: RoutineDetailScreen.routePath,
         name: RoutineDetailScreen.routeName,
-        builder: (context, state) => RoutineDetailScreen(),
+        builder: (context, state) {
+          String id = state.pathParameters['routineId'] ?? "";
+
+          return RoutineDetailScreen(routineId: id);
+        },
       ),
       GoRoute(
         path: YogaMain.routePath,

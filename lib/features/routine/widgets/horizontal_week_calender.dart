@@ -6,6 +6,7 @@ import 'package:mindfulminis/core/app_spacing.dart';
 class HorizontalWeekCalendar extends StatefulWidget {
   final DateTime selectedDate;
   final ValueChanged<DateTime> onDateSelected;
+  
 
   const HorizontalWeekCalendar({
     super.key,

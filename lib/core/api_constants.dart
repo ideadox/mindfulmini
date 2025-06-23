@@ -10,4 +10,7 @@ class ApiConstants {
   //routine
   static String createRoutineUrl = '$baseUrl/api/routine/addRoutine';
   static String getRoutinesUrl = '$baseUrl/api/routine/getRoutinesByProfileId/';
+  static String getRoutineActivityUrl = '$baseUrl/api/activity/getActivity';
+  static String updateRoutineActivityPercentUrl =
+      '$baseUrl/api/activityContent/updateActivityContentProgressById/';
 }
