@@ -1,18 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart';
 
 import 'package:mindfulminis/common/widgets/custom_back_button.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
+import 'package:mindfulminis/features/journal/models/gratiude_journal_model.dart';
 
 import 'package:mindfulminis/gen/assets.gen.dart';
+import 'package:mindfulminis/utiles/basic_function.dart';
+import '../providers/journal_provider.dart';
 
 class JournalDetail1Screen extends StatefulWidget {
   static String routeName = 'journal-detail1-screen';
-  static String routePath = '/journal-detail1-screen';
+  static String routePath = '/journal-detail1-screen:gratitudeId';
+  final String gratitudeId;
+  final GratiudeJournalModel gratitudeJournal;
+  final JournalProvider journalProvider;
 
-  const JournalDetail1Screen({super.key});
+  const JournalDetail1Screen({
+    super.key,
+    required this.gratitudeId,
+    required this.gratitudeJournal,
+    required this.journalProvider,
+  });
 
   @override
   State<JournalDetail1Screen> createState() => _JournalDetail1ScreenState();
@@ -86,7 +98,12 @@ class _JournalDetail1ScreenState extends State<JournalDetail1Screen> {
             ),
           ),
 
-          ContentScreen(moveUp: _moveUp, screenHeight: screenHeight),
+          ContentScreen(
+            moveUp: _moveUp,
+            screenHeight: screenHeight,
+            gratiudeJournalModel: widget.gratitudeJournal,
+            provider: widget.journalProvider,
+          ),
         ],
       ),
     );
@@ -96,14 +113,21 @@ class _JournalDetail1ScreenState extends State<JournalDetail1Screen> {
 class ContentScreen extends StatelessWidget {
   final bool moveUp;
   final double screenHeight;
+  final GratiudeJournalModel gratiudeJournalModel;
+  final JournalProvider provider;
   const ContentScreen({
     super.key,
     required this.moveUp,
     required this.screenHeight,
+    required this.gratiudeJournalModel,
+    required this.provider,
   });
 
   @override
   Widget build(BuildContext context) {
+    int countWord = BasicFunction.countWords(
+      gratiudeJournalModel.emotionDescription,
+    );
     return SizedBox(
       height: screenHeight,
       width: double.infinity,
@@ -168,7 +192,9 @@ class ContentScreen extends StatelessWidget {
                               color: Colors.grey.shade300,
                             ),
                             child: SvgPicture.asset(
-                              Assets.icons.amazingEmoji,
+                              BasicFunction.getJounalEmoji(
+                                gratiudeJournalModel.emotion,
+                              ),
                               height: 90,
                               width: 90,
                             ),
@@ -187,7 +213,7 @@ class ContentScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(30),
                           ),
                           child: Text(
-                            'Amazing',
+                            gratiudeJournalModel.emotion,
                             style: TextStyle(color: HexColor('#8E00FF')),
                           ),
                         ),
@@ -197,21 +223,29 @@ class ContentScreen extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text('Feb 2, 2025', style: TextStyle(fontSize: 12)),
+                            Text(
+                              DateFormat(
+                                'MMM dd, yyyy',
+                              ).format(gratiudeJournalModel.date),
+                              style: TextStyle(fontSize: 12),
+                            ),
                             SizedBox(width: 8),
                             Text('•', style: TextStyle(fontSize: 12)),
+                            // SizedBox(width: 8),
+                            // Text('02:22 AM', style: TextStyle(fontSize: 12)),
+                            // SizedBox(width: 8),
+                            // Text('•', style: TextStyle(fontSize: 12)),
                             SizedBox(width: 8),
-                            Text('02:22 AM', style: TextStyle(fontSize: 12)),
-                            SizedBox(width: 8),
-                            Text('•', style: TextStyle(fontSize: 12)),
-                            SizedBox(width: 8),
-                            Text('80 Words', style: TextStyle(fontSize: 12)),
+                            Text(
+                              '$countWord Words',
+                              style: TextStyle(fontSize: 12),
+                            ),
                           ],
                         ),
 
                         Space.h20,
                         Text(
-                          'Feeling Amazing Today! 😊',
+                          'Feeling ${gratiudeJournalModel.emotion} Today! 😊',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -238,7 +272,8 @@ class ContentScreen extends StatelessWidget {
                                             ),
                                             child: Text(
                                               textAlign: TextAlign.start,
-                                              'Today, I am grateful for the time I spent with my grandpa, listening to his stories and feeling his warmth.\n\n His wisdom and kindness made my day special. I plan to help set the table for dinner, read a new story, and smile more today. These little moments bring joy and mindfulness to my day. Every small action helps me feel happy and connected. 🌿✨',
+                                              gratiudeJournalModel
+                                                  .emotionDescription,
                                             ),
                                           ),
                                         ],

@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
+import 'package:mindfulminis/features/journal/models/gratiude_journal_model.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
+import 'package:mindfulminis/utiles/basic_function.dart';
 
 class RecentEntryCard extends StatelessWidget {
   final VoidCallback onPressed;
-  const RecentEntryCard({super.key, required this.onPressed});
+  final GratiudeJournalModel gratiudeJournalModel;
+  const RecentEntryCard({
+    super.key,
+    required this.onPressed,
+    required this.gratiudeJournalModel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +37,9 @@ class RecentEntryCard extends StatelessWidget {
             Container(
               alignment: Alignment.centerLeft,
 
-              child: SvgPicture.asset(Assets.icons.amazingEmoji),
+              child: SvgPicture.asset(
+                BasicFunction.getJounalEmoji(gratiudeJournalModel.emotion),
+              ),
             ),
             Space.w20,
             Expanded(
@@ -44,7 +54,7 @@ class RecentEntryCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: Text(
-                      'Amazing',
+                      gratiudeJournalModel.emotion,
                       style: TextStyle(color: HexColor('#FC09A3')),
                     ),
                   ),
@@ -53,7 +63,9 @@ class RecentEntryCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Feb 2, 2025',
+                        DateFormat(
+                          'MMM dd, yyyy',
+                        ).format(gratiudeJournalModel.date),
                         style: TextStyle(fontSize: 12, color: Colors.black87),
                       ),
                       SizedBox(width: 8),
@@ -62,24 +74,24 @@ class RecentEntryCard extends StatelessWidget {
                         style: TextStyle(fontSize: 12, color: Colors.black87),
                       ),
                       SizedBox(width: 8),
+                      // Text(
+                      //   '02:22 AM',
+                      //   style: TextStyle(fontSize: 12, color: Colors.black87),
+                      // ),
+                      // SizedBox(width: 8),
+                      // Text(
+                      //   '•',
+                      //   style: TextStyle(fontSize: 12, color: Colors.black87),
+                      // ),
+                      // SizedBox(width: 8),
                       Text(
-                        '02:22 AM',
-                        style: TextStyle(fontSize: 12, color: Colors.black87),
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        '•',
-                        style: TextStyle(fontSize: 12, color: Colors.black87),
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        '80 Words',
+                        '${BasicFunction.countWords(gratiudeJournalModel.emotionDescription)} Words',
                         style: TextStyle(fontSize: 12, color: Colors.black87),
                       ),
                     ],
                   ),
                   Space.h8,
-                  Text('Feeling Amazing Today! 😊'),
+                  Text('Feeling ${gratiudeJournalModel.emotion} Today! 😊'),
                 ],
               ),
             ),

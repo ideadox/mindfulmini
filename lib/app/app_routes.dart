@@ -127,7 +127,11 @@ GoRouter buildRouter() {
       GoRoute(
         path: CreateJournalScreen.routePath,
         name: CreateJournalScreen.routeName,
-        builder: (context, state) => CreateJournalScreen(),
+        builder: (context, state) {
+          return CreateJournalScreen(
+            activityId: state.pathParameters['activityId'] ?? "",
+          );
+        },
       ),
       GoRoute(
         path: JournalDetailScreen.routePath,

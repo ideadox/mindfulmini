@@ -13,9 +13,10 @@ import 'package:provider/provider.dart';
 
 class CreateJournalScreen extends StatefulWidget {
   static String routeName = 'create-journal-screen';
-  static String routePath = '/create-journal-screen';
+  static String routePath = '/create-journal-screen/:activityId';
+  final String activityId;
 
-  const CreateJournalScreen({super.key});
+  const CreateJournalScreen({super.key, required this.activityId});
 
   @override
   State<CreateJournalScreen> createState() => _CreateJournalScreenState();
@@ -189,18 +190,28 @@ class _CreateJournalScreenState extends State<CreateJournalScreen> {
                           Space.h40,
 
                           GradientButton(
-                            onPressed: () {
-                              provider.showCelebrateDailog();
-                            },
+                            onPressed:
+                                provider.loading
+                                    ? null
+                                    : () {
+                                      provider.createJournal(
+                                        _provider1.textController.text,
+                                        _provider2.textController.text,
+                                        widget.activityId,
+                                      );
+                                    },
                             child: Center(
-                              child: Text(
-                                'Done',
+                              child:
+                                  provider.loading
+                                      ? CircularProgressIndicator()
+                                      : Text(
+                                        'Done',
 
-                                style:
-                                    AppTextTheme.mainButtonTextStyle(
-                                      context,
-                                    ).titleLarge,
-                              ),
+                                        style:
+                                            AppTextTheme.mainButtonTextStyle(
+                                              context,
+                                            ).titleLarge,
+                                      ),
                             ),
                           ),
                         ],

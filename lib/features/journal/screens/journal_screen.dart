@@ -31,10 +31,13 @@ class JournalScreen extends StatelessWidget {
     }
 
     return ChangeNotifierProvider(
-      create: (context) => JournalProvider(),
+      create: (context) => JournalProvider()..getGratitudeJournals(),
       child: Scaffold(
         body: Consumer<JournalProvider>(
           builder: (context, provider, _) {
+            if (provider.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
             return SingleChildScrollView(
               child: Column(
                 children: [
@@ -132,34 +135,44 @@ class JournalScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Column(
                       children: [
-                        Space.h12,
-                        Row(
-                          children: [
-                            Text(
-                              'Recent Entries',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
+                        if (provider.gratitudeJournals.isNotEmpty) ...[
+                          Space.h12,
+                          Row(
+                            children: [
+                              Text(
+                                'Recent Entries',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        Space.h12,
-                        RecentEntryCard(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return JournalDetail1Screen();
-                                },
-                              ),
-                            );
-                            return;
-                          },
-                        ),
-                        Space.h20,
-                        Space.h12,
+                            ],
+                          ),
+                          Space.h12,
+                          RecentEntryCard(
+                            gratiudeJournalModel:
+                                provider.gratitudeJournals.last,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return JournalDetail1Screen(
+                                      gratitudeId:
+                                          provider.gratitudeJournals.last.id,
+                                      gratitudeJournal:
+                                          provider.gratitudeJournals.last,
+                                      journalProvider: provider,
+                                    );
+                                  },
+                                ),
+                              );
+                              return;
+                            },
+                          ),
+                        ],
+                        Space.h32,
+
                         CustomMonthCalender(provider: provider),
                       ],
                     ),

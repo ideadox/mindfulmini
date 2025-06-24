@@ -4,6 +4,7 @@ class ActivityModel {
   final String id;
   final String profileId;
   final String routineId;
+  final String? gratitudeId;
   final DateTime date;
   final String status;
   final DateTime createdAt;
@@ -21,6 +22,7 @@ class ActivityModel {
     required this.updatedAt,
 
     required this.activityContent,
+    this.gratitudeId,
   });
 
   factory ActivityModel.fromJson(Map<String, dynamic> json) {
@@ -37,6 +39,7 @@ class ActivityModel {
           (json['activityContent'] as List)
               .map((e) => ActivityContentModel.fromJson(e))
               .toList(),
+      gratitudeId: json['gratitudeId'],
     );
   }
 
@@ -62,6 +65,7 @@ class ActivityModel {
     DateTime? updatedAt,
 
     List<ActivityContentModel>? activityContent,
+    String? gratitudeId,
   }) {
     return ActivityModel(
       id: id ?? this.id,
@@ -73,6 +77,7 @@ class ActivityModel {
       updatedAt: updatedAt ?? this.updatedAt,
 
       activityContent: activityContent ?? this.activityContent,
+      gratitudeId: gratitudeId ?? this.gratitudeId,
     );
   }
 }

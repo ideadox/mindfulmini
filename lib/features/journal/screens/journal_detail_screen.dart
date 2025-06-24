@@ -20,13 +20,6 @@ class _JournalDetailScreenState extends State<JournalDetailScreen> {
   @override
   void initState() {
     super.initState();
-
-    Future.delayed(const Duration(milliseconds: 800), () {
-      // Navigator.pop(context);
-      Navigator.of(
-        context,
-      ).pushReplacement(_createSpringRoute(JournalDetail1Screen()));
-    });
   }
 
   @override

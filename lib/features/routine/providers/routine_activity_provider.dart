@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mindfulminis/features/routine/models/activity_content_model.dart';
 import 'package:mindfulminis/features/routine/models/activity_model.dart';
 
 import '../../../injection/injection.dart';
@@ -18,7 +20,16 @@ class RoutineActivityProvider with ChangeNotifier {
   RoutineActivityProvider(String id, String date) {
     getRoutineActivity(id, date);
   }
-  // ValueChanged<DateTime> onDateSelected;
+
+  final List<String> customOrder = [
+    'Gratitude Journal',
+    'Affirmation',
+    'Meditation',
+    'Yoga',
+    'Breathing',
+    'Stories',
+    'Mini body scan',
+  ];
 
   ActivityModel? activityModel;
   DateTime selectedDate = DateTime.now();
@@ -43,6 +54,26 @@ class RoutineActivityProvider with ChangeNotifier {
       log(date);
 
       activityModel = await _routineData.getRoutineActivity(id, date);
+      activityModel?.activityContent.add(
+        ActivityContentModel(
+          id: id,
+          profileId: '',
+          routineId: '',
+          activityId: '',
+          contentId: '',
+          goal: 'Gratitude Journal',
+          progressStatus: 0,
+          status: '',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          v: 0,
+        ),
+      );
+
+      activityModel?.activityContent.sort(
+        (a, b) =>
+            customOrder.indexOf(a.goal).compareTo(customOrder.indexOf(b.goal)),
+      );
     } catch (e) {
       rethrow;
     } finally {
@@ -66,4 +97,23 @@ class RoutineActivityProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  // Future<void> createJournal(String des, String acc) async {
+  //   try {
+  //     var map = {
+  //       "profileId": _sharedPrefs.getUserId(),
+  //       "activityId": "<objectId>",
+  //       "emotion": slectedFeeling?.trim(),
+  //       "emotionDescription": des.trim(),
+  //       "accomplishments": acc.trim(),
+  //       "date": "2025-06-24",
+  //     };
+  //     log(map.toString());
+  //     // return;
+  //     await _routineData.createJournal(map);
+  //     // showCelebrateDailog();
+  //   } catch (e) {
+  //     SmartDialog.showToast('Something went wrong. Please try again later.');
+  //   }
+  // }
 }

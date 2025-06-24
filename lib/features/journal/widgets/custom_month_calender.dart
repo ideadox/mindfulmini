@@ -6,8 +6,10 @@ import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/journal/providers/journal_provider.dart';
 import 'package:mindfulminis/features/journal/screens/journal_detail1_screen.dart';
-import 'package:mindfulminis/gen/assets.gen.dart';
+import 'package:mindfulminis/utiles/basic_function.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+
+import '../models/gratiude_journal_model.dart';
 
 class CustomMonthCalender extends StatelessWidget {
   final JournalProvider provider;
@@ -32,24 +34,6 @@ class CustomMonthCalender extends StatelessWidget {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(width: 12),
-                // DropdownButton<String>(
-                //   value: 'Option 1',
-                //   underline: SizedBox(),
-                //   items:
-                //       <String>[
-                //         'Option 1',
-                //         'Option 2',
-                //         'Option 3',
-                //       ].map<DropdownMenuItem<String>>((String value) {
-                //         return DropdownMenuItem<String>(
-                //           value: value,
-                //           child: Text(value),
-                //         );
-                //       }).toList(),
-                //   onChanged: (value) {
-                //     // handle dropdown change
-                //   },
-                // ),
               ],
             ),
           ),
@@ -58,12 +42,38 @@ class CustomMonthCalender extends StatelessWidget {
             height: 450,
             child: SfCalendar(
               onTap: (calendarTapDetails) {
-                // provider.navigateToJournalDetail();
+                final journal = provider.gratitudeJournals.lastWhere(
+                  (element) {
+                    return element.date.day == calendarTapDetails.date?.day &&
+                        element.date.month == calendarTapDetails.date?.month &&
+                        element.date.year == calendarTapDetails.date?.year;
+                  },
+                  orElse:
+                      () => GratiudeJournalModel(
+                        id: '',
+                        profileId: '',
+                        activityId: '',
+                        emotion: '',
+                        emotionDescription: '',
+                        accomplishments: '',
+                        date: calendarTapDetails.date ?? DateTime.now(),
+                        createdAt: DateTime.now(),
+                        updatedAt: DateTime.now(),
+                        v: 0,
+                      ),
+                );
+                if (journal.id.isEmpty) {
+                  return;
+                }
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) {
-                      return JournalDetail1Screen();
+                      return JournalDetail1Screen(
+                        gratitudeJournal: journal,
+                        gratitudeId: journal.id,
+                        journalProvider: provider,
+                      );
                     },
                   ),
                 );
@@ -76,7 +86,7 @@ class CustomMonthCalender extends StatelessWidget {
               headerHeight: 0,
 
               todayHighlightColor: AppColors.primary,
-              
+
               cellBorderColor: Colors.transparent,
               monthViewSettings: MonthViewSettings(
                 dayFormat: 'EEE',
@@ -98,6 +108,27 @@ class CustomMonthCalender extends StatelessWidget {
                 final isOtherMonth =
                     details.date.month != details.visibleDates[10].month;
 
+                final journal = provider.gratitudeJournals.lastWhere(
+                  (element) {
+                    return element.date.day == details.date.day &&
+                        element.date.month == details.date.month &&
+                        element.date.year == details.date.year;
+                  },
+                  orElse:
+                      () => GratiudeJournalModel(
+                        id: '',
+                        profileId: '',
+                        activityId: '',
+                        emotion: '',
+                        emotionDescription: '',
+                        accomplishments: '',
+                        date: details.date,
+                        createdAt: DateTime.now(),
+                        updatedAt: DateTime.now(),
+                        v: 0,
+                      ),
+                );
+
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -115,9 +146,13 @@ class CustomMonthCalender extends StatelessWidget {
                                 : Border.all(color: AppColors.primary),
                       ),
                       child:
-                          !isToday
-                              ? null
-                              : SvgPicture.asset(Assets.icons.amazingEmoji),
+                          journal.id.isNotEmpty
+                              ? SvgPicture.asset(
+                                BasicFunction.getJounalEmoji(journal.emotion),
+                                width: 24,
+                                height: 24,
+                              )
+                              : null,
                     ),
                     const SizedBox(height: 6),
                     Container(

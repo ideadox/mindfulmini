@@ -69,4 +69,18 @@ class RoutineData {
       rethrow;
     }
   }
+
+  Future<void> createJournal(var map) async {
+    try {
+      final res = await httpService.post(
+        ApiConstants.addGratitudeJournalUrl,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(map),
+      );
+      log(res.toString());
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
 }

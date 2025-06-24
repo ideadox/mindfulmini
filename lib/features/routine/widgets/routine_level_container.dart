@@ -25,15 +25,24 @@ class RoutineLevelContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // sl<GoRouter>().pushNamed(CreateJournalScreen.routeName);
-
-        // if (index == 0) {
-        //   sl<GoRouter>().pushNamed(CreateJournalScreen.routeName);
-        // }
-        // if (index == 1) {
-        //   sl<GoRouter>().pushNamed(AffirmationScreen.routeName);
-        // }
-        // Add more conditions for other indices if needed
+        if (activityContentModel.goal == 'Gratitude Journal') {
+          sl<GoRouter>().pushNamed(
+            CreateJournalScreen.routeName,
+            pathParameters: {'activityId': activityContentModel.id},
+          );
+        } else if (activityContentModel.goal == 'Affirmation') {
+          sl<GoRouter>().pushNamed(AffirmationScreen.routeName);
+        } else if (activityContentModel.goal == 'Meditation') {
+          // Navigate to Meditation screen
+        } else if (activityContentModel.goal == 'Yoga') {
+          // Navigate to Yoga screen
+        } else if (activityContentModel.goal == 'Breathing') {
+          // Navigate to Breathing screen
+        } else if (activityContentModel.goal == 'Stories') {
+          // Navigate to Stories screen
+        } else if (activityContentModel.goal == 'Mini body scan') {
+          // Navigate to Mini body scan screen
+        }
       },
       child: Container(
         decoration: BoxDecoration(

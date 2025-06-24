@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -6,14 +7,45 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/widgets/custom_dailog.dart';
 import 'package:mindfulminis/injection/injection.dart';
 
+import '../../../services/shared_prefs.dart';
+import '../journal_data/journal_data.dart';
+
 class CreateJournalProvider with ChangeNotifier {
   final _navigationService = sl<GoRouter>();
+  final journalData = sl<JournalData>();
+  final _sharedPrefs = sl<SharedPrefs>();
 
   String? slectedFeeling;
+  bool loading = false;
 
   void onChangeFeeling(val) {
     slectedFeeling = val;
     notifyListeners();
+  }
+
+  Future<void> createJournal(String des, String acc, String activityId) async {
+    try {
+      loading = true;
+      notifyListeners();
+
+      var map = {
+        "profileId": _sharedPrefs.getUserId(),
+        "activityId": activityId,
+        "emotion": slectedFeeling?.trim(),
+        "emotionDescription": des.trim(),
+        "accomplishments": acc.trim(),
+        "date": "2025-06-24",
+      };
+      log(map.toString());
+      // return;
+      await journalData.createJournal(map);
+      showCelebrateDailog();
+    } catch (e) {
+      SmartDialog.showToast('Something went wrong. Please try again later.');
+    } finally {
+      loading = false;
+      notifyListeners();
+    }
   }
 
   showCelebrateDailog() {
