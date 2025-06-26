@@ -22,6 +22,7 @@ class ProfileData {
   Future<void> updateProfile(UserProfile updatedProfile, String userId) async {
     try {
       log(updatedProfile.toJson().toString());
+      log(ApiConstants.updateUserUrl + userId);
       final res = await httpService.post(
         ApiConstants.updateUserUrl + userId,
         headers: {'Content-Type': 'application/json'},

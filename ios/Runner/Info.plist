@@ -49,6 +49,8 @@
 	<string>We need your permission to use the microphone for speech recognition.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Speech recognition is used to convert your voice to text.</string>
+	<key>FlutterDeepLinkingEnabled</key>
+	<false/>
 
 </dict>
 </plist>
