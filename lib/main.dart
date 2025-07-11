@@ -15,7 +15,7 @@ void main() async {
   ]);
   // Initialize the Branch SDK first
   await FlutterBranchSdk.init();
-  // FlutterBranchSdk.validateSDKIntegration();
+  FlutterBranchSdk.validateSDKIntegration();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 

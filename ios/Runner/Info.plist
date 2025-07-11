@@ -22,6 +22,25 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLName</key>
+	<string>app.mindfulmini.com</string>
+	<key>CFBundleURLSchemes</key>
+	<array>
+		<string>mindfulmini</string>
+	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>app.mindfulmini.com</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>mindfulmini</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FlutterDeepLinkingEnabled</key>
@@ -50,6 +69,13 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>branch_key</key>
+	<string>key_test_gqqitq23QJ0ZNNwGo1ZTjmnaBxgGHrt5</string>
+	<key>branch_universal_link_domains</key>
+	<array>
+		<string>40gr3.test-app.link</string>
+		<string>40gr3-alternate.test-app.link</string>
 	</array>
 </dict>
 </plist>
