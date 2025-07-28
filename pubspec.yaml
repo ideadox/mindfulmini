@@ -70,6 +70,7 @@ dependencies:
   another_flushbar: ^1.12.30
   flutter_branch_sdk: ^8.5.0
   uuid: ^4.5.1
+  flutter_launcher_icons: ^0.14.4
   # custom_navigation_bar: ^0.8.2
 
 dev_dependencies:

@@ -6,7 +6,7 @@ class LocalNotificationService {
       FlutterLocalNotificationsPlugin();
   init() {
     var initializationSettingsAndroid = const AndroidInitializationSettings(
-      '@mipmap/ic_launcher',
+      '@drawable/noti',
     );
     // var initializationSettingsIOS = IOSInitializationSettings();
     var initializationSettings = InitializationSettings(
@@ -35,7 +35,7 @@ class LocalNotificationService {
       playSound: false,
       importance: notificationImportance,
       priority: notificationPriority,
-      icon: "@mipmap/ic_launcher",
+      icon: "@drawable/noti",
       ticker: 'ticker',
     );
     // var iOSPlatformChannelSpecifics =
