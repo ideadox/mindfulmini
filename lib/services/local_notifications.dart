@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class LocalNotificationService {
@@ -20,7 +24,8 @@ class LocalNotificationService {
   Future<void> showNotification(
     String notificationTitle,
     String notificationContent,
-    String payload, {
+    String payload,
+    String? url, {
     String channelId = 'high_importance_channel',
     String channelTitle = 'High Importance Notifications',
     String channelDescription =
@@ -28,6 +33,15 @@ class LocalNotificationService {
     Priority notificationPriority = Priority.high,
     Importance notificationImportance = Importance.max,
   }) async {
+    BigPictureStyleInformation? bigPictureStyleInformation;
+    if (url != null) {
+      final response = await http.get(Uri.parse(url));
+      bigPictureStyleInformation = BigPictureStyleInformation(
+        ByteArrayAndroidBitmap.fromBase64String(
+          base64Encode(response.bodyBytes),
+        ),
+      );
+    }
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       channelId,
       channelTitle,
@@ -37,6 +51,7 @@ class LocalNotificationService {
       priority: notificationPriority,
       icon: "@drawable/noti",
       ticker: 'ticker',
+      styleInformation: bigPictureStyleInformation,
     );
     // var iOSPlatformChannelSpecifics =
     //     IOSNotificationDetails(presentSound: false);

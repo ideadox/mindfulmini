@@ -15,6 +15,7 @@ import '../services/shared_prefs.dart';
 final sl = GetIt.instance; // Ensure you're using the correct GetIt instance
 
 Future<void> setupInjection() async {
+  
   sl.registerSingletonAsync<SharedPreferences>(
     () async => await SharedPreferences.getInstance(),
   );
