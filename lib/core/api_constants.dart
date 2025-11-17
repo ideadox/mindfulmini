@@ -14,6 +14,7 @@ class ApiConstants {
   static String updateRoutineActivityPercentUrl =
       '$baseUrl/api/activityContent/updateActivityContentProgressById/';
 
+  //gratitude journal
   static String addGratitudeJournalUrl = '$baseUrl/api/gratitude/addGratitude';
   static String getGratitudeJournalUrl = '$baseUrl/api/gratitude/getGratitude';
 }

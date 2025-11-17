@@ -12,6 +12,7 @@ class LocalNotificationService {
     var initializationSettingsAndroid = const AndroidInitializationSettings(
       '@drawable/noti',
     );
+
     // var initializationSettingsIOS = IOSInitializationSettings();
     var initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
