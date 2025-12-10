@@ -15,23 +15,24 @@ class RoutineData {
 
   Future<void> createRoutine(var map) async {
     try {
-      final res = await httpService.post(
+      await httpService.post(
         ApiConstants.createRoutineUrl,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(map),
       );
-      log(res.toString());
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<List<RoutineModel>> getRoutines(String userid) async {
+  Future<List<RoutineModel>> getRoutines(String profileId) async {
     try {
-      final res = await httpService.get(ApiConstants.getRoutinesUrl + userid);
-      log(res.toString());
+      final res = await httpService.get(
+        '${ApiConstants.getRoutinesUrl}?profileId=$profileId',
+      );
+
       List<RoutineModel> routines = [];
-      for (var routine in res['data']['routines']) {
+      for (var routine in res['data']) {
         try {
           routines.add(RoutineModel.fromJson(routine));
         } catch (e) {
@@ -44,15 +45,14 @@ class RoutineData {
     }
   }
 
-  Future<ActivityModel> getRoutineActivity(String id, String date) async {
+  Future<GoalsSummary> getRoutineActivity(String id, String date) async {
     try {
-      final res = await httpService.post(
-        ApiConstants.getRoutineActivityUrl,
+      final res = await httpService.get(
+        '${ApiConstants.getGoalsUrl}?routineId=$id&date=$date',
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({"routineId": id, "date": date}),
       );
 
-      return ActivityModel.fromJson(res['data']['activity']);
+      return GoalsSummary.fromJson(res['data']);
     } catch (e) {
       rethrow;
     }

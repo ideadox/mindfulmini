@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-
 import 'package:hexcolor/hexcolor.dart';
 
-class CustomPrecentageIndicator extends StatelessWidget {
+class CustomPercentageIndicator extends StatelessWidget {
+  /// Accepts either a fraction (0.0 - 1.0) or percentage (0 - 100).
+  /// Internally it normalizes to 0.0..1.0.
   final double percent;
 
-  const CustomPrecentageIndicator({super.key, required this.percent});
+  const CustomPercentageIndicator({super.key, required this.percent});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +19,16 @@ class CustomPrecentageIndicator extends StatelessWidget {
 }
 
 class _CircularProgressPainter extends CustomPainter {
-  final double percent;
+  final double rawPercent;
+  _CircularProgressPainter(this.rawPercent);
 
-  _CircularProgressPainter(this.percent);
+  // Convert rawPercent to normalized 0..1
+  double get _percent {
+    if (rawPercent.isNaN) return 0.0;
+    if (rawPercent <= 1.0) return rawPercent.clamp(0.0, 1.0);
+    // if > 1 treat as 0..100 value
+    return (rawPercent / 100.0).clamp(0.0, 1.0);
+  }
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -37,52 +45,63 @@ class _CircularProgressPainter extends CustomPainter {
 
     canvas.drawCircle(center, radius, backgroundPaint);
 
-    // Shadow behind active arc
-    final shadowPaint =
-        Paint()
-          ..shader = SweepGradient(
-            startAngle: -pi / 2,
-            endAngle: -pi / 2 + 2 * pi * percent,
-            colors: [
-              HexColor('#F95D11').withOpacity(0.3),
-              HexColor('#FCCB6C').withOpacity(0.3),
-            ],
-          ).createShader(Rect.fromCircle(center: center, radius: radius))
-          ..strokeWidth = strokeWidth + 6
-          ..style = PaintingStyle.stroke
-          ..strokeCap = StrokeCap.round
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
+    final percent = _percent;
+    final sweep = 2 * pi * percent;
 
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      -pi / 2,
-      2 * pi * percent,
-      false,
-      shadowPaint,
-    );
+    // If sweep is zero, skip drawing arc/shadow/gradient
+    if (sweep > 0.0001) {
+      // Shadow behind active arc (soft glow)
+      final shadowPaint =
+          Paint()
+            ..shader = SweepGradient(
+              startAngle: -pi / 2,
+              endAngle: -pi / 2 + sweep,
+              colors: [
+                HexColor('#F95D11').withOpacity(0.25),
+                HexColor('#FCCB6C').withOpacity(0.25),
+              ],
+            ).createShader(Rect.fromCircle(center: center, radius: radius))
+            ..strokeWidth = strokeWidth + 6
+            ..style = PaintingStyle.stroke
+            ..strokeCap = StrokeCap.round
+            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
 
-    final gradientPaint =
-        Paint()
-          ..shader = SweepGradient(
-            startAngle: -pi / 2,
-            endAngle: -pi / 2 + 2 * pi * percent,
-            colors: [HexColor('#F95D11'), HexColor('#FCCB6C')],
-          ).createShader(Rect.fromCircle(center: center, radius: radius))
-          ..strokeWidth = strokeWidth
-          ..style = PaintingStyle.stroke
-          ..strokeCap = StrokeCap.round;
+      canvas.drawArc(
+        Rect.fromCircle(center: center, radius: radius),
+        -pi / 2,
+        sweep,
+        false,
+        shadowPaint,
+      );
 
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      -pi / 2,
-      2 * pi * percent,
-      false,
-      gradientPaint,
-    );
+      // Gradient for active arc
+      // If percent is 1.0, avoid exactly 2π (use tiny epsilon)
+      final safeSweep = (percent >= 1.0) ? (2 * pi - 0.0001) : sweep;
 
-    // Center text
+      final gradientPaint =
+          Paint()
+            ..shader = SweepGradient(
+              startAngle: -pi / 2,
+              endAngle: -pi / 2 + safeSweep,
+              colors: [HexColor('#F95D11'), HexColor('#FCCB6C')],
+            ).createShader(Rect.fromCircle(center: center, radius: radius))
+            ..strokeWidth = strokeWidth
+            ..style = PaintingStyle.stroke
+            ..strokeCap = StrokeCap.round;
+
+      canvas.drawArc(
+        Rect.fromCircle(center: center, radius: radius),
+        -pi / 2,
+        safeSweep,
+        false,
+        gradientPaint,
+      );
+    }
+
+    // Center text - show percentage as integer 0..100
+    final displayPercent = (_percent * 100).round();
     final textSpan = TextSpan(
-      text: '${(percent * 100).round()}%',
+      text: '$displayPercent%',
       style: const TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.bold,
@@ -105,5 +124,8 @@ class _CircularProgressPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant _CircularProgressPainter oldDelegate) {
+    // repaint only when normalized percent changes
+    return (_percent - oldDelegate._percent).abs() > 0.0001;
+  }
 }

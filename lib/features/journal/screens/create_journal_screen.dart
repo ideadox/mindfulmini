@@ -11,6 +11,8 @@ import 'package:mindfulminis/features/journal/widgets/feeling_container_widget.d
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:provider/provider.dart';
 
+import '../../profile/providers/profile_provider.dart';
+
 class CreateJournalScreen extends StatefulWidget {
   static String routeName = 'create-journal-screen';
   static String routePath = '/create-journal-screen/:activityId';
@@ -42,186 +44,197 @@ class _CreateJournalScreenState extends State<CreateJournalScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final profileId = context.read<ProfileProvider>().userProfile.id;
+
     return GradientScaffold(
-      body: ChangeNotifierProvider(
-        create: (context) => CreateJournalProvider(),
-        child: Consumer<CreateJournalProvider>(
-          builder: (context, provider, _) {
-            return Column(
-              children: [
-                Stack(
-                  alignment: Alignment.center,
+      body: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: ChangeNotifierProvider(
+          create: (context) => CreateJournalProvider(profileId),
+          child: Consumer<CreateJournalProvider>(
+            builder: (context, provider, _) {
+              return Column(
+                children: [
+                  Stack(
+                    alignment: Alignment.center,
 
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
-                      children: [CustomBackButton(), SizedBox(width: 48)],
-                    ),
+                        children: [CustomBackButton(), SizedBox(width: 48)],
+                      ),
 
-                    Center(
-                      child: Text(
-                        'Thu, Feb 6',
-                        style: AppTextTheme.titleTextTheme(
-                          context,
-                        ).titleLarge?.copyWith(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                      Center(
+                        child: Text(
+                          'Thu, Feb 6',
+                          style: AppTextTheme.titleTextTheme(
+                            context,
+                          ).titleLarge?.copyWith(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'How are you feeling today?',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Space.h20,
+                            Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 20,
+                                horizontal: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  FeelingContainerWidget(
+                                    title: 'Amazing',
+                                    icon: Assets.icons.amazingEmoji,
+                                    selected:
+                                        provider.slectedFeeling == 'Amazing',
+                                    makeGrey: provider.slectedFeeling != null,
+                                    onPressed: () {
+                                      provider.onChangeFeeling('Amazing');
+                                    },
+                                  ),
+                                  FeelingContainerWidget(
+                                    title: 'Happy',
+                                    icon: Assets.icons.happy,
+                                    selected:
+                                        provider.slectedFeeling == 'Happy',
+                                    makeGrey: provider.slectedFeeling != null,
+                                    onPressed: () {
+                                      provider.onChangeFeeling('Happy');
+                                    },
+                                  ),
+                                  FeelingContainerWidget(
+                                    title: 'Confused',
+                                    icon: Assets.icons.confushedEmoji,
+                                    makeGrey: provider.slectedFeeling != null,
+                                    selected:
+                                        provider.slectedFeeling == 'Confused',
+
+                                    onPressed: () {
+                                      provider.onChangeFeeling('Confused');
+                                    },
+                                  ),
+                                  FeelingContainerWidget(
+                                    title: 'Sad',
+                                    icon: Assets.icons.sadEmoji,
+                                    makeGrey: provider.slectedFeeling != null,
+                                    selected: provider.slectedFeeling == 'Sad',
+
+                                    onPressed: () {
+                                      provider.onChangeFeeling('Sad');
+                                    },
+                                  ),
+                                  FeelingContainerWidget(
+                                    title: 'Upset',
+                                    icon: Assets.icons.upsetEmoji,
+                                    makeGrey: provider.slectedFeeling != null,
+                                    selected:
+                                        provider.slectedFeeling == 'Upset',
+
+                                    onPressed: () {
+                                      provider.onChangeFeeling('Upset');
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Space.h40,
+                            Text(
+                              'Today I am grateful for?',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Space.h20,
+                            CommonSpeechTextfield(
+                              maxLines: 6,
+                              minLines: 6,
+                              hintText: 'Playing with my best friend...',
+                              speechProvider: _provider1,
+                            ),
+
+                            Space.h40,
+                            Text(
+                              "3 things I'll accomplish today",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Space.h20,
+                            CommonSpeechTextfield(
+                              maxLines: 6,
+                              minLines: 6,
+                              hintText: 'I will finish my coloring or drawing.',
+                              speechProvider: _provider2,
+                            ),
+                            Space.h40,
+
+                            GradientButton(
+                              onPressed:
+                                  provider.loading
+                                      ? null
+                                      : () {
+                                        provider.createJournal(
+                                          _provider1.textController.text,
+                                          _provider2.textController.text,
+                                          widget.activityId,
+                                        );
+                                      },
+                              child: Center(
+                                child:
+                                    provider.loading
+                                        ? CircularProgressIndicator()
+                                        : Text(
+                                          'Done',
+
+                                          style:
+                                              AppTextTheme.mainButtonTextStyle(
+                                                context,
+                                              ).titleLarge,
+                                        ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ],
-                ),
-
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'How are you feeling today?',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Space.h20,
-                          Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(
-                              vertical: 20,
-                              horizontal: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                FeelingContainerWidget(
-                                  title: 'Amazing',
-                                  icon: Assets.icons.amazingEmoji,
-                                  selected:
-                                      provider.slectedFeeling == 'Amazing',
-                                  makeGrey: provider.slectedFeeling != null,
-                                  onPressed: () {
-                                    provider.onChangeFeeling('Amazing');
-                                  },
-                                ),
-                                FeelingContainerWidget(
-                                  title: 'Happy',
-                                  icon: Assets.icons.happy,
-                                  selected: provider.slectedFeeling == 'Happy',
-                                  makeGrey: provider.slectedFeeling != null,
-                                  onPressed: () {
-                                    provider.onChangeFeeling('Happy');
-                                  },
-                                ),
-                                FeelingContainerWidget(
-                                  title: 'Confused',
-                                  icon: Assets.icons.confushedEmoji,
-                                  makeGrey: provider.slectedFeeling != null,
-                                  selected:
-                                      provider.slectedFeeling == 'Confused',
-
-                                  onPressed: () {
-                                    provider.onChangeFeeling('Confused');
-                                  },
-                                ),
-                                FeelingContainerWidget(
-                                  title: 'Sad',
-                                  icon: Assets.icons.sadEmoji,
-                                  makeGrey: provider.slectedFeeling != null,
-                                  selected: provider.slectedFeeling == 'Sad',
-
-                                  onPressed: () {
-                                    provider.onChangeFeeling('Sad');
-                                  },
-                                ),
-                                FeelingContainerWidget(
-                                  title: 'Upset',
-                                  icon: Assets.icons.upsetEmoji,
-                                  makeGrey: provider.slectedFeeling != null,
-                                  selected: provider.slectedFeeling == 'Upset',
-
-                                  onPressed: () {
-                                    provider.onChangeFeeling('Upset');
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          Space.h40,
-                          Text(
-                            'Today I am grateful for?',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Space.h20,
-                          CommonSpeechTextfield(
-                            maxLines: 6,
-                            minLines: 6,
-                            hintText: 'Playing with my best friend...',
-                            speechProvider: _provider1,
-                          ),
-
-                          Space.h40,
-                          Text(
-                            "3 things I'll accomplish today",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Space.h20,
-                          CommonSpeechTextfield(
-                            maxLines: 6,
-                            minLines: 6,
-                            hintText: 'I will finish my coloring or drawing.',
-                            speechProvider: _provider2,
-                          ),
-                          Space.h40,
-
-                          GradientButton(
-                            onPressed:
-                                provider.loading
-                                    ? null
-                                    : () {
-                                      provider.createJournal(
-                                        _provider1.textController.text,
-                                        _provider2.textController.text,
-                                        widget.activityId,
-                                      );
-                                    },
-                            child: Center(
-                              child:
-                                  provider.loading
-                                      ? CircularProgressIndicator()
-                                      : Text(
-                                        'Done',
-
-                                        style:
-                                            AppTextTheme.mainButtonTextStyle(
-                                              context,
-                                            ).titleLarge,
-                                      ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                   ),
-                ),
-              ],
-            );
-          },
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

@@ -7,9 +7,9 @@ import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+import 'package:mindfulminis/features/home/providers/home_provider.dart';
 import 'package:mindfulminis/features/offline_status/providers/offline_status_provider.dart';
 import 'package:mindfulminis/features/profile/providers/profile_provider.dart';
-import 'package:mindfulminis/features/routine/screens/my_routine_screen.dart';
 
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
@@ -72,7 +72,7 @@ class _TabViewState extends State<TabView> with TickerProviderStateMixin {
     );
 
     PushNotificationService().initToken();
-    context.read<ProfileProvider>().getUser();
+    context.read<ProfileProvider>().getUser(notify: false);
     super.initState();
   }
 
@@ -278,6 +278,8 @@ class _TabViewState extends State<TabView> with TickerProviderStateMixin {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => TabViewProvider()),
+        ChangeNotifierProvider(create: (context) => HomeProvider()),
+
       ],
 
       child: Consumer2<TabViewProvider, OfflineStatusProvider>(
@@ -291,12 +293,15 @@ class _TabViewState extends State<TabView> with TickerProviderStateMixin {
                     !osp.connected
                         ? OfflineScreen()
                         : provider.screens[provider.currentIndex],
-                floatingActionButton: IconButton(
-                  onPressed: () {
-                    sl<GoRouter>().pushNamed(ShidiChatScreen.routeName);
-                  },
-                  icon: Image.asset(Assets.icons.floatingButton.path),
-                ),
+                floatingActionButton:
+                    provider.currentIndex == 3
+                        ? null
+                        : IconButton(
+                          onPressed: () {
+                            sl<GoRouter>().pushNamed(ShidiChatScreen.routeName);
+                          },
+                          icon: Image.asset(Assets.icons.floatingButton.path),
+                        ),
                 bottomNavigationBar: SizedBox(
                   height: 80,
                   child: CustomNavigationBar(

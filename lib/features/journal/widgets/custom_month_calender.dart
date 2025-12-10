@@ -52,14 +52,13 @@ class CustomMonthCalender extends StatelessWidget {
                       () => GratiudeJournalModel(
                         id: '',
                         profileId: '',
-                        activityId: '',
+
                         emotion: '',
                         emotionDescription: '',
-                        accomplishments: '',
+                        accomplishments: [],
                         date: calendarTapDetails.date ?? DateTime.now(),
                         createdAt: DateTime.now(),
                         updatedAt: DateTime.now(),
-                        v: 0,
                       ),
                 );
                 if (journal.id.isEmpty) {
@@ -118,14 +117,13 @@ class CustomMonthCalender extends StatelessWidget {
                       () => GratiudeJournalModel(
                         id: '',
                         profileId: '',
-                        activityId: '',
+
                         emotion: '',
                         emotionDescription: '',
-                        accomplishments: '',
+                        accomplishments: [],
                         date: details.date,
                         createdAt: DateTime.now(),
                         updatedAt: DateTime.now(),
-                        v: 0,
                       ),
                 );
 

@@ -12,7 +12,6 @@ import 'package:mindfulminis/features/onbaord/widgets/allset_dailog.dart';
 import 'package:mindfulminis/features/tab_view/screens/tab_view.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
-import 'package:mindfulminis/services/shared_prefs.dart';
 
 import '../onboard_data/onboard_data.dart';
 import '../screens/dob.dart';
@@ -21,7 +20,6 @@ import '../screens/felling_today.dart';
 class OnboardsProvider with ChangeNotifier {
   final _navigation = sl<GoRouter>();
   final _onBoardData = sl<OnboardData>();
-  final _sharedPrefs = sl<SharedPrefs>();
   DateTime? selectedDob;
   String? feeling;
   TextEditingController dobController = TextEditingController();
@@ -77,17 +75,18 @@ class OnboardsProvider with ChangeNotifier {
     try {
       loading = true;
       notifyListeners();
-      final userId = _sharedPrefs.getUserId();
+
       var map = {
-        "userId": userId,
-        "kidName": nameController.text.trim(),
-        "firstName": nameController.text.trim(),
-        "dateOfBirth": selectedDob?.toIso8601String(),
+        "fullname": nameController.text.trim(),
+        "dob": DateFormat('yyyy-MM-dd').format(selectedDob!),
+        "gender": 'F',
       };
+      log(map.toString());
+
       await _onBoardData.addUser(map);
       _navigation.pushNamed(FellingToday.routeName);
     } catch (e) {
-      rethrow;
+      SmartDialog.showToast(e.toString());
     } finally {
       loading = false;
       notifyListeners();

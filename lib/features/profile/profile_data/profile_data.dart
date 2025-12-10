@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:mindfulminis/features/profile/models/user_profile.dart';
 
@@ -9,27 +8,35 @@ import '../../../services/http_service.dart';
 class ProfileData {
   final HttpService httpService;
   ProfileData({required this.httpService});
-  Future<UserProfile> getUser(String userId) async {
+  Future<UserProfile> getUser() async {
     try {
-      final res = await httpService.get(ApiConstants.getUserUrl + userId);
-      log(res.toString());
-      return UserProfile.fromJson(res['data']['profiles'][0]);
+      final res = await httpService.get(ApiConstants.listProfilesUrl);
+
+      return UserProfile.fromJson(res['data'][0]);
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<void> updateProfile(UserProfile updatedProfile, String userId) async {
+  Future<void> updateProfile(UserProfile updatedProfile) async {
     try {
-      log(updatedProfile.toJson().toString());
-      log(ApiConstants.updateUserUrl + userId);
-      final res = await httpService.post(
-        ApiConstants.updateUserUrl + userId,
+      await httpService.patch(
+        '${ApiConstants.updateProfileUrl}/${updatedProfile.id}',
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(updatedProfile.toJson()),
+        body: jsonEncode(updatedProfile.toName()),
       );
-      log(res.toString());
-      // return UserProfile.fromJson(res['data']['profiles'][0]);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> editImage(String profileId, String imageUrl) async {
+    try {
+      await httpService.patch(
+        '${ApiConstants.updateProfileUrl}/$profileId',
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'image': imageUrl}),
+      );
     } catch (e) {
       rethrow;
     }

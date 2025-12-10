@@ -9,6 +9,7 @@ import 'package:mindfulminis/injection/injection.dart';
 import 'package:mindfulminis/services/exceptions.dart';
 
 import '../../../services/shared_prefs.dart';
+import '../../../services/storage/token_storage.dart';
 
 class CreateAccountProvoider with ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey();
@@ -18,6 +19,7 @@ class CreateAccountProvoider with ChangeNotifier {
 
   final AuthData _authData = sl<AuthData>();
   final SharedPrefs _sharedPrefs = sl<SharedPrefs>();
+  final _tokenStorage = sl<TokenStorage>();
 
   bool isVisible = false;
 
@@ -52,15 +54,19 @@ class CreateAccountProvoider with ChangeNotifier {
 
         if (user != null) {
           await user.updateDisplayName(name);
+
           var map = {
             "email": email,
-            "firstName": name,
+            "fullname": name,
             "firebaseUid": user.uid,
+            "password": password,
           };
 
           final userId = await _authData.createUser(map);
+          var loginMap = {"email": email, "password": password};
+          final token = await _authData.loginUser(loginMap);
           await _sharedPrefs.setUserId(userId);
-
+          await _tokenStorage.saveAccessToken(token);
           sl<GoRouter>().goNamed(KidName.routeName);
         } else {
           error = 'Something went wrong';

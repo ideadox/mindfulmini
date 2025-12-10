@@ -4,6 +4,8 @@ import 'dart:async';
 
 import 'package:mindfulminis/features/play%20visuals/models/audolyric.dart';
 
+import '../../../common/models/story_segment.dart';
+
 class AudioProgressWithLyrics extends StatefulWidget {
   final Duration totalDuration;
   final List<AudioChapter> chapterTimestamps;
@@ -188,84 +190,62 @@ class _AudioProgressWithLyricsState extends State<AudioProgressWithLyrics> {
 }
 
 class LyricLineBuilder extends StatefulWidget {
-  final Duration totalDuration;
-  final List<LyricLine> lyrics;
+  final List<StorySegment> segments;
 
-  const LyricLineBuilder({
-    super.key,
-    required this.lyrics,
-    required this.totalDuration,
-  });
+  const LyricLineBuilder({super.key, required this.segments});
 
   @override
   State<LyricLineBuilder> createState() => _LyricLineBuilderState();
 }
 
-class _LyricLineBuilderState extends State<LyricLineBuilder> {
-  Duration currentPosition = Duration.zero;
-  Timer? _timer;
+class _LyricLineBuilderState extends State<LyricLineBuilder>
+    with TickerProviderStateMixin {
+  final List<String> shownLines = [];
+  int currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        if (currentPosition < widget.totalDuration) {
-          currentPosition += const Duration(seconds: 1);
-        } else {
-          _timer?.cancel();
-        }
-      });
-    });
+    playNext();
   }
 
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
+  void playNext() async {
+    if (currentIndex >= widget.segments.length) return;
 
-  int get currentLyricIndex {
-    for (int i = 0; i < widget.lyrics.length; i++) {
-      final current = widget.lyrics[i].timestamp;
-      final next =
-          (i + 1 < widget.lyrics.length)
-              ? widget.lyrics[i + 1].timestamp
-              : widget.totalDuration;
-      if (currentPosition >= current && currentPosition < next) {
-        return i;
-      }
+    final seg = widget.segments[currentIndex];
+
+    if (seg.text.isNotEmpty) {
+      setState(() => shownLines.add(seg.text));
     }
-    return 0;
+
+    await Future.delayed(seg.delay + const Duration(milliseconds: 800));
+    currentIndex++;
+    playNext();
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentLyric = widget.lyrics[currentLyricIndex];
+    final currentLyric = shownLines.last;
+    final currentLyricIndex = shownLines.length - 1;
 
-    return SizedBox(
-      height: 60,
-      child: Center(
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 400),
-          transitionBuilder: (child, animation) {
-            return SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0, 0.5),
-                end: Offset.zero,
-              ).animate(animation),
-              child: FadeTransition(opacity: animation, child: child),
-            );
-          },
-          child: Text(
-            currentLyric.text,
-            key: ValueKey(currentLyricIndex),
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 500),
+      transitionBuilder: (child, animation) {
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0, 0.2),
+            end: Offset.zero,
+          ).animate(animation),
+          child: FadeTransition(opacity: animation, child: child),
+        );
+      },
+      child: Text(
+        currentLyric,
+        key: ValueKey(currentLyricIndex),
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
         ),
       ),
     );

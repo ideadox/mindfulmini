@@ -1,83 +1,58 @@
-import 'activity_content_model.dart';
+class Goal {
+  final String title;
+  final int progress;
 
-class ActivityModel {
-  final String id;
-  final String profileId;
-  final String routineId;
-  final String? gratitudeId;
-  final DateTime date;
-  final String status;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  Goal({required this.title, required this.progress});
 
-  final List<ActivityContentModel> activityContent;
+  factory Goal.fromJson(Map<String, dynamic> json) {
+    return Goal(
+      title: json['title'] as String,
+      progress:
+          (json['progress'] is int)
+              ? json['progress'] as int
+              : int.tryParse(json['progress'].toString()) ?? 0,
+    );
+  }
 
-  ActivityModel({
-    required this.id,
-    required this.profileId,
-    required this.routineId,
-    required this.date,
-    required this.status,
-    required this.createdAt,
-    required this.updatedAt,
+  Map<String, dynamic> toJson() => {'title': title, 'progress': progress};
 
-    required this.activityContent,
-    this.gratitudeId,
-  });
+  Goal copyWith({String? title, int? progress}) {
+    return Goal(
+      title: title ?? this.title,
+      progress: progress ?? this.progress,
+    );
+  }
+}
 
-  factory ActivityModel.fromJson(Map<String, dynamic> json) {
-    return ActivityModel(
-      id: json['_id'] ?? json['id'],
-      profileId: json['profileId'],
-      routineId: json['routineId'],
-      date: DateTime.parse(json['date']),
-      status: json['status'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+class GoalsSummary {
+  final List<Goal> goals;
+  final double averageProgress;
 
-      activityContent:
-          (json['activityContent'] as List)
-              .map((e) => ActivityContentModel.fromJson(e))
+  GoalsSummary({required this.goals, required this.averageProgress});
+
+  factory GoalsSummary.fromJson(Map<String, dynamic> json) {
+    return GoalsSummary(
+      goals:
+          (json['goals'] as List<dynamic>? ?? [])
+              .map((e) => Goal.fromJson(e as Map<String, dynamic>))
               .toList(),
-      gratitudeId: json['gratitudeId'],
+      averageProgress:
+          (json['averageProgress'] is num)
+              ? (json['averageProgress'] as num).toDouble()
+              : double.tryParse(json['averageProgress']?.toString() ?? '0') ??
+                  0,
     );
   }
 
   Map<String, dynamic> toJson() => {
-    '_id': id,
-    'profileId': profileId,
-    'routineId': routineId,
-    'date': date.toIso8601String(),
-    'status': status,
-    'createdAt': createdAt.toIso8601String(),
-    'updatedAt': updatedAt.toIso8601String(),
-
-    'activityContent': activityContent.map((e) => e.toJson()).toList(),
+    'goals': goals.map((g) => g.toJson()).toList(),
+    'averageProgress': averageProgress,
   };
 
-  ActivityModel copyWith({
-    String? id,
-    String? profileId,
-    String? routineId,
-    DateTime? date,
-    String? status,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-
-    List<ActivityContentModel>? activityContent,
-    String? gratitudeId,
-  }) {
-    return ActivityModel(
-      id: id ?? this.id,
-      profileId: profileId ?? this.profileId,
-      routineId: routineId ?? this.routineId,
-      date: date ?? this.date,
-      status: status ?? this.status,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-
-      activityContent: activityContent ?? this.activityContent,
-      gratitudeId: gratitudeId ?? this.gratitudeId,
+  GoalsSummary copyWith({List<Goal>? goals, double? averageProgress}) {
+    return GoalsSummary(
+      goals: goals ?? this.goals,
+      averageProgress: averageProgress ?? this.averageProgress,
     );
   }
 }

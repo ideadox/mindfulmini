@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import '../../../core/api_constants.dart';
 import '../../../services/http_service.dart';
@@ -9,10 +10,11 @@ class OnboardData {
   Future<void> addUser(var map) async {
     try {
       final res = await httpService.post(
-        ApiConstants.addUserUrl,
+        ApiConstants.createProfileUrl,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(map),
       );
+      log(res.toString());
     } catch (e) {
       rethrow;
     }

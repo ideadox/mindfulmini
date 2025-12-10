@@ -8,11 +8,15 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/features/authentication/screens/verification_complete_dailog.dart';
 import 'package:mindfulminis/injection/injection.dart';
 
+import '../../../services/shared_prefs.dart';
+import '../auth_data/auth_data.dart';
 import '../screens/phone_verification.dart';
 
 class PhoneAuthhProvider with ChangeNotifier {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final navigationService = sl<GoRouter>();
+  final AuthData _authData = sl<AuthData>();
+  final SharedPrefs _sharedPrefs = sl<SharedPrefs>();
 
   TextEditingController phoneNumerController = TextEditingController();
   String? countryCode = '+91';
@@ -53,6 +57,7 @@ class PhoneAuthhProvider with ChangeNotifier {
           );
           showVerificationDailog();
           if (userCredential.user != null) {
+            await _sharedPrefs.setUserId(userCredential.user!.uid);
             if (userCredential.additionalUserInfo!.isNewUser) {}
           } else {
             error =
@@ -105,12 +110,20 @@ class PhoneAuthhProvider with ChangeNotifier {
         credential,
       );
       if (userCredential.user != null) {
-        showVerificationDailog();
-        if (userCredential.additionalUserInfo!.isNewUser) {}
+        // showVerificationDailog();
+
+        final userId = await _authData.createUser({
+          "firebaseUid": userCredential.user?.uid,
+        });
+
+        await _sharedPrefs.setUserId(userId);
+        // navigateToHome();
       } else {
         error = 'Something went wrong, Please restart verification process.';
       }
     } on FirebaseAuthException catch (e) {
+      log(e.toString());
+
       if (e.code == 'invalid-verification-code') {
         error = 'Incorrect code. Please recheck and enter the correct OTP.';
         return;
@@ -118,6 +131,8 @@ class PhoneAuthhProvider with ChangeNotifier {
       log(e.toString());
       error = e.message ?? '';
     } catch (e) {
+      log(e.toString());
+
       error = 'Something went wrong';
     } finally {
       SmartDialog.dismiss();

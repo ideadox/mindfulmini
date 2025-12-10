@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/features/about/screens/about_screen.dart';
 import 'package:mindfulminis/features/analytices/screens/analytic_screen.dart';
@@ -13,8 +12,6 @@ import 'package:mindfulminis/features/subscription/screens/manage_subscription.d
 import 'package:mindfulminis/features/terms_service/screens/terms_service.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
-import 'package:mindfulminis/services/image_picker_helper.dart';
-import 'package:mindfulminis/services/shared_prefs.dart';
 
 import '../../library/screens/library_screen.dart';
 import '../../privacy/screens/privacy_screen.dart';
@@ -25,8 +22,7 @@ import '../screens/edit_profile_screen.dart';
 class ProfileProvider with ChangeNotifier {
   final _navigationService = sl<GoRouter>();
   final _profileData = sl<ProfileData>();
-  final _sharedPrefs = sl<SharedPrefs>();
-  final _imageHelper = sl<ImagePickerHelper>();
+
   final _firebaseAuth = FirebaseAuth.instance;
 
   User? get currentUser => _firebaseAuth.currentUser;
@@ -36,28 +32,21 @@ class ProfileProvider with ChangeNotifier {
   bool loading = false;
   bool updating = false;
   ProfileProvider() {
-    if (currentUser == null) {
-      return;
-    }
-    userId = _sharedPrefs.getUserId();
-    getUser();
+    // if (currentUser == null) {
+    //   return;
+    // }
+    // userId = _sharedPrefs.getUserId();
+    // getUser(notify: false);
   }
 
-  File? imageFile;
-  void pickImage({String type = 'lib'}) async {
-    if (type == 'lib') {
-      imageFile = await _imageHelper.pickFromGallery();
-    } else {
-      imageFile = await _imageHelper.pickFromCamera();
-    }
-  }
-
-  Future<void> getUser() async {
+  Future<void> getUser({bool notify = true}) async {
     try {
       loading = true;
-      notifyListeners();
+      if (notify) {
+        notifyListeners();
+      }
 
-      userProfile = await _profileData.getUser(userId ?? '');
+      userProfile = await _profileData.getUser();
     } catch (e) {
       rethrow;
     } finally {
@@ -70,7 +59,10 @@ class ProfileProvider with ChangeNotifier {
     try {
       updating = true;
       notifyListeners();
-      await _profileData.updateProfile(updatedProfile, userId ?? "");
+      await _profileData.updateProfile(updatedProfile);
+      userProfile = await _profileData.getUser();
+      SmartDialog.showToast('Profile updated');
+      _navigationService.pop();
     } catch (e) {
       rethrow;
     } finally {

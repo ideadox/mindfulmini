@@ -4,16 +4,18 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:mindfulminis/common/widgets/custom_dailog.dart';
 import 'package:mindfulminis/injection/injection.dart';
 
-import '../../../services/shared_prefs.dart';
 import '../journal_data/journal_data.dart';
 
 class CreateJournalProvider with ChangeNotifier {
   final _navigationService = sl<GoRouter>();
   final journalData = sl<JournalData>();
-  final _sharedPrefs = sl<SharedPrefs>();
+  late String profileId;
+
+  CreateJournalProvider(this.profileId);
 
   String? slectedFeeling;
   bool loading = false;
@@ -27,21 +29,22 @@ class CreateJournalProvider with ChangeNotifier {
     try {
       loading = true;
       notifyListeners();
+      final now = DateTime.now();
+      final dateFormat = DateFormat('yyyy-MM-dd');
 
       var map = {
-        "profileId": _sharedPrefs.getUserId(),
-        "activityId": activityId,
-        "emotion": slectedFeeling?.trim(),
-        "emotionDescription": des.trim(),
-        "accomplishments": acc.trim(),
-        "date": "2025-06-24",
+        "profileId": profileId,
+        'mood': slectedFeeling,
+        "date": dateFormat.format(now),
+        'description': des,
+        'accomplishments': acc.split('\n'),
       };
       log(map.toString());
-      // return;
+
       await journalData.createJournal(map);
       showCelebrateDailog();
     } catch (e) {
-      SmartDialog.showToast('Something went wrong. Please try again later.');
+      SmartDialog.showToast(e.toString());
     } finally {
       loading = false;
       notifyListeners();

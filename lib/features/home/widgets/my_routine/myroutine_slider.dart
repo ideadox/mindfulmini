@@ -8,10 +8,11 @@ import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
+import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
-import '../../../routine/screens/my_routine_screen.dart';
+import '../../../routine/screens/routine_detail_screen.dart';
 import '../../../routine/widgets/five_step_progressbar.dart';
+import '../../providers/active_routine_provider.dart';
 
 class RoutineCardDataModel {
   final String icon, title;
@@ -71,6 +72,7 @@ class _MyroutineSliderState extends State<MyroutineSlider> {
 
   @override
   Widget build(BuildContext context) {
+    final routines = context.read<ActiveRoutineProvider>().routines;
     return Column(
       children: [
         CarouselSlider(
@@ -87,15 +89,37 @@ class _MyroutineSliderState extends State<MyroutineSlider> {
             },
           ),
           items:
-              items.map((i) {
+              routines.map((i) {
                 return Builder(
                   builder: (BuildContext context) {
                     return MyRoutineCard(
-                      linearGradient: i.linearGradient,
-                      icon: i.icon,
-                      title: i.title,
-                      leftTask: i.leftTask,
-                      percentComplete: i.percentComplete,
+                      id: i.id,
+                      linearGradient:
+                          i.timeOfDay == 'morning'
+                              ? LinearGradient(
+                                colors: [
+                                  HexColor('#FEFFCD').withValues(alpha: 0.3),
+                                  HexColor('#E2C7FF').withValues(alpha: 0.5),
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              )
+                              : LinearGradient(
+                                colors: [
+                                  HexColor('#CDCEFF'),
+                                  HexColor('#FCFAFF'),
+                                ],
+                                begin: Alignment.topRight,
+                                end: Alignment.bottomLeft,
+                              ),
+                      icon:
+                          i.timeOfDay == 'morning'
+                              ? Assets.icons.sunIcon
+                              : Assets.icons.fullSunIcon,
+                      title:
+                          '${i.timeOfDay[0].toUpperCase()}${i.timeOfDay.substring(1)} Routine',
+                      leftTask: 0,
+                      percentComplete: 50,
                     );
                   },
                 );
@@ -104,7 +128,7 @@ class _MyroutineSliderState extends State<MyroutineSlider> {
         const SizedBox(height: 16),
         AnimatedSmoothIndicator(
           activeIndex: _currentIndex,
-          count: items.length,
+          count: routines.length,
           effect: const ExpandingDotsEffect(
             activeDotColor: Colors.black,
             dotColor: Colors.grey,
@@ -125,6 +149,7 @@ class MyRoutineCard extends StatelessWidget {
   final String icon, title;
   final int leftTask;
   final int percentComplete;
+  final String id;
 
   const MyRoutineCard({
     super.key,
@@ -133,6 +158,7 @@ class MyRoutineCard extends StatelessWidget {
     required this.title,
     required this.leftTask,
     required this.percentComplete,
+    required this.id,
   });
 
   @override
@@ -221,8 +247,12 @@ class MyRoutineCard extends StatelessWidget {
                           child: GradientButton(
                             onPressed: () {
                               sl<GoRouter>().pushNamed(
-                                MyRoutineScreen.routeName,
+                                RoutineDetailScreen.routeName,
+                                pathParameters: {'routineId': id},
                               );
+                              // sl<GoRouter>().pushNamed(
+                              //   MyRoutineScreen.routeName,
+                              // );
                             },
                             child: Center(
                               child: Text(

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:mindfulminis/common/widgets/custom_dailog.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
@@ -17,19 +18,22 @@ class CreateRoutineProvider with ChangeNotifier {
   final _routineData = sl<RoutineData>();
   final _sharedPrefs = sl<SharedPrefs>();
 
-  String? routineTimeLine;
-  String? routineTime;
-  String? routineSpendTime;
-  List<String> routineTypes = ['Affirmation'];
+  String? durationDays;
+  String? timeOfDay;
+  String? dailyDurationMinutes;
+  List<String> goals = [];
 
   bool remainder = false;
   bool loading = false;
   bool creating = false;
 
+  final String profileId;
+  CreateRoutineProvider(this.profileId);
+
   //peroid
   void onChangeTimeLine(val) {
     log(val.toString());
-    routineTimeLine = val;
+    durationDays = val;
     notifyListeners();
   }
 
@@ -37,7 +41,7 @@ class CreateRoutineProvider with ChangeNotifier {
   void onChangeTime(val) {
     log(val.toString());
 
-    routineTime = val;
+    timeOfDay = val;
     notifyListeners();
   }
 
@@ -45,7 +49,7 @@ class CreateRoutineProvider with ChangeNotifier {
   void onChangeSpendTime(val) {
     log(val.toString());
 
-    routineSpendTime = val;
+    dailyDurationMinutes = val;
     notifyListeners();
   }
 
@@ -53,10 +57,10 @@ class CreateRoutineProvider with ChangeNotifier {
   void onChangeType(val) {
     log(val.toString());
 
-    if (routineTypes.contains(val)) {
-      routineTypes.remove(val);
+    if (goals.contains(val)) {
+      goals.remove(val);
     } else {
-      routineTypes.add(val);
+      goals.add(val);
     }
     notifyListeners();
   }
@@ -64,7 +68,6 @@ class CreateRoutineProvider with ChangeNotifier {
   //remainder
   void toogleRemaider() {
     remainder = !remainder;
-    notifyListeners();
   }
 
   TimeOfDay? selectedTime = TimeOfDay(hour: 1, minute: 00);
@@ -86,19 +89,22 @@ class CreateRoutineProvider with ChangeNotifier {
     try {
       creating = true;
       notifyListeners();
+      goals = ['Affirmation', ...goals];
       var map = {
-        "profileId": _sharedPrefs.getUserId(),
-        "period": routineTimeLine,
-        "session": routineTime,
-        "goals": routineTypes,
-        "duration": int.parse(routineSpendTime ?? ""),
-        "reminder": {
-          "days": selectedDay,
-          "time":
-              "${selectedTime!.hour.toString().padLeft(2, '0')}:${selectedTime!.minute.toString().padLeft(2, '0')}",
-        },
+        "profileId": profileId,
+        "startDate": DateFormat(
+          'yyyy-MM-dd',
+        ).format(DateTime.now().add(Duration(days: 1))),
+        "durationDays": int.parse(durationDays!),
+        "timeOfDay": timeOfDay?.toLowerCase(),
+        "dailyDurationMinutes": int.parse(dailyDurationMinutes!),
+        "goals": goals.map((g) => g.toLowerCase()).toList(),
+        "hasReminder": remainder,
+        if (remainder) "reminderDays": selectedDay,
+        if (remainder) "reminderTime": timeOfDayTo24Hour(selectedTime!),
       };
       log(map.toString());
+
       await _routineData.createRoutine(map);
       showSuccessDailog();
     } catch (e) {
@@ -107,6 +113,12 @@ class CreateRoutineProvider with ChangeNotifier {
       creating = false;
       notifyListeners();
     }
+  }
+
+  String timeOfDayTo24Hour(TimeOfDay time) {
+    final hour = time.hour.toString().padLeft(2, '0');
+    final minute = time.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
   }
 
   showSuccessDailog() {
@@ -137,21 +149,25 @@ class CreateRoutineProvider with ChangeNotifier {
       'icon': Assets.icons.routineCalenderIcon,
       'title': 'Kickstart',
       'subtitle': '30 Days',
+      'duration': '30',
     },
     {
       'icon': Assets.icons.routineCalenderIcon,
       'title': 'Habit Builder',
       'subtitle': '90 Days',
+      'duration': '90',
     },
     {
       'icon': Assets.icons.routineCalenderIcon,
       'title': 'Transformation',
       'subtitle': '180 Days',
+      'duration': '180',
     },
     {
       'icon': Assets.icons.routineCalenderIcon,
       'title': "Day's Mastery",
       'subtitle': '365 Days',
+      'duration': '365',
     },
   ];
   List<Map<String, String>> secondPageData = [

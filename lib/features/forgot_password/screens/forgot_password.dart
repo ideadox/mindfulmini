@@ -22,82 +22,88 @@ class ForgotPassword extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => ForgotpasswordProvider(),
       child: GradientScaffold(
-        body: Consumer<ForgotpasswordProvider>(
-          builder: (context, cap, _) {
-            return Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomBackButton(),
-                  Text(
-                    'Let’s reset your \n password',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-
-                  SizedBox(height: 30),
-
-                  CommonTextFormField(
-                    controller: cap.emailController,
-                    prefixIcon: SvgPicture.asset(Assets.icons.mail),
-                    hintText: 'Email Address',
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (p0) {
-                      if (p0!.isEmpty) {
-                        return 'Please enter email.';
-                      }
-                      return null;
-                    },
-                  ),
-
-                  SizedBox(height: 20),
-                  if (cap.message != null)
+        body: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: Consumer<ForgotpasswordProvider>(
+            builder: (context, cap, _) {
+              return Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomBackButton(),
                     Text(
-                      'Please check your email, and follow the instructions',
+                      'Let’s reset your \n password',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  Spacer(),
 
-                  GradientButton(
-                    onPressed:
-                        cap.isLoading
-                            ? null
-                            : () {
-                              // cap.sendResetLink();
-                              sl<GoRouter>().pushNamed(
-                                ChangePassword.routeName,
-                              );
-                            },
-                    child:
-                        cap.isLoading
-                            ? Center(child: CircularProgressIndicator())
-                            : Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Send Reset Link',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
+                    SizedBox(height: 30),
+
+                    CommonTextFormField(
+                      controller: cap.emailController,
+                      prefixIcon: SvgPicture.asset(Assets.icons.mail),
+                      hintText: 'Email Address',
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (p0) {
+                        if (p0!.isEmpty) {
+                          return 'Please enter email.';
+                        }
+                        return null;
+                      },
+                    ),
+
+                    SizedBox(height: 20),
+                    if (cap.message != null)
+                      Text(
+                        'Please check your email, and follow the instructions',
+                      ),
+                    Spacer(),
+
+                    GradientButton(
+                      onPressed:
+                          cap.isLoading
+                              ? null
+                              : () {
+                                // cap.sendResetLink();
+                                sl<GoRouter>().pushNamed(
+                                  ChangePassword.routeName,
+                                );
+                              },
+                      child:
+                          cap.isLoading
+                              ? Center(child: CircularProgressIndicator())
+                              : Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Send Reset Link',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+
+                                  SizedBox(width: 10),
+                                  Icon(
+                                    Icons.arrow_forward_outlined,
                                     color: Colors.white,
                                   ),
-                                ),
-
-                                SizedBox(width: 10),
-                                Icon(
-                                  Icons.arrow_forward_outlined,
-                                  color: Colors.white,
-                                ),
-                              ],
-                            ),
-                  ),
-                ],
-              ),
-            );
-          },
+                                ],
+                              ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

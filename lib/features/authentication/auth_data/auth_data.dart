@@ -15,7 +15,21 @@ class AuthData {
         body: jsonEncode(map),
       );
       log(res.toString());
-      return res['data']['user']['_id'];
+      return res['data']['id'];
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String> loginUser(var map) async {
+    try {
+      final res = await httpService.post(
+        ApiConstants.loginUserUrl,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(map),
+      );
+
+      return res['data']['token'];
     } catch (e) {
       rethrow;
     }

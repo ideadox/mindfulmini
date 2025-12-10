@@ -31,6 +31,13 @@ class RoutineDetailScreen extends StatelessWidget {
             if (provider.loading) {
               return Center(child: CircularProgressIndicator());
             }
+            if (provider.activityModel == null) {
+              return Text('No data found');
+            }
+            if (provider.activityModel?.goals.isEmpty ?? true) {
+              return Text('No data found');
+            }
+
             return Column(
               children: [
                 Space.h40,
@@ -66,8 +73,11 @@ class RoutineDetailScreen extends StatelessWidget {
                         ),
                       ),
 
-                      // CircularProgressIndicator(value: 0.3),
-                      CustomPrecentageIndicator(percent: 0.40),
+                      CustomPercentageIndicator(
+                        percent:
+                            provider.activityModel!.averageProgress.toDouble() /
+                            100,
+                      ),
                     ],
                   ),
                 ),
@@ -98,11 +108,7 @@ class RoutineDetailScreen extends StatelessWidget {
                             }
 
                             int length =
-                                (provider
-                                        .activityModel
-                                        ?.activityContent
-                                        .length ??
-                                    0);
+                                (provider.activityModel?.goals.length ?? 0);
                             return Padding(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 12,
@@ -222,7 +228,7 @@ class RoutineDetailScreen extends StatelessWidget {
                                         final activity =
                                             provider
                                                 .activityModel!
-                                                .activityContent[index];
+                                                .goals[index];
                                         return RoutineLevelContainer(
                                           isCompleted: index == 0,
                                           currentLevel: index == 0,
@@ -237,6 +243,7 @@ class RoutineDetailScreen extends StatelessWidget {
                             );
                           },
                         ),
+                        Space.h20,
                       ],
                     ),
                   ),

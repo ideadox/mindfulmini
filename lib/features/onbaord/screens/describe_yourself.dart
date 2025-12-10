@@ -42,120 +42,127 @@ class _DescribeYourselfState extends State<DescribeYourself> {
       child: Consumer2<OnboardsProvider, SpeechProvider>(
         builder: (context, provider, speechProvider, _) {
           return GradientScaffold(
-            body: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [CommonCloseButton(onPressed: () {})],
-                  ),
-                  Text(
-                    'Can you describe how your child feeling right now',
-                    style: AppTextTheme.titleTextTheme(context).titleLarge,
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    "Freely write down anything that's on your mind",
-                    style: AppTextTheme.titleTextTheme(context).bodyMedium,
-                  ),
-                  SizedBox(height: 20),
-                  Stack(
-                    children: [
-                      Form(
-                        key: describeFormKey,
-                        child: TextFormField(
-                          controller: speechProvider.textController,
-                          minLines: 8,
+            resizeToAvoidBottomInset: false,
+            body: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                FocusScope.of(context).unfocus();
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [CommonCloseButton(onPressed: () {})],
+                    ),
+                    Text(
+                      'Can you describe how your child feeling right now',
+                      style: AppTextTheme.titleTextTheme(context).titleLarge,
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      "Freely write down anything that's on your mind",
+                      style: AppTextTheme.titleTextTheme(context).bodyMedium,
+                    ),
+                    SizedBox(height: 20),
+                    Stack(
+                      children: [
+                        Form(
+                          key: describeFormKey,
+                          child: TextFormField(
+                            controller: speechProvider.textController,
+                            minLines: 8,
 
-                          maxLines: 8,
-                          keyboardType: TextInputType.multiline,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            hintText:
-                                speechProvider.isListening
-                                    ? "Listening..."
-                                    : 'Enter here...',
-                            hintStyle: TextStyle(color: Colors.grey),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: HexColor(
-                                  '#ACADBC',
-                                ).withValues(alpha: 0.86),
+                            maxLines: 8,
+                            keyboardType: TextInputType.multiline,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              hintText:
+                                  speechProvider.isListening
+                                      ? "Listening..."
+                                      : 'Enter here...',
+                              hintStyle: TextStyle(color: Colors.grey),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: HexColor(
+                                    '#ACADBC',
+                                  ).withValues(alpha: 0.86),
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(20.0),
+                                ),
                               ),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20.0),
+                              border: OutlineInputBorder(
+                                // borderSide: BorderSide(color: Colors.black12),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(20.0),
+                                ),
                               ),
+                              contentPadding: EdgeInsets.all(16),
                             ),
-                            border: OutlineInputBorder(
-                              // borderSide: BorderSide(color: Colors.black12),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20.0),
-                              ),
-                            ),
-                            contentPadding: EdgeInsets.all(16),
+                            onSaved: (newValue) {
+                              provider.onDescribeSave(newValue ?? "");
+                            },
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                           ),
-                          onSaved: (newValue) {
-                            provider.onDescribeSave(newValue ?? "");
-                          },
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                        ),
+                        Positioned(
+                          bottom: 10,
+                          right: 10,
+                          child:
+                              speechProvider.isListening
+                                  ? InkWell(
+                                    onTap: () {
+                                      speechProvider.toggleListening();
+                                    },
+                                    child: ListeningWidget(),
+                                  )
+                                  : IconButton.outlined(
+                                    style: IconButton.styleFrom(
+                                      side: BorderSide(color: AppColors.grey45),
+                                    ),
+                                    icon: SvgPicture.asset(Assets.icons.mic),
+                                    onPressed: () {
+                                      speechProvider.toggleListening();
+                                    },
+                                  ),
+                        ),
+                      ],
+                    ),
+
+                    // if (speechProvider.error != null)
+                    //   Text(
+                    //     speechProvider.error!,
+                    //     style: TextStyle(color: Colors.red),
+                    //   ),
+                    Spacer(),
+
+                    GradientButton(
+                      onPressed:
+                          speechProvider.isEmpty
+                              ? null
+                              : () {
+                                if (describeFormKey.currentState!.validate()) {
+                                  describeFormKey.currentState!.save();
+                                }
+                              },
+                      child: Center(
+                        child: Text(
+                          'Continue',
+                          style:
+                              AppTextTheme.mainButtonTextStyle(
+                                context,
+                              ).titleLarge,
                         ),
                       ),
-                      Positioned(
-                        bottom: 10,
-                        right: 10,
-                        child:
-                            speechProvider.isListening
-                                ? InkWell(
-                                  onTap: () {
-                                    speechProvider.toggleListening();
-                                  },
-                                  child: ListeningWidget(),
-                                )
-                                : IconButton.outlined(
-                                  style: IconButton.styleFrom(
-                                    side: BorderSide(color: AppColors.grey45),
-                                  ),
-                                  icon: SvgPicture.asset(Assets.icons.mic),
-                                  onPressed: () {
-                                    speechProvider.toggleListening();
-                                  },
-                                ),
-                      ),
-                    ],
-                  ),
-
-                  // if (speechProvider.error != null)
-                  //   Text(
-                  //     speechProvider.error!,
-                  //     style: TextStyle(color: Colors.red),
-                  //   ),
-                  Spacer(),
-
-                  GradientButton(
-                    onPressed:
-                        speechProvider.isEmpty
-                            ? null
-                            : () {
-                              if (describeFormKey.currentState!.validate()) {
-                                describeFormKey.currentState!.save();
-                              }
-                            },
-                    child: Center(
-                      child: Text(
-                        'Continue',
-
-                        style:
-                            AppTextTheme.mainButtonTextStyle(
-                              context,
-                            ).titleLarge,
-                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

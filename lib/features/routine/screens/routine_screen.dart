@@ -6,7 +6,9 @@ import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/routine/screens/create_routine_screen.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/routine_provider.dart';
 import '../widgets/horizontal_week_calender.dart';
 
 class RoutineScreen extends StatelessWidget {
@@ -59,10 +61,15 @@ class RoutineScreen extends StatelessWidget {
                         width: 170,
                         height: 48,
                         child: GradientButton(
-                          onPressed: () {
-                            sl<GoRouter>().pushNamed(
+                          onPressed: () async {
+                            await sl<GoRouter>().pushNamed(
                               CreateRoutineScreen.routeName,
                             );
+                            if (context.mounted) {
+                              context.read<RoutineProvider>().getRoutines(
+                                notify: false,
+                              );
+                            }
                           },
                           child: Center(
                             child: Text(

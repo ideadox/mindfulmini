@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/widgets/common_appbar.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
+import 'package:mindfulminis/features/profile/providers/profile_provider.dart';
 import 'package:mindfulminis/features/routine/providers/routine_provider.dart';
 import 'package:mindfulminis/features/routine/screens/create_routine_screen.dart';
 import 'package:mindfulminis/features/routine/screens/routine_detail_screen.dart';
@@ -18,8 +19,9 @@ class MyRoutineScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final profileId = context.read<ProfileProvider>().userProfile.id;
     return ChangeNotifierProvider(
-      create: (context) => RoutineProvider(),
+      create: (context) => RoutineProvider(profileId),
       child: Scaffold(
         body: Column(
           children: [
@@ -39,22 +41,27 @@ class MyRoutineScreen extends StatelessWidget {
                   );
                 }
                 return Expanded(
-                  child: ListView.separated(
-                    padding: EdgeInsets.all(12),
-                    itemCount: provider.routines.length,
-                    separatorBuilder: (context, index) => Space.h32,
-                    itemBuilder: (context, index) {
-                      final routineModel = provider.routines[index];
-                      return InkWell(
-                        onTap: () {
-                          sl<GoRouter>().pushNamed(
-                            RoutineDetailScreen.routeName,
-                            pathParameters: {'routineId': routineModel.id},
-                          );
-                        },
-                        child: MyroutineBriefCard(routineModel: routineModel),
-                      );
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      await provider.getRoutines(notify: false);
                     },
+                    child: ListView.separated(
+                      padding: EdgeInsets.all(12),
+                      itemCount: provider.routines.length,
+                      separatorBuilder: (context, index) => Space.h32,
+                      itemBuilder: (context, index) {
+                        final routineModel = provider.routines[index];
+                        return InkWell(
+                          onTap: () {
+                            sl<GoRouter>().pushNamed(
+                              RoutineDetailScreen.routeName,
+                              pathParameters: {'routineId': routineModel.id},
+                            );
+                          },
+                          child: MyroutineBriefCard(routineModel: routineModel),
+                        );
+                      },
+                    ),
                   ),
                 );
               },
@@ -65,8 +72,11 @@ class MyRoutineScreen extends StatelessWidget {
         floatingActionButton: InkWell(
           borderRadius: BorderRadius.circular(100),
 
-          onTap: () {
-            sl<GoRouter>().pushNamed(CreateRoutineScreen.routeName);
+          onTap: () async {
+            await sl<GoRouter>().pushNamed(CreateRoutineScreen.routeName);
+            if (context.mounted) {
+              context.read<RoutineProvider>().getRoutines(notify: false);
+            }
           },
           child: Container(
             height: 48,

@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
+
 import 'package:mindfulminis/features/journal/journal_data/journal_data.dart';
 import 'package:mindfulminis/features/journal/models/gratiude_journal_model.dart';
 import 'package:mindfulminis/features/journal/screens/create_journal_screen.dart';
-import 'package:mindfulminis/features/journal/screens/journal_detail_screen.dart';
-import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
-
-import '../../../services/shared_prefs.dart';
 
 class JournalProvider with ChangeNotifier {
   final _navigationService = sl<GoRouter>();
   final journal = sl<JournalData>();
-  final _sharedPrefs = sl<SharedPrefs>();
 
-  void navigateToCreateJournal() {
-    _navigationService.pushNamed(CreateJournalScreen.routeName);
-  }
+  late String profileId;
 
-  void navigateToJournalDetail() {
-    _navigationService.pushNamed(JournalDetailScreen.routeName);
+  JournalProvider(this.profileId);
+
+  void navigateToCreateJournal() async {
+    await _navigationService.pushNamed(
+      CreateJournalScreen.routeName,
+      pathParameters: {'activityId': 'rvr'},
+    );
+    await getGratitudeJournals();
   }
 
   List<GratiudeJournalModel> gratitudeJournals = [];
@@ -30,23 +29,15 @@ class JournalProvider with ChangeNotifier {
     try {
       isLoading = true;
       notifyListeners();
-
       final now = DateTime.now();
-
-      final firstDay = DateTime(now.year, now.month, 1);
-
-      final lastDay = DateTime(now.year, now.month + 1, 0);
-
-      final dateFormat = DateFormat('yyyy-MM-dd');
-      var map = {
-        "profileId": _sharedPrefs.getUserId(),
-        "startDate": dateFormat.format(firstDay),
-        "endDate": dateFormat.format(lastDay),
-      };
-      gratitudeJournals = await journal.getGratitudeJournals(map);
+      gratitudeJournals = await journal.getGratitudeJournals(
+        profileId,
+        now.year.toString(),
+        now.month.toString(),
+      );
     } catch (e) {
       SmartDialog.showToast(
-        'Failed to load gratitude journals',
+        e.toString(),
         displayTime: const Duration(seconds: 2),
       );
     } finally {

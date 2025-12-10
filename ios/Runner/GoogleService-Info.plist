@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CLIENT_ID</key>
+	<string>326927403832-vv7bodddh67b34ljmfar56uk75nthaoe.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.326927403832-vv7bodddh67b34ljmfar56uk75nthaoe</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>326927403832-pg4lgm0qjsavcsntv01vsecsvvecc8in.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyDTnuoV8PXrpZJvmC4n0dRKgLgiCxn-0pg</string>
 	<key>GCM_SENDER_ID</key>
@@ -9,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>app.mindfulmini.in</string>
+	<string>app.mindfulmini.com</string>
 	<key>PROJECT_ID</key>
 	<string>mindful-minis-app</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:326927403832:ios:2a85e568928b837d68cfcd</string>
+	<string>1:326927403832:ios:78c0d169f6e555be68cfcd</string>
 </dict>
 </plist>

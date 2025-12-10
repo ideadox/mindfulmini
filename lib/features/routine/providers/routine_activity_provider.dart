@@ -1,19 +1,16 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mindfulminis/features/routine/models/activity_content_model.dart';
 import 'package:mindfulminis/features/routine/models/activity_model.dart';
 
 import '../../../injection/injection.dart';
-import '../../../services/shared_prefs.dart';
 import '../routine_data/routine_data.dart';
 
 class RoutineActivityProvider with ChangeNotifier {
   final _navigationService = sl<GoRouter>();
   final _routineData = sl<RoutineData>();
-  final _sharedPrefs = sl<SharedPrefs>();
+
   bool loading = false;
   bool innerLoading = false;
 
@@ -31,7 +28,7 @@ class RoutineActivityProvider with ChangeNotifier {
     'Mini body scan',
   ];
 
-  ActivityModel? activityModel;
+  GoalsSummary? activityModel;
   DateTime selectedDate = DateTime.now();
 
   void selectDate(date) {
@@ -51,29 +48,14 @@ class RoutineActivityProvider with ChangeNotifier {
         loading = true;
       }
       notifyListeners();
+
       log(date);
-
       activityModel = await _routineData.getRoutineActivity(id, date);
-      activityModel?.activityContent.add(
-        ActivityContentModel(
-          id: id,
-          profileId: '',
-          routineId: '',
-          activityId: '',
-          contentId: '',
-          goal: 'Gratitude Journal',
-          progressStatus: 0,
-          status: '',
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-          v: 0,
-        ),
-      );
 
-      activityModel?.activityContent.sort(
-        (a, b) =>
-            customOrder.indexOf(a.goal).compareTo(customOrder.indexOf(b.goal)),
-      );
+      // activityModel?.activityContent.sort(
+      //   (a, b) =>
+      //       customOrder.indexOf(a.goal).compareTo(customOrder.indexOf(b.goal)),
+      // );
     } catch (e) {
       rethrow;
     } finally {

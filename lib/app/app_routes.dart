@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
@@ -11,7 +9,6 @@ import 'package:mindfulminis/features/breathing/screens/breathing_screen.dart';
 import 'package:mindfulminis/features/forgot_password/screens/change_password.dart';
 import 'package:mindfulminis/features/forgot_password/screens/forgot_password.dart';
 import 'package:mindfulminis/features/journal/screens/create_journal_screen.dart';
-import 'package:mindfulminis/features/journal/screens/journal_detail_screen.dart';
 import 'package:mindfulminis/features/authentication/screens/login.dart';
 import 'package:mindfulminis/features/meditation/screens/meditation_screen.dart';
 import 'package:mindfulminis/features/onbaord/screens/dob.dart';
@@ -38,6 +35,7 @@ import '../features/help_center/screens/help_center_screen.dart';
 import '../features/library/screens/library_screen.dart';
 import '../features/notifications/screens/notification_screen.dart';
 import '../features/onbaord/screens/describe_yourself.dart';
+import '../features/play visuals/screen/play_text.dart';
 import '../features/privacy/screens/privacy_screen.dart';
 import '../features/referals/screens/referal_screen.dart';
 import '../features/sidhi/screens/shidi_chat_screen.dart';
@@ -133,11 +131,7 @@ GoRouter buildRouter() {
           );
         },
       ),
-      GoRoute(
-        path: JournalDetailScreen.routePath,
-        name: JournalDetailScreen.routeName,
-        builder: (context, state) => JournalDetailScreen(),
-      ),
+
       GoRoute(
         path: CreateRoutineScreen.routePath,
         name: CreateRoutineScreen.routeName,
@@ -185,7 +179,11 @@ GoRouter buildRouter() {
       GoRoute(
         path: PlayVisuals.routePath,
         name: PlayVisuals.routeName,
-        builder: (context, state) => PlayVisuals(),
+        builder:
+            (context, state) => PlayVisuals(
+              collection: state.pathParameters['collection'] ?? "",
+              id: state.pathParameters['id'] ?? "",
+            ),
       ),
       GoRoute(
         path: StoriesDownload.routePath,
@@ -256,6 +254,12 @@ GoRouter buildRouter() {
         name: ManageSubscription.routeName,
         builder: (context, state) => ManageSubscription(),
       ),
+
+      // GoRoute(
+      //   path: PlayText.routePath,
+      //   name: PlayText.routeName,
+      //   builder: (context, state) => PlayText(),
+      // ),
     ],
     redirect: (context, state) {
       bool isLoggedIn = FirebaseAuth.instance.currentUser != null;

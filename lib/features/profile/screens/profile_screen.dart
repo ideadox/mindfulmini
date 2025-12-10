@@ -10,8 +10,19 @@ import 'package:provider/provider.dart';
 import '../widgets/log_out.dart';
 import '../widgets/mini_plus_card.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    context.read<ProfileProvider>().getUser(notify: false);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,13 +75,18 @@ class ProfileScreen extends StatelessWidget {
                               227,
                               252,
                             ),
-                            backgroundImage: AssetImage(
-                              Assets.profileIcons.noProfilePng.path,
-                            ),
+                            backgroundImage:
+                                provider.userProfile.profileImage != null
+                                    ? NetworkImage(
+                                      provider.userProfile.profileImage!,
+                                    )
+                                    : AssetImage(
+                                      Assets.profileIcons.noProfilePng.path,
+                                    ),
                           ),
                         ),
                         title: Text(
-                          provider.userProfile.firstName,
+                          provider.userProfile.fullname,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w800,

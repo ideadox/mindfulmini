@@ -26,140 +26,146 @@ class Login extends StatelessWidget {
       child: GradientScaffold(
         body: Consumer<LoginProvider>(
           builder: (context, cap, _) {
-            return Padding(
-              padding: const EdgeInsets.all(12),
-              child: Form(
-                key: cap.formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomBackButton(),
-                    Text(
-                      'Let’s Log In',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w600,
+            return GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                FocusScope.of(context).unfocus();
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Form(
+                  key: cap.formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomBackButton(),
+                      Text(
+                        'Let’s Log In',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                    Text(
-                      'Welcome Back,You have been missed.',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.copyWith(color: AppColors.grey45),
-                    ),
-                    SizedBox(height: 30),
+                      Text(
+                        'Welcome Back,You have been missed.',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: AppColors.grey45,
+                        ),
+                      ),
+                      SizedBox(height: 30),
 
-                    CommonTextFormField(
-                      controller: cap.emailController,
-                      prefixIcon: SvgPicture.asset(Assets.icons.mail),
-                      hintText: 'Email Address',
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (p0) {
-                        if (p0!.isEmpty) {
-                          return 'Please enter email.';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 20),
-
-                    CommonTextFormField(
-                      controller: cap.passwordController,
-                      obscureText: cap.isVisible,
-                      prefixIcon: SvgPicture.asset(Assets.icons.passLock),
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          cap.toogleVisiblity();
+                      CommonTextFormField(
+                        controller: cap.emailController,
+                        prefixIcon: SvgPicture.asset(Assets.icons.mail),
+                        hintText: 'Email Address',
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (p0) {
+                          if (p0!.isEmpty) {
+                            return 'Please enter email.';
+                          }
+                          return null;
                         },
-                        icon: SvgPicture.asset(
-                          cap.isVisible
-                              ? Assets.icons.visibleEye
-                              : Assets.icons.invisbleEye,
-                        ),
                       ),
-                      hintText: 'Enter Password',
-                      keyboardType: TextInputType.visiblePassword,
-                      validator: (p0) {
-                        if (p0!.isEmpty) {
-                          return 'Please enter password.';
-                        }
-                        if (p0.length < 8) {
-                          return 'Passwords must be at least 8 characters long.';
-                        }
-                        return null;
-                      },
-                    ),
-                    if (cap.error != null)
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(
-                          child: Text(
-                            cap.error ?? '',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 12, color: Colors.red),
-                          ),
-                        ),
-                      ),
-                    SizedBox(height: 30),
+                      SizedBox(height: 20),
 
-                    Center(
-                      child: InkWell(
-                        onTap: () {
-                          sl<GoRouter>().pushNamed(ForgotPassword.routeName);
-                        },
-                        child: Text(
-                          'Forgot Password ',
-                          style: TextStyle(
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Spacer(),
-
-                    GradientButton(
-                      onPressed:
-                          cap.isLoading
-                              ? null
-                              : () async {
-                                try {
-                                  await cap.login();
-                                } catch (e) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text(e.toString())),
-                                  );
-                                }
-                              },
-                      child: Center(
-                        child:
-                            cap.isLoading
-                                ? CircularProgressIndicator()
-                                : Text(
-                                  'Go',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Don’t have any account? "),
-                        TextButton(
+                      CommonTextFormField(
+                        controller: cap.passwordController,
+                        obscureText: cap.isVisible,
+                        prefixIcon: SvgPicture.asset(Assets.icons.passLock),
+                        suffixIcon: IconButton(
                           onPressed: () {
-                            sl<GoRouter>().pushReplacementNamed(
-                              CreateAccount.routeName,
-                            );
+                            cap.toogleVisiblity();
                           },
-                          child: Text('Register Now'),
+                          icon: SvgPicture.asset(
+                            cap.isVisible
+                                ? Assets.icons.visibleEye
+                                : Assets.icons.invisbleEye,
+                          ),
                         ),
-                      ],
-                    ),
-                  ],
+                        hintText: 'Enter Password',
+                        keyboardType: TextInputType.visiblePassword,
+                        validator: (p0) {
+                          if (p0!.isEmpty) {
+                            return 'Please enter password.';
+                          }
+                          if (p0.length < 8) {
+                            return 'Passwords must be at least 8 characters long.';
+                          }
+                          return null;
+                        },
+                      ),
+                      if (cap.error != null)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(
+                            child: Text(
+                              cap.error ?? '',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 12, color: Colors.red),
+                            ),
+                          ),
+                        ),
+                      SizedBox(height: 30),
+
+                      Center(
+                        child: InkWell(
+                          onTap: () {
+                            sl<GoRouter>().pushNamed(ForgotPassword.routeName);
+                          },
+                          child: Text(
+                            'Forgot Password ',
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Spacer(),
+
+                      GradientButton(
+                        onPressed:
+                            cap.isLoading
+                                ? null
+                                : () async {
+                                  try {
+                                    await cap.login();
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(e.toString())),
+                                    );
+                                  }
+                                },
+                        child: Center(
+                          child:
+                              cap.isLoading
+                                  ? CircularProgressIndicator()
+                                  : Text(
+                                    'Go',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Don’t have any account? "),
+                          TextButton(
+                            onPressed: () {
+                              sl<GoRouter>().pushReplacementNamed(
+                                CreateAccount.routeName,
+                              );
+                            },
+                            child: Text('Register Now'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );

@@ -276,6 +276,17 @@ class ContentScreen extends StatelessWidget {
                                                   .emotionDescription,
                                             ),
                                           ),
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                            ),
+                                            child: Text(
+                                              textAlign: TextAlign.start,
+                                              gratiudeJournalModel
+                                                  .accomplishments
+                                                  .join('\n'),
+                                            ),
+                                          ),
                                         ],
                                       ),
                             );

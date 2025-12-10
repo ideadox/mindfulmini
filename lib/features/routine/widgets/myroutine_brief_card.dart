@@ -58,7 +58,7 @@ class MyroutineBriefCard extends StatelessWidget {
                     children: [
                       SvgPicture.asset(Assets.icons.sunIcon),
                       Space.w8,
-                      Text(routineModel.session),
+                      Text(routineModel.timeOfDay),
                     ],
                   ),
                   Space.h12,
@@ -70,7 +70,7 @@ class MyroutineBriefCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${7}-Day ${routineModel.period}',
+                              '${routineModel.durationDays}-Days',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
@@ -107,7 +107,9 @@ class MyroutineBriefCard extends StatelessWidget {
                                         ),
                                       ),
                                       CustomGradientText(
-                                        text: routineModel.duration.toString(),
+                                        text:
+                                            routineModel.dailyDurationMinutes
+                                                .toString(),
                                       ),
                                       Space.w4,
                                       Text('Min'),
@@ -116,7 +118,7 @@ class MyroutineBriefCard extends StatelessWidget {
                                 ),
                                 Space.w8,
                                 Text(
-                                  "Day 1",
+                                  "Day ${routineModel.dayNumberSinceStart()}",
                                   style: TextStyle(fontWeight: FontWeight.w600),
                                 ),
                               ],

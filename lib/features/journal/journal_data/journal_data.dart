@@ -12,29 +12,30 @@ class JournalData {
 
   Future<void> createJournal(var map) async {
     try {
-      final res = await httpService.post(
+      await httpService.post(
         ApiConstants.addGratitudeJournalUrl,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(map),
       );
-      log(res.toString());
     } catch (e) {
-      log(e.toString());
       rethrow;
     }
   }
 
-  Future<List<GratiudeJournalModel>> getGratitudeJournals(var map) async {
+  Future<List<GratiudeJournalModel>> getGratitudeJournals(
+    String profileId,
+    String year,
+    String month,
+  ) async {
     try {
-      final res = await httpService.post(
-        ApiConstants.getGratitudeJournalUrl,
+      final res = await httpService.get(
+        '${ApiConstants.getMonthlyGratitudeUrl}?profileId=$profileId&year=$year&month=$month',
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(map),
       );
       log(res.toString());
 
       List<GratiudeJournalModel> gratitudeJournals = [];
-      for (var data in res['data']['gratitudes']) {
+      for (var data in res['data']) {
         try {
           gratitudeJournals.add(
             GratiudeJournalModel.fromJson(data as Map<String, dynamic>),

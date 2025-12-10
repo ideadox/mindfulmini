@@ -1,157 +1,97 @@
 class RoutineModel {
   final String id;
   final String profileId;
-  final String period;
-  final String session;
+  final DateTime startDate;
+  final int durationDays;
+  final String timeOfDay; // morning, night, evening, etc.
+  final int dailyDurationMinutes;
   final List<String> goals;
-  final int duration;
-  final String status;
+  final bool hasReminder;
+  final List<String> reminderDays;
+  final String reminderTime; // "09:00"
   final DateTime createdAt;
   final DateTime updatedAt;
   final int v;
-  final List<ReminderModel> reminders;
 
   RoutineModel({
     required this.id,
     required this.profileId,
-    required this.period,
-    required this.session,
+    required this.startDate,
+    required this.durationDays,
+    required this.timeOfDay,
+    required this.dailyDurationMinutes,
     required this.goals,
-    required this.duration,
-    required this.status,
+    required this.hasReminder,
+    required this.reminderDays,
+    required this.reminderTime,
     required this.createdAt,
     required this.updatedAt,
     required this.v,
-    required this.reminders,
   });
+
+  int dayNumberSinceStart() {
+    final now = DateTime.now();
+    return now.difference(startDate).inDays;
+  }
 
   factory RoutineModel.fromJson(Map<String, dynamic> json) {
     return RoutineModel(
-      id: json['_id'] ?? json['id'],
-      profileId: json['profileId'],
-      period: json['period'],
-      session: json['session'],
-      goals: List<String>.from(json['goals']),
-      duration: json['duration'],
-      status: json['status'],
+      id: json['_id'] ?? '',
+      profileId: json['profileId'] ?? '',
+      startDate: DateTime.parse(json['startDate']),
+      durationDays: json['durationDays'] ?? 0,
+      timeOfDay: json['timeOfDay'] ?? '',
+      dailyDurationMinutes: json['dailyDurationMinutes'] ?? 0,
+      goals: List<String>.from(json['goals'] ?? []),
+      hasReminder: json['hasReminder'] ?? false,
+      reminderDays: List<String>.from(json['reminderDays'] ?? []),
+      reminderTime: json['reminderTime'] ?? '',
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
-      v: json['__v'],
-      reminders:
-          (json['reminders'] as List<dynamic>)
-              .map((e) => ReminderModel.fromJson(e))
-              .toList(),
+      v: json['__v'] ?? 0,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': id,
-      'profileId': profileId,
-      'period': period,
-      'session': session,
-      'goals': goals,
-      'duration': duration,
-      'status': status,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-      '__v': v,
-      'reminders': reminders.map((e) => e.toJson()).toList(),
+      "profileId": profileId,
+      "startDate": startDate.toIso8601String(),
+      "durationDays": durationDays,
+      "timeOfDay": timeOfDay,
+      "dailyDurationMinutes": dailyDurationMinutes,
+      "goals": goals,
+      "hasReminder": hasReminder,
+      "reminderDays": reminderDays,
+      "reminderTime": reminderTime,
     };
   }
 
   RoutineModel copyWith({
     String? id,
     String? profileId,
-    String? period,
-    String? session,
+    DateTime? startDate,
+    int? durationDays,
+    String? timeOfDay,
+    int? dailyDurationMinutes,
     List<String>? goals,
-    int? duration,
-    String? status,
+    bool? hasReminder,
+    List<String>? reminderDays,
+    String? reminderTime,
     DateTime? createdAt,
     DateTime? updatedAt,
     int? v,
-    List<ReminderModel>? reminders,
   }) {
     return RoutineModel(
       id: id ?? this.id,
       profileId: profileId ?? this.profileId,
-      period: period ?? this.period,
-      session: session ?? this.session,
+      startDate: startDate ?? this.startDate,
+      durationDays: durationDays ?? this.durationDays,
+      timeOfDay: timeOfDay ?? this.timeOfDay,
+      dailyDurationMinutes: dailyDurationMinutes ?? this.dailyDurationMinutes,
       goals: goals ?? this.goals,
-      duration: duration ?? this.duration,
-      status: status ?? this.status,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      v: v ?? this.v,
-      reminders: reminders ?? this.reminders,
-    );
-  }
-}
-
-class ReminderModel {
-  final String id;
-  final String routineId;
-  final bool isActive;
-  final List<String> days;
-  final String time;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final int v;
-
-  ReminderModel({
-    required this.id,
-    required this.routineId,
-    required this.isActive,
-    required this.days,
-    required this.time,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.v,
-  });
-
-  factory ReminderModel.fromJson(Map<String, dynamic> json) {
-    return ReminderModel(
-      id: json['_id'],
-      routineId: json['routineId'],
-      isActive: json['isActive'],
-      days: List<String>.from(json['days']),
-      time: json['time'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-      v: json['__v'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      '_id': id,
-      'routineId': routineId,
-      'isActive': isActive,
-      'days': days,
-      'time': time,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-      '__v': v,
-    };
-  }
-
-  ReminderModel copyWith({
-    String? id,
-    String? routineId,
-    bool? isActive,
-    List<String>? days,
-    String? time,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    int? v,
-  }) {
-    return ReminderModel(
-      id: id ?? this.id,
-      routineId: routineId ?? this.routineId,
-      isActive: isActive ?? this.isActive,
-      days: days ?? this.days,
-      time: time ?? this.time,
+      hasReminder: hasReminder ?? this.hasReminder,
+      reminderDays: reminderDays ?? this.reminderDays,
+      reminderTime: reminderTime ?? this.reminderTime,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       v: v ?? this.v,

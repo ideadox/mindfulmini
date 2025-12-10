@@ -8,6 +8,7 @@ import 'package:mindfulminis/services/exceptions.dart';
 
 import '../../../injection/injection.dart';
 import '../../../services/shared_prefs.dart';
+import '../../../services/storage/token_storage.dart';
 import '../auth_data/auth_data.dart';
 
 class LoginProvider with ChangeNotifier {
@@ -17,6 +18,7 @@ class LoginProvider with ChangeNotifier {
 
   final _authData = sl<AuthData>();
   final SharedPrefs _sharedPrefs = sl<SharedPrefs>();
+  final _tokenStorage = sl<TokenStorage>();
 
   bool isVisible = false;
   bool isLoading = false;
@@ -45,16 +47,13 @@ class LoginProvider with ChangeNotifier {
           );
 
       if (userCredential.user != null) {
-        final userId = await _authData.createUser({
+        final token = await _authData.loginUser({
           "email": emailController.text.trim(),
-          "firstName": userCredential.user?.displayName,
-          "firebaseUid": userCredential.user?.uid,
+          "password": passwordController.text.trim(),
         });
 
-        await _sharedPrefs.setUserId(userId);
-        log('saved shaed');
-
-        navigateToKid();
+        await _tokenStorage.saveAccessToken(token);
+        navigateToHome();
       }
     } on FirebaseAuthException catch (e) {
       error = ResolveError.resolve(e.code);
@@ -66,7 +65,7 @@ class LoginProvider with ChangeNotifier {
     }
   }
 
-  void navigateToKid() {
+  void navigateToHome() {
     sl<GoRouter>().goNamed(TabView.routeName);
     return;
   }

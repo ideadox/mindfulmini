@@ -15,13 +15,13 @@ class RemainderRoutineProvider with ChangeNotifier {
   }
 
   final List<String> weekDay = [
-    'Sun',
-    'Mon',
-    'Tue',
-    'Wed',
-    'Thu',
-    'Fri',
-    'Sat',
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
   ];
 
   final List<String> selectedDay = [];

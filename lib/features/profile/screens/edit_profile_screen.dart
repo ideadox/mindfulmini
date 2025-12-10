@@ -57,23 +57,36 @@ class EditProfileScreen extends StatelessWidget {
                               248,
                               254,
                             ),
-                            backgroundImage: AssetImage(
-                              Assets.profileIcons.noProfilePng.path,
-                            ),
+                            backgroundImage:
+                                provider.userProfile.profileImage != null
+                                    ? NetworkImage(
+                                      provider.userProfile.profileImage!,
+                                    )
+                                    : AssetImage(
+                                      Assets.profileIcons.noProfilePng.path,
+                                    ),
                           ),
                         ),
                         Positioned(
                           bottom: 6,
                           right: 6,
                           child: InkWell(
-                            onTap: () {
-                              showModalBottomSheet(
+                            onTap: () async {
+                              final res = await showModalBottomSheet(
                                 showDragHandle: true,
                                 context: context,
                                 builder: (context) {
-                                  return ChangeImage();
+                                  return ChangeImage(
+                                    userId: provider.userProfile.id,
+                                    hasAlreadyProfile:
+                                        provider.userProfile.profileImage !=
+                                        null,
+                                  );
                                 },
                               );
+                              if (res == true) {
+                                provider.getUser();
+                              }
                             },
                             borderRadius: BorderRadius.circular(100),
                             child: Image.asset(
@@ -89,7 +102,7 @@ class EditProfileScreen extends StatelessWidget {
 
                   ProfileInfoRowWidget(
                     title: 'Name',
-                    value: provider.userProfile.firstName,
+                    value: provider.userProfile.fullname,
                     trailing: IconButton(
                       onPressed: () {
                         showModalBottomSheet(
@@ -98,7 +111,7 @@ class EditProfileScreen extends StatelessWidget {
                           context: context,
                           builder: (context) {
                             return ChangeYourName(
-                              name: provider.userProfile.firstName,
+                              name: provider.userProfile.fullname,
                             );
                           },
                         );

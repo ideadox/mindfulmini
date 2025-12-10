@@ -20,7 +20,9 @@ import 'package:mindfulminis/utiles/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/widgets/scroll_timepicker.dart';
+import '../../profile/providers/profile_provider.dart';
 import '../providers/remainder_routine_provider.dart';
+import '../providers/routine_provider.dart';
 import '../widgets/create_week_days.dart';
 
 class CreateRoutineScreen extends StatefulWidget {
@@ -101,10 +103,11 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final profileId = context.read<ProfileProvider>().userProfile.id;
     return GradientScaffold(
       hasGradient: currentStep != 4,
       body: ChangeNotifierProvider(
-        create: (context) => CreateRoutineProvider(),
+        create: (context) => CreateRoutineProvider(profileId),
         child: Consumer<CreateRoutineProvider>(
           builder: (context, provider, _) {
             return Column(
@@ -152,7 +155,7 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
                       if (currentStep == 0) {
                         return GradientButton(
                           onPressed:
-                              provider.routineTimeLine == null
+                              provider.durationDays == null
                                   ? null
                                   : () {
                                     _goToStep(currentStep + 1);
@@ -162,7 +165,7 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
                             child: Text(
                               'Continue',
                               style:
-                                  provider.routineTimeLine == null
+                                  provider.durationDays == null
                                       ? null
                                       : AppTextTheme.mainButtonTextStyle(
                                         context,
@@ -174,7 +177,7 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
                       if (currentStep == 1) {
                         return GradientButton(
                           onPressed:
-                              provider.routineTime == null
+                              provider.timeOfDay == null
                                   ? null
                                   : () {
                                     _goToStep(currentStep + 1);
@@ -184,7 +187,7 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
                             child: Text(
                               'Continue',
                               style:
-                                  provider.routineTime == null
+                                  provider.timeOfDay == null
                                       ? null
                                       : AppTextTheme.mainButtonTextStyle(
                                         context,
@@ -196,7 +199,7 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
                       if (currentStep == 2) {
                         return GradientButton(
                           onPressed:
-                              provider.routineSpendTime == null
+                              provider.dailyDurationMinutes == null
                                   ? null
                                   : () {
                                     _goToStep(currentStep + 1);
@@ -206,7 +209,7 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
                             child: Text(
                               'Continue',
                               style:
-                                  provider.routineSpendTime == null
+                                  provider.dailyDurationMinutes == null
                                       ? null
                                       : AppTextTheme.mainButtonTextStyle(
                                         context,
@@ -219,7 +222,7 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
                       if (currentStep == 3) {
                         return GradientButton(
                           onPressed:
-                              provider.routineTypes.length < 3
+                              provider.goals.length < 3
                                   ? null
                                   : () {
                                     _goToStep(currentStep + 1);
@@ -227,11 +230,11 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
                                   },
                           child: Center(
                             child: Text(
-                              provider.routineTypes.length < 3
-                                  ? 'Select ${3 - provider.routineTypes.length} More Activities'
+                              provider.goals.length < 3
+                                  ? 'Select ${3 - provider.goals.length} More Activities'
                                   : 'Continue',
                               style:
-                                  provider.routineTypes.length < 3
+                                  provider.goals.length < 3
                                       ? null
                                       : AppTextTheme.mainButtonTextStyle(
                                         context,
@@ -317,8 +320,8 @@ class BuildFirstPage extends StatelessWidget {
                   icon: item['icon'] ?? '',
                   title: item['title'] ?? '',
                   subtitle: item['subtitle'] ?? '',
-                  radioValue: item['title'] ?? "",
-                  groupValue: provider.routineTimeLine ?? "",
+                  radioValue: item['duration'] ?? "",
+                  groupValue: provider.durationDays ?? "",
                   onChanged: (p0) {
                     provider.onChangeTimeLine(p0);
                   },
@@ -364,8 +367,8 @@ class BuildSecondPage extends StatelessWidget {
                   icon: item['icon'] ?? '',
                   title: item['title'] ?? '',
                   subtitle: item['subtitle'] ?? '',
-                  radioValue: item['title'] ?? "",
-                  groupValue: provider.routineTime ?? "",
+                  radioValue: item['subtitle'] ?? "",
+                  groupValue: provider.timeOfDay ?? "",
                   onChanged: (p0) {
                     provider.onChangeTime(p0);
                   },
@@ -412,7 +415,7 @@ class BuildThirdPage extends StatelessWidget {
                   title: item['title'] ?? '',
                   subtitle: item['subtitle'] ?? '',
                   radioValue: item['time'].toString(),
-                  groupValue: provider.routineSpendTime ?? "",
+                  groupValue: provider.dailyDurationMinutes ?? "",
                   onChanged: (p0) {
                     provider.onChangeSpendTime(p0);
                   },
@@ -481,9 +484,7 @@ class BuildFourthPage extends StatelessWidget {
                         return GoalRoutineContainer(
                           title: item['title'] ?? "",
                           icon: item['icon'] ?? '',
-                          isSelected: provider.routineTypes.contains(
-                            item['title'],
-                          ),
+                          isSelected: provider.goals.contains(item['title']),
                           onChanged: (val) {
                             provider.onChangeType(item['title']);
                           },
@@ -508,7 +509,7 @@ class BuildFourthPage extends StatelessWidget {
                                       .length -
                                   1]['icon'] ??
                               '',
-                          isSelected: provider.routineTypes.contains(
+                          isSelected: provider.goals.contains(
                             provider.fourthPageData[provider
                                     .fourthPageData
                                     .length -
@@ -653,6 +654,7 @@ class BuildFifthPage extends StatelessWidget {
                       value: rProvider.remainder,
                       onChanged: (val) {
                         rProvider.toogleRemaider();
+                        provider.toogleRemaider();
                       },
                     ),
                   ),

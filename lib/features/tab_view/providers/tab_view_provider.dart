@@ -5,6 +5,7 @@ import 'package:mindfulminis/features/journal/screens/journal_screen.dart';
 import 'package:mindfulminis/features/routine/screens/routine_screen.dart';
 
 import '../../profile/screens/profile_screen.dart';
+import '../../routine/screens/routine_decider.dart';
 
 class TabViewProvider with ChangeNotifier {
   TabViewProvider() {
@@ -23,7 +24,7 @@ class TabViewProvider with ChangeNotifier {
     HomeScreen(),
     ActivityScreen(),
     JournalScreen(),
-    RoutineScreen(),
+    RoutineDecider(),
     ProfileScreen(),
   ];
 }

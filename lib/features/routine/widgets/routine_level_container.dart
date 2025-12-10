@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/widgets/custom_level_percent_indicator.dart';
 import 'package:mindfulminis/core/app_colors.dart';
-import 'package:mindfulminis/features/journal/screens/create_journal_screen.dart';
-import 'package:mindfulminis/features/routine/models/activity_content_model.dart';
 import 'package:mindfulminis/features/routine/screens/affirmation_screen.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
+
+import '../models/activity_model.dart';
 
 class RoutineLevelContainer extends StatelessWidget {
   final int index;
   final bool isCompleted;
   final bool currentLevel;
-  final ActivityContentModel activityContentModel;
+  final Goal activityContentModel;
   const RoutineLevelContainer({
     super.key,
     this.isCompleted = false,
@@ -25,22 +25,22 @@ class RoutineLevelContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (activityContentModel.goal == 'Gratitude Journal') {
-          sl<GoRouter>().pushNamed(
-            CreateJournalScreen.routeName,
-            pathParameters: {'activityId': activityContentModel.id},
-          );
-        } else if (activityContentModel.goal == 'Affirmation') {
+        if (activityContentModel.title == 'Gratitude Journal') {
+          // sl<GoRouter>().pushNamed(
+          //   CreateJournalScreen.routeName,
+          //   pathParameters: {'activityId': activityContentModel.id},
+          // );
+        } else if (activityContentModel.title == 'affirmation') {
           sl<GoRouter>().pushNamed(AffirmationScreen.routeName);
-        } else if (activityContentModel.goal == 'Meditation') {
+        } else if (activityContentModel.title == 'meditation') {
           // Navigate to Meditation screen
-        } else if (activityContentModel.goal == 'Yoga') {
+        } else if (activityContentModel.title == 'yoga') {
           // Navigate to Yoga screen
-        } else if (activityContentModel.goal == 'Breathing') {
+        } else if (activityContentModel.title == 'breathing') {
           // Navigate to Breathing screen
-        } else if (activityContentModel.goal == 'Stories') {
+        } else if (activityContentModel.title == 'stories') {
           // Navigate to Stories screen
-        } else if (activityContentModel.goal == 'Mini body scan') {
+        } else if (activityContentModel.title == 'mini body scan') {
           // Navigate to Mini body scan screen
         }
       },
@@ -68,7 +68,7 @@ class RoutineLevelContainer extends StatelessWidget {
               ),
             ),
             title: Text(
-              activityContentModel.goal,
+              '${activityContentModel.title[0].toUpperCase()}${activityContentModel.title.substring(1)}',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -82,7 +82,7 @@ class RoutineLevelContainer extends StatelessWidget {
               ),
             ),
             trailing: CustomLevelPercentIndicator(
-              percent: activityContentModel.progressStatus.toDouble() / 100,
+              percent: activityContentModel.progress.toDouble() / 100,
             ),
           ),
         ),

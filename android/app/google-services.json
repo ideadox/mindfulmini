@@ -12,7 +12,20 @@
           "package_name": "app.mindfulmini.in"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "326927403832-pg4lgm0qjsavcsntv01vsecsvvecc8in.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.mindfulmini.in",
+            "certificate_hash": "84f0c59c2c6448a2b057a529e168d4b2cce01582"
+          }
+        },
+        {
+          "client_id": "326927403832-jfdi0biha4nfmupgrrdvb74ee6l9fhac.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAwQbI5Px2CDX2ix2gQP-d6Fi1DkHH490c"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "326927403832-jfdi0biha4nfmupgrrdvb74ee6l9fhac.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "326927403832-sen3gj7ja4mffgua6k5gno9tquo4il4b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.mindfulmini.in"
+              }
+            }
+          ]
         }
       }
     }

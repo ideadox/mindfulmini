@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:mindfulminis/common/widgets/common_text_form_field.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
@@ -55,12 +54,10 @@ class _ChangeYourNameState extends State<ChangeYourName> {
                         : () async {
                           try {
                             UserProfile updatedProfile = provider.userProfile
-                                .copyWith(
-                                  firstName: nameController.text.trim(),
-                                );
+                                .copyWith(fullname: nameController.text.trim());
                             await provider.updateProfile(updatedProfile);
                           } catch (e) {
-                            log(e.toString());
+                            SmartDialog.showToast(e.toString());
                           }
                         },
                 child: Center(

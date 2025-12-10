@@ -7,15 +7,19 @@ import 'package:mindfulminis/common/screens/upcoming_activity.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/play%20visuals/models/audolyric.dart';
+import 'package:mindfulminis/features/play%20visuals/provider/cms_provider.dart';
 import 'package:mindfulminis/features/play%20visuals/screen/chapter_wise_progress.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
+import 'package:provider/provider.dart';
 
 class PlayVisuals extends StatefulWidget {
   static String routeName = 'play-visuals';
-  static String routePath = '/play-visuals';
+  static String routePath = '/play-visuals/:collection/:id';
+  final String collection;
+  final String id;
 
-  const PlayVisuals({super.key});
+  const PlayVisuals({super.key, required this.collection, required this.id});
 
   @override
   State<PlayVisuals> createState() => _PlayVisualsState();
@@ -26,7 +30,6 @@ class _PlayVisualsState extends State<PlayVisuals>
   bool startAnimation = false;
   late AnimationController _controller;
   late AnimationController _lottiController;
-
   late Animation<Offset> _textOffsetAnimation;
   // late Animation<double> _scaleAnimation;
   // late Animation<double> _scaleVectorsAnimation;
@@ -110,214 +113,228 @@ class _PlayVisualsState extends State<PlayVisuals>
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
 
-    return Scaffold(
-      body: SizedBox(
-        height: height,
-        width: double.infinity,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            //lottie
-            if (_showLottie)
-              Positioned(
-                left: 0,
-                top: 0,
-                right: 0,
-                bottom: MediaQuery.sizeOf(context).height * 0.1,
-                child: Hero(
-                  tag: 'audio',
-                  child: Lottie.asset(
-                    // width: double.infinity,
-                    backgroundLoading: true,
-                    fit: BoxFit.fill,
-                    Assets.vectors.flow146, // Your Lottie path
-                    controller: _lottiController,
-                    onLoaded: (composition) {
-                      _lottiController.duration = composition.duration;
-                    },
-                  ),
-                ),
-              ),
-
-            // top app bar icon
-            Positioned(
-              top: 50,
-              left: 12,
-              right: 12,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return ChangeNotifierProvider(
+      create: (context) => CmsProvider(widget.collection, widget.id),
+      child: Scaffold(
+        body: Consumer<CmsProvider>(
+          builder: (context, p, _) {
+            if (p.isLoading) {
+              return Center(child: CircularProgressIndicator());
+            }
+            if (p.cms == null) {
+              return Center(child: Text('No data found'));
+            }
+            return SizedBox(
+              height: height,
+              width: double.infinity,
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(100),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.purple.withValues(alpha: 0.5),
-                          blurRadius: 8,
-                          spreadRadius: 0.5,
-                          offset: Offset(0, 3),
+                  //lottie
+                  if (_showLottie)
+                    Positioned(
+                      left: 0,
+                      top: 0,
+                      right: 0,
+                      bottom: MediaQuery.sizeOf(context).height * 0.1,
+                      child: Hero(
+                        tag: 'audio',
+                        child: Lottie.asset(
+                          // width: double.infinity,
+                          backgroundLoading: true,
+                          fit: BoxFit.fill,
+                          Assets.vectors.flow146, // Your Lottie path
+                          controller: _lottiController,
+                          onLoaded: (composition) {
+                            _lottiController.duration = composition.duration;
+                          },
                         ),
-                      ],
+                      ),
                     ),
-                    child: IconButton(
-                      onPressed: () {
-                        sl<GoRouter>().pop();
-                      },
-                      icon: Icon(Icons.keyboard_arrow_down),
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(100),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.purple.withValues(alpha: 0.5),
-                          blurRadius: 8,
-                          spreadRadius: 0.5,
-                          offset: Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: SvgPicture.asset(Assets.icons.heartButton),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            //lyricess text
-            Positioned(
-              top: 110,
-              left: 0,
-              right: 100,
-              child: AnimatedOpacity(
-                opacity: !startAnimation ? 0 : 1,
-                duration: Duration(milliseconds: 1000),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: LyricLineBuilder(
-                    lyrics: lyrics,
-                    totalDuration: Duration(seconds: 90),
-                  ),
-                ),
-              ),
-            ),
 
-            //content
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: height * 0.06,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SlideTransition(
-                    position: _textOffsetAnimation,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  // top app bar icon
+                  Positioned(
+                    top: 50,
+                    left: 12,
+                    right: 12,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          textAlign: TextAlign.center,
-                          'Tenali Raman and the Wise Judgment',
-                          style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w600,
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(100),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.purple.withValues(alpha: 0.5),
+                                blurRadius: 8,
+                                spreadRadius: 0.5,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: IconButton(
+                            onPressed: () {
+                              sl<GoRouter>().pop();
+                            },
+                            icon: Icon(Icons.keyboard_arrow_down),
                           ),
                         ),
-                        const Text(
-                          textAlign: TextAlign.center,
-                          "The Mango Tree teaches that true prosperity comes from unity and sharing, showing how cooperation fosters abundance and harmony for all.",
-                          style: TextStyle(color: Colors.black45),
-                        ),
-                        Space.h12,
                         Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 18),
-                          height: 8,
                           decoration: BoxDecoration(
-                            color: Colors.grey.shade300,
-                            borderRadius: BorderRadius.circular(4),
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(100),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.purple.withValues(alpha: 0.5),
+                                blurRadius: 8,
+                                spreadRadius: 0.5,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: IconButton(
+                            onPressed: () {},
+                            icon: SvgPicture.asset(Assets.icons.heartButton),
                           ),
                         ),
                       ],
                     ),
                   ),
-
-                  AnimatedOpacity(
-                    opacity: !startAnimation ? 0 : 1,
-                    duration: Duration(milliseconds: 600),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: AudioProgressWithLyrics(
-                        totalDuration: Duration(seconds: 10),
-                        chapterTimestamps: chapters,
-                        lyrics: lyrics,
-                        onComplete: () {
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            // showDragHandle: true,
-                            enableDrag: true,
-                            context: context,
-                            builder: (context) {
-                              return UpcomingActivity();
-                            },
-                          );
-                        },
+                  //lyricess text
+                  Positioned(
+                    top: 110,
+                    left: 0,
+                    right: 100,
+                    child: AnimatedOpacity(
+                      opacity: !startAnimation ? 0 : 1,
+                      duration: Duration(milliseconds: 1000),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: LyricLineBuilder(segments: p.segments),
                       ),
                     ),
                   ),
-                  if (startAnimation) Space.h12,
-                  SizedBox(
-                    height: 60,
-                    child: Stack(
-                      alignment: Alignment.center,
+
+                  //content
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: height * 0.06,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        IgnorePointer(
-                          ignoring: !startAnimation,
-                          child: SlideTransition(
-                            position: _leftMostSlide,
-                            child: AnimatedOpacity(
-                              opacity: startAnimation ? 1 : 0,
-                              duration: const Duration(milliseconds: 200),
-                              child: _iconButton(Assets.icons.repeatIcon),
+                        SlideTransition(
+                          position: _textOffsetAnimation,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                textAlign: TextAlign.center,
+                                'Tenali Raman and the Wise Judgment',
+                                style: const TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const Text(
+                                textAlign: TextAlign.center,
+                                "The Mango Tree teaches that true prosperity comes from unity and sharing, showing how cooperation fosters abundance and harmony for all.",
+                                style: TextStyle(color: Colors.black45),
+                              ),
+                              Space.h12,
+                              Container(
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 18,
+                                ),
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade300,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        AnimatedOpacity(
+                          opacity: !startAnimation ? 0 : 1,
+                          duration: Duration(milliseconds: 600),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: AudioProgressWithLyrics(
+                              totalDuration: Duration(seconds: 10),
+                              chapterTimestamps: chapters,
+                              lyrics: lyrics,
+                              onComplete: () {
+                                // showModalBottomSheet(
+                                //   isScrollControlled: true,
+                                //   // showDragHandle: true,
+                                //   enableDrag: true,
+                                //   context: context,
+                                //   builder: (context) {
+                                //     return UpcomingActivity();
+                                //   },
+                                // );
+                              },
                             ),
                           ),
                         ),
-                        IgnorePointer(
-                          ignoring: !startAnimation,
-                          child: SlideTransition(
-                            position: _leftSlide,
-                            child: AnimatedOpacity(
-                              opacity: startAnimation ? 1 : 0,
-                              duration: const Duration(milliseconds: 200),
-                              child: _iconButton(Assets.icons.back10),
-                            ),
-                          ),
-                        ),
-                        // Play button - always active
-                        _playButton(),
-                        IgnorePointer(
-                          ignoring: !startAnimation,
-                          child: SlideTransition(
-                            position: _rightSlide,
-                            child: AnimatedOpacity(
-                              opacity: startAnimation ? 1 : 0,
-                              duration: const Duration(milliseconds: 200),
-                              child: _iconButton(Assets.icons.forward10),
-                            ),
-                          ),
-                        ),
-                        IgnorePointer(
-                          ignoring: !startAnimation,
-                          child: SlideTransition(
-                            position: _rightMostSlide,
-                            child: AnimatedOpacity(
-                              opacity: startAnimation ? 1 : 0,
-                              duration: const Duration(milliseconds: 200),
-                              child: _iconButton(Assets.icons.heartButton),
-                            ),
+                        if (startAnimation) Space.h12,
+                        SizedBox(
+                          height: 60,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              IgnorePointer(
+                                ignoring: !startAnimation,
+                                child: SlideTransition(
+                                  position: _leftMostSlide,
+                                  child: AnimatedOpacity(
+                                    opacity: startAnimation ? 1 : 0,
+                                    duration: const Duration(milliseconds: 200),
+                                    child: _iconButton(Assets.icons.repeatIcon),
+                                  ),
+                                ),
+                              ),
+                              IgnorePointer(
+                                ignoring: !startAnimation,
+                                child: SlideTransition(
+                                  position: _leftSlide,
+                                  child: AnimatedOpacity(
+                                    opacity: startAnimation ? 1 : 0,
+                                    duration: const Duration(milliseconds: 200),
+                                    child: _iconButton(Assets.icons.back10),
+                                  ),
+                                ),
+                              ),
+                              // Play button - always active
+                              _playButton(),
+                              IgnorePointer(
+                                ignoring: !startAnimation,
+                                child: SlideTransition(
+                                  position: _rightSlide,
+                                  child: AnimatedOpacity(
+                                    opacity: startAnimation ? 1 : 0,
+                                    duration: const Duration(milliseconds: 200),
+                                    child: _iconButton(Assets.icons.forward10),
+                                  ),
+                                ),
+                              ),
+                              IgnorePointer(
+                                ignoring: !startAnimation,
+                                child: SlideTransition(
+                                  position: _rightMostSlide,
+                                  child: AnimatedOpacity(
+                                    opacity: startAnimation ? 1 : 0,
+                                    duration: const Duration(milliseconds: 200),
+                                    child: _iconButton(
+                                      Assets.icons.heartButton,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -325,8 +342,8 @@ class _PlayVisualsState extends State<PlayVisuals>
                   ),
                 ],
               ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
