@@ -22,7 +22,6 @@ import 'package:provider/provider.dart';
 import '../../../common/widgets/scroll_timepicker.dart';
 import '../../profile/providers/profile_provider.dart';
 import '../providers/remainder_routine_provider.dart';
-import '../providers/routine_provider.dart';
 import '../widgets/create_week_days.dart';
 
 class CreateRoutineScreen extends StatefulWidget {
@@ -456,76 +455,90 @@ class BuildFourthPage extends StatelessWidget {
                 double vertSpace = 12.0;
 
                 double cardHeight = constraints.maxHeight / 3 - (vertSpace);
+                // Ensure cardHeight doesn't make the cards too wide for the screen
+                double maxPossibleWidth =
+                    (constraints.maxWidth - vertSpace) / 2;
+                if (cardHeight > maxPossibleWidth) {
+                  cardHeight = maxPossibleWidth;
+                }
+                // Also ensure cardHeight is not negative
+                cardHeight = cardHeight.clamp(0.0, double.infinity);
+
                 double totalCardWith = 2 * cardHeight + vertSpace;
-                double padding = constraints.maxWidth - totalCardWith;
+                double padding = (constraints.maxWidth - totalCardWith).clamp(
+                  0.0,
+                  double.infinity,
+                );
 
-                return Column(
-                  children: [
-                    GridView.builder(
-                      shrinkWrap: true,
-                      padding: EdgeInsets.only(
-                        left: padding / 2,
-                        right: padding / 2,
-                      ),
-                      physics: NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 12.0,
-                        crossAxisSpacing: 12.0,
-                        mainAxisExtent: cardHeight,
-                      ),
-                      itemCount:
-                          provider.fourthPageData.length.isEven
-                              ? provider.fourthPageData.length
-                              : provider.fourthPageData.length - 1,
-                      itemBuilder: (context, index) {
-                        final item = provider.fourthPageData[index];
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      GridView.builder(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.only(
+                          left: padding / 2,
+                          right: padding / 2,
+                        ),
+                        physics: NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 12.0,
+                          crossAxisSpacing: 12.0,
+                          mainAxisExtent: cardHeight,
+                        ),
+                        itemCount:
+                            provider.fourthPageData.length.isEven
+                                ? provider.fourthPageData.length
+                                : provider.fourthPageData.length - 1,
+                        itemBuilder: (context, index) {
+                          final item = provider.fourthPageData[index];
 
-                        return GoalRoutineContainer(
-                          title: item['title'] ?? "",
-                          icon: item['icon'] ?? '',
-                          isSelected: provider.goals.contains(item['title']),
-                          onChanged: (val) {
-                            provider.onChangeType(item['title']);
-                          },
-                        );
-                      },
-                    ),
-                    Space.h12,
-                    if (provider.fourthPageData.length.isOdd)
-                      SizedBox(
-                        height: cardHeight,
-                        width: cardHeight,
-                        child: GoalRoutineContainer(
-                          title:
-                              provider.fourthPageData[provider
-                                      .fourthPageData
-                                      .length -
-                                  1]['title'] ??
-                              "",
-                          icon:
-                              provider.fourthPageData[provider
-                                      .fourthPageData
-                                      .length -
-                                  1]['icon'] ??
-                              '',
-                          isSelected: provider.goals.contains(
-                            provider.fourthPageData[provider
-                                    .fourthPageData
-                                    .length -
-                                1]['title'],
-                          ),
-                          onChanged: (val) {
-                            provider.onChangeType(
+                          return GoalRoutineContainer(
+                            title: item['title'] ?? "",
+                            icon: item['icon'] ?? '',
+                            isSelected: provider.goals.contains(item['title']),
+                            onChanged: (val) {
+                              provider.onChangeType(item['title']);
+                            },
+                          );
+                        },
+                      ),
+                      Space.h12,
+                      if (provider.fourthPageData.length.isOdd)
+                        SizedBox(
+                          height: cardHeight,
+                          width: cardHeight,
+                          child: GoalRoutineContainer(
+                            title:
+                                provider.fourthPageData[provider
+                                        .fourthPageData
+                                        .length -
+                                    1]['title'] ??
+                                "",
+                            icon:
+                                provider.fourthPageData[provider
+                                        .fourthPageData
+                                        .length -
+                                    1]['icon'] ??
+                                '',
+                            isSelected: provider.goals.contains(
                               provider.fourthPageData[provider
                                       .fourthPageData
                                       .length -
                                   1]['title'],
-                            );
-                          },
+                            ),
+                            onChanged: (val) {
+                              provider.onChangeType(
+                                provider.fourthPageData[provider
+                                        .fourthPageData
+                                        .length -
+                                    1]['title'],
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 );
 
                 // Column(
@@ -587,103 +600,111 @@ class BuildFifthPage extends StatelessWidget {
       create: (context) => RemainderRoutineProvider(),
       child: Consumer<RemainderRoutineProvider>(
         builder: (context, rProvider, _) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (rProvider.remainder)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Remind me at ',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (rProvider.remainder)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Remind me at ',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      CustomGradientText(
-                        text: AppFormate.formatAMPM(rProvider.selectedTime!),
-                        textStyle: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
+                        CustomGradientText(
+                          text: AppFormate.formatAMPM(rProvider.selectedTime!),
+                          textStyle: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-
-                if (!rProvider.remainder)
-                  Text(
-                    'No Reminder',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-                Space.h20,
-                Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(0),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-
-                      colors: [HexColor('#F4F0FF'), HexColor('#FFFFFF')],
+                      ],
                     ),
-                  ),
-                  child: ListTile(
-                    contentPadding: EdgeInsets.only(right: 12, top: 12),
-                    leading: SvgPicture.asset(Assets.icons.rimderIcon),
-                    horizontalTitleGap: 0,
-                    title: Text(
-                      'Reminder',
+
+                  if (!rProvider.remainder)
+                    Text(
+                      'No Reminder',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    subtitle: Text(
-                      'Set a specific time to remind me',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.grey45,
+                  Space.h20,
+                  Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.all(0),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+
+                        colors: [HexColor('#F4F0FF'), HexColor('#FFFFFF')],
                       ),
                     ),
-                    trailing: CupertinoSwitch(
-                      activeTrackColor: AppColors.purple,
-                      value: rProvider.remainder,
-                      onChanged: (val) {
-                        rProvider.toogleRemaider();
-                        provider.toogleRemaider();
-                      },
+                    child: ListTile(
+                      contentPadding: EdgeInsets.only(right: 12, top: 12),
+                      leading: SvgPicture.asset(Assets.icons.rimderIcon),
+                      horizontalTitleGap: 0,
+                      title: Text(
+                        'Reminder',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        'Set a specific time to remind me',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.grey45,
+                        ),
+                      ),
+                      trailing: CupertinoSwitch(
+                        activeTrackColor: AppColors.purple,
+                        value: rProvider.remainder,
+                        onChanged: (val) {
+                          rProvider.toogleRemaider();
+                          provider.toogleRemaider();
+                        },
+                      ),
                     ),
                   ),
-                ),
-                Space.h20,
-                ScrollTimePicker(
-                  disable: !rProvider.remainder,
-                  onTimeChanged: (p0) {
-                    rProvider.updateTime(p0);
-                    provider.updateTime(p0);
-                  },
-                ),
-                Space.h20,
-                Row(
-                  children: [
-                    Text('Select Day', style: TextStyle(color: Colors.black54)),
-                  ],
-                ),
-                Space.h24,
+                  Space.h20,
+                  ScrollTimePicker(
+                    disable: !rProvider.remainder,
+                    onTimeChanged: (p0) {
+                      rProvider.updateTime(p0);
+                      provider.updateTime(p0);
+                    },
+                  ),
+                  Space.h20,
+                  Row(
+                    children: [
+                      Text(
+                        'Select Day',
+                        style: TextStyle(color: Colors.black54),
+                      ),
+                    ],
+                  ),
+                  Space.h24,
 
-                CreateWeekDays(
-                  rProvider: rProvider,
-                  disable: !rProvider.remainder,
-                  onSelect: (val) {
-                    provider.updateSelection(val);
-                  },
-                ),
-                Space.h24,
-              ],
+                  CreateWeekDays(
+                    rProvider: rProvider,
+                    disable: !rProvider.remainder,
+                    onSelect: (val) {
+                      provider.updateSelection(val);
+                    },
+                  ),
+                  Space.h24,
+                ],
+              ),
             ),
           );
         },
