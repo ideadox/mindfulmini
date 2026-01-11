@@ -1,5 +1,5 @@
 class ApiConstants {
-  static String baseUrl = 'https://apiv1.mindfulminis.in/api/v1';
+  static String baseUrl = 'https://node.mindfulminis.in/api/v1/';
   static String mediaBaseUrl =
       'https://minfulminis.s3.eu-north-1.amazonaws.com/payloadcms';
 
@@ -20,6 +20,7 @@ class ApiConstants {
   static String createRoutineUrl = '$baseUrl/routines';
   static String getRoutinesUrl = '$baseUrl/routines';
   static String getRoutineActivityUrl = '$baseUrl/api/activity/getActivity';
+  static String getActivitiesUrl = '$baseUrl/activities/activity';
   static String updateRoutineActivityPercentUrl =
       '$baseUrl/api/activityContent/updateActivityContentProgressById/';
 

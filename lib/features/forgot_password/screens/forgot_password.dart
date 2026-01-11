@@ -71,10 +71,10 @@ class ForgotPassword extends StatelessWidget {
                           cap.isLoading
                               ? null
                               : () {
-                                // cap.sendResetLink();
-                                sl<GoRouter>().pushNamed(
-                                  ChangePassword.routeName,
-                                );
+                                cap.sendResetLink();
+                                // sl<GoRouter>().pushNamed(
+                                //   ChangePassword.routeName,
+                                // );
                               },
                       child:
                           cap.isLoading

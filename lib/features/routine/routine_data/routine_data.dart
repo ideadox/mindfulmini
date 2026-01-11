@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/features/routine/models/activity_model.dart';
+import 'package:mindfulminis/features/routine/models/activity_detail_model.dart';
 
 import 'package:mindfulminis/services/http_service.dart';
 
@@ -80,6 +81,31 @@ class RoutineData {
       log(res.toString());
     } catch (e) {
       log(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<List<ActivityDetailModel>> getActivities(
+    String routineId,
+    String date,
+  ) async {
+    try {
+      final res = await httpService.get(
+        '${ApiConstants.getActivitiesUrl}?date=$date&routineId=$routineId',
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      List<ActivityDetailModel> activities = [];
+      for (var activity in res['data']) {
+        try {
+          activities.add(ActivityDetailModel.fromJson(activity));
+        } catch (e) {
+          log('Error parsing activity: $e');
+          continue;
+        }
+      }
+      return activities;
+    } catch (e) {
       rethrow;
     }
   }

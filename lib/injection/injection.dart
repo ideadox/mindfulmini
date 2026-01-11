@@ -11,6 +11,7 @@ import '../features/journal/journal_data/journal_data.dart';
 import '../features/onbaord/onboard_data/onboard_data.dart';
 import '../features/profile/profile_data/profile_data.dart';
 import '../features/routine/routine_data/routine_data.dart';
+import '../features/routine/providers/activities_provider.dart';
 import '../services/image_picker_helper.dart';
 import '../services/shared_prefs.dart';
 import '../services/storage/flutter_secure_token_storage.dart';
@@ -42,4 +43,7 @@ Future<void> setupInjection() async {
   sl.registerLazySingleton<JournalData>(() => JournalData(httpService: sl()));
   sl.registerLazySingleton<HomeData>(() => HomeData(httpService: sl()));
   sl.registerLazySingleton<CmsData>(() => CmsData(httpService: sl()));
+
+  //providers
+  sl.registerLazySingleton<ActivitiesProvider>(() => ActivitiesProvider());
 }

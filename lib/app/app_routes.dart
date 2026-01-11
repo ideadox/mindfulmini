@@ -204,7 +204,11 @@ GoRouter buildRouter() {
       GoRoute(
         path: AffirmationScreen.routePath,
         name: AffirmationScreen.routeName,
-        builder: (context, state) => AffirmationScreen(),
+        builder:
+            (context, state) => AffirmationScreen(
+              routineId: state.uri.queryParameters['routineId'],
+              date: state.uri.queryParameters['date'],
+            ),
       ),
       GoRoute(
         path: HelpCenterScreen.routePath,

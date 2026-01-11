@@ -47,12 +47,14 @@ class LoginProvider with ChangeNotifier {
           );
 
       if (userCredential.user != null) {
-        final token = await _authData.loginUser({
-          "email": emailController.text.trim(),
-          "password": passwordController.text.trim(),
-        });
+        // final token = await _authData.loginUser({
+        //   "email": emailController.text.trim(),
+        //   "password": passwordController.text.trim(),
+        // });
+        final token = await userCredential.user!.getIdToken(true);
+        log('Login Token: $token');
 
-        await _tokenStorage.saveAccessToken(token);
+        await _tokenStorage.saveAccessToken(token!);
         navigateToHome();
       }
     } on FirebaseAuthException catch (e) {

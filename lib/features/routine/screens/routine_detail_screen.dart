@@ -234,6 +234,10 @@ class RoutineDetailScreen extends StatelessWidget {
                                           currentLevel: index == 0,
                                           index: index,
                                           activityContentModel: activity,
+                                          routineId: routineId,
+                                          date: DateFormat(
+                                            'yyyy-MM-dd',
+                                          ).format(provider.selectedDate),
                                         );
                                       },
                                     ),

@@ -13,12 +13,17 @@ class RoutineLevelContainer extends StatelessWidget {
   final bool isCompleted;
   final bool currentLevel;
   final Goal activityContentModel;
+  final String? routineId;
+  final String? date;
+
   const RoutineLevelContainer({
     super.key,
     this.isCompleted = false,
     this.currentLevel = false,
     required this.index,
     required this.activityContentModel,
+    this.routineId,
+    this.date,
   });
 
   @override
@@ -31,7 +36,13 @@ class RoutineLevelContainer extends StatelessWidget {
           //   pathParameters: {'activityId': activityContentModel.id},
           // );
         } else if (activityContentModel.title == 'affirmation') {
-          sl<GoRouter>().pushNamed(AffirmationScreen.routeName);
+          sl<GoRouter>().pushNamed(
+            AffirmationScreen.routeName,
+            queryParameters: {
+              if (routineId != null) 'routineId': routineId!,
+              if (date != null) 'date': date!,
+            },
+          );
         } else if (activityContentModel.title == 'meditation') {
           // Navigate to Meditation screen
         } else if (activityContentModel.title == 'yoga') {
