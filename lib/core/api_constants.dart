@@ -1,8 +1,10 @@
 class ApiConstants {
   static String baseUrl = 'https://node.mindfulminis.in/api/v1/';
-  static String mediaBaseUrl =
-      'https://minfulminis.s3.eu-north-1.amazonaws.com/payloadcms';
+  // static String mediaBaseUrl =
+  // 'https://minfulminis.s3.eu-north-1.amazonaws.com/payloadcms';
 
+  static String mediaBaseUrl =
+      'https://minfulminis.s3.eu-north-1.amazonaws.com/payloadcms/';
   //user
   static String createUserUrl = '$baseUrl/users';
   static String createProfileUrl = '$baseUrl/profiles';
@@ -36,6 +38,9 @@ class ApiConstants {
   static String cmsByIdUrl = '$baseUrl/cms/content';
   static String getGoalsUrl = '$baseUrl/routines/goals';
   static String getMonthlyGratitudeUrl = '$baseUrl//activities/gratitude/month';
+
+  // yoga
+  static String getYogaUrl = '$baseUrl/cms/yoga';
   // /routines/goals?routineId=6912fd515fcf7118e9c04553&date=2025-11-11
   // /activities/gratitude/month?profileId=690dcfdc78f23500d69992bd&year=2025&month=11
 }

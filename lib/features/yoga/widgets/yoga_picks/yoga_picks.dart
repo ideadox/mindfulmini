@@ -35,7 +35,11 @@ class YogaPicks extends StatelessWidget {
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () {
-                  sl<GoRouter>().pushNamed(YogaList.routeName);
+                  // TODO: Replace with actual yoga ID when available
+                  sl<GoRouter>().pushNamed(
+                    YogaList.routeName,
+                    pathParameters: {'id': 'placeholder-id'},
+                  );
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -9,6 +9,7 @@ import 'package:mindfulminis/features/home/providers/rating_provider.dart';
 import 'package:mindfulminis/features/offline_status/providers/offline_status_provider.dart';
 import 'package:mindfulminis/features/onbaord/providers/onboards_provider.dart';
 import 'package:mindfulminis/features/profile/providers/profile_provider.dart';
+import 'package:mindfulminis/features/yoga/providers/yoga_provider.dart';
 import 'package:mindfulminis/injection/injection.dart';
 import 'package:provider/provider.dart';
 
@@ -27,15 +28,14 @@ class Mindfulminis extends StatelessWidget {
           lazy: false,
           create: (context) => ProfileProvider(),
         ),
-
         ChangeNotifierProvider(create: (context) => OnboardsProvider()),
         ChangeNotifierProvider(
           lazy: false,
           create: (context) => OfflineStatusProvider(),
         ),
         ChangeNotifierProvider(create: (context) => AudioManager()),
-
         ChangeNotifierProvider(create: (context) => RatingProvider()),
+        ChangeNotifierProvider(create: (context) => sl<YogaProvider>()),
       ],
       child: MaterialApp.router(
         builder: FlutterSmartDialog.init(

@@ -1,14 +1,20 @@
+import 'dart:developer';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
+import 'package:mindfulminis/features/yoga/models/yoga_model.dart';
 import 'package:mindfulminis/features/yoga/screens/yoga_list.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
 
 class FeaturedCollection extends StatelessWidget {
-  const FeaturedCollection({super.key});
+  final List<YogaModel> featuredPoses;
+  const FeaturedCollection({super.key, required this.featuredPoses});
 
   @override
   Widget build(BuildContext context) {
@@ -27,14 +33,18 @@ class FeaturedCollection extends StatelessWidget {
           height: 303,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: 10,
+            itemCount: featuredPoses.length,
             separatorBuilder: (context, index) {
               return Space.w16;
             },
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () {
-                  sl<GoRouter>().pushNamed(YogaList.routeName);
+                  log(featuredPoses[index].id!);
+                  sl<GoRouter>().pushNamed(
+                    YogaList.routeName,
+                    pathParameters: {'id': featuredPoses[index].id},
+                  );
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +59,14 @@ class FeaturedCollection extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
 
-                          child: SvgPicture.asset(Assets.dummy.frame2043683273),
+                          child: CachedNetworkImage(
+                            imageUrl:
+                                ApiConstants.mediaBaseUrl +
+                                featuredPoses[index].media!['filename']
+                                    .toString(),
+                            fit: BoxFit.cover,
+                          ),
+                          // SvgPicture.asset(Assets.dummy.frame2043683273),
                         ),
                         // Positioned(bottom: 50, left: 16, child: TotalTimingWidget()),
                       ],

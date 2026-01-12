@@ -159,7 +159,8 @@ GoRouter buildRouter() {
       GoRoute(
         path: YogaList.routePath,
         name: YogaList.routeName,
-        builder: (context, state) => YogaList(),
+        builder:
+            (context, state) => YogaList(id: state.pathParameters['id'] ?? ''),
       ),
       GoRoute(
         path: MeditationScreen.routePath,
