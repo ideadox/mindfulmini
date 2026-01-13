@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 /// Represents a formatted text span within a yoga segment
@@ -23,7 +25,7 @@ class YogaTextSpan {
   }
 }
 
-/// Represents a single displayable segment of yoga content
+
 class YogaSegment {
   final List<YogaTextSpan> textSpans;
   final Duration duration;
@@ -37,9 +39,7 @@ class YogaSegment {
   int get charCount => fullText.length;
 }
 
-/// Parser for yoga lexical JSON format
 class YogaRichTextParser {
-  /// Parse yoga content description from lexical JSON format
   static List<YogaSegment> parseYogaContent(
     Map<String, dynamic>? contentDescription,
   ) {
@@ -67,12 +67,12 @@ class YogaRichTextParser {
 
       return segments;
     } catch (e) {
-      print('Error parsing yoga content: $e');
+      log('Error parsing yoga content: $e');
       return [];
     }
   }
+ 
 
-  /// Parse a paragraph into individual line segments (split by linebreaks)
   static List<YogaSegment> _parseParagraphLines(
     Map<String, dynamic> paragraph,
   ) {
@@ -108,7 +108,6 @@ class YogaRichTextParser {
       }
     }
 
-    // Add remaining line if any
     if (currentLineSpans.isNotEmpty) {
       final segment = _createSegment(currentLineSpans);
       if (segment != null) {
@@ -119,7 +118,6 @@ class YogaRichTextParser {
     return lineSegments;
   }
 
-  /// Create a segment with duration from text spans
   static YogaSegment? _createSegment(List<YogaTextSpan> textSpans) {
     if (textSpans.isEmpty) return null;
 
@@ -134,7 +132,6 @@ class YogaRichTextParser {
     return YogaSegment(textSpans: textSpans, duration: duration);
   }
 
-  /// Parse a single paragraph into a segment (deprecated - kept for reference)
   static YogaSegment? _parseParagraph(Map<String, dynamic> paragraph) {
     final children = paragraph['children'] as List<dynamic>? ?? [];
     final textSpans = <YogaTextSpan>[];
@@ -176,7 +173,7 @@ class YogaRichTextParser {
   }
 }
 
-/// Widget to render a yoga segment with rich text formatting
+
 class YogaSegmentWidget extends StatelessWidget {
   final YogaSegment segment;
   final Animation<double> animation;

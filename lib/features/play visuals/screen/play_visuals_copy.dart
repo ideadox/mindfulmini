@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import 'package:mindfulminis/core/api_constants.dart';
 import 'dart:async';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
@@ -271,15 +273,21 @@ class _PlayVisualsCopyState extends State<PlayVisualsCopy>
               bottom: height * 0.1,
               child: Hero(
                 tag: 'audio',
-                child: Lottie.asset(
-                  backgroundLoading: true,
-                  fit: BoxFit.fill,
-                  Assets.vectors.flow146,
-                  controller: _lottiController,
-                  onLoaded: (composition) {
-                    _lottiController.duration = composition.duration;
-                  },
+                child: CachedNetworkImage(
+                  imageUrl:
+                      ApiConstants.mediaBaseUrl +
+                      (widget.yogaContentModel?.media?['filename'] ?? ''),
+                  //   fit: BoxFit.fill,
                 ),
+                //  Lottie.asset(
+                //   backgroundLoading: true,
+                //   fit: BoxFit.fill,
+                //   Assets.vectors.flow146,
+                //   controller: _lottiController,
+                //   onLoaded: (composition) {
+                //     _lottiController.duration = composition.duration;
+                //   },
+                // ),
               ),
             ),
 
@@ -331,13 +339,11 @@ class _PlayVisualsCopyState extends State<PlayVisualsCopy>
             ),
           ),
 
-          // Yoga content positioned at bottom
           Positioned(
             left: 0,
             right: 0,
-            bottom: height * 0.06,
+            top: height * 0.15,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Title and description - hide when playing
                 SlideTransition(
@@ -413,7 +419,20 @@ class _PlayVisualsCopyState extends State<PlayVisualsCopy>
                     },
                   ),
                 ),
+
                 // Progress bar
+              ],
+            ),
+          ),
+
+          // Yoga content positioned at bottom
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: height * 0.06,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
                 AnimatedOpacity(
                   opacity: startAnimation ? 1 : 0,
                   duration: const Duration(milliseconds: 600),
