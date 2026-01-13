@@ -16,6 +16,7 @@ import 'package:mindfulminis/features/onbaord/screens/felling_today.dart';
 import 'package:mindfulminis/features/onbaord/screens/kid_name.dart';
 import 'package:mindfulminis/features/onboarding/screens/onboard_screen.dart';
 import 'package:mindfulminis/features/play%20visuals/screen/play_visuals.dart';
+import 'package:mindfulminis/features/play%20visuals/screen/play_visuals_copy.dart';
 import 'package:mindfulminis/features/profile/screens/app_setting_screen.dart';
 import 'package:mindfulminis/features/profile/screens/edit_profile_screen.dart';
 import 'package:mindfulminis/features/profile/screens/language_screen.dart';
@@ -27,6 +28,7 @@ import 'package:mindfulminis/features/authentication/screens/create_account.dart
 import 'package:mindfulminis/features/stories/screens/stories_download.dart';
 import 'package:mindfulminis/features/stories/screens/stories_screen.dart';
 import 'package:mindfulminis/features/tab_view/screens/tab_view.dart';
+import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
 import 'package:mindfulminis/features/yoga/screens/yoga_list.dart';
 import 'package:mindfulminis/features/yoga/screens/yoga_main.dart';
 
@@ -35,7 +37,6 @@ import '../features/help_center/screens/help_center_screen.dart';
 import '../features/library/screens/library_screen.dart';
 import '../features/notifications/screens/notification_screen.dart';
 import '../features/onbaord/screens/describe_yourself.dart';
-import '../features/play visuals/screen/play_text.dart';
 import '../features/privacy/screens/privacy_screen.dart';
 import '../features/referals/screens/referal_screen.dart';
 import '../features/sidhi/screens/shidi_chat_screen.dart';
@@ -160,7 +161,8 @@ GoRouter buildRouter() {
         path: YogaList.routePath,
         name: YogaList.routeName,
         builder:
-            (context, state) => YogaList(id: state.pathParameters['id'] ?? ''),
+            (context, state) =>
+                YogaList(id: (state.extra as YogaContentModel?)?.id ?? ''),
       ),
       GoRoute(
         path: MeditationScreen.routePath,
@@ -184,6 +186,16 @@ GoRouter buildRouter() {
             (context, state) => PlayVisuals(
               collection: state.pathParameters['collection'] ?? "",
               id: state.pathParameters['id'] ?? "",
+            ),
+      ),
+      GoRoute(
+        path: PlayVisualsCopy.routePath,
+        name: PlayVisualsCopy.routeName,
+        builder:
+            (context, state) => PlayVisualsCopy(
+              yogaContentModel: state.extra as YogaContentModel?,
+              collection: state.uri.queryParameters['collection'],
+              id: state.uri.queryParameters['id'],
             ),
       ),
       GoRoute(

@@ -7,7 +7,8 @@ import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
-import 'package:mindfulminis/features/play%20visuals/screen/play_visuals.dart';
+import 'package:mindfulminis/features/play%20visuals/screen/play_visuals_copy.dart';
+import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
 import 'package:mindfulminis/features/yoga/providers/yoga_provider.dart';
 import 'package:mindfulminis/features/yoga/screens/widgets/yoga_list_shimmer_loader.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
@@ -16,7 +17,7 @@ import 'package:provider/provider.dart';
 
 class YogaList extends StatefulWidget {
   static String routeName = 'yoga-list';
-  static String routePath = '/yoga-list/:id';
+  static String routePath = '/yoga-list';
 
   final String id;
 
@@ -130,7 +131,9 @@ class _YogaListState extends State<YogaList> {
                                       ),
                                 ),
                               ),
-                            VerticalStepperList(),
+                            VerticalStepperList(
+                              yogaContent: yogaProvider.selectedContent!,
+                            ),
                             Space.h40,
                             Space.h40,
                           ],
@@ -147,11 +150,14 @@ class _YogaListState extends State<YogaList> {
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: GradientButton(
               onPressed: () {
-                sl<GoRouter>().pushNamed(PlayVisuals.routeName);
+                sl<GoRouter>().pushNamed(
+                  PlayVisualsCopy.routeName,
+                  extra: yogaProvider.selectedContent,
+                );
               },
               child: Center(
                 child: Text(
-                  'Let’s Go',
+                  'Let\'s Go',
                   style: AppTextTheme.mainButtonTextStyle(context).titleLarge,
                 ),
               ),
@@ -164,14 +170,15 @@ class _YogaListState extends State<YogaList> {
 }
 
 class VerticalStepperList extends StatelessWidget {
-  const VerticalStepperList({super.key});
+  final YogaContentModel yogaContent;
+  const VerticalStepperList({super.key, required this.yogaContent});
 
   @override
   Widget build(BuildContext context) {
     const double cardHeight = 106 + 30;
 
-    const int stepCount = 6;
-    const int activeIndex = 2;
+    const int stepCount = 1;
+    const int activeIndex = 0;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -341,7 +348,11 @@ class VerticalStepperList extends StatelessWidget {
                           ],
                           image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: AssetImage(Assets.dummy.springYogaCard.path),
+                            image: CachedNetworkImageProvider(
+                              ApiConstants.mediaBaseUrl +
+                                  yogaContent.media!['filename'].toString(),
+                            ),
+                            // AssetImage(Assets.dummy.springYogaCard.path),
                           ),
                         ),
                       ),

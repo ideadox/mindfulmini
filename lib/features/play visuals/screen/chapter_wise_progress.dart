@@ -133,7 +133,7 @@ class _AudioProgressWithLyricsState extends State<AudioProgressWithLyrics> {
                               height: 4,
                               decoration: BoxDecoration(
                                 // gradient: AppColors.primaryGradient,
-                                color: Colors.black,
+                                color: Colors.black38,
                                 borderRadius: BorderRadius.circular(4),
                               ),
                             ),

@@ -7,6 +7,8 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
+import 'package:mindfulminis/features/yoga/data/yoga_data.dart';
+import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
 import 'package:mindfulminis/features/yoga/models/yoga_model.dart';
 import 'package:mindfulminis/features/yoga/screens/yoga_list.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
@@ -39,12 +41,20 @@ class FeaturedCollection extends StatelessWidget {
             },
             itemBuilder: (context, index) {
               return InkWell(
-                onTap: () {
+                onTap: () async {
                   log(featuredPoses[index].id!);
-                  sl<GoRouter>().pushNamed(
-                    YogaList.routeName,
-                    pathParameters: {'id': featuredPoses[index].id},
-                  );
+                  try {
+                    final yogaData = sl<YogaData>();
+                    final yogaContent = await yogaData.getYogaContentById(
+                      featuredPoses[index].id,
+                    );
+                    sl<GoRouter>().pushNamed(
+                      YogaList.routeName,
+                      extra: yogaContent,
+                    );
+                  } catch (e) {
+                    log('Error fetching yoga content: $e');
+                  }
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
