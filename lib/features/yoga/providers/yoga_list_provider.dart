@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:mindfulminis/features/yoga/data/yoga_data.dart';
 import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
@@ -37,7 +39,7 @@ class YogaListProvider with ChangeNotifier {
       _selectedContent = await yogaData.getYogaContentById(id);
     } catch (e) {
       _contentError = e.toString();
-      print('Yoga List Provider Error: $_contentError');
+      log('Yoga List Provider Error: $_contentError');
     } finally {
       _isContentLoading = false;
       notifyListeners();

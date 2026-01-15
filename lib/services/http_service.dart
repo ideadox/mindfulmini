@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:mindfulminis/services/exceptions.dart';
@@ -58,6 +59,9 @@ class RetryAndRefreshClient extends http.BaseClient {
 }
 
 class HttpService {
+  bool _isTokenRefreshing = false;
+  final _tokenRefreshCompleter = Completer<String?>();
+
   final client = RetryAndRefreshClient(
     getAccessToken: () async {
       final token = await sl<TokenStorage>().getAccessToken();
@@ -82,15 +86,49 @@ class HttpService {
     );
   }
 
-  final Duration _timeOutDuration = Duration(seconds: 15);
-  Future<dynamic> get(String url, {Map<String, String>? headers}) async {
-    final response = await retryRequest(
-      () => client
-          .get(Uri.parse(url), headers: headers)
-          .timeout(_timeOutDuration),
-    );
+  /// Refresh Firebase token and save it to TokenStorage
+  Future<bool> _refreshFirebaseToken() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final newToken = await user.getIdToken(true);
+        if (newToken != null) {
+          await sl<TokenStorage>().saveAccessToken(newToken);
+          log('✅ Token refreshed and saved from Firebase');
+          return true;
+        }
+      }
+      log('❌ Failed to refresh token: No Firebase user');
+      return false;
+    } catch (e) {
+      log('❌ Token refresh error: $e');
+      return false;
+    }
+  }
 
-    return _returnResponse(response);
+  final Duration _timeOutDuration = Duration(seconds: 15);
+
+  Future<dynamic> get(String url, {Map<String, String>? headers}) async {
+    try {
+      final response = await retryRequest(
+        () => client
+            .get(Uri.parse(url), headers: headers)
+            .timeout(_timeOutDuration),
+      );
+      return await _returnResponse(response, 'GET', url, headers: headers);
+    } on UnauthorisedException catch (e) {
+      if (e.toString().contains('Token refreshed')) {
+        // Retry the request after token refresh
+        log('🔄 Retrying GET request after token refresh...');
+        final response = await retryRequest(
+          () => client
+              .get(Uri.parse(url), headers: headers)
+              .timeout(_timeOutDuration),
+        );
+        return await _returnResponse(response, 'GET', url, headers: headers);
+      }
+      rethrow;
+    }
   }
 
   Future<dynamic> patch(
@@ -98,12 +136,37 @@ class HttpService {
     Map<String, String>? headers,
     dynamic body,
   }) async {
-    final response = await retryRequest(
-      () => client
-          .patch(Uri.parse(url), headers: headers, body: body)
-          .timeout(_timeOutDuration),
-    );
-    return _returnResponse(response);
+    try {
+      final response = await retryRequest(
+        () => client
+            .patch(Uri.parse(url), headers: headers, body: body)
+            .timeout(_timeOutDuration),
+      );
+      return await _returnResponse(
+        response,
+        'PATCH',
+        url,
+        headers: headers,
+        body: body,
+      );
+    } on UnauthorisedException catch (e) {
+      if (e.toString().contains('Token refreshed')) {
+        log('🔄 Retrying PATCH request after token refresh...');
+        final response = await retryRequest(
+          () => client
+              .patch(Uri.parse(url), headers: headers, body: body)
+              .timeout(_timeOutDuration),
+        );
+        return await _returnResponse(
+          response,
+          'PATCH',
+          url,
+          headers: headers,
+          body: body,
+        );
+      }
+      rethrow;
+    }
   }
 
   Future<dynamic> post(
@@ -111,13 +174,37 @@ class HttpService {
     Map<String, String>? headers,
     dynamic body,
   }) async {
-    final response = await retryRequest(
-      () => client
-          .post(Uri.parse(url), headers: headers, body: body)
-          .timeout(_timeOutDuration),
-    );
-
-    return _returnResponse(response);
+    try {
+      final response = await retryRequest(
+        () => client
+            .post(Uri.parse(url), headers: headers, body: body)
+            .timeout(_timeOutDuration),
+      );
+      return await _returnResponse(
+        response,
+        'POST',
+        url,
+        headers: headers,
+        body: body,
+      );
+    } on UnauthorisedException catch (e) {
+      if (e.toString().contains('Token refreshed')) {
+        log('🔄 Retrying POST request after token refresh...');
+        final response = await retryRequest(
+          () => client
+              .post(Uri.parse(url), headers: headers, body: body)
+              .timeout(_timeOutDuration),
+        );
+        return await _returnResponse(
+          response,
+          'POST',
+          url,
+          headers: headers,
+          body: body,
+        );
+      }
+      rethrow;
+    }
   }
 
   Future<dynamic> put(
@@ -125,13 +212,37 @@ class HttpService {
     Map<String, String>? headers,
     dynamic body,
   }) async {
-    final response = await retryRequest(
-      () => client
-          .put(Uri.parse(url), headers: headers, body: body)
-          .timeout(_timeOutDuration),
-    );
-
-    return _returnResponse(response);
+    try {
+      final response = await retryRequest(
+        () => client
+            .put(Uri.parse(url), headers: headers, body: body)
+            .timeout(_timeOutDuration),
+      );
+      return await _returnResponse(
+        response,
+        'PUT',
+        url,
+        headers: headers,
+        body: body,
+      );
+    } on UnauthorisedException catch (e) {
+      if (e.toString().contains('Token refreshed')) {
+        log('🔄 Retrying PUT request after token refresh...');
+        final response = await retryRequest(
+          () => client
+              .put(Uri.parse(url), headers: headers, body: body)
+              .timeout(_timeOutDuration),
+        );
+        return await _returnResponse(
+          response,
+          'PUT',
+          url,
+          headers: headers,
+          body: body,
+        );
+      }
+      rethrow;
+    }
   }
 
   Future<dynamic> delete(
@@ -139,16 +250,46 @@ class HttpService {
     Map<String, String>? headers,
     dynamic body,
   }) async {
-    final response = await retryRequest(
-      () => client
-          .delete(Uri.parse(url), headers: headers, body: body)
-          .timeout(_timeOutDuration),
-    );
-
-    return _returnResponse(response);
+    try {
+      final response = await retryRequest(
+        () => client
+            .delete(Uri.parse(url), headers: headers, body: body)
+            .timeout(_timeOutDuration),
+      );
+      return await _returnResponse(
+        response,
+        'DELETE',
+        url,
+        headers: headers,
+        body: body,
+      );
+    } on UnauthorisedException catch (e) {
+      if (e.toString().contains('Token refreshed')) {
+        log('🔄 Retrying DELETE request after token refresh...');
+        final response = await retryRequest(
+          () => client
+              .delete(Uri.parse(url), headers: headers, body: body)
+              .timeout(_timeOutDuration),
+        );
+        return await _returnResponse(
+          response,
+          'DELETE',
+          url,
+          headers: headers,
+          body: body,
+        );
+      }
+      rethrow;
+    }
   }
 
-  dynamic _returnResponse(http.Response response) {
+  Future<dynamic> _returnResponse(
+    http.Response response,
+    String method,
+    String url, {
+    Map<String, String>? headers,
+    dynamic body,
+  }) async {
     log(response.statusCode.toString());
     log(response.body.toString());
 
@@ -210,11 +351,16 @@ class HttpService {
               : jsonDecode(response.body)['message'].toString(),
         );
       case 401:
-        throw UnauthorisedException(
-          jsonDecode(response.body)['message'] == null
-              ? response.body.toString()
-              : jsonDecode(response.body)['message'].toString(),
-        );
+        // Token expired - try to refresh from Firebase
+        log('🔐 401 Unauthorized - Attempting token refresh...');
+        final tokenRefreshed = await _refreshFirebaseToken();
+
+        if (tokenRefreshed) {
+          log('🔄 Token refreshed - exception will trigger automatic retry...');
+          throw UnauthorisedException(
+            'Token refreshed. Please retry your request.',
+          );
+        }
 
       case 408:
         throw TimeoutException(

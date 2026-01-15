@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
 import 'package:mindfulminis/features/yoga/models/yoga_model.dart';
@@ -44,7 +46,7 @@ class YogaData {
       }
       throw Exception('Failed to fetch yoga content');
     } catch (e) {
-      print('Error fetching yoga content: $e');
+      log('Error fetching yoga content: $e');
       rethrow;
     }
   }

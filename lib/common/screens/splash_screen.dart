@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mindfulminis/features/onboarding/screens/onboard_screen.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../injection/injection.dart';
 
@@ -22,7 +24,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
+   if(FirebaseAuth.instance.currentUser != null){
+     var token = FirebaseAuth.instance.currentUser!.getIdToken();
+     SharedPreferences prefs = sl<SharedPreferences>();
+     prefs.setString('token', token.toString());
+      return;
+    }
     Timer(const Duration(seconds: 2), () {
       sl<GoRouter>().pushReplacementNamed(OnboardScreen.routeName);
     });
