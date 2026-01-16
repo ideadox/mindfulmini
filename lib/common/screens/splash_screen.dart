@@ -24,12 +24,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-   if(FirebaseAuth.instance.currentUser != null){
-     var token = FirebaseAuth.instance.currentUser!.getIdToken();
-     SharedPreferences prefs = sl<SharedPreferences>();
-     prefs.setString('token', token.toString());
-      return;
-    }
+  //  if(FirebaseAuth.instance.currentUser != null){
+  //    var token = FirebaseAuth.instance.currentUser!.getIdToken();
+  //    SharedPreferences prefs = sl<SharedPreferences>();
+  //    prefs.setString('token', token.toString());
+  //     return;
+  //   }
     Timer(const Duration(seconds: 2), () {
       sl<GoRouter>().pushReplacementNamed(OnboardScreen.routeName);
     });

@@ -46,4 +46,5 @@ class ApiConstants {
   static String getMeditationUrl = '$baseUrl/cms/meditation';
   // /routines/goals?routineId=6912fd515fcf7118e9c04553&date=2025-11-11
   // /activities/gratitude/month?profileId=690dcfdc78f23500d69992bd&year=2025&month=11
+  static String getStoriesUrl = '$baseUrl/cms/stories';
 }

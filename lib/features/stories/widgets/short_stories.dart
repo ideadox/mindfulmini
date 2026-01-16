@@ -1,87 +1,57 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:mindfulminis/common/models/cms_model.dart';
-import 'package:mindfulminis/core/app_text_theme.dart';
+import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/features/stories/proviers/sroties_provider.dart';
-import 'package:mindfulminis/gen/assets.gen.dart';
+import 'package:mindfulminis/injection/injection.dart';
 import 'package:provider/provider.dart';
 
-import '../../../common/widgets/time_widget.dart';
-import '../../../common/widgets/views_widget.dart';
-import '../../../core/api_constants.dart';
-import '../../../injection/injection.dart';
-import '../../play visuals/screen/play_text.dart';
-import '../../play visuals/screen/play_visuals.dart';
+import '../../play visuals/screen/play_visuals_copy.dart';
 
 class ShortStories extends StatelessWidget {
   const ShortStories({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final stories = context.read<SrotiesProvider>();
-    return PagingListener(
-      controller: stories.storiesController,
-      builder: (context, state, fetchNextPage) {
+    return Consumer<SrotiesProvider>(
+      builder: (context, storiesProvider, _) {
+        if (storiesProvider.storiesSessions.isEmpty) {
+          return const SliverToBoxAdapter(child: SizedBox.shrink());
+        }
+
         return SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          sliver: PagedSliverGrid<int, CmsModel>(
-            showNewPageProgressIndicatorAsGridChild: false,
-            showNewPageErrorIndicatorAsGridChild: false,
-            showNoMoreItemsIndicatorAsGridChild: false,
-            state: state,
-            fetchNextPage: fetchNextPage,
+          sliver: SliverGrid(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               childAspectRatio: 100 / 140,
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
               crossAxisCount: 2,
             ),
-            builderDelegate: PagedChildBuilderDelegate<CmsModel>(
-              animateTransitions: true,
-              itemBuilder:
-                  (context, item, index) => InkWell(
-                    onTap: () {
-                      sl<GoRouter>().pushNamed(
-                        PlayVisuals.routeName,
-
-                        pathParameters: {
-                          'collection': 'stories',
-                          'id': item.id,
-                        },
-                      );
-                    },
-                    child: Stack(
-                      children: [
-                        Container(
-                          height: 268,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.fill,
-                              image: CachedNetworkImageProvider(
-                                Uri.encodeFull(
-                                  '${ApiConstants.mediaBaseUrl}/${item.media?.filename}',
-                                ),
-                              ),
-                            ),
-                          ),
+            delegate: SliverChildBuilderDelegate((context, index) {
+              final story = storiesProvider.storiesSessions[index];
+              return InkWell(
+                onTap: () {
+                  sl<GoRouter>().pushNamed(
+                    PlayVisualsCopy.routeName,
+                    extra: story,
+                  );
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: CachedNetworkImageProvider(
+                        Uri.encodeFull(
+                          '${ApiConstants.mediaBaseUrl}${story.media?['filename'] ?? ''}',
                         ),
-                        Positioned(
-                          bottom: 10,
-                          right: 10,
-                          child: TimeWidget(totalTime: 5),
-                        ),
-
-                        Positioned(
-                          top: 10,
-                          right: 10,
-                          child: ViewsWidget(totalViews: 458),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-            ),
+                ),
+              );
+            }, childCount: storiesProvider.storiesSessions.length),
           ),
         );
       },

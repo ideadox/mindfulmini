@@ -14,6 +14,8 @@ import '../features/routine/routine_data/routine_data.dart';
 import '../features/routine/providers/activities_provider.dart';
 import '../features/meditation/data/meditation_data.dart';
 import '../features/meditation/providers/meditation_provider.dart';
+import '../features/stories/data/stories_data.dart';
+import '../features/stories/proviers/sroties_provider.dart';
 import '../features/yoga/data/yoga_data.dart';
 import '../features/yoga/providers/yoga_provider.dart';
 import '../services/image_picker_helper.dart';
@@ -51,11 +53,15 @@ Future<void> setupInjection() async {
   sl.registerLazySingleton<MeditationData>(
     () => MeditationData(httpService: sl()),
   );
+  sl.registerLazySingleton<StoriesData>(() => StoriesData(httpService: sl()));
 
   //providers
   sl.registerLazySingleton<ActivitiesProvider>(() => ActivitiesProvider());
   sl.registerLazySingleton<YogaProvider>(() => YogaProvider(yogaData: sl()));
   sl.registerLazySingleton<MeditationProvider>(
     () => MeditationProvider(meditationData: sl()),
+  );
+  sl.registerLazySingleton<SrotiesProvider>(
+    () => SrotiesProvider(storiesData: sl()),
   );
 }

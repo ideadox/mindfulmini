@@ -4,26 +4,39 @@ import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/stories/proviers/sroties_provider.dart';
 import 'package:mindfulminis/features/stories/widgets/short_stories.dart';
-import 'package:mindfulminis/features/stories/widgets/stories_categories.dart';
-import 'package:mindfulminis/features/stories/widgets/suggestion_widget.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
+import 'package:mindfulminis/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 import '../../mini_audio_player/screens/minimize_player.dart';
 
-class StoriesScreen extends StatelessWidget {
+class StoriesScreen extends StatefulWidget {
   static String routeName = 'stories-main';
   static String routePath = '/stories-main';
 
   const StoriesScreen({super.key});
 
   @override
+  State<StoriesScreen> createState() => _StoriesScreenState();
+}
+
+class _StoriesScreenState extends State<StoriesScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Fetch stories when screen loads
+    Future.microtask(() {
+      sl<SrotiesProvider>().fetchStoriesSessions();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => SrotiesProvider(),
+    return ChangeNotifierProvider<SrotiesProvider>.value(
+      value: sl<SrotiesProvider>(),
       child: Scaffold(
         body: Consumer<SrotiesProvider>(
-          builder: (context, p, _) {
+          builder: (context, storiesProvider, _) {
             return Stack(
               children: [
                 CustomScrollView(
@@ -183,10 +196,10 @@ class StoriesScreen extends StatelessWidget {
                 //     ],
                 //   ),
                 // ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: MiniAudioPlayer(),
-                ),
+                // Align(
+                //   alignment: Alignment.bottomCenter,
+                //   child: MiniAudioPlayer(),
+                // ),
               ],
             );
           },
