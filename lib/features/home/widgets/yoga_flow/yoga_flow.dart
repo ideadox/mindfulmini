@@ -1,14 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
-import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../common/models/cms_model.dart';
-import '../../../../common/widgets/views_widget.dart';
+// import '../../../../common/widgets/views_widget.dart';
 import '../../../../core/api_constants.dart';
 import '../../providers/home_provider.dart';
 
@@ -60,6 +58,24 @@ class YogaFlowWidget extends StatelessWidget {
                 builderDelegate: PagedChildBuilderDelegate(
                   itemBuilder: (context, item, index) {
                     final story = item;
+                    if (story.media?.filename == null) {
+                      return Container(
+                        width: 177,
+                        height: 268,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.grey.shade200,
+                        ),
+                        child: Icon(
+                          Icons.image_not_supported,
+                          color: Colors.grey.shade400,
+                        ),
+                      );
+                    }
+
+                    final imageUrl =
+                        '${ApiConstants.mediaBaseUrl}${story.media!.filename}';
+
                     return Stack(
                       children: [
                         Container(
@@ -68,20 +84,40 @@ class YogaFlowWidget extends StatelessWidget {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                           ),
-
-                          child: CachedNetworkImage(
-                            imageUrl: Uri.encodeFull(
-                              '${ApiConstants.mediaBaseUrl}/${story.media?.filename}',
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: CachedNetworkImage(
+                              imageUrl: imageUrl,
+                              fit: BoxFit.cover,
+                              placeholder:
+                                  (context, url) => Container(
+                                    color: Colors.grey.shade200,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                              Colors.grey.shade400,
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                              errorWidget:
+                                  (context, url, error) => Container(
+                                    color: Colors.grey.shade200,
+                                    child: Icon(
+                                      Icons.broken_image,
+                                      color: Colors.grey.shade400,
+                                    ),
+                                  ),
                             ),
-
-                            errorListener: (value) {},
                           ),
                         ),
-                        Positioned(
-                          right: 8,
-                          top: 8,
-                          child: ViewsWidget(totalViews: story.viewCount),
-                        ),
+                        // Positioned(
+                        //   right: 8,
+                        //   top: 8,
+                        //   child: ViewsWidget(totalViews: story.viewCount),
+                        // ),
                       ],
                     );
                   },

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
+import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/home/providers/home_provider.dart';
 import 'package:mindfulminis/features/home/widgets/add_feeling/add_feeling_widget.dart';
 import 'package:mindfulminis/features/home/widgets/breathing/breathing.dart';
@@ -12,6 +14,7 @@ import 'package:mindfulminis/features/home/widgets/stories/stories.dart';
 import 'package:mindfulminis/features/home/widgets/yoga_flow/yoga_flow.dart';
 import 'package:mindfulminis/features/notifications/screens/notification_screen.dart';
 import 'package:mindfulminis/features/profile/providers/profile_provider.dart';
+import 'package:mindfulminis/features/routine/screens/create_routine_screen.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
 import 'package:provider/provider.dart';
@@ -103,11 +106,43 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         Space.h12,
-                        // CreateRoutineButton(),
-                        Consumer<ActiveRoutineProvider>(
-                          builder: (context, p, _) {
+                        Consumer2<ActiveRoutineProvider, ProfileProvider>(
+                          builder: (context, p, pp, _) {
                             if (p.routines.isEmpty) {
-                              return SizedBox.shrink();
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 16),
+                                child: SizedBox(
+                                  width: 170,
+                                  height: 48,
+                                  child: GradientButton(
+                                    onPressed: () async {
+                                      await sl<GoRouter>().pushNamed(
+                                        CreateRoutineScreen.routeName,
+                                      );
+                                      if (context.mounted &&
+                                          pp.userProfile != null) {
+                                        context
+                                            .read<ActiveRoutineProvider>()
+                                            .getRoutines(
+                                              pp.userProfile!.id,
+                                              notify: false,
+                                            );
+                                      }
+                                    },
+                                    child: Center(
+                                      child: Text(
+                                        'Create Routine',
+                                        style: AppTextTheme.mainButtonTextStyle(
+                                          context,
+                                        ).titleLarge?.copyWith(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
                             }
                             return MyroutineSlider();
                           },
