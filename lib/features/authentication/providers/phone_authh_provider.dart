@@ -6,9 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/features/authentication/screens/verification_complete_dailog.dart';
+import 'package:mindfulminis/features/onbaord/screens/kid_name.dart';
+import 'package:mindfulminis/features/tab_view/screens/tab_view.dart';
 import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/services/exceptions.dart';
 
 import '../../../services/shared_prefs.dart';
+import '../../../services/storage/token_storage.dart';
 import '../auth_data/auth_data.dart';
 import '../screens/phone_verification.dart';
 
@@ -17,6 +21,7 @@ class PhoneAuthhProvider with ChangeNotifier {
   final navigationService = sl<GoRouter>();
   final AuthData _authData = sl<AuthData>();
   final SharedPrefs _sharedPrefs = sl<SharedPrefs>();
+  final TokenStorage _tokenStorage = sl<TokenStorage>();
 
   TextEditingController phoneNumerController = TextEditingController();
   String? countryCode = '+91';
@@ -48,20 +53,117 @@ class PhoneAuthhProvider with ChangeNotifier {
         // autoRetrievedSmsCodeForTesting: '123456',
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
-          final smsCode = credential.smsCode;
-          if (smsCode != null) {
-            fillOtpFields(smsCode);
-          }
-          final userCredential = await firebaseAuth.signInWithCredential(
-            credential,
-          );
-          showVerificationDailog();
-          if (userCredential.user != null) {
-            await _sharedPrefs.setUserId(userCredential.user!.uid);
-            if (userCredential.additionalUserInfo!.isNewUser) {}
-          } else {
-            error =
-                'Something went wrong, Please restart verification process.';
+          try {
+            final smsCode = credential.smsCode;
+            if (smsCode != null) {
+              fillOtpFields(smsCode);
+            }
+            final userCredential = await firebaseAuth.signInWithCredential(
+              credential,
+            );
+
+            if (userCredential.user != null) {
+              final firebaseUser = userCredential.user!;
+              final isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
+
+              // Get Firebase token
+              final token = await firebaseUser.getIdToken(true);
+              if (token == null || token.isEmpty) {
+                error = 'Failed to get authentication token. Please try again.';
+                notifyListeners();
+                return;
+              }
+
+              if (isNewUser) {
+                // New user: Create backend user
+                log('📱 New phone user (auto-verified), creating backend user...');
+                try {
+                  // Use phone number as placeholder name - user will update during onboarding
+                  final phoneNumber = firebaseUser.phoneNumber ?? 'User';
+                  final userId = await _authData.createUser({
+                    "firebaseUid": firebaseUser.uid,
+                    "fullname": phoneNumber, // Placeholder - will be updated during onboarding
+                  });
+
+                  await _sharedPrefs.setUserId(userId);
+                  await _tokenStorage.saveAccessToken(token);
+                  log('✅ New phone user created successfully (auto-verified)');
+
+                  // Show verification dialog and navigate
+                  showVerificationDailog();
+                } on InvalidInputException catch (e) {
+                  await _rollbackFirebaseUser(firebaseUser);
+                  error = e.message.isNotEmpty ? e.message : 'Failed to create account. Please try again.';
+                  log('❌ Create user failed (auto-verified): ${e.message}');
+                  notifyListeners();
+                } on BadRequestException catch (e) {
+                  await _rollbackFirebaseUser(firebaseUser);
+                  error = e.message.isNotEmpty ? e.message : 'Invalid request. Please try again.';
+                  log('❌ Create user failed (auto-verified): ${e.message}');
+                  notifyListeners();
+                } on UnauthorisedException catch (e) {
+                  await _rollbackFirebaseUser(firebaseUser);
+                  error = e.message.isNotEmpty ? e.message : 'Authentication failed. Please try again.';
+                  log('❌ Create user failed (auto-verified): ${e.message}');
+                  notifyListeners();
+                } on FetchDataException catch (e) {
+                  await _rollbackFirebaseUser(firebaseUser);
+                  error = e.message.isNotEmpty ? e.message : 'Server error. Please try again later.';
+                  log('❌ Create user failed (auto-verified): ${e.message}');
+                  notifyListeners();
+                } on TimeoutException catch (e) {
+                  await _rollbackFirebaseUser(firebaseUser);
+                  error = e.message.isNotEmpty ? e.message : 'Request timed out. Please try again.';
+                  log('❌ Create user failed (auto-verified): ${e.message}');
+                  notifyListeners();
+                } catch (e) {
+                  await _rollbackFirebaseUser(firebaseUser);
+                  error = 'Failed to create account. Please try again.';
+                  log('❌ Create user failed (auto-verified): $e');
+                  notifyListeners();
+                }
+              } else {
+                // Existing user: Ensure backend user exists
+                log('📱 Existing phone user (auto-verified), ensuring backend user exists...');
+                await _tokenStorage.saveAccessToken(token);
+                
+                // Try to create backend user if it doesn't exist
+                try {
+                  // Use phone number as placeholder name - user will update during onboarding
+                  final phoneNumber = firebaseUser.phoneNumber ?? 'User';
+                  final userId = await _authData.createUser({
+                    "firebaseUid": firebaseUser.uid,
+                    "fullname": phoneNumber, // Placeholder - will be updated during onboarding
+                  });
+                  await _sharedPrefs.setUserId(userId);
+                  log('✅ Backend user created/verified for existing phone user (auto-verified)');
+                } on BadRequestException catch (e) {
+                  // User might already exist (e.g., duplicate firebaseUid) - that's okay
+                  log('ℹ️ Backend user may already exist (auto-verified): ${e.message}');
+                  // Continue - profile fetch will handle getting the userId
+                } on UnauthorisedException catch (e) {
+                  // Auth error - but we just got a valid token, so this might be a backend issue
+                  // Continue anyway - let profile fetch handle it
+                  log('⚠️ Backend auth error during user creation (auto-verified): ${e.message}');
+                } catch (e) {
+                  // Any other error - log but continue
+                  log('⚠️ Could not verify/create backend user (auto-verified): $e');
+                  // Continue - profile fetch will determine if user exists
+                }
+
+                log('✅ Existing phone user signed in successfully (auto-verified)');
+
+                // Navigate directly to home for existing users
+                navigationService.goNamed(TabView.routeName);
+              }
+            } else {
+              error = 'Something went wrong, Please restart verification process.';
+              notifyListeners();
+            }
+          } catch (e) {
+            log('❌ Verification completed error: $e');
+            error = 'Something went wrong. Please try again.';
+            notifyListeners();
           }
         },
         verificationFailed: (FirebaseAuthException e) {
@@ -85,8 +187,6 @@ class PhoneAuthhProvider with ChangeNotifier {
   }
 
   Future<void> onPhoneAuthVerificationCodeSubmit() async {
-    // showVerificationDailog();
-    // return;
     resetError();
     if (code == null) {
       return;
@@ -101,6 +201,9 @@ class PhoneAuthhProvider with ChangeNotifier {
 
     SmartDialog.showLoading();
 
+    User? firebaseUser;
+    bool isNewUser = false;
+
     try {
       final PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: verificationId!,
@@ -109,34 +212,135 @@ class PhoneAuthhProvider with ChangeNotifier {
       final userCredential = await firebaseAuth.signInWithCredential(
         credential,
       );
+
       if (userCredential.user != null) {
-        // showVerificationDailog();
+        firebaseUser = userCredential.user;
+        isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
 
-        final userId = await _authData.createUser({
-          "firebaseUid": userCredential.user?.uid,
-        });
+        // Step 1: Get Firebase token
+        final token = await firebaseUser!.getIdToken(true);
+        if (token == null || token.isEmpty) {
+          throw Exception('Failed to get authentication token from Firebase');
+        }
 
-        await _sharedPrefs.setUserId(userId);
-        // navigateToHome();
+        // Step 2: Handle new vs existing users
+        if (isNewUser) {
+          // New user: Create backend user
+          log('📱 New phone user detected, creating backend user...');
+          try {
+            // Use phone number as placeholder name - user will update during onboarding
+            final phoneNumber = firebaseUser.phoneNumber ?? 'User';
+            final userId = await _authData.createUser({
+              "firebaseUid": firebaseUser.uid,
+              "fullname": phoneNumber, // Placeholder - will be updated during onboarding
+            });
+
+            // Save user data and token
+            await _sharedPrefs.setUserId(userId);
+            await _tokenStorage.saveAccessToken(token);
+            log('✅ New phone user created successfully');
+
+            // Navigate to onboarding
+            SmartDialog.dismiss();
+            navigationService.goNamed(KidName.routeName);
+          } on InvalidInputException catch (e) {
+            await _rollbackFirebaseUser(firebaseUser);
+            error = e.message.isNotEmpty ? e.message : 'Failed to create account. Please try again.';
+            log('❌ Create user failed: ${e.message}');
+          } on BadRequestException catch (e) {
+            await _rollbackFirebaseUser(firebaseUser);
+            error = e.message.isNotEmpty ? e.message : 'Invalid request. Please try again.';
+            log('❌ Create user failed: ${e.message}');
+          } on UnauthorisedException catch (e) {
+            await _rollbackFirebaseUser(firebaseUser);
+            error = e.message.isNotEmpty ? e.message : 'Authentication failed. Please try again.';
+            log('❌ Create user failed: ${e.message}');
+          } on FetchDataException catch (e) {
+            await _rollbackFirebaseUser(firebaseUser);
+            error = e.message.isNotEmpty ? e.message : 'Server error. Please try again later.';
+            log('❌ Create user failed: ${e.message}');
+          } on TimeoutException catch (e) {
+            await _rollbackFirebaseUser(firebaseUser);
+            error = e.message.isNotEmpty ? e.message : 'Request timed out. Please try again.';
+            log('❌ Create user failed: ${e.message}');
+          } catch (e) {
+            await _rollbackFirebaseUser(firebaseUser);
+            error = 'Failed to create account. Please try again.';
+            log('❌ Create user failed: $e');
+          }
+        } else {
+          // Existing user: Ensure backend user exists
+          log('📱 Existing phone user detected, ensuring backend user exists...');
+          await _tokenStorage.saveAccessToken(token);
+          
+          // Try to create backend user if it doesn't exist
+          // This is safe to call even if user already exists - backend should handle it gracefully
+          try {
+            // Use phone number as placeholder name - user will update during onboarding
+            final phoneNumber = firebaseUser.phoneNumber ?? 'User';
+            final userId = await _authData.createUser({
+              "firebaseUid": firebaseUser.uid,
+              "fullname": phoneNumber, // Placeholder - will be updated during onboarding
+            });
+            await _sharedPrefs.setUserId(userId);
+            log('✅ Backend user created/verified for existing phone user');
+          } on BadRequestException catch (e) {
+            // User might already exist (e.g., duplicate firebaseUid) - that's okay
+            // The backend should return the existing user or handle it gracefully
+            log('ℹ️ Backend user may already exist: ${e.message}');
+            // Continue - profile fetch will handle getting the userId
+          } on UnauthorisedException catch (e) {
+            // Auth error - but we just got a valid token, so this might be a backend issue
+            // Continue anyway - let profile fetch handle it
+            log('⚠️ Backend auth error during user creation: ${e.message}');
+          } catch (e) {
+            // Any other error - log but continue
+            // User might already exist, or there might be a temporary backend issue
+            log('⚠️ Could not verify/create backend user: $e');
+            // Continue - profile fetch will determine if user exists
+          }
+
+          log('✅ Existing phone user signed in successfully');
+
+          // Navigate to home
+          SmartDialog.dismiss();
+          navigationService.goNamed(TabView.routeName);
+        }
       } else {
         error = 'Something went wrong, Please restart verification process.';
       }
     } on FirebaseAuthException catch (e) {
-      log(e.toString());
+      log('❌ Firebase auth error: ${e.toString()}');
 
       if (e.code == 'invalid-verification-code') {
         error = 'Incorrect code. Please recheck and enter the correct OTP.';
-        return;
+      } else {
+        error = e.message ?? 'Something went wrong';
       }
-      log(e.toString());
-      error = e.message ?? '';
     } catch (e) {
-      log(e.toString());
-
-      error = 'Something went wrong';
+      log('❌ Phone auth error: $e');
+      error = 'Something went wrong. Please try again.';
     } finally {
       SmartDialog.dismiss();
       notifyListeners();
+    }
+  }
+
+  /// Rollback Firebase user creation if backend operations fail
+  Future<void> _rollbackFirebaseUser(User? user) async {
+    if (user != null) {
+      try {
+        await user.delete();
+        log('✅ Firebase user rolled back successfully');
+      } catch (e) {
+        log('❌ Failed to rollback Firebase user: $e');
+        // If deletion fails, try to sign out at least
+        try {
+          await firebaseAuth.signOut();
+        } catch (signOutError) {
+          log('❌ Failed to sign out after rollback: $signOutError');
+        }
+      }
     }
   }
 

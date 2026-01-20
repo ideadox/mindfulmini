@@ -11,9 +11,15 @@ class RoutineDecider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final profileId = context.read<ProfileProvider>().userProfile.id;
+    return Consumer<ProfileProvider>(
+      builder: (context, profileProvider, _) {
+        if (profileProvider.loading || profileProvider.userProfile == null) {
+          return Center(child: CircularProgressIndicator());
+        }
 
-    return ChangeNotifierProvider(
+        final profileId = profileProvider.userProfile!.id;
+
+        return ChangeNotifierProvider(
       create: (context) => RoutineProvider(profileId),
 
       builder: (context, child) {
@@ -31,6 +37,8 @@ class RoutineDecider extends StatelessWidget {
           return RoutineScreen();
         },
       ),
+    );
+      },
     );
   }
 }

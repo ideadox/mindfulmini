@@ -1,5 +1,5 @@
 class ApiConstants {
-  static String baseUrl = 'https://node.mindfulminis.in/api/v1/';
+  static String baseUrl = 'https://node.mindfulminis.in/api/v1';
   // static String mediaBaseUrl =
   // 'https://minfulminis.s3.eu-north-1.amazonaws.com/payloadcms';
 
@@ -37,7 +37,7 @@ class ApiConstants {
 
   static String cmsByIdUrl = '$baseUrl/cms/content';
   static String getGoalsUrl = '$baseUrl/routines/goals';
-  static String getMonthlyGratitudeUrl = '$baseUrl//activities/gratitude/month';
+  static String getMonthlyGratitudeUrl = '$baseUrl/activities/gratitude/month';
 
   // yoga
   static String getYogaUrl = '$baseUrl/cms/yoga';

@@ -59,8 +59,8 @@ class RetryAndRefreshClient extends http.BaseClient {
 }
 
 class HttpService {
-  bool _isTokenRefreshing = false;
-  final _tokenRefreshCompleter = Completer<String?>();
+  int _tokenRefreshAttempts = 0;
+  static const int _maxTokenRefreshAttempts = 2; // Max 2 refresh attempts per request
 
   final client = RetryAndRefreshClient(
     getAccessToken: () async {
@@ -106,9 +106,27 @@ class HttpService {
     }
   }
 
+  /// Handle persistent 401 errors - likely means user doesn't exist in backend
+  /// Sign out and clear auth state
+  Future<void> _handlePersistent401() async {
+    try {
+      log('🔓 Signing out user due to persistent authentication failure...');
+      await FirebaseAuth.instance.signOut();
+      await sl<TokenStorage>().clear();
+      log('✅ Auth state cleared');
+    } catch (e) {
+      log('❌ Error clearing auth state: $e');
+    }
+  }
+
   final Duration _timeOutDuration = Duration(seconds: 15);
 
   Future<dynamic> get(String url, {Map<String, String>? headers}) async {
+    _tokenRefreshAttempts = 0; // Reset counter for new request
+    return await _getWithRetry(url, headers: headers);
+  }
+
+  Future<dynamic> _getWithRetry(String url, {Map<String, String>? headers}) async {
     try {
       final response = await retryRequest(
         () => client
@@ -118,14 +136,18 @@ class HttpService {
       return await _returnResponse(response, 'GET', url, headers: headers);
     } on UnauthorisedException catch (e) {
       if (e.toString().contains('Token refreshed')) {
+        // Counter was already incremented in _returnResponse
+        // Check if we've exceeded the limit (counter is now > max)
+        if (_tokenRefreshAttempts > _maxTokenRefreshAttempts) {
+          log('❌ Max token refresh attempts reached ($_tokenRefreshAttempts > $_maxTokenRefreshAttempts). User may not exist in backend. Signing out...');
+          await _handlePersistent401();
+          throw UnauthorisedException(
+            'Authentication failed. Please log in again.',
+          );
+        }
         // Retry the request after token refresh
-        log('🔄 Retrying GET request after token refresh...');
-        final response = await retryRequest(
-          () => client
-              .get(Uri.parse(url), headers: headers)
-              .timeout(_timeOutDuration),
-        );
-        return await _returnResponse(response, 'GET', url, headers: headers);
+        log('🔄 Retrying GET request after token refresh (attempt $_tokenRefreshAttempts/$_maxTokenRefreshAttempts)...');
+        return await _getWithRetry(url, headers: headers);
       }
       rethrow;
     }
@@ -136,6 +158,7 @@ class HttpService {
     Map<String, String>? headers,
     dynamic body,
   }) async {
+    _tokenRefreshAttempts = 0;
     try {
       final response = await retryRequest(
         () => client
@@ -151,19 +174,28 @@ class HttpService {
       );
     } on UnauthorisedException catch (e) {
       if (e.toString().contains('Token refreshed')) {
-        log('🔄 Retrying PATCH request after token refresh...');
-        final response = await retryRequest(
-          () => client
-              .patch(Uri.parse(url), headers: headers, body: body)
-              .timeout(_timeOutDuration),
-        );
-        return await _returnResponse(
-          response,
-          'PATCH',
-          url,
-          headers: headers,
-          body: body,
-        );
+        _tokenRefreshAttempts++;
+        if (_tokenRefreshAttempts <= _maxTokenRefreshAttempts) {
+          log('🔄 Retrying PATCH request after token refresh (attempt $_tokenRefreshAttempts/$_maxTokenRefreshAttempts)...');
+          final response = await retryRequest(
+            () => client
+                .patch(Uri.parse(url), headers: headers, body: body)
+                .timeout(_timeOutDuration),
+          );
+          return await _returnResponse(
+            response,
+            'PATCH',
+            url,
+            headers: headers,
+            body: body,
+          );
+        } else {
+          log('❌ Max token refresh attempts reached. Signing out...');
+          await _handlePersistent401();
+          throw UnauthorisedException(
+            'Authentication failed. Please log in again.',
+          );
+        }
       }
       rethrow;
     }
@@ -174,6 +206,7 @@ class HttpService {
     Map<String, String>? headers,
     dynamic body,
   }) async {
+    _tokenRefreshAttempts = 0;
     try {
       final response = await retryRequest(
         () => client
@@ -189,19 +222,28 @@ class HttpService {
       );
     } on UnauthorisedException catch (e) {
       if (e.toString().contains('Token refreshed')) {
-        log('🔄 Retrying POST request after token refresh...');
-        final response = await retryRequest(
-          () => client
-              .post(Uri.parse(url), headers: headers, body: body)
-              .timeout(_timeOutDuration),
-        );
-        return await _returnResponse(
-          response,
-          'POST',
-          url,
-          headers: headers,
-          body: body,
-        );
+        _tokenRefreshAttempts++;
+        if (_tokenRefreshAttempts <= _maxTokenRefreshAttempts) {
+          log('🔄 Retrying POST request after token refresh (attempt $_tokenRefreshAttempts/$_maxTokenRefreshAttempts)...');
+          final response = await retryRequest(
+            () => client
+                .post(Uri.parse(url), headers: headers, body: body)
+                .timeout(_timeOutDuration),
+          );
+          return await _returnResponse(
+            response,
+            'POST',
+            url,
+            headers: headers,
+            body: body,
+          );
+        } else {
+          log('❌ Max token refresh attempts reached. Signing out...');
+          await _handlePersistent401();
+          throw UnauthorisedException(
+            'Authentication failed. Please log in again.',
+          );
+        }
       }
       rethrow;
     }
@@ -212,6 +254,7 @@ class HttpService {
     Map<String, String>? headers,
     dynamic body,
   }) async {
+    _tokenRefreshAttempts = 0;
     try {
       final response = await retryRequest(
         () => client
@@ -227,19 +270,28 @@ class HttpService {
       );
     } on UnauthorisedException catch (e) {
       if (e.toString().contains('Token refreshed')) {
-        log('🔄 Retrying PUT request after token refresh...');
-        final response = await retryRequest(
-          () => client
-              .put(Uri.parse(url), headers: headers, body: body)
-              .timeout(_timeOutDuration),
-        );
-        return await _returnResponse(
-          response,
-          'PUT',
-          url,
-          headers: headers,
-          body: body,
-        );
+        _tokenRefreshAttempts++;
+        if (_tokenRefreshAttempts <= _maxTokenRefreshAttempts) {
+          log('🔄 Retrying PUT request after token refresh (attempt $_tokenRefreshAttempts/$_maxTokenRefreshAttempts)...');
+          final response = await retryRequest(
+            () => client
+                .put(Uri.parse(url), headers: headers, body: body)
+                .timeout(_timeOutDuration),
+          );
+          return await _returnResponse(
+            response,
+            'PUT',
+            url,
+            headers: headers,
+            body: body,
+          );
+        } else {
+          log('❌ Max token refresh attempts reached. Signing out...');
+          await _handlePersistent401();
+          throw UnauthorisedException(
+            'Authentication failed. Please log in again.',
+          );
+        }
       }
       rethrow;
     }
@@ -250,6 +302,7 @@ class HttpService {
     Map<String, String>? headers,
     dynamic body,
   }) async {
+    _tokenRefreshAttempts = 0;
     try {
       final response = await retryRequest(
         () => client
@@ -265,19 +318,28 @@ class HttpService {
       );
     } on UnauthorisedException catch (e) {
       if (e.toString().contains('Token refreshed')) {
-        log('🔄 Retrying DELETE request after token refresh...');
-        final response = await retryRequest(
-          () => client
-              .delete(Uri.parse(url), headers: headers, body: body)
-              .timeout(_timeOutDuration),
-        );
-        return await _returnResponse(
-          response,
-          'DELETE',
-          url,
-          headers: headers,
-          body: body,
-        );
+        _tokenRefreshAttempts++;
+        if (_tokenRefreshAttempts <= _maxTokenRefreshAttempts) {
+          log('🔄 Retrying DELETE request after token refresh (attempt $_tokenRefreshAttempts/$_maxTokenRefreshAttempts)...');
+          final response = await retryRequest(
+            () => client
+                .delete(Uri.parse(url), headers: headers, body: body)
+                .timeout(_timeOutDuration),
+          );
+          return await _returnResponse(
+            response,
+            'DELETE',
+            url,
+            headers: headers,
+            body: body,
+          );
+        } else {
+          log('❌ Max token refresh attempts reached. Signing out...');
+          await _handlePersistent401();
+          throw UnauthorisedException(
+            'Authentication failed. Please log in again.',
+          );
+        }
       }
       rethrow;
     }
@@ -353,12 +415,31 @@ class HttpService {
       case 401:
         // Token expired - try to refresh from Firebase
         log('🔐 401 Unauthorized - Attempting token refresh...');
+        
+        // Check if we've already tried refreshing too many times (BEFORE incrementing)
+        if (_tokenRefreshAttempts >= _maxTokenRefreshAttempts) {
+          log('❌ Max token refresh attempts reached ($_tokenRefreshAttempts >= $_maxTokenRefreshAttempts). User may not exist in backend.');
+          await _handlePersistent401();
+          throw UnauthorisedException(
+            'Authentication failed. Please log in again.',
+          );
+        }
+        
+        // Increment counter AFTER checking limit
+        _tokenRefreshAttempts++;
         final tokenRefreshed = await _refreshFirebaseToken();
 
         if (tokenRefreshed) {
-          log('🔄 Token refreshed - exception will trigger automatic retry...');
+          log('🔄 Token refreshed (attempt $_tokenRefreshAttempts/$_maxTokenRefreshAttempts) - exception will trigger automatic retry...');
           throw UnauthorisedException(
             'Token refreshed. Please retry your request.',
+          );
+        } else {
+          // Token refresh failed - sign out user
+          log('❌ Token refresh failed. Signing out user...');
+          await _handlePersistent401();
+          throw UnauthorisedException(
+            'Authentication failed. Please log in again.',
           );
         }
 

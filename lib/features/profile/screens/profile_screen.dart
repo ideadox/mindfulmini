@@ -47,7 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             child: Builder(
               builder: (context) {
-                if (provider.loading) {
+                if (provider.loading || provider.userProfile == null) {
                   return Center(child: CircularProgressIndicator());
                 }
                 return SingleChildScrollView(
@@ -76,9 +76,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               252,
                             ),
                             backgroundImage:
-                                provider.userProfile.profileImage != null
+                                provider.userProfile!.profileImage != null
                                     ? NetworkImage(
-                                      provider.userProfile.profileImage!,
+                                      provider.userProfile!.profileImage!,
                                     )
                                     : AssetImage(
                                       Assets.profileIcons.noProfilePng.path,
@@ -86,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                         title: Text(
-                          provider.userProfile.fullname,
+                          provider.userProfile!.fullname,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w800,

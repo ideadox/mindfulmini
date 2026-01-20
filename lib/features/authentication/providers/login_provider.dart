@@ -7,17 +7,13 @@ import 'package:mindfulminis/features/tab_view/screens/tab_view.dart';
 import 'package:mindfulminis/services/exceptions.dart';
 
 import '../../../injection/injection.dart';
-import '../../../services/shared_prefs.dart';
 import '../../../services/storage/token_storage.dart';
-import '../auth_data/auth_data.dart';
 
 class LoginProvider with ChangeNotifier {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey();
 
-  final _authData = sl<AuthData>();
-  final SharedPrefs _sharedPrefs = sl<SharedPrefs>();
   final _tokenStorage = sl<TokenStorage>();
 
   bool isVisible = false;
@@ -47,20 +43,30 @@ class LoginProvider with ChangeNotifier {
           );
 
       if (userCredential.user != null) {
-        // final token = await _authData.loginUser({
-        //   "email": emailController.text.trim(),
-        //   "password": passwordController.text.trim(),
-        // });
-        final token = await userCredential.user!.getIdToken(true);
-        log('Login Token: $token');
+        try {
+          final token = await userCredential.user!.getIdToken(true);
+          log('Login Token: $token');
 
-        await _tokenStorage.saveAccessToken(token!);
-        navigateToHome();
+          if (token != null && token.isNotEmpty) {
+            await _tokenStorage.saveAccessToken(token);
+            navigateToHome();
+          } else {
+            error = 'Failed to get authentication token. Please try again.';
+            log('Token is null or empty');
+          }
+        } catch (e) {
+          error = 'Failed to complete login. Please try again.';
+          log('Error getting token: $e');
+        }
+      } else {
+        error = 'Login failed. Please try again.';
       }
     } on FirebaseAuthException catch (e) {
+      log('Firebase auth error: ${e.toString()}');
       error = ResolveError.resolve(e.code);
     } catch (e) {
-      rethrow;
+      error = 'An unexpected error occurred. Please try again.';
+      log('Unexpected error during login: $e');
     } finally {
       isLoading = false;
       notifyListeners();

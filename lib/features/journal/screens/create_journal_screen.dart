@@ -44,9 +44,17 @@ class _CreateJournalScreenState extends State<CreateJournalScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final profileId = context.read<ProfileProvider>().userProfile.id;
+    return Consumer<ProfileProvider>(
+      builder: (context, profileProvider, _) {
+        if (profileProvider.loading || profileProvider.userProfile == null) {
+          return GradientScaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
 
-    return GradientScaffold(
+        final profileId = profileProvider.userProfile!.id;
+
+        return GradientScaffold(
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
@@ -237,6 +245,8 @@ class _CreateJournalScreenState extends State<CreateJournalScreen> {
           ),
         ),
       ),
+    );
+      },
     );
   }
 }

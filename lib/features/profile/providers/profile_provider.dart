@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -15,6 +16,9 @@ import 'package:mindfulminis/injection/injection.dart';
 
 import '../../library/screens/library_screen.dart';
 import '../../privacy/screens/privacy_screen.dart';
+import '../../../services/exceptions.dart';
+import '../../../services/shared_prefs.dart';
+import '../../../services/storage/token_storage.dart';
 import '../models/user_profile.dart';
 import '../profile_data/profile_data.dart';
 import '../screens/edit_profile_screen.dart';
@@ -22,15 +26,20 @@ import '../screens/edit_profile_screen.dart';
 class ProfileProvider with ChangeNotifier {
   final _navigationService = sl<GoRouter>();
   final _profileData = sl<ProfileData>();
+  final _sharedPrefs = sl<SharedPrefs>();
+  final _tokenStorage = sl<TokenStorage>();
 
   final _firebaseAuth = FirebaseAuth.instance;
 
   User? get currentUser => _firebaseAuth.currentUser;
 
-  late String? userId;
-  late UserProfile userProfile;
+  String? userId;
+  UserProfile? userProfile;
   bool loading = false;
   bool updating = false;
+  String? error;
+
+  bool get hasProfile => userProfile != null;
   ProfileProvider() {
     // if (currentUser == null) {
     //   return;
@@ -42,13 +51,25 @@ class ProfileProvider with ChangeNotifier {
   Future<void> getUser({bool notify = true}) async {
     try {
       loading = true;
+      error = null;
       if (notify) {
         notifyListeners();
       }
 
       userProfile = await _profileData.getUser();
+      error = null;
+    } on UnauthorisedException catch (e) {
+      // If authentication fails persistently, user may not exist in backend
+      // Clear auth state and set error
+      error = e.message.isNotEmpty ? e.message : 'Authentication failed. Please log in again.';
+      userProfile = null;
+      log('❌ Profile fetch failed: ${e.message}');
+      // Don't rethrow - let the UI handle the error state
     } catch (e) {
-      rethrow;
+      error = e.toString();
+      userProfile = null;
+      log('❌ Profile fetch error: $e');
+      // Don't rethrow - let the UI handle the error state
     } finally {
       loading = false;
       notifyListeners();
@@ -58,12 +79,14 @@ class ProfileProvider with ChangeNotifier {
   Future<void> updateProfile(UserProfile updatedProfile) async {
     try {
       updating = true;
+      error = null;
       notifyListeners();
       await _profileData.updateProfile(updatedProfile);
       userProfile = await _profileData.getUser();
       SmartDialog.showToast('Profile updated');
       _navigationService.pop();
     } catch (e) {
+      error = e.toString();
       rethrow;
     } finally {
       updating = false;
@@ -72,7 +95,27 @@ class ProfileProvider with ChangeNotifier {
   }
 
   Future<void> logOutUser() async {
-    await FirebaseAuth.instance.signOut();
+    try {
+      // Clear Firebase Auth
+      await FirebaseAuth.instance.signOut();
+      
+      // Clear secure storage (token)
+      await _tokenStorage.clear();
+      
+      // Clear SharedPreferences (userId)
+      await _sharedPrefs.clearUserId();
+      userId = null;
+      
+      // Clear profile state
+      userProfile = null;
+      error = null;
+      
+      notifyListeners();
+    } catch (e) {
+      error = 'Failed to logout: ${e.toString()}';
+      notifyListeners();
+      rethrow;
+    }
   }
 
   void navigateToEditProfile() {

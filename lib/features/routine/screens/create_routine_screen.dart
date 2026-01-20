@@ -102,8 +102,16 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final profileId = context.read<ProfileProvider>().userProfile.id;
-    return GradientScaffold(
+    return Consumer<ProfileProvider>(
+      builder: (context, profileProvider, _) {
+        if (profileProvider.loading || profileProvider.userProfile == null) {
+          return GradientScaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        final profileId = profileProvider.userProfile!.id;
+        return GradientScaffold(
       hasGradient: currentStep != 4,
       body: ChangeNotifierProvider(
         create: (context) => CreateRoutineProvider(profileId),
@@ -283,6 +291,8 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
           },
         ),
       ),
+    );
+      },
     );
   }
 }

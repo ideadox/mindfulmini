@@ -36,9 +36,13 @@ class HomeScreen extends StatelessWidget {
         extendBodyBehindAppBar: true,
         body: Consumer2<ProfileProvider, HomeProvider>(
           builder: (context, pp, hp, _) {
-            if (!pp.loading) {
+            if (pp.loading || pp.userProfile == null) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (!pp.loading && pp.userProfile != null) {
               context.read<ActiveRoutineProvider>().getRoutines(
-                pp.userProfile.id,
+                pp.userProfile!.id,
                 notify: false,
               );
             }

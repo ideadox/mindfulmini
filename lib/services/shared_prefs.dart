@@ -14,4 +14,8 @@ class SharedPrefs {
   String? getUserId() {
     return prefs.getString(userIdKey);
   }
+
+  Future<bool> clearUserId() async {
+    return await prefs.remove(userIdKey);
+  }
 }

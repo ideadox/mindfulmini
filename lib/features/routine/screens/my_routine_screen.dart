@@ -19,8 +19,16 @@ class MyRoutineScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final profileId = context.read<ProfileProvider>().userProfile.id;
-    return ChangeNotifierProvider(
+    return Consumer<ProfileProvider>(
+      builder: (context, profileProvider, _) {
+        if (profileProvider.loading || profileProvider.userProfile == null) {
+          return Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        final profileId = profileProvider.userProfile!.id;
+        return ChangeNotifierProvider(
       create: (context) => RoutineProvider(profileId),
       child: Scaffold(
         body: Column(
@@ -89,6 +97,8 @@ class MyRoutineScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+      },
     );
   }
 }
