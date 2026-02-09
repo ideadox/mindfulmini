@@ -3,7 +3,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
-import 'package:mindfulminis/common/screens/upcoming_activity.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/play%20visuals/models/audolyric.dart';
@@ -107,6 +106,32 @@ class _PlayVisualsState extends State<PlayVisuals>
 
   void _playAnimation() {
     _controller.forward(from: 0.0); // Play from start
+  }
+
+  String _extractDescription(contentDescription) {
+    try {
+      if (contentDescription.root.children.isEmpty) return '';
+      // Get the first paragraph's text content
+      final firstParagraph = contentDescription.root.children.first;
+      if (firstParagraph.children.isEmpty) return '';
+      
+      // Extract text from all children
+      String description = '';
+      for (var child in firstParagraph.children) {
+        if (child.type == 'text' && child.text != null) {
+          // Remove break tags and clean the text
+          String text = child.text!
+              .replaceAll(RegExp(r'<break time="([\d.]+)s"\s*\/>'), '')
+              .trim();
+          if (text.isNotEmpty) {
+            description += text + ' ';
+          }
+        }
+      }
+      return description.trim();
+    } catch (e) {
+      return '';
+    }
   }
 
   @override
@@ -231,16 +256,18 @@ class _PlayVisualsState extends State<PlayVisuals>
                             children: [
                               Text(
                                 textAlign: TextAlign.center,
-                                'Tenali Raman and the Wise Judgment',
+                                p.cms?.title ?? '',
                                 style: const TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              const Text(
+                              Text(
                                 textAlign: TextAlign.center,
-                                "The Mango Tree teaches that true prosperity comes from unity and sharing, showing how cooperation fosters abundance and harmony for all.",
-                                style: TextStyle(color: Colors.black45),
+                                p.cms?.contentDescription.root.children.isNotEmpty == true
+                                    ? _extractDescription(p.cms!.contentDescription)
+                                    : '',
+                                style: const TextStyle(color: Colors.black45),
                               ),
                               Space.h12,
                               Container(

@@ -15,6 +15,7 @@ import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
 
 import '../../library/screens/library_screen.dart';
+import '../../onboarding/screens/onboard_screen.dart';
 import '../../privacy/screens/privacy_screen.dart';
 import '../../../services/exceptions.dart';
 import '../../../services/shared_prefs.dart';
@@ -37,7 +38,10 @@ class ProfileProvider with ChangeNotifier {
   UserProfile? userProfile;
   bool loading = false;
   bool updating = false;
+  bool _isLoggingOut = false; // Flag to prevent multiple logout calls
   String? error;
+
+  bool get isLoggingOut => _isLoggingOut;
 
   bool get hasProfile => userProfile != null;
   ProfileProvider() {
@@ -58,6 +62,13 @@ class ProfileProvider with ChangeNotifier {
 
       userProfile = await _profileData.getUser();
       error = null;
+    } on ProfileNotFoundException catch (e) {
+      // Profile doesn't exist - this is critical data, log out the user
+      log('❌ Profile not found - logging out user: ${e.message}');
+      userProfile = null;
+      error = null;
+      // Log out and navigate to fresh state
+      await _forceLogout();
     } on UnauthorisedException catch (e) {
       // If authentication fails persistently, user may not exist in backend
       // Clear auth state and set error
@@ -95,6 +106,23 @@ class ProfileProvider with ChangeNotifier {
   }
 
   Future<void> logOutUser() async {
+    // Prevent multiple simultaneous logout calls
+    if (_isLoggingOut) {
+      log('⚠️ Logout already in progress, skipping duplicate call');
+      return;
+    }
+    await _forceLogout();
+  }
+
+  /// Internal method to force logout and navigate to fresh state
+  Future<void> _forceLogout() async {
+    // Prevent multiple simultaneous logout calls
+    if (_isLoggingOut) {
+      return;
+    }
+    _isLoggingOut = true;
+    notifyListeners();
+    
     try {
       // Clear Firebase Auth
       await FirebaseAuth.instance.signOut();
@@ -111,10 +139,21 @@ class ProfileProvider with ChangeNotifier {
       error = null;
       
       notifyListeners();
+      
+      // Navigate to onboard screen (fresh state)
+      _navigationService.goNamed(OnboardScreen.routeName);
     } catch (e) {
       error = 'Failed to logout: ${e.toString()}';
+      log('❌ Error during force logout: $e');
+      // Even if logout fails, try to navigate to fresh state
+      try {
+        _navigationService.goNamed('onboard');
+      } catch (navError) {
+        log('❌ Error navigating to onboard: $navError');
+      }
+    } finally {
+      _isLoggingOut = false;
       notifyListeners();
-      rethrow;
     }
   }
 

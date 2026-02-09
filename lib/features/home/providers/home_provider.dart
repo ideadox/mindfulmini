@@ -1,5 +1,6 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:mindfulminis/common/models/cms_model.dart';
 import 'package:mindfulminis/features/home/data/home_data.dart';
 import 'package:mindfulminis/injection/injection.dart';
@@ -7,71 +8,148 @@ import 'package:mindfulminis/injection/injection.dart';
 class HomeProvider with ChangeNotifier {
   final _data = sl<HomeData>();
 
-  bool isLoading = false;
+  // Data lists
+  List<CmsModel> _stories = [];
+  List<CmsModel> _breathing = [];
+  List<CmsModel> _meditation = [];
+  List<CmsModel> _yoga = [];
 
-  List<CmsModel> cmsContent = [];
+  // Getters
+  List<CmsModel> get stories => _stories;
+  List<CmsModel> get breathing => _breathing;
+  List<CmsModel> get meditation => _meditation;
+  List<CmsModel> get yoga => _yoga;
 
-  late PagingController<int, CmsModel> _storiesController;
-  late PagingController<int, CmsModel> _breathingController;
-  late PagingController<int, CmsModel> _meditationController;
-  late PagingController<int, CmsModel> _yogaController;
-  late PagingController<int, CmsModel> _dailyActivityController;
+  // Loading states
+  bool _isLoadingStories = false;
+  bool _isLoadingBreathing = false;
+  bool _isLoadingMeditation = false;
+  bool _isLoadingYoga = false;
 
-  PagingController<int, CmsModel> get storiesController => _storiesController;
-  PagingController<int, CmsModel> get breathingController =>
-      _breathingController;
-  PagingController<int, CmsModel> get meditationController =>
-      _meditationController;
-  PagingController<int, CmsModel> get yogaController => _yogaController;
-  PagingController<int, CmsModel> get dailyActivityController =>
-      _dailyActivityController;
+  bool get isLoadingStories => _isLoadingStories;
+  bool get isLoadingBreathing => _isLoadingBreathing;
+  bool get isLoadingMeditation => _isLoadingMeditation;
+  bool get isLoadingYoga => _isLoadingYoga;
+  
+  // Overall loading state - true if any content is loading
+  bool get isLoading => _isLoadingStories || _isLoadingBreathing || _isLoadingMeditation || _isLoadingYoga;
 
   HomeProvider() {
-    _storiesController = PagingController<int, CmsModel>(
-      getNextPageKey:
-          (state) => state.lastPageIsEmpty ? null : state.nextIntPageKey,
-      fetchPage:
-          (pageKey) async => await _data.getCMSContentByCollection(
-            'stories',
-            page: pageKey,
-            limit: 10,
-            sort: 'createdAt',
-          ),
-    );
-    _breathingController = PagingController<int, CmsModel>(
-      getNextPageKey:
-          (state) => state.lastPageIsEmpty ? null : state.nextIntPageKey,
-      fetchPage:
-          (pageKey) async => await _data.getCMSContentByCollection(
-            'breathings',
-            page: pageKey,
-            limit: 10,
-            sort: 'createdAt',
-          ),
-    );
+    // Load data when provider is created - don't await to avoid blocking
+    loadAllContent();
+  }
 
-    _meditationController = PagingController<int, CmsModel>(
-      getNextPageKey:
-          (state) => state.lastPageIsEmpty ? null : state.nextIntPageKey,
-      fetchPage:
-          (pageKey) async => await _data.getCMSContentByCollection(
-            'meditations',
-            page: pageKey,
-            limit: 10,
-            sort: 'createdAt',
-          ),
-    );
+  Future<void> loadAllContent() async {
+    // Load all content in parallel, but don't block on errors
+    await Future.wait([
+      loadStories(),
+      loadBreathing(),
+      loadMeditation(),
+      loadYoga(),
+    ], eagerError: false);
+  }
 
-    _yogaController = PagingController<int, CmsModel>(
-      getNextPageKey:
-          (state) => state.lastPageIsEmpty ? null : state.nextIntPageKey,
-      fetchPage:
-          (pageKey) async => await _data.getCMSContentByCollection(
-            'yogas',
-            page: pageKey,
-            limit: 10,
-            sort: 'createdAt',
-          ),
-    );
+  Future<void> loadStories() async {
+    try {
+      _isLoadingStories = true;
+      notifyListeners();
+      _stories = await _data.getCMSContentByCollection(
+        'stories',
+        page: 1,
+        limit: 20,
+        sort: 'createdAt',
+      );
+    } catch (e) {
+      log('Error loading stories: $e');
+    } finally {
+      _isLoadingStories = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> loadBreathing() async {
+    try {
+      _isLoadingBreathing = true;
+      notifyListeners();
+      // Try different collection name variations
+      List<String> collectionNames = ['breathings', 'breathing', 'breathingexercises', 'breathing-exercises'];
+      var result = <CmsModel>[];
+      
+      for (var collectionName in collectionNames) {
+        log('Loading breathing from collection: $collectionName');
+        result = await _data.getCMSContentByCollection(
+          collectionName,
+          page: 1,
+          limit: 20,
+          sort: 'createdAt',
+        );
+        if (result.isNotEmpty) {
+          log('Found ${result.length} items with collection name: $collectionName');
+          break;
+        }
+      }
+      
+      log('Loaded ${result.length} breathing items');
+      _breathing = result;
+    } catch (e, stackTrace) {
+      log('Error loading breathing: $e');
+      log('Stack trace: $stackTrace');
+      _breathing = [];
+    } finally {
+      _isLoadingBreathing = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> loadMeditation() async {
+    try {
+      _isLoadingMeditation = true;
+      notifyListeners();
+      // Try plural first (like yogas, stories)
+      log('Loading meditation from collection: meditations');
+      var result = await _data.getCMSContentByCollection(
+        'meditations',
+        page: 1,
+        limit: 20,
+        sort: 'createdAt',
+      );
+      // If empty, try singular (matching getMeditationUrl)
+      if (result.isEmpty) {
+        log('No results with plural, trying singular: meditation');
+        result = await _data.getCMSContentByCollection(
+          'meditation',
+          page: 1,
+          limit: 20,
+          sort: 'createdAt',
+        );
+      }
+      log('Loaded ${result.length} meditation items');
+      _meditation = result;
+    } catch (e, stackTrace) {
+      log('Error loading meditation: $e');
+      log('Stack trace: $stackTrace');
+      _meditation = [];
+    } finally {
+      _isLoadingMeditation = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> loadYoga() async {
+    try {
+      _isLoadingYoga = true;
+      notifyListeners();
+      _yoga = await _data.getCMSContentByCollection(
+        'yogas',
+        page: 1,
+        limit: 20,
+        sort: 'createdAt',
+      );
+    } catch (e) {
+      log('Error loading yoga: $e');
+    } finally {
+      _isLoadingYoga = false;
+      notifyListeners();
+    }
   }
 }

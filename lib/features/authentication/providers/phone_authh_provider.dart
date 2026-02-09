@@ -7,6 +7,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/features/authentication/screens/verification_complete_dailog.dart';
 import 'package:mindfulminis/features/onbaord/screens/kid_name.dart';
+import 'package:mindfulminis/features/profile/profile_data/profile_data.dart';
 import 'package:mindfulminis/features/tab_view/screens/tab_view.dart';
 import 'package:mindfulminis/injection/injection.dart';
 import 'package:mindfulminis/services/exceptions.dart';
@@ -20,6 +21,7 @@ class PhoneAuthhProvider with ChangeNotifier {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final navigationService = sl<GoRouter>();
   final AuthData _authData = sl<AuthData>();
+  final ProfileData _profileData = sl<ProfileData>();
   final SharedPrefs _sharedPrefs = sl<SharedPrefs>();
   final TokenStorage _tokenStorage = sl<TokenStorage>();
 
@@ -78,15 +80,18 @@ class PhoneAuthhProvider with ChangeNotifier {
                 // New user: Create backend user
                 log('📱 New phone user (auto-verified), creating backend user...');
                 try {
+                  // IMPORTANT: Save token BEFORE making API call so HttpService can use it
+                  await _tokenStorage.saveAccessToken(token);
+                  
                   // Use phone number as placeholder name - user will update during onboarding
                   final phoneNumber = firebaseUser.phoneNumber ?? 'User';
                   final userId = await _authData.createUser({
                     "firebaseUid": firebaseUser.uid,
                     "fullname": phoneNumber, // Placeholder - will be updated during onboarding
+                    "phone": firebaseUser.phoneNumber, // Include phone number for backend
                   });
 
                   await _sharedPrefs.setUserId(userId);
-                  await _tokenStorage.saveAccessToken(token);
                   log('✅ New phone user created successfully (auto-verified)');
 
                   // Show verification dialog and navigate
@@ -134,6 +139,7 @@ class PhoneAuthhProvider with ChangeNotifier {
                   final userId = await _authData.createUser({
                     "firebaseUid": firebaseUser.uid,
                     "fullname": phoneNumber, // Placeholder - will be updated during onboarding
+                    "phone": firebaseUser.phoneNumber, // Include phone number for backend
                   });
                   await _sharedPrefs.setUserId(userId);
                   log('✅ Backend user created/verified for existing phone user (auto-verified)');
@@ -153,8 +159,21 @@ class PhoneAuthhProvider with ChangeNotifier {
 
                 log('✅ Existing phone user signed in successfully (auto-verified)');
 
-                // Navigate directly to home for existing users
+                // Check if user has completed onboarding (has a profile)
+                try {
+                  await _profileData.getUser();
+                  log('✅ Profile exists - navigating to home');
                 navigationService.goNamed(TabView.routeName);
+                } on ProfileNotFoundException {
+                  // No profile exists - user needs to complete onboarding
+                  log('📝 No profile found - redirecting to onboarding');
+                  navigationService.goNamed(KidName.routeName);
+                } catch (e) {
+                  // Other error fetching profile - still try to navigate to onboarding
+                  // as it's safer than going to home without a profile
+                  log('⚠️ Error checking profile, redirecting to onboarding: $e');
+                  navigationService.goNamed(KidName.routeName);
+                }
               }
             } else {
               error = 'Something went wrong, Please restart verification process.';
@@ -228,16 +247,19 @@ class PhoneAuthhProvider with ChangeNotifier {
           // New user: Create backend user
           log('📱 New phone user detected, creating backend user...');
           try {
+            // IMPORTANT: Save token BEFORE making API call so HttpService can use it
+            await _tokenStorage.saveAccessToken(token);
+            
             // Use phone number as placeholder name - user will update during onboarding
             final phoneNumber = firebaseUser.phoneNumber ?? 'User';
             final userId = await _authData.createUser({
               "firebaseUid": firebaseUser.uid,
               "fullname": phoneNumber, // Placeholder - will be updated during onboarding
+              "phone": firebaseUser.phoneNumber, // Include phone number for backend
             });
 
-            // Save user data and token
+            // Save user ID after successful creation
             await _sharedPrefs.setUserId(userId);
-            await _tokenStorage.saveAccessToken(token);
             log('✅ New phone user created successfully');
 
             // Navigate to onboarding
@@ -281,6 +303,7 @@ class PhoneAuthhProvider with ChangeNotifier {
             final userId = await _authData.createUser({
               "firebaseUid": firebaseUser.uid,
               "fullname": phoneNumber, // Placeholder - will be updated during onboarding
+              "phone": firebaseUser.phoneNumber, // Include phone number for backend
             });
             await _sharedPrefs.setUserId(userId);
             log('✅ Backend user created/verified for existing phone user');
@@ -302,9 +325,22 @@ class PhoneAuthhProvider with ChangeNotifier {
 
           log('✅ Existing phone user signed in successfully');
 
-          // Navigate to home
+          // Check if user has completed onboarding (has a profile)
           SmartDialog.dismiss();
+          try {
+            await _profileData.getUser();
+            log('✅ Profile exists - navigating to home');
           navigationService.goNamed(TabView.routeName);
+          } on ProfileNotFoundException {
+            // No profile exists - user needs to complete onboarding
+            log('📝 No profile found - redirecting to onboarding');
+            navigationService.goNamed(KidName.routeName);
+          } catch (e) {
+            // Other error fetching profile - still try to navigate to onboarding
+            // as it's safer than going to home without a profile
+            log('⚠️ Error checking profile, redirecting to onboarding: $e');
+            navigationService.goNamed(KidName.routeName);
+          }
         }
       } else {
         error = 'Something went wrong, Please restart verification process.';
@@ -340,6 +376,13 @@ class PhoneAuthhProvider with ChangeNotifier {
         } catch (signOutError) {
           log('❌ Failed to sign out after rollback: $signOutError');
         }
+      }
+      // Clear the token to maintain consistent auth state
+      try {
+        await _tokenStorage.clear();
+        log('✅ Token cleared during rollback');
+      } catch (e) {
+        log('❌ Failed to clear token during rollback: $e');
       }
     }
   }

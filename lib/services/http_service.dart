@@ -36,25 +36,9 @@ class RetryAndRefreshClient extends http.BaseClient {
     }
     log(_accessToken.toString());
 
-    int attempt = 0;
-    while (true) {
-      attempt++;
-
-      final response = await _inner.send(request);
-
-      // Retry on 5xx server errors or network issues
-      if (_shouldRetry(response.statusCode) && attempt < maxRetries) {
-        await Future.delayed(Duration(seconds: 2 * attempt)); // backoff
-        continue;
-      }
-
-      return response;
-    }
-  }
-
-  bool _shouldRetry(int? statusCode) {
-    if (statusCode == null) return true;
-    return statusCode >= 500;
+    // Send the request once - retry logic is handled at HttpService level
+    // Note: HTTP requests can only be sent once after finalization
+    return await _inner.send(request);
   }
 }
 
@@ -167,6 +151,14 @@ class HttpService {
     dynamic body,
   }) async {
     _tokenRefreshAttempts = 0;
+    return await _patchWithRetry(url, headers: headers, body: body);
+  }
+
+  Future<dynamic> _patchWithRetry(
+    String url, {
+    Map<String, String>? headers,
+    dynamic body,
+  }) async {
     try {
       final response = await retryRequest(
         () => client
@@ -182,30 +174,20 @@ class HttpService {
       );
     } on UnauthorisedException catch (e) {
       if (e.toString().contains('Token refreshed')) {
-        _tokenRefreshAttempts++;
-        if (_tokenRefreshAttempts <= _maxTokenRefreshAttempts) {
+        // Counter was already incremented in _returnResponse
+        if (_tokenRefreshAttempts > _maxTokenRefreshAttempts) {
           log(
-            '🔄 Retrying PATCH request after token refresh (attempt $_tokenRefreshAttempts/$_maxTokenRefreshAttempts)...',
+            '❌ Max token refresh attempts reached ($_tokenRefreshAttempts > $_maxTokenRefreshAttempts). Signing out...',
           );
-          final response = await retryRequest(
-            () => client
-                .patch(Uri.parse(url), headers: headers, body: body)
-                .timeout(_timeOutDuration),
-          );
-          return await _returnResponse(
-            response,
-            'PATCH',
-            url,
-            headers: headers,
-            body: body,
-          );
-        } else {
-          log('❌ Max token refresh attempts reached. Signing out...');
           await _handlePersistent401();
           throw UnauthorisedException(
             'Authentication failed. Please log in again.',
           );
         }
+        log(
+          '🔄 Retrying PATCH request after token refresh (attempt $_tokenRefreshAttempts/$_maxTokenRefreshAttempts)...',
+        );
+        return await _patchWithRetry(url, headers: headers, body: body);
       }
       rethrow;
     }
@@ -217,6 +199,14 @@ class HttpService {
     dynamic body,
   }) async {
     _tokenRefreshAttempts = 0;
+    return await _postWithRetry(url, headers: headers, body: body);
+  }
+
+  Future<dynamic> _postWithRetry(
+    String url, {
+    Map<String, String>? headers,
+    dynamic body,
+  }) async {
     try {
       final response = await retryRequest(
         () => client
@@ -232,30 +222,20 @@ class HttpService {
       );
     } on UnauthorisedException catch (e) {
       if (e.toString().contains('Token refreshed')) {
-        _tokenRefreshAttempts++;
-        if (_tokenRefreshAttempts <= _maxTokenRefreshAttempts) {
+        // Counter was already incremented in _returnResponse
+        if (_tokenRefreshAttempts > _maxTokenRefreshAttempts) {
           log(
-            '🔄 Retrying POST request after token refresh (attempt $_tokenRefreshAttempts/$_maxTokenRefreshAttempts)...',
+            '❌ Max token refresh attempts reached ($_tokenRefreshAttempts > $_maxTokenRefreshAttempts). Signing out...',
           );
-          final response = await retryRequest(
-            () => client
-                .post(Uri.parse(url), headers: headers, body: body)
-                .timeout(_timeOutDuration),
-          );
-          return await _returnResponse(
-            response,
-            'POST',
-            url,
-            headers: headers,
-            body: body,
-          );
-        } else {
-          log('❌ Max token refresh attempts reached. Signing out...');
           await _handlePersistent401();
           throw UnauthorisedException(
             'Authentication failed. Please log in again.',
           );
         }
+        log(
+          '🔄 Retrying POST request after token refresh (attempt $_tokenRefreshAttempts/$_maxTokenRefreshAttempts)...',
+        );
+        return await _postWithRetry(url, headers: headers, body: body);
       }
       rethrow;
     }
@@ -267,6 +247,14 @@ class HttpService {
     dynamic body,
   }) async {
     _tokenRefreshAttempts = 0;
+    return await _putWithRetry(url, headers: headers, body: body);
+  }
+
+  Future<dynamic> _putWithRetry(
+    String url, {
+    Map<String, String>? headers,
+    dynamic body,
+  }) async {
     try {
       final response = await retryRequest(
         () => client
@@ -282,30 +270,20 @@ class HttpService {
       );
     } on UnauthorisedException catch (e) {
       if (e.toString().contains('Token refreshed')) {
-        _tokenRefreshAttempts++;
-        if (_tokenRefreshAttempts <= _maxTokenRefreshAttempts) {
+        // Counter was already incremented in _returnResponse
+        if (_tokenRefreshAttempts > _maxTokenRefreshAttempts) {
           log(
-            '🔄 Retrying PUT request after token refresh (attempt $_tokenRefreshAttempts/$_maxTokenRefreshAttempts)...',
+            '❌ Max token refresh attempts reached ($_tokenRefreshAttempts > $_maxTokenRefreshAttempts). Signing out...',
           );
-          final response = await retryRequest(
-            () => client
-                .put(Uri.parse(url), headers: headers, body: body)
-                .timeout(_timeOutDuration),
-          );
-          return await _returnResponse(
-            response,
-            'PUT',
-            url,
-            headers: headers,
-            body: body,
-          );
-        } else {
-          log('❌ Max token refresh attempts reached. Signing out...');
           await _handlePersistent401();
           throw UnauthorisedException(
             'Authentication failed. Please log in again.',
           );
         }
+        log(
+          '🔄 Retrying PUT request after token refresh (attempt $_tokenRefreshAttempts/$_maxTokenRefreshAttempts)...',
+        );
+        return await _putWithRetry(url, headers: headers, body: body);
       }
       rethrow;
     }
@@ -317,6 +295,14 @@ class HttpService {
     dynamic body,
   }) async {
     _tokenRefreshAttempts = 0;
+    return await _deleteWithRetry(url, headers: headers, body: body);
+  }
+
+  Future<dynamic> _deleteWithRetry(
+    String url, {
+    Map<String, String>? headers,
+    dynamic body,
+  }) async {
     try {
       final response = await retryRequest(
         () => client
@@ -332,30 +318,20 @@ class HttpService {
       );
     } on UnauthorisedException catch (e) {
       if (e.toString().contains('Token refreshed')) {
-        _tokenRefreshAttempts++;
-        if (_tokenRefreshAttempts <= _maxTokenRefreshAttempts) {
+        // Counter was already incremented in _returnResponse
+        if (_tokenRefreshAttempts > _maxTokenRefreshAttempts) {
           log(
-            '🔄 Retrying DELETE request after token refresh (attempt $_tokenRefreshAttempts/$_maxTokenRefreshAttempts)...',
+            '❌ Max token refresh attempts reached ($_tokenRefreshAttempts > $_maxTokenRefreshAttempts). Signing out...',
           );
-          final response = await retryRequest(
-            () => client
-                .delete(Uri.parse(url), headers: headers, body: body)
-                .timeout(_timeOutDuration),
-          );
-          return await _returnResponse(
-            response,
-            'DELETE',
-            url,
-            headers: headers,
-            body: body,
-          );
-        } else {
-          log('❌ Max token refresh attempts reached. Signing out...');
           await _handlePersistent401();
           throw UnauthorisedException(
             'Authentication failed. Please log in again.',
           );
         }
+        log(
+          '🔄 Retrying DELETE request after token refresh (attempt $_tokenRefreshAttempts/$_maxTokenRefreshAttempts)...',
+        );
+        return await _deleteWithRetry(url, headers: headers, body: body);
       }
       rethrow;
     }

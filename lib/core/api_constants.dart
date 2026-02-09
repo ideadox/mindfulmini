@@ -1,5 +1,5 @@
 class ApiConstants {
-  static String baseUrl = 'https://node.mindfulminis.in/api/v1';
+  static String baseUrl = 'https://devapi.mindfulminis.life/api/v1';
   // static String mediaBaseUrl =
   // 'https://minfulminis.s3.eu-north-1.amazonaws.com/payloadcms';
 

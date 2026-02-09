@@ -31,21 +31,27 @@ class CmsModel {
 
   factory CmsModel.fromJson(Map<String, dynamic> json) {
     return CmsModel(
-      id: json['_id'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-      title: json['title'],
-      contentDescription: ContentDescription.fromJson(
-        json['contentDescription'],
-      ),
+      id: json['_id'] ?? '',
+      createdAt: json['createdAt'] != null 
+          ? DateTime.parse(json['createdAt']) 
+          : DateTime.now(),
+      updatedAt: json['updatedAt'] != null 
+          ? DateTime.parse(json['updatedAt']) 
+          : DateTime.now(),
+      title: json['title'] ?? '',
+      contentDescription: json['contentDescription'] != null
+          ? ContentDescription.fromJson(json['contentDescription'])
+          : ContentDescription(root: ContentRoot(children: [])),
       media: json['media'] != null ? Media.fromJson(json['media']) : null,
-      tags: (json['tags'] as List).map((t) => Tag.fromJson(t)).toList(),
-      inSeries: json['inSeries'],
-      seriesName: json['seriesName'],
-      seriesIndex: json['seriesIndex'],
-      v: json['__v'],
-      viewCount: json['viewCount'],
-      contentDescriptionJson: json['contentDescription'],
+      tags: json['tags'] != null && json['tags'] is List
+          ? (json['tags'] as List).map((t) => Tag.fromJson(t)).toList()
+          : [],
+      inSeries: json['inSeries'] ?? false,
+      seriesName: json['seriesName'] ?? '',
+      seriesIndex: json['seriesIndex'] ?? 0,
+      v: json['__v'] ?? 0,
+      viewCount: json['viewCount'] ?? 0,
+      contentDescriptionJson: json['contentDescription'] ?? {},
     );
   }
 
@@ -148,7 +154,13 @@ class ContentDescription {
   ContentDescription({required this.root});
 
   factory ContentDescription.fromJson(Map<String, dynamic> json) {
+    if (json['root'] != null) {
     return ContentDescription(root: ContentRoot.fromJson(json['root']));
+    }
+    // Return empty content description if root is null
+    return ContentDescription(
+      root: ContentRoot(children: []),
+    );
   }
 
   Map<String, dynamic> toJson() => {'root': root.toJson()};
@@ -160,12 +172,15 @@ class ContentRoot {
   ContentRoot({required this.children});
 
   factory ContentRoot.fromJson(Map<String, dynamic> json) {
+    if (json['children'] != null && json['children'] is List) {
     return ContentRoot(
       children:
           (json['children'] as List)
               .map((e) => ContentParagraph.fromJson(e))
               .toList(),
     );
+    }
+    return ContentRoot(children: []);
   }
 
   Map<String, dynamic> toJson() => {
@@ -192,15 +207,16 @@ class ContentParagraph {
 
   factory ContentParagraph.fromJson(Map<String, dynamic> json) {
     return ContentParagraph(
-      children:
-          (json['children'] as List)
+      children: json['children'] != null && json['children'] is List
+          ? (json['children'] as List)
               .map((c) => ContentChild.fromJson(c))
-              .toList(),
+              .toList()
+          : [],
       direction: json['direction'],
       format: json['format'] ?? '',
-      indent: json['indent'],
-      type: json['type'],
-      version: json['version'],
+      indent: json['indent'] ?? 0,
+      type: json['type'] ?? '',
+      version: json['version'] ?? 1,
     );
   }
 
@@ -235,7 +251,7 @@ class ContentChild {
 
   factory ContentChild.fromJson(Map<String, dynamic> json) {
     return ContentChild(
-      type: json['type'],
+      type: json['type'] ?? '',
       text: json['text'],
       detail: json['detail'],
       format: json['format'],

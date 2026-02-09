@@ -36,6 +36,10 @@ class LocalDatabaseError extends AppException {
   LocalDatabaseError([super.message]);
 }
 
+class ProfileNotFoundException extends AppException {
+  ProfileNotFoundException([super.message]);
+}
+
 class ResolveError {
   static String resolve(String errorCode) {
     switch (errorCode) {

@@ -23,17 +23,57 @@ class HomeData {
           'sortRaw': sort,
         },
       );
+      log('Fetching CMS content from: ${url.toString()}');
       List<CmsModel> cms = [];
       final res = await _httpService.get(url.toString());
-      for (var c in res['data']) {
-        try {
-          cms.add(CmsModel.fromJson(c));
-        } catch (e) {
-          continue;
+      log('Response keys: ${res.keys}');
+      log('Response data type: ${res['data'].runtimeType}');
+      
+      // Check if response has data field
+      if (res['data'] != null && res['data'] is List) {
+        log('Found ${(res['data'] as List).length} items in data array');
+        for (int i = 0; i < (res['data'] as List).length; i++) {
+          var c = (res['data'] as List)[i];
+          try {
+            // Log first item structure for debugging
+            if (i == 0) {
+              log('First item structure - keys: ${(c as Map).keys}');
+              log('First item - title: ${c['title']}, seriesName: ${c['seriesName']}, tags: ${c['tags']}');
+            }
+            cms.add(CmsModel.fromJson(c));
+          } catch (e, stackTrace) {
+            log('Error parsing CMS item at index $i: $e');
+            if (c is Map) {
+              log('Item keys: ${c.keys}');
+              log('Item title: ${c['title']}');
+              log('Item seriesName: ${c['seriesName']}');
+              log('Item tags: ${c['tags']}');
+              log('Item contentDescription: ${c['contentDescription']}');
+            }
+            log('Stack trace: $stackTrace');
+            continue;
+          }
+        }
+      } else {
+        log('No data field found or data is not a list');
+        // If no data field, try direct list
+        if (res is List) {
+          log('Response is a direct list with ${res.length} items');
+          for (var c in res) {
+            try {
+              cms.add(CmsModel.fromJson(c));
+            } catch (e) {
+              log('Error parsing CMS item: $e');
+              continue;
+            }
+          }
         }
       }
+      log('Successfully parsed ${cms.length} CMS items');
       return cms;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      log('Error in getCMSContentByCollection for $collection: $e');
+      log('Stack trace: $stackTrace');
       rethrow;
     }
   }

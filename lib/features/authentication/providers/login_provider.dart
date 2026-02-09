@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mindfulminis/features/onbaord/screens/kid_name.dart';
+import 'package:mindfulminis/features/profile/profile_data/profile_data.dart';
 import 'package:mindfulminis/features/tab_view/screens/tab_view.dart';
 import 'package:mindfulminis/services/exceptions.dart';
 
@@ -15,6 +17,7 @@ class LoginProvider with ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey();
 
   final _tokenStorage = sl<TokenStorage>();
+  final _profileData = sl<ProfileData>();
 
   bool isVisible = false;
   bool isLoading = false;
@@ -49,7 +52,7 @@ class LoginProvider with ChangeNotifier {
 
           if (token != null && token.isNotEmpty) {
             await _tokenStorage.saveAccessToken(token);
-            navigateToHome();
+            await _navigateBasedOnProfile();
           } else {
             error = 'Failed to get authentication token. Please try again.';
             log('Token is null or empty');
@@ -70,6 +73,24 @@ class LoginProvider with ChangeNotifier {
     } finally {
       isLoading = false;
       notifyListeners();
+    }
+  }
+
+  /// Check if user has completed onboarding and navigate accordingly
+  Future<void> _navigateBasedOnProfile() async {
+    try {
+      await _profileData.getUser();
+      log('✅ Profile exists - navigating to home');
+      sl<GoRouter>().goNamed(TabView.routeName);
+    } on ProfileNotFoundException {
+      // No profile exists - user needs to complete onboarding
+      log('📝 No profile found - redirecting to onboarding');
+      sl<GoRouter>().goNamed(KidName.routeName);
+    } catch (e) {
+      // Other error fetching profile - still try to navigate to onboarding
+      // as it's safer than going to home without a profile
+      log('⚠️ Error checking profile, redirecting to onboarding: $e');
+      sl<GoRouter>().goNamed(KidName.routeName);
     }
   }
 

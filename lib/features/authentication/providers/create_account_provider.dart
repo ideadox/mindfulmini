@@ -63,7 +63,21 @@ class CreateAccountProvoider with ChangeNotifier {
         // Step 2: Update display name
         await firebaseUser!.updateDisplayName(name);
 
-        // Step 3: Create user in backend API
+        // Step 3: Get Firebase token BEFORE making API call
+        // The backend requires a valid Firebase token for authentication
+        final token = await firebaseUser.getIdToken(true);
+        
+        if (token == null || token.isEmpty) {
+          await _rollbackFirebaseUser(firebaseUser);
+          error = 'Failed to get authentication token. Please try again.';
+          log('❌ Token retrieval failed during signup');
+          return;
+        }
+        
+        // IMPORTANT: Save token BEFORE making API call so HttpService can use it
+        await _tokenStorage.saveAccessToken(token);
+
+        // Step 4: Create user in backend API
         try {
           var map = {
             "email": email,
@@ -74,27 +88,10 @@ class CreateAccountProvoider with ChangeNotifier {
 
           final userId = await _authData.createUser(map);
           
-          // Step 4: Get Firebase token (use Firebase token directly, same as login flow)
-          // The backend accepts Firebase tokens, not email/password for authentication
-          try {
-            // Get fresh Firebase token for the newly created user
-            final token = await firebaseUser.getIdToken(true);
-            
-            if (token == null || token.isEmpty) {
-              throw Exception('Failed to get authentication token from Firebase');
-            }
-            
-            // Step 5: Save user data and navigate
+          // Step 5: Save user ID and navigate
             await _sharedPrefs.setUserId(userId);
-            await _tokenStorage.saveAccessToken(token);
             log('✅ Signup successful - User created and token saved');
             sl<GoRouter>().goNamed(KidName.routeName);
-          } catch (e) {
-            // Rollback: Delete Firebase user if token retrieval fails
-            await _rollbackFirebaseUser(firebaseUser);
-            error = 'Failed to complete signup. Please try again.';
-            log('❌ Token retrieval failed during signup: $e');
-          }
         } on InvalidInputException catch (e) {
           // Rollback: Delete Firebase user if create user fails
           await _rollbackFirebaseUser(firebaseUser);
@@ -154,6 +151,13 @@ class CreateAccountProvoider with ChangeNotifier {
         } catch (signOutError) {
           log('Failed to sign out after rollback: $signOutError');
         }
+      }
+      // Clear the token to maintain consistent auth state
+      try {
+        await _tokenStorage.clear();
+        log('Token cleared during rollback');
+      } catch (e) {
+        log('Failed to clear token during rollback: $e');
       }
     }
   }
