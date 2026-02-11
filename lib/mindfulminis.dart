@@ -5,6 +5,7 @@ import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_screen_size.dart';
 
 import 'package:mindfulminis/features/authentication/providers/phone_authh_provider.dart';
+import 'package:mindfulminis/features/breathing/providers/breathing_provider.dart';
 import 'package:mindfulminis/features/home/providers/rating_provider.dart';
 import 'package:mindfulminis/features/meditation/providers/meditation_provider.dart';
 import 'package:mindfulminis/features/offline_status/providers/offline_status_provider.dart';
@@ -38,6 +39,7 @@ class Mindfulminis extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => RatingProvider()),
         ChangeNotifierProvider(create: (context) => sl<YogaProvider>()),
         ChangeNotifierProvider(create: (context) => sl<MeditationProvider>()),
+        ChangeNotifierProvider(create: (context) => sl<BreathingProvider>()),
       ],
       child: MaterialApp.router(
         builder: FlutterSmartDialog.init(

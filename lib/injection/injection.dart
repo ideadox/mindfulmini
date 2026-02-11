@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../common/data/cms_data.dart';
 import '../features/authentication/auth_data/auth_data.dart';
+import '../features/breathing/data/breathing_data.dart';
+import '../features/breathing/providers/breathing_provider.dart';
 import '../features/home/data/home_data.dart';
 import '../features/journal/journal_data/journal_data.dart';
 import '../features/onbaord/onboard_data/onboard_data.dart';
@@ -53,6 +55,9 @@ Future<void> setupInjection() async {
   sl.registerLazySingleton<MeditationData>(
     () => MeditationData(httpService: sl()),
   );
+  sl.registerLazySingleton<BreathingData>(
+    () => BreathingData(httpService: sl()),
+  );
   sl.registerLazySingleton<StoriesData>(() => StoriesData(httpService: sl()));
 
   //providers
@@ -60,6 +65,9 @@ Future<void> setupInjection() async {
   sl.registerLazySingleton<YogaProvider>(() => YogaProvider(yogaData: sl()));
   sl.registerLazySingleton<MeditationProvider>(
     () => MeditationProvider(meditationData: sl()),
+  );
+  sl.registerLazySingleton<BreathingProvider>(
+    () => BreathingProvider(breathingData: sl()),
   );
   sl.registerLazySingleton<SrotiesProvider>(
     () => SrotiesProvider(storiesData: sl()),

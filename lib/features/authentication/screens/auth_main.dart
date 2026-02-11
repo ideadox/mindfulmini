@@ -68,6 +68,11 @@ class AuthMain extends StatelessWidget {
                     child: CountryCodePicker(
                       initialSelection: countryCode,
                       favorite: ["+91"],
+                      onInit: (value) {
+                        // Set initial country code in provider when picker initializes
+                        context.read<PhoneAuthhProvider>().countryCode =
+                            value?.dialCode ?? '+91';
+                      },
                       onChanged: (value) {
                         context.read<PhoneAuthhProvider>().countryCode =
                             value.dialCode;

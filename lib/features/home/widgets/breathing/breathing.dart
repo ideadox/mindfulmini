@@ -118,7 +118,7 @@ class BreathingWidget extends StatelessWidget {
                       sl<GoRouter>().pushNamed(
                         PlayVisuals.routeName,
                         pathParameters: {
-                          'collection': 'breathings',
+                          'collection': 'breaths',
                           'id': breathingItem.id,
                         },
                       );

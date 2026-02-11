@@ -71,26 +71,14 @@ class HomeProvider with ChangeNotifier {
     try {
       _isLoadingBreathing = true;
       notifyListeners();
-      // Try different collection name variations
-      List<String> collectionNames = ['breathings', 'breathing', 'breathingexercises', 'breathing-exercises'];
-      var result = <CmsModel>[];
-      
-      for (var collectionName in collectionNames) {
-        log('Loading breathing from collection: $collectionName');
-        result = await _data.getCMSContentByCollection(
-          collectionName,
-          page: 1,
-          limit: 20,
-          sort: 'createdAt',
-        );
-        if (result.isNotEmpty) {
-          log('Found ${result.length} items with collection name: $collectionName');
-          break;
-        }
-      }
-      
-      log('Loaded ${result.length} breathing items');
-      _breathing = result;
+      log('Loading breathing from collection: breaths');
+      _breathing = await _data.getCMSContentByCollection(
+        'breaths',
+        page: 1,
+        limit: 20,
+        sort: 'createdAt',
+      );
+      log('Loaded ${_breathing.length} breathing items');
     } catch (e, stackTrace) {
       log('Error loading breathing: $e');
       log('Stack trace: $stackTrace');
