@@ -7,7 +7,7 @@ import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
 
 import '../../../common/widgets/views_widget.dart';
-import '../../play visuals/screen/play_visuals.dart';
+import '../../play_visuals/screen/play_visuals.dart';
 
 class StoriesCategories extends StatelessWidget {
   const StoriesCategories({super.key});

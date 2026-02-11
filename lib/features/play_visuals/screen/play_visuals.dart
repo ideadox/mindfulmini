@@ -1,30 +1,29 @@
+import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottie/lottie.dart';
 import 'package:mindfulminis/core/api_constants.dart';
-import 'dart:async';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/utils/yoga_rich_text_parser.dart';
-import 'package:mindfulminis/features/play%20visuals/models/audolyric.dart';
-import 'package:mindfulminis/features/play%20visuals/provider/cms_provider.dart';
-import 'package:mindfulminis/features/play%20visuals/widgets/yoga_progress_bar.dart';
+import 'package:mindfulminis/features/play_visuals/provider/cms_provider.dart';
+import 'package:mindfulminis/features/play_visuals/screen/chapter_wise_progress.dart';
+import 'package:mindfulminis/features/play_visuals/widgets/yoga_progress_bar.dart';
 import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
 import 'package:mindfulminis/features/yoga/providers/yoga_play_visuals_provider.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/injection/injection.dart';
 import 'package:provider/provider.dart';
 
-class PlayVisualsCopy extends StatefulWidget {
-  static String routeName = 'play-visuals-copy';
-  static String routePath = '/play-visuals-copy';
+class PlayVisuals extends StatefulWidget {
+  static String routeName = 'play-visuals';
+  static String routePath = '/play-visuals';
   final String? collection;
   final String? id;
   final YogaContentModel? yogaContentModel;
 
-  const PlayVisualsCopy({
+  const PlayVisuals({
     super.key,
     this.collection,
     this.id,
@@ -32,10 +31,10 @@ class PlayVisualsCopy extends StatefulWidget {
   });
 
   @override
-  State<PlayVisualsCopy> createState() => _PlayVisualsCopyState();
+  State<PlayVisuals> createState() => _PlayVisualsState();
 }
 
-class _PlayVisualsCopyState extends State<PlayVisualsCopy>
+class _PlayVisualsState extends State<PlayVisuals>
     with TickerProviderStateMixin {
   bool startAnimation = false;
   bool isPlaying = false;
@@ -105,7 +104,7 @@ class _PlayVisualsCopyState extends State<PlayVisualsCopy>
       end: const Offset(2.8, 0),
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
-    // Initialize progress timer (though it's managed by AudioProgressWithLyrics in yoga display)
+    // Initialize progress timer
     _progressTimer = Timer(Duration.zero, () {});
 
     Future.delayed(Duration(milliseconds: 300), () {
@@ -180,7 +179,10 @@ class _PlayVisualsCopyState extends State<PlayVisualsCopy>
     });
     if (isPlaying) {
       _controller.forward();
-      _lottiController.forward(from: 0.0);
+      // Only forward Lottie controller for yoga content (which still uses Lottie)
+      if (widget.yogaContentModel != null && _lottiController.duration != null) {
+        _lottiController.forward(from: 0.0);
+      }
       _startProgressTimer();
     } else {
       _segmentController.stop();
@@ -198,14 +200,43 @@ class _PlayVisualsCopyState extends State<PlayVisualsCopy>
     });
   }
 
-  void _pauseAnimation() {
-    setState(() {
-      isPlaying = false;
-    });
-    _segmentController.stop();
-    if (_progressTimer?.isActive ?? false) {
-      _progressTimer?.cancel();
+  String _extractDescription(dynamic contentDescription) {
+    try {
+      if (contentDescription == null) return '';
+      if (contentDescription is Map<String, dynamic>) {
+        // If it has a 'root' structure (ContentDescription object)
+        if (contentDescription['root'] != null &&
+            contentDescription['root']['children'] != null) {
+          final children = contentDescription['root']['children'] as List;
+          if (children.isEmpty) return '';
+          final firstParagraph = children.first;
+          if (firstParagraph['children'] == null) return '';
+          
+          String description = '';
+          for (var child in firstParagraph['children']) {
+            if (child['type'] == 'text' && child['text'] != null) {
+              String text = child['text']!
+                  .replaceAll(RegExp(r'<break time="([\d.]+)s"\s*\/>'), '')
+                  .trim();
+              if (text.isNotEmpty) {
+                description += text + ' ';
+              }
+            }
+          }
+          return description.trim();
+        }
+      }
+      return '';
+    } catch (e) {
+      return '';
     }
+  }
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final minutes = twoDigits(duration.inMinutes.remainder(60));
+    final seconds = twoDigits(duration.inSeconds.remainder(60));
+    return '$minutes:$seconds';
   }
 
   @override
@@ -264,7 +295,7 @@ class _PlayVisualsCopyState extends State<PlayVisualsCopy>
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Lottie animation background
+          // Background image/animation
           if (_showLottie)
             Positioned(
               left: 0,
@@ -277,17 +308,16 @@ class _PlayVisualsCopyState extends State<PlayVisualsCopy>
                   imageUrl:
                       ApiConstants.mediaBaseUrl +
                       (widget.yogaContentModel?.media?['filename'] ?? ''),
-                  //   fit: BoxFit.fill,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                    color: Colors.grey.shade200,
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: Colors.grey.shade200,
+                    child: Center(child: Icon(Icons.error)),
+                  ),
                 ),
-                //  Lottie.asset(
-                //   backgroundLoading: true,
-                //   fit: BoxFit.fill,
-                //   Assets.vectors.flow146,
-                //   controller: _lottiController,
-                //   onLoaded: (composition) {
-                //     _lottiController.duration = composition.duration;
-                //   },
-                // ),
               ),
             ),
 
@@ -419,8 +449,6 @@ class _PlayVisualsCopyState extends State<PlayVisualsCopy>
                     },
                   ),
                 ),
-
-                // Progress bar
               ],
             ),
           ),
@@ -519,7 +547,7 @@ class _PlayVisualsCopyState extends State<PlayVisualsCopy>
     );
   }
 
-  /// Build CMS display with regular content
+  /// Build CMS display with regular content (stories/meditations)
   Widget _buildCmsDisplay(BuildContext context, double height, CmsProvider p) {
     return SizedBox(
       height: height,
@@ -527,8 +555,8 @@ class _PlayVisualsCopyState extends State<PlayVisualsCopy>
       child: Stack(
         alignment: Alignment.center,
         children: [
-          //lottie
-          if (_showLottie)
+          // Background image - dynamic from CMS
+          if (_showLottie && p.cms?.media?.filename != null)
             Positioned(
               left: 0,
               top: 0,
@@ -536,19 +564,22 @@ class _PlayVisualsCopyState extends State<PlayVisualsCopy>
               bottom: MediaQuery.sizeOf(context).height * 0.1,
               child: Hero(
                 tag: 'audio',
-                child: Lottie.asset(
-                  backgroundLoading: true,
-                  fit: BoxFit.fill,
-                  Assets.vectors.flow146,
-                  controller: _lottiController,
-                  onLoaded: (composition) {
-                    _lottiController.duration = composition.duration;
-                  },
+                child: CachedNetworkImage(
+                  imageUrl: '${ApiConstants.mediaBaseUrl}${p.cms!.media!.filename}',
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                    color: Colors.grey.shade200,
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: Colors.grey.shade200,
+                    child: Center(child: Icon(Icons.error)),
+                  ),
                 ),
               ),
             ),
 
-          // top app bar
+          // Top app bar
           Positioned(
             top: 50,
             left: 12,
@@ -596,26 +627,26 @@ class _PlayVisualsCopyState extends State<PlayVisualsCopy>
             ),
           ),
 
-          // lyrics text - not used for yoga
-          // Positioned(
-          //   top: 110,
-          //   left: 0,
-          //   right: 100,
-          //   child: AnimatedOpacity(
-          //     opacity: !startAnimation ? 0 : 1,
-          //     duration: Duration(milliseconds: 1000),
-          //     child: Padding(
-          //       padding: const EdgeInsets.symmetric(horizontal: 20),
-          //       child: LyricLineBuilder(segments: p.segments),
-          //     ),
-          //   ),
-          // ),
+          // Animated lyrics text - synced with audio!
+          Positioned(
+            top: 110,
+            left: 0,
+            right: 100,
+            child: AnimatedOpacity(
+              opacity: !startAnimation ? 0 : 1,
+              duration: Duration(milliseconds: 1000),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: LyricLineBuilder(segments: p.segments),
+              ),
+            ),
+          ),
 
-          //content
+          // Content - title and description at bottom
           Positioned(
             left: 0,
             right: 0,
-            bottom: height * 0.15,
+            bottom: height * 0.06,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -626,16 +657,139 @@ class _PlayVisualsCopyState extends State<PlayVisualsCopy>
                     children: [
                       Text(
                         textAlign: TextAlign.center,
-                        'Tenali Raman and the Wise Judgment',
+                        p.cms?.title ?? '',
                         style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const Text(
+                      Text(
                         textAlign: TextAlign.center,
-                        "The Mango Tree teaches that true prosperity comes from unity and sharing, showing how cooperation fosters abundance and harmony for all.",
-                        style: TextStyle(color: Colors.black45),
+                        _extractDescription(p.cms?.contentDescription),
+                        style: const TextStyle(color: Colors.black45),
+                      ),
+                      Space.h12,
+                      Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 18,
+                        ),
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Audio progress slider
+                Consumer<CmsProvider>(
+                  builder: (context, provider, _) {
+                    return AnimatedOpacity(
+                      opacity: !startAnimation ? 0 : 1,
+                      duration: Duration(milliseconds: 600),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          children: [
+                            if (provider.totalDuration.inSeconds > 0)
+                              Slider(
+                                value: provider.currentPosition.inSeconds.toDouble(),
+                                max: provider.totalDuration.inSeconds.toDouble(),
+                                onChanged: (value) {
+                                  provider.seek(Duration(seconds: value.toInt()));
+                                },
+                              ),
+                            if (provider.totalDuration.inSeconds > 0)
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    _formatDuration(provider.currentPosition),
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                  Text(
+                                    _formatDuration(provider.totalDuration),
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                if (startAnimation) Space.h12,
+                
+                // Multi-button control panel
+                SizedBox(
+                  height: 60,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      IgnorePointer(
+                        ignoring: !startAnimation,
+                        child: SlideTransition(
+                          position: _leftMostSlide,
+                          child: AnimatedOpacity(
+                            opacity: startAnimation ? 1 : 0,
+                            duration: const Duration(milliseconds: 200),
+                            child: _iconButton(Assets.icons.repeatIcon),
+                          ),
+                        ),
+                      ),
+                      IgnorePointer(
+                        ignoring: !startAnimation,
+                        child: SlideTransition(
+                          position: _leftSlide,
+                          child: AnimatedOpacity(
+                            opacity: startAnimation ? 1 : 0,
+                            duration: const Duration(milliseconds: 200),
+                            child: Consumer<CmsProvider>(
+                              builder: (context, provider, _) {
+                                return _iconButton(
+                                  Assets.icons.back10,
+                                  onPressed: () => provider.seekBackward(),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Play button - always active
+                      _playButton(),
+                      IgnorePointer(
+                        ignoring: !startAnimation,
+                        child: SlideTransition(
+                          position: _rightSlide,
+                          child: AnimatedOpacity(
+                            opacity: startAnimation ? 1 : 0,
+                            duration: const Duration(milliseconds: 200),
+                            child: Consumer<CmsProvider>(
+                              builder: (context, provider, _) {
+                                return _iconButton(
+                                  Assets.icons.forward10,
+                                  onPressed: () => provider.seekForward(),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      IgnorePointer(
+                        ignoring: !startAnimation,
+                        child: SlideTransition(
+                          position: _rightMostSlide,
+                          child: AnimatedOpacity(
+                            opacity: startAnimation ? 1 : 0,
+                            duration: const Duration(milliseconds: 200),
+                            child: _iconButton(
+                              Assets.icons.heartButton,
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -643,22 +797,14 @@ class _PlayVisualsCopyState extends State<PlayVisualsCopy>
               ],
             ),
           ),
-
-          // Play button at bottom
-          Positioned(
-            bottom: height * 0.05,
-            left: 0,
-            right: 0,
-            child: Center(child: _playButton()),
-          ),
         ],
       ),
     );
   }
 
-  Widget _iconButton(String assetPath) {
+  Widget _iconButton(String assetPath, {VoidCallback? onPressed}) {
     return IconButton(
-      onPressed: () {},
+      onPressed: onPressed ?? () {},
       style: IconButton.styleFrom(
         maximumSize: const Size(40, 40),
         minimumSize: const Size(40, 40),
@@ -670,71 +816,28 @@ class _PlayVisualsCopyState extends State<PlayVisualsCopy>
   }
 
   Widget _playButton() {
-    return IconButton(
-      style: IconButton.styleFrom(
-        maximumSize: const Size(50, 50),
-        minimumSize: const Size(50, 50),
-        alignment: Alignment.center,
-        backgroundColor: Colors.grey.shade300,
-      ),
-      onPressed: () {
-        if (!startAnimation) {
-          start();
-        } else if (isPlaying) {
-          _pauseAnimation();
-        } else {
-          setState(() {
-            isPlaying = true;
-          });
-          _playNextSegment();
-          _startProgressTimer();
-        }
+    return Consumer<CmsProvider>(
+      builder: (context, provider, _) {
+        return IconButton(
+          style: IconButton.styleFrom(
+            maximumSize: const Size(50, 50),
+            minimumSize: const Size(50, 50),
+            alignment: Alignment.center,
+            backgroundColor: Colors.grey.shade300,
+          ),
+          onPressed: () {
+            if (!startAnimation) {
+              start();
+            }
+            provider.playPause();
+          },
+          icon: Icon(
+            provider.isPlaying ? Icons.pause : Icons.play_arrow,
+            color: Theme.of(context).primaryColor,
+            size: 28,
+          ),
+        );
       },
-      icon: Icon(
-        isPlaying ? Icons.pause : Icons.play_arrow,
-        color: Theme.of(context).primaryColor,
-        size: 28,
-      ),
     );
   }
-
-  final List<AudioChapter> chapters = [
-    AudioChapter(
-      title: 'Intro',
-      start: Duration(seconds: 0),
-      end: Duration(seconds: 2),
-    ),
-    AudioChapter(
-      title: 'Verse 1',
-      start: Duration(seconds: 3),
-      end: Duration(seconds: 5),
-    ),
-    AudioChapter(
-      title: 'Chorus',
-      start: Duration(seconds: 5),
-      end: Duration(seconds: 8),
-    ),
-    AudioChapter(
-      title: 'Verse 2',
-      start: Duration(seconds: 8),
-      end: Duration(seconds: 10),
-    ),
-  ];
-
-  final List<LyricLine> lyrics = [
-    LyricLine(timestamp: Duration(seconds: 0), text: ""),
-    LyricLine(
-      timestamp: Duration(seconds: 2),
-      text: "Wake up to a brand new day",
-    ),
-    LyricLine(
-      timestamp: Duration(seconds: 3),
-      text: "The sun is shining bright",
-    ),
-    LyricLine(timestamp: Duration(seconds: 5), text: "It's time to be alive"),
-    LyricLine(
-      timestamp: Duration(seconds: 8),
-      text: "And feel the magic in the air",
-    ),
-  ];
 }

@@ -344,8 +344,9 @@ class HttpService {
     Map<String, String>? headers,
     dynamic body,
   }) async {
-    log(response.statusCode.toString());
-    log(response.body.toString());
+    // Commented out verbose logging
+    // log(response.statusCode.toString());
+    // log(response.body.toString());
 
     if (response.statusCode == 498) {
       final responseJson = jsonDecode(response.body);

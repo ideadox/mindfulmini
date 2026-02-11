@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:mindfulminis/features/yoga/data/yoga_data.dart';
 import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
@@ -43,7 +45,7 @@ class YogaProvider with ChangeNotifier {
       );
     } catch (e) {
       _error = e.toString();
-      print('Yoga Provider Error: $_error');
+      log('Yoga Provider Error: $_error');
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -59,7 +61,7 @@ class YogaProvider with ChangeNotifier {
       _selectedContent = await yogaData.getYogaContentById(id);
     } catch (e) {
       _contentError = e.toString();
-      print('Yoga Content Provider Error: $_contentError');
+      log('Yoga Content Provider Error: $_contentError');
     } finally {
       _isContentLoading = false;
       notifyListeners();

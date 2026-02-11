@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
-import 'package:mindfulminis/features/play visuals/screen/play_visuals.dart';
+import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
 import 'package:mindfulminis/injection/injection.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/api_constants.dart';
@@ -112,7 +112,7 @@ class MeditationWidget extends StatelessWidget {
                     onTap: () {
                       sl<GoRouter>().pushNamed(
                         PlayVisuals.routeName,
-                        pathParameters: {
+                        queryParameters: {
                           'collection': 'meditations',
                           'id': meditationItem.id,
                         },

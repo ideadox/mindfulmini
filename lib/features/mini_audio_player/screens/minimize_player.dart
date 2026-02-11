@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../../common/providers/audio_manager.dart';
 import '../../../injection/injection.dart';
-import '../../play visuals/screen/play_visuals.dart';
+import '../../play_visuals/screen/play_visuals.dart';
 
 class MiniAudioPlayer extends StatelessWidget {
   const MiniAudioPlayer({super.key});

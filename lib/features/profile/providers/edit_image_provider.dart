@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/api_constants.dart';
 import '../../../injection/injection.dart';
 import '../../../services/image_picker_helper.dart';
 import '../../../services/upload_file_service.dart';
@@ -43,7 +44,7 @@ class EditImageProvider with ChangeNotifier {
       }
       await _profileData.editImage(
         profileId,
-        'https://minfulminis.s3.eu-north-1.amazonaws.com/$urlKey',
+        '${ApiConstants.mediaBaseUrl}$urlKey',
       );
       _navigationService.pop(true);
     } catch (e) {

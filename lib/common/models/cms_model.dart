@@ -5,6 +5,7 @@ class CmsModel {
   final String title;
   final ContentDescription contentDescription;
   final Media? media;
+  final Media? audio;
   final List<Tag> tags;
   final bool inSeries;
   final String seriesName;
@@ -20,6 +21,7 @@ class CmsModel {
     required this.title,
     required this.contentDescription,
     required this.media,
+    this.audio,
     required this.tags,
     required this.inSeries,
     required this.seriesName,
@@ -43,6 +45,7 @@ class CmsModel {
           ? ContentDescription.fromJson(json['contentDescription'])
           : ContentDescription(root: ContentRoot(children: [])),
       media: json['media'] != null ? Media.fromJson(json['media']) : null,
+      audio: json['audio'] != null ? Media.fromJson(json['audio']) : null,
       tags: json['tags'] != null && json['tags'] is List
           ? (json['tags'] as List).map((t) => Tag.fromJson(t)).toList()
           : [],
@@ -63,6 +66,7 @@ class CmsModel {
       'title': title,
       'contentDescription': contentDescription.toJson(),
       if (media != null) 'media': media!.toJson(),
+      if (audio != null) 'audio': audio!.toJson(),
       'tags': tags.map((t) => t.toJson()).toList(),
       'inSeries': inSeries,
       'seriesName': seriesName,
@@ -79,12 +83,12 @@ class Media {
   final DateTime updatedAt;
   final String filename;
   final String mimeType;
-  final int filesize;
-  final int width;
-  final int height;
-  final int focalX;
-  final int focalY;
-  final int v;
+  final int? filesize;
+  final int? width;
+  final int? height;
+  final int? focalX;
+  final int? focalY;
+  final int? v;
 
   Media({
     required this.id,
@@ -92,12 +96,12 @@ class Media {
     required this.updatedAt,
     required this.filename,
     required this.mimeType,
-    required this.filesize,
-    required this.width,
-    required this.height,
-    required this.focalX,
-    required this.focalY,
-    required this.v,
+    this.filesize,
+    this.width,
+    this.height,
+    this.focalX,
+    this.focalY,
+    this.v,
   });
 
   factory Media.fromJson(Map<String, dynamic> json) {
@@ -107,13 +111,23 @@ class Media {
       updatedAt: DateTime.parse(json['updatedAt']),
       filename: json['filename'],
       mimeType: json['mimeType'],
-      filesize: json['filesize'],
-      width: json['width'],
-      height: json['height'],
-      focalX: json['focalX'],
-      focalY: json['focalY'],
-      v: json['__v'],
+      filesize: _parseIntSafe(json['filesize']),
+      width: _parseIntSafe(json['width']),
+      height: _parseIntSafe(json['height']),
+      focalX: _parseIntSafe(json['focalX']),
+      focalY: _parseIntSafe(json['focalY']),
+      v: _parseIntSafe(json['__v']),
     );
+  }
+
+  static int? _parseIntSafe(dynamic value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    if (value is String) {
+      final parsed = int.tryParse(value);
+      return parsed;
+    }
+    return null;
   }
 
   Map<String, dynamic> toJson() {
@@ -214,9 +228,9 @@ class ContentParagraph {
           : [],
       direction: json['direction'],
       format: json['format'] ?? '',
-      indent: json['indent'] ?? 0,
+      indent: Media._parseIntSafe(json['indent']) ?? 0,
       type: json['type'] ?? '',
-      version: json['version'] ?? 1,
+      version: Media._parseIntSafe(json['version']) ?? 1,
     );
   }
 
@@ -253,11 +267,11 @@ class ContentChild {
     return ContentChild(
       type: json['type'] ?? '',
       text: json['text'],
-      detail: json['detail'],
-      format: json['format'],
+      detail: Media._parseIntSafe(json['detail']),
+      format: Media._parseIntSafe(json['format']),
       mode: json['mode'],
       style: json['style'],
-      version: json['version'],
+      version: Media._parseIntSafe(json['version']),
     );
   }
 

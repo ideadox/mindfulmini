@@ -6,7 +6,7 @@ import 'package:mindfulminis/features/stories/proviers/sroties_provider.dart';
 import 'package:mindfulminis/injection/injection.dart';
 import 'package:provider/provider.dart';
 
-import '../../play visuals/screen/play_visuals_copy.dart';
+import '../../play_visuals/screen/play_visuals.dart';
 
 class ShortStories extends StatelessWidget {
   const ShortStories({super.key});
@@ -32,10 +32,13 @@ class ShortStories extends StatelessWidget {
               final story = storiesProvider.storiesSessions[index];
               return InkWell(
                 onTap: () {
-                  sl<GoRouter>().pushNamed(
-                    PlayVisualsCopy.routeName,
-                    extra: story,
-                  );
+                    sl<GoRouter>().pushNamed(
+                      PlayVisuals.routeName,
+                      queryParameters: {
+                        'collection': 'stories',
+                        'id': story.id,
+                      },
+                    );
                 },
                 child: Container(
                   decoration: BoxDecoration(

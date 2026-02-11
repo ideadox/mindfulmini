@@ -7,7 +7,7 @@ import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
-import 'package:mindfulminis/features/play%20visuals/screen/play_visuals_copy.dart';
+import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
 import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
 import 'package:mindfulminis/features/yoga/providers/yoga_provider.dart';
 import 'package:mindfulminis/features/yoga/screens/widgets/yoga_list_shimmer_loader.dart';
@@ -151,7 +151,7 @@ class _YogaListState extends State<YogaList> {
             child: GradientButton(
               onPressed: () {
                 sl<GoRouter>().pushNamed(
-                  PlayVisualsCopy.routeName,
+                  PlayVisuals.routeName,
                   extra: yogaProvider.selectedContent,
                 );
               },

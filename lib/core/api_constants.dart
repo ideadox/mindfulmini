@@ -1,10 +1,15 @@
 class ApiConstants {
+  // Production URL
   static String baseUrl = 'https://devapi.mindfulminis.life/api/v1';
+  // Local testing: static String baseUrl = 'http://localhost:3000/api/v1';
+  
+  // Old bucket (deprecated)
   // static String mediaBaseUrl =
-  // 'https://minfulminis.s3.eu-north-1.amazonaws.com/payloadcms';
+  // 'https://minfulminis.s3.eu-north-1.amazonaws.com/payloadcms/';
 
+  // New bucket in ap-south-1 (Mumbai) - with payloadcms folder
   static String mediaBaseUrl =
-      'https://minfulminis.s3.eu-north-1.amazonaws.com/payloadcms/';
+      'https://mm-lite-store.s3.ap-south-1.amazonaws.com/payloadcms/';
   //user
   static String createUserUrl = '$baseUrl/users';
   static String createProfileUrl = '$baseUrl/profiles';

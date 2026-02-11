@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import '../../../common/widgets/time_widget.dart';
 import '../../../common/widgets/views_widget.dart';
 import '../../../core/api_constants.dart';
-import '../../play visuals/screen/play_visuals.dart';
+import '../../play_visuals/screen/play_visuals.dart';
 
 class BreathingSuggestion extends StatelessWidget {
   const BreathingSuggestion({super.key});

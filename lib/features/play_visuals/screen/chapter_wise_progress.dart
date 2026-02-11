@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mindfulminis/core/app_formate.dart';
 import 'dart:async';
 
-import 'package:mindfulminis/features/play%20visuals/models/audolyric.dart';
+import 'package:mindfulminis/features/play_visuals/models/audolyric.dart';
 
 import '../../../common/models/story_segment.dart';
 
@@ -225,6 +225,10 @@ class _LyricLineBuilderState extends State<LyricLineBuilder>
 
   @override
   Widget build(BuildContext context) {
+    if (shownLines.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    
     final currentLyric = shownLines.last;
     final currentLyricIndex = shownLines.length - 1;
 

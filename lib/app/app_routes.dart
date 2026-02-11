@@ -15,8 +15,7 @@ import 'package:mindfulminis/features/onbaord/screens/dob.dart';
 import 'package:mindfulminis/features/onbaord/screens/felling_today.dart';
 import 'package:mindfulminis/features/onbaord/screens/kid_name.dart';
 import 'package:mindfulminis/features/onboarding/screens/onboard_screen.dart';
-import 'package:mindfulminis/features/play%20visuals/screen/play_visuals.dart';
-import 'package:mindfulminis/features/play%20visuals/screen/play_visuals_copy.dart';
+import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
 import 'package:mindfulminis/features/profile/screens/app_setting_screen.dart';
 import 'package:mindfulminis/features/profile/screens/edit_profile_screen.dart';
 import 'package:mindfulminis/features/profile/screens/language_screen.dart';
@@ -184,15 +183,6 @@ GoRouter buildRouter() {
         name: PlayVisuals.routeName,
         builder:
             (context, state) => PlayVisuals(
-              collection: state.pathParameters['collection'] ?? "",
-              id: state.pathParameters['id'] ?? "",
-            ),
-      ),
-      GoRoute(
-        path: PlayVisualsCopy.routePath,
-        name: PlayVisualsCopy.routeName,
-        builder:
-            (context, state) => PlayVisualsCopy(
               yogaContentModel: state.extra as YogaContentModel?,
               collection: state.uri.queryParameters['collection'],
               id: state.uri.queryParameters['id'],
