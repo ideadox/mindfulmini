@@ -56,7 +56,7 @@ class HomeProvider with ChangeNotifier {
       _stories = await _data.getCMSContentByCollection(
         'stories',
         page: 1,
-        limit: 20,
+        limit: 100,
         sort: 'createdAt',
       );
     } catch (e) {

@@ -32,13 +32,13 @@ class ShortStories extends StatelessWidget {
               final story = storiesProvider.storiesSessions[index];
               return InkWell(
                 onTap: () {
-                    sl<GoRouter>().pushNamed(
-                      PlayVisuals.routeName,
-                      queryParameters: {
-                        'collection': 'stories',
-                        'id': story.id,
-                      },
-                    );
+                  sl<GoRouter>().pushNamed(
+                    PlayVisuals.routeName,
+                    queryParameters: {
+                      'collection': 'stories',
+                      'id': story.id,
+                    },
+                  );
                 },
                 child: Container(
                   decoration: BoxDecoration(

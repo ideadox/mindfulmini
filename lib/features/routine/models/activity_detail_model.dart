@@ -263,7 +263,7 @@ class MediaDetail {
   };
 
   String getFullImageUrl() {
-    return '${ApiConstants.mediaBaseUrl}/$filename';
+    return '${ApiConstants.mediaBaseUrl}$filename';
   }
 
   MediaDetail copyWith({

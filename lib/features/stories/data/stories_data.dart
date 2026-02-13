@@ -14,7 +14,7 @@ class StoriesData {
   }) async {
     try {
       final url =
-          '${ApiConstants.getStoriesUrl}?limitRaw=$limitRaw&pageRaw=$pageRaw&sortRaw=$sortRaw';
+          '${ApiConstants.getStoriesUrl}?limit=$limitRaw&page=$pageRaw&sort=$sortRaw';
       final response = await httpService.get(url);
 
       if (response['status'] == 200 && response['data'] != null) {

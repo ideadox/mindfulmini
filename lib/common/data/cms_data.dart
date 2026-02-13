@@ -18,9 +18,9 @@ class CmsData {
     try {
       Uri url = Uri.parse('${ApiConstants.cmsUrl}/$collection').replace(
         queryParameters: {
-          'pageRaw': page.toString(),
-          'limitRaw': limit.toString(),
-          'sortRaw': sort,
+          'page': page.toString(),
+          'limit': limit.toString(),
+          'sort': sort,
         },
       );
       List<CmsModel> cms = [];

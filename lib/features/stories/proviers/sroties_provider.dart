@@ -30,26 +30,33 @@ class SrotiesProvider with ChangeNotifier {
             'stories',
             page: pageKey,
             limit: 10,
-            sort: 'createdAt',
+            sort: '-createdAt',
           ),
     );
   }
 
   Future<void> fetchStoriesSessions({
-    int limitRaw = 20,
+    int limitRaw = 100,
     int pageRaw = 1,
     String sortRaw = 'createdAt',
+    bool append = false,
   }) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      _storiesSessions = await storiesData.getStoriesSessions(
+      final newSessions = await storiesData.getStoriesSessions(
         limitRaw: limitRaw,
         pageRaw: pageRaw,
         sortRaw: sortRaw,
       );
+      
+      if (append) {
+        _storiesSessions = [..._storiesSessions, ...newSessions];
+      } else {
+        _storiesSessions = newSessions;
+      }
       _error = null;
     } catch (e) {
       _error = e.toString();
