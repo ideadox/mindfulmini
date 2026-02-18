@@ -12,7 +12,7 @@ import 'package:mindfulminis/features/yoga/widgets/starter_deck/starter_deck.dar
 import 'package:mindfulminis/features/yoga/widgets/warm-up/warm_up.dart';
 import 'package:mindfulminis/features/yoga/widgets/yoga_picks/yoga_picks.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 class YogaMain extends StatefulWidget {

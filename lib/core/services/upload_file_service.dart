@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 
-import '../core/api_constants.dart';
+import '../api_constants.dart';
 
 class UploadFileService {
   Future<String?> uploadFile(File file) async {

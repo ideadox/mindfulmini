@@ -12,7 +12,7 @@ import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
 import 'package:mindfulminis/features/yoga/providers/yoga_provider.dart';
 import 'package:mindfulminis/features/yoga/screens/widgets/yoga_list_shimmer_loader.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 class YogaList extends StatefulWidget {

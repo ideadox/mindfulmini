@@ -9,7 +9,7 @@ import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/journal/models/gratiude_journal_model.dart';
 
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/utiles/basic_function.dart';
+import 'package:mindfulminis/core/utils/basic_function.dart';
 import '../providers/journal_provider.dart';
 
 class JournalDetail1Screen extends StatefulWidget {

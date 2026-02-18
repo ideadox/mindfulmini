@@ -18,7 +18,7 @@ import 'package:mindfulminis/features/notifications/screens/notification_screen.
 import 'package:mindfulminis/features/profile/providers/profile_provider.dart';
 import 'package:mindfulminis/features/routine/screens/create_routine_screen.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/active_routine_provider.dart';

@@ -12,7 +12,7 @@ import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
 import 'package:mindfulminis/features/yoga/models/yoga_model.dart';
 import 'package:mindfulminis/features/yoga/screens/yoga_list.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 
 class FeaturedCollection extends StatelessWidget {
   final List<YogaModel> featuredPoses;

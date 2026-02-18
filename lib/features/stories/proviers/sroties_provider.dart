@@ -5,7 +5,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:mindfulminis/common/data/cms_data.dart';
 import 'package:mindfulminis/features/stories/data/stories_data.dart';
 import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 
 import '../../../common/models/cms_model.dart';
 

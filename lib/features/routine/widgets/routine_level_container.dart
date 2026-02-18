@@ -4,7 +4,7 @@ import 'package:mindfulminis/common/widgets/custom_level_percent_indicator.dart'
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/features/routine/screens/affirmation_screen.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 
 import '../models/activity_model.dart';
 

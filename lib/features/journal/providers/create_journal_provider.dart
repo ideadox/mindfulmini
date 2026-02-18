@@ -6,7 +6,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:mindfulminis/common/widgets/custom_dailog.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 
 import '../journal_data/journal_data.dart';
 

@@ -11,7 +11,7 @@ import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/widgets/common_text_form_field.dart';
-import '../../../injection/injection.dart';
+import '../../../core/injection/injection.dart';
 
 class CreateAccount extends StatelessWidget {
   static String routeName = 'create-account';

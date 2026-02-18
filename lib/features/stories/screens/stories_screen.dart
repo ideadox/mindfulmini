@@ -5,7 +5,7 @@ import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/stories/proviers/sroties_provider.dart';
 import 'package:mindfulminis/features/stories/widgets/short_stories.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 import '../../mini_audio_player/screens/minimize_player.dart';

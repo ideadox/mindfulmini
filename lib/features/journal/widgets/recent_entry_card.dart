@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/journal/models/gratiude_journal_model.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/utiles/basic_function.dart';
+import 'package:mindfulminis/core/utils/basic_function.dart';
 
 class RecentEntryCard extends StatelessWidget {
   final VoidCallback onPressed;

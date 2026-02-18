@@ -5,7 +5,7 @@ import 'package:mindfulminis/gen/assets.gen.dart';
 
 import '../../../../core/app_spacing.dart';
 import '../../../../core/app_text_theme.dart';
-import '../../../../injection/injection.dart';
+import '../../../../core/injection/injection.dart';
 import '../../screens/yoga_list.dart';
 
 class YogaPicks extends StatelessWidget {

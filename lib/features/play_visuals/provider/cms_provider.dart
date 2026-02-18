@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:mindfulminis/common/data/cms_data.dart';
 import 'package:mindfulminis/core/api_constants.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 
 import '../../../common/models/cms_model.dart';
 import '../../../common/models/story_segment.dart';

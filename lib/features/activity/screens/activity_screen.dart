@@ -7,7 +7,7 @@ import 'package:mindfulminis/features/meditation/screens/meditation_screen.dart'
 import 'package:mindfulminis/features/stories/screens/stories_screen.dart';
 import 'package:mindfulminis/features/yoga/screens/yoga_main.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/app_text_theme.dart';

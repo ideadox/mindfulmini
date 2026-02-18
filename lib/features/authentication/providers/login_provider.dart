@@ -6,17 +6,15 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/features/onbaord/screens/kid_name.dart';
 import 'package:mindfulminis/features/profile/profile_data/profile_data.dart';
 import 'package:mindfulminis/features/tab_view/screens/tab_view.dart';
-import 'package:mindfulminis/services/exceptions.dart';
+import 'package:mindfulminis/core/services/exceptions.dart';
 
-import '../../../injection/injection.dart';
-import '../../../services/storage/token_storage.dart';
+import '../../../core/injection/injection.dart';
 
 class LoginProvider with ChangeNotifier {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey();
 
-  final _tokenStorage = sl<TokenStorage>();
   final _profileData = sl<ProfileData>();
 
   bool isVisible = false;
@@ -39,6 +37,9 @@ class LoginProvider with ChangeNotifier {
     try {
       isLoading = true;
       notifyListeners();
+
+      // Sign in with Firebase – the SDK persists the session and manages
+      // token refresh automatically. No need to manually save tokens.
       final userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
             email: emailController.text.trim(),
@@ -46,21 +47,8 @@ class LoginProvider with ChangeNotifier {
           );
 
       if (userCredential.user != null) {
-        try {
-          final token = await userCredential.user!.getIdToken(true);
-          log('Login Token: $token');
-
-          if (token != null && token.isNotEmpty) {
-            await _tokenStorage.saveAccessToken(token);
-            await _navigateBasedOnProfile();
-          } else {
-            error = 'Failed to get authentication token. Please try again.';
-            log('Token is null or empty');
-          }
-        } catch (e) {
-          error = 'Failed to complete login. Please try again.';
-          log('Error getting token: $e');
-        }
+        log('✅ Firebase login successful: ${userCredential.user!.uid}');
+        await _navigateBasedOnProfile();
       } else {
         error = 'Login failed. Please try again.';
       }

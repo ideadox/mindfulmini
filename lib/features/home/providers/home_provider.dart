@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:mindfulminis/common/models/cms_model.dart';
 import 'package:mindfulminis/features/home/data/home_data.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 
 class HomeProvider with ChangeNotifier {
   final _data = sl<HomeData>();

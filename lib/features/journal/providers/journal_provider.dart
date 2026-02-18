@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/features/journal/journal_data/journal_data.dart';
 import 'package:mindfulminis/features/journal/models/gratiude_journal_model.dart';
 import 'package:mindfulminis/features/journal/screens/create_journal_screen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 
 class JournalProvider with ChangeNotifier {
   final _navigationService = sl<GoRouter>();

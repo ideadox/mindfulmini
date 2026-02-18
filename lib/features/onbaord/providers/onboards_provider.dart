@@ -11,7 +11,7 @@ import 'package:mindfulminis/features/onbaord/widgets/agelimitdailog.dart';
 import 'package:mindfulminis/features/onbaord/widgets/allset_dailog.dart';
 import 'package:mindfulminis/features/tab_view/screens/tab_view.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 
 import '../onboard_data/onboard_data.dart';
 import '../screens/dob.dart';

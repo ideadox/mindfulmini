@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/features/stories/proviers/sroties_provider.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 import '../../play_visuals/screen/play_visuals.dart';

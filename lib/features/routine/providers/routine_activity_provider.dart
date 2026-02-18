@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/features/routine/models/activity_model.dart';
 
-import '../../../injection/injection.dart';
+import '../../../core/injection/injection.dart';
 import '../routine_data/routine_data.dart';
 
 class RoutineActivityProvider with ChangeNotifier {

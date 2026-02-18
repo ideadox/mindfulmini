@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 
-import '../../../services/shared_prefs.dart';
+import '../../../core/services/shared_prefs.dart';
 import '../models/routine_model.dart';
 import '../routine_data/routine_data.dart';
 

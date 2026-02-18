@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/widgets/close_button_dailog.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 
 class CompleteAffirmationDialog extends StatelessWidget {
   const CompleteAffirmationDialog({super.key});

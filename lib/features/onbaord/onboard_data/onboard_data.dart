@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import '../../../core/api_constants.dart';
-import '../../../services/http_service.dart';
+import '../../../core/services/http_service.dart';
 
 class OnboardData {
   final HttpService httpService;

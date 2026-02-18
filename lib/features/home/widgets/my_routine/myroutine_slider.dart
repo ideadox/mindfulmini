@@ -7,7 +7,7 @@ import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../routine/screens/routine_detail_screen.dart';

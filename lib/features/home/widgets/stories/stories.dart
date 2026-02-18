@@ -7,7 +7,7 @@ import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/home/providers/home_provider.dart';
 import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 class StoriesWidget extends StatelessWidget {

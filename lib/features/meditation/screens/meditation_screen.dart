@@ -7,7 +7,7 @@ import 'package:mindfulminis/features/meditation/screens/widgets/meditation_shim
 import 'package:mindfulminis/features/meditation/widgets/category_widget.dart';
 import 'package:mindfulminis/features/meditation/widgets/suggestion_widgets.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 class MeditationScreen extends StatefulWidget {

@@ -8,9 +8,9 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:mindfulminis/common/widgets/custom_dailog.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 
-import '../../../services/shared_prefs.dart';
+import '../../../core/services/shared_prefs.dart';
 import '../routine_data/routine_data.dart';
 
 class CreateRoutineProvider with ChangeNotifier {

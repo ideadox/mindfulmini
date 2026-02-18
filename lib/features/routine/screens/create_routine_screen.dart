@@ -16,7 +16,7 @@ import 'package:mindfulminis/features/routine/providers/create_routine_provider.
 import 'package:mindfulminis/features/routine/widgets/create_routine_conatiner.dart';
 import 'package:mindfulminis/features/routine/widgets/goal_routine_container.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/utiles/custom_snackbar.dart';
+import 'package:mindfulminis/core/utils/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/widgets/scroll_timepicker.dart';

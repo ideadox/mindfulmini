@@ -13,7 +13,8 @@ class ApiConstants {
   //user
   static String createUserUrl = '$baseUrl/users';
   static String createProfileUrl = '$baseUrl/profiles';
-  static String loginUserUrl = '$baseUrl/users/login';
+  // Note: No /users/login route exists on the backend.
+  // Auth is handled via Firebase ID tokens verified by the auth middleware.
   static String listProfilesUrl = '$baseUrl/profiles';
   static String updateProfileUrl = '$baseUrl/profiles';
 

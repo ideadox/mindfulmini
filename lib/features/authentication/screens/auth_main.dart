@@ -8,7 +8,7 @@ import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/authentication/screens/login.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/phone_authh_provider.dart';

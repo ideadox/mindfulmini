@@ -5,11 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/features/authentication/auth_data/auth_data.dart';
 import 'package:mindfulminis/features/onbaord/screens/kid_name.dart';
-import 'package:mindfulminis/injection/injection.dart';
-import 'package:mindfulminis/services/exceptions.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:mindfulminis/core/services/exceptions.dart';
 
-import '../../../services/shared_prefs.dart';
-import '../../../services/storage/token_storage.dart';
+import '../../../core/services/shared_prefs.dart';
 
 class CreateAccountProvoider with ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey();
@@ -19,7 +18,6 @@ class CreateAccountProvoider with ChangeNotifier {
 
   final AuthData _authData = sl<AuthData>();
   final SharedPrefs _sharedPrefs = sl<SharedPrefs>();
-  final _tokenStorage = sl<TokenStorage>();
 
   bool isVisible = false;
 
@@ -63,37 +61,23 @@ class CreateAccountProvoider with ChangeNotifier {
         // Step 2: Update display name
         await firebaseUser!.updateDisplayName(name);
 
-        // Step 3: Get Firebase token BEFORE making API call
-        // The backend requires a valid Firebase token for authentication
-        final token = await firebaseUser.getIdToken(true);
-        
-        if (token == null || token.isEmpty) {
-          await _rollbackFirebaseUser(firebaseUser);
-          error = 'Failed to get authentication token. Please try again.';
-          log('❌ Token retrieval failed during signup');
-          return;
-        }
-        
-        // IMPORTANT: Save token BEFORE making API call so HttpService can use it
-        await _tokenStorage.saveAccessToken(token);
-
-        // Step 4: Create user in backend API
+        // Step 3: Create user in backend API
+        // HttpService now gets the Firebase token automatically per-request,
+        // so no need to manually save tokens before making API calls.
         try {
           var map = {
             "email": email,
             "fullname": name,
             "firebaseUid": firebaseUser.uid,
-            "password": password,
           };
 
           final userId = await _authData.createUser(map);
           
-          // Step 5: Save user ID and navigate
-            await _sharedPrefs.setUserId(userId);
-            log('✅ Signup successful - User created and token saved');
-            sl<GoRouter>().goNamed(KidName.routeName);
+          // Step 4: Save user ID and navigate
+          await _sharedPrefs.setUserId(userId);
+          log('✅ Signup successful - User created');
+          sl<GoRouter>().goNamed(KidName.routeName);
         } on InvalidInputException catch (e) {
-          // Rollback: Delete Firebase user if create user fails
           await _rollbackFirebaseUser(firebaseUser);
           error = e.message.isNotEmpty ? e.message : 'Invalid information. Please check your details.';
           log('Create user failed: ${e.message}');
@@ -151,13 +135,6 @@ class CreateAccountProvoider with ChangeNotifier {
         } catch (signOutError) {
           log('Failed to sign out after rollback: $signOutError');
         }
-      }
-      // Clear the token to maintain consistent auth state
-      try {
-        await _tokenStorage.clear();
-        log('Token cleared during rollback');
-      } catch (e) {
-        log('Failed to clear token during rollback: $e');
       }
     }
   }

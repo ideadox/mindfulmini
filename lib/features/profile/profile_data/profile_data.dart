@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:mindfulminis/features/profile/models/user_profile.dart';
 
 import '../../../core/api_constants.dart';
-import '../../../services/exceptions.dart';
-import '../../../services/http_service.dart';
+import '../../../core/services/exceptions.dart';
+import '../../../core/services/http_service.dart';
 
 class ProfileData {
   final HttpService httpService;

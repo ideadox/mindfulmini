@@ -5,7 +5,7 @@ import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/routine/screens/create_routine_screen.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/routine_provider.dart';

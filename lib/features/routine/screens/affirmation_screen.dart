@@ -10,7 +10,7 @@ import 'package:mindfulminis/common/widgets/listening_widget.dart';
 import 'package:mindfulminis/features/routine/models/affir_text_detail.dart';
 import 'package:mindfulminis/features/routine/providers/activities_provider.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import '../models/affir_container_design.dart';

@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/screens/splash_screen.dart';
+import 'package:mindfulminis/core/services/auth_service.dart';
 import 'package:mindfulminis/features/analytices/screens/analytic_screen.dart';
 import 'package:mindfulminis/features/authentication/screens/auth_main.dart';
 import 'package:mindfulminis/features/authentication/screens/phone_verification.dart';
@@ -31,16 +31,17 @@ import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
 import 'package:mindfulminis/features/yoga/screens/yoga_list.dart';
 import 'package:mindfulminis/features/yoga/screens/yoga_main.dart';
 
-import '../features/about/screens/about_screen.dart';
-import '../features/help_center/screens/help_center_screen.dart';
-import '../features/library/screens/library_screen.dart';
-import '../features/notifications/screens/notification_screen.dart';
-import '../features/onbaord/screens/describe_yourself.dart';
-import '../features/privacy/screens/privacy_screen.dart';
-import '../features/referals/screens/referal_screen.dart';
-import '../features/sidhi/screens/shidi_chat_screen.dart';
-import '../features/subscription/screens/manage_subscription.dart';
-import '../features/terms_service/screens/terms_service.dart';
+import '../../features/about/screens/about_screen.dart';
+import '../../features/help_center/screens/help_center_screen.dart';
+import '../../features/library/screens/library_screen.dart';
+import '../../features/notifications/screens/notification_screen.dart';
+import '../../features/onbaord/screens/describe_yourself.dart';
+import '../../features/privacy/screens/privacy_screen.dart';
+import '../../features/referals/screens/referal_screen.dart';
+import '../../features/sidhi/screens/shidi_chat_screen.dart';
+import '../../features/subscription/screens/manage_subscription.dart';
+import '../../features/terms_service/screens/terms_service.dart';
+import '../injection/injection.dart';
 
 // GoRouter configuration
 GoRouter buildRouter() {
@@ -269,17 +270,55 @@ GoRouter buildRouter() {
       // ),
     ],
     redirect: (context, state) {
-      bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
+      final isLoggedIn = sl<AuthService>().isAuthenticated;
+      final location = state.matchedLocation;
 
-      if (isLoggedIn && state.matchedLocation == '/') {
+      // Routes that don't require authentication
+      const publicRoutes = {
+        '/',               // Splash
+        '/onboard-screen',
+        '/auth-main',
+        '/login',
+        '/create-account',
+        '/otp-verification',
+        '/forgot-password',
+      };
+
+      // Routes that require auth but are part of onboarding flow
+      // (user is logged in via Firebase but hasn't completed profile setup)
+      const onboardingRoutes = {
+        '/kid-name',
+        '/dob-path',
+        '/feeling-today',
+        '/describe-yourself',
+      };
+
+      final isPublicRoute = publicRoutes.contains(location);
+      final isOnboardingRoute = onboardingRoutes.contains(location);
+
+      // Logged-in user on splash → go straight to home
+      if (isLoggedIn && location == '/') {
         return TabView.routePath;
       }
-      if (isLoggedIn && state.matchedLocation == CreateAccount.routePath) {
+
+      // Logged-in user trying to access auth screens (login, signup, etc.)
+      // → redirect to home (they're already authenticated)
+      // Exception: allow onboarding routes (kid-name, dob, etc.)
+      if (isLoggedIn && isPublicRoute && location != '/') {
+        return TabView.routePath;
+      }
+
+      // Allow onboarding routes for logged-in users (profile setup)
+      if (isLoggedIn && isOnboardingRoute) {
         return null;
       }
-      //  if (isLoggedIn && state.matchedLocation == CreateAccount.routePath) {
-      //   return null;
-      // }
+
+      // Not logged in, trying to access a protected route
+      // → redirect to onboard screen
+      if (!isLoggedIn && !isPublicRoute && !isOnboardingRoute) {
+        return OnboardScreen.routePath;
+      }
+
       return null;
     },
     observers: [FlutterSmartDialog.observer],

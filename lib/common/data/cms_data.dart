@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:mindfulminis/common/models/cms_model.dart';
 import 'package:mindfulminis/core/api_constants.dart';
-import 'package:mindfulminis/services/http_service.dart';
+import 'package:mindfulminis/core/services/http_service.dart';
 
 class CmsData {
   final HttpService _httpService;

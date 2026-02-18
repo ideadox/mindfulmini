@@ -12,14 +12,14 @@ import 'package:mindfulminis/features/referals/screens/referal_screen.dart';
 import 'package:mindfulminis/features/subscription/screens/manage_subscription.dart';
 import 'package:mindfulminis/features/terms_service/screens/terms_service.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:mindfulminis/core/services/auth_service.dart';
 
 import '../../library/screens/library_screen.dart';
 import '../../onboarding/screens/onboard_screen.dart';
 import '../../privacy/screens/privacy_screen.dart';
-import '../../../services/exceptions.dart';
-import '../../../services/shared_prefs.dart';
-import '../../../services/storage/token_storage.dart';
+import '../../../core/services/exceptions.dart';
+import '../../../core/services/shared_prefs.dart';
 import '../models/user_profile.dart';
 import '../profile_data/profile_data.dart';
 import '../screens/edit_profile_screen.dart';
@@ -28,11 +28,9 @@ class ProfileProvider with ChangeNotifier {
   final _navigationService = sl<GoRouter>();
   final _profileData = sl<ProfileData>();
   final _sharedPrefs = sl<SharedPrefs>();
-  final _tokenStorage = sl<TokenStorage>();
+  final _authService = sl<AuthService>();
 
-  final _firebaseAuth = FirebaseAuth.instance;
-
-  User? get currentUser => _firebaseAuth.currentUser;
+  User? get currentUser => _authService.currentUser;
 
   String? userId;
   UserProfile? userProfile;
@@ -114,7 +112,10 @@ class ProfileProvider with ChangeNotifier {
     await _forceLogout();
   }
 
-  /// Internal method to force logout and navigate to fresh state
+  /// Internal method to force logout and navigate to fresh state.
+  ///
+  /// Signs out of Firebase (which is the single source of auth truth),
+  /// clears local data, and navigates to the onboard screen.
   Future<void> _forceLogout() async {
     // Prevent multiple simultaneous logout calls
     if (_isLoggingOut) {
@@ -124,11 +125,9 @@ class ProfileProvider with ChangeNotifier {
     notifyListeners();
     
     try {
-      // Clear Firebase Auth
-      await FirebaseAuth.instance.signOut();
-      
-      // Clear secure storage (token)
-      await _tokenStorage.clear();
+      // Sign out via AuthService – the single source of auth truth.
+      // HttpService will no longer be able to get tokens after this.
+      await _authService.signOut();
       
       // Clear SharedPreferences (userId)
       await _sharedPrefs.clearUserId();
@@ -147,7 +146,7 @@ class ProfileProvider with ChangeNotifier {
       log('❌ Error during force logout: $e');
       // Even if logout fails, try to navigate to fresh state
       try {
-        _navigationService.goNamed('onboard');
+        _navigationService.goNamed(OnboardScreen.routeName);
       } catch (navError) {
         log('❌ Error navigating to onboard: $navError');
       }

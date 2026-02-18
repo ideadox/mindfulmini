@@ -3,6 +3,7 @@ class YogaContentModel {
   final String title;
   final Map<String, dynamic>? contentDescription;
   final Map<String, dynamic>? media;
+  final Map<String, dynamic>? audio;
   final List<Map<String, dynamic>>? tags;
   final bool? inSeries;
   final String? seriesName;
@@ -16,6 +17,7 @@ class YogaContentModel {
     required this.title,
     this.contentDescription,
     this.media,
+    this.audio,
     this.tags,
     this.inSeries,
     this.seriesName,
@@ -31,6 +33,7 @@ class YogaContentModel {
       title: json['title'] ?? '',
       contentDescription: json['contentDescription'],
       media: json['media'],
+      audio: json['audio'] is Map<String, dynamic> ? json['audio'] : null,
       tags:
           json['tags'] != null
               ? List<Map<String, dynamic>>.from(json['tags'])
@@ -50,6 +53,7 @@ class YogaContentModel {
       'title': title,
       'contentDescription': contentDescription,
       'media': media,
+      'audio': audio,
       'tags': tags,
       'inSeries': inSeries,
       'seriesName': seriesName,

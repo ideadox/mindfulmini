@@ -1,4 +1,4 @@
-import '../gen/assets.gen.dart';
+import '../../gen/assets.gen.dart';
 
 class BasicFunction {
   static int countWords(String sentence) {

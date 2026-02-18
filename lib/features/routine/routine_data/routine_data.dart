@@ -5,7 +5,7 @@ import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/features/routine/models/activity_model.dart';
 import 'package:mindfulminis/features/routine/models/activity_detail_model.dart';
 
-import 'package:mindfulminis/services/http_service.dart';
+import 'package:mindfulminis/core/services/http_service.dart';
 
 import '../models/routine_model.dart';
 

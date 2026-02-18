@@ -13,7 +13,7 @@ import 'package:mindfulminis/features/play_visuals/widgets/yoga_progress_bar.dar
 import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
 import 'package:mindfulminis/features/yoga/providers/yoga_play_visuals_provider.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 class PlayVisuals extends StatefulWidget {
@@ -511,7 +511,7 @@ class _PlayVisualsState extends State<PlayVisuals>
                         ),
                       ),
                       // Play/Pause button (center)
-                      _playButton(),
+                      _yogaPlayButton(),
                       // Forward 10 seconds button
                       IgnorePointer(
                         ignoring: !startAnimation,
@@ -815,6 +815,33 @@ class _PlayVisualsState extends State<PlayVisuals>
     );
   }
 
+  /// Play button for yoga flow — uses local state only (no CmsProvider)
+  Widget _yogaPlayButton() {
+    return IconButton(
+      style: IconButton.styleFrom(
+        maximumSize: const Size(50, 50),
+        minimumSize: const Size(50, 50),
+        alignment: Alignment.center,
+        backgroundColor: Colors.grey.shade300,
+      ),
+      onPressed: () {
+        if (!startAnimation) {
+          start();
+        } else {
+          setState(() {
+            isPlaying = !isPlaying;
+          });
+        }
+      },
+      icon: Icon(
+        isPlaying ? Icons.pause : Icons.play_arrow,
+        color: Theme.of(context).primaryColor,
+        size: 28,
+      ),
+    );
+  }
+
+  /// Play button for CMS flow — uses CmsProvider for audio playback
   Widget _playButton() {
     return Consumer<CmsProvider>(
       builder: (context, provider, _) {

@@ -3,7 +3,6 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_screen_size.dart';
-
 import 'package:mindfulminis/features/authentication/providers/phone_authh_provider.dart';
 import 'package:mindfulminis/features/breathing/providers/breathing_provider.dart';
 import 'package:mindfulminis/features/home/providers/rating_provider.dart';
@@ -12,13 +11,12 @@ import 'package:mindfulminis/features/offline_status/providers/offline_status_pr
 import 'package:mindfulminis/features/onbaord/providers/onboards_provider.dart';
 import 'package:mindfulminis/features/profile/providers/profile_provider.dart';
 import 'package:mindfulminis/features/yoga/providers/yoga_provider.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
-
 import 'common/providers/audio_manager.dart';
 
-class Mindfulminis extends StatelessWidget {
-  const Mindfulminis({super.key});
+class MindfulminisApp extends StatelessWidget {
+  const MindfulminisApp({super.key});
 
   // This widget is the root of your application.
   @override

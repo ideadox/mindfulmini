@@ -7,7 +7,7 @@ import 'package:mindfulminis/features/routine/providers/routine_provider.dart';
 import 'package:mindfulminis/features/routine/screens/create_routine_screen.dart';
 import 'package:mindfulminis/features/routine/screens/routine_detail_screen.dart';
 import 'package:mindfulminis/features/routine/widgets/myroutine_brief_card.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 class MyRoutineBaseScreen extends StatelessWidget {

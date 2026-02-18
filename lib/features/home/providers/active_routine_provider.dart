@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../injection/injection.dart';
+import '../../../core/injection/injection.dart';
 import '../../routine/models/routine_model.dart';
 import '../../routine/routine_data/routine_data.dart';
 
