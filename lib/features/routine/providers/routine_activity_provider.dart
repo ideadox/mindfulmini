@@ -1,37 +1,26 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/features/routine/models/activity_model.dart';
 
 import '../../../core/injection/injection.dart';
 import '../routine_data/routine_data.dart';
 
 class RoutineActivityProvider with ChangeNotifier {
-  final _navigationService = sl<GoRouter>();
   final _routineData = sl<RoutineData>();
 
   bool loading = false;
   bool innerLoading = false;
 
-  RoutineActivityProvider(String id, String date) {
+  RoutineActivityProvider(String id, String date, {DateTime? initialDate}) {
+    if (initialDate != null) selectedDate = initialDate;
     getRoutineActivity(id, date);
   }
-
-  final List<String> customOrder = [
-    'Gratitude Journal',
-    'Affirmation',
-    'Meditation',
-    'Yoga',
-    'Breathing',
-    'Stories',
-    'Mini body scan',
-  ];
 
   GoalsSummary? activityModel;
   DateTime selectedDate = DateTime.now();
 
-  void selectDate(date) {
+  void selectDate(DateTime date) {
     selectedDate = date;
     notifyListeners();
   }
@@ -49,15 +38,12 @@ class RoutineActivityProvider with ChangeNotifier {
       }
       notifyListeners();
 
-      log(date);
+      log('Fetching routine activity for id: $id, date: $date');
       activityModel = await _routineData.getRoutineActivity(id, date);
-
-      // activityModel?.activityContent.sort(
-      //   (a, b) =>
-      //       customOrder.indexOf(a.goal).compareTo(customOrder.indexOf(b.goal)),
-      // );
     } catch (e) {
-      rethrow;
+      log('Error fetching routine activity: $e');
+      // Don't rethrow — show empty state instead of crashing
+      activityModel = null;
     } finally {
       loading = false;
       innerLoading = false;
@@ -67,35 +53,21 @@ class RoutineActivityProvider with ChangeNotifier {
 
   bool updating = false;
 
-  Future<void> updateActivityContentProgress(String id, int progress) async {
+  /// Updates progress for a specific activity via PATCH
+  Future<void> updateActivityContentProgress(
+    String activityId,
+    int progress,
+  ) async {
     try {
       updating = true;
       notifyListeners();
-      await _routineData.updateRoutineActivityPercent(id, progress);
+      await _routineData.updateActivityProgress(activityId, progress);
     } catch (e) {
+      log('Error updating activity progress: $e');
       rethrow;
     } finally {
       updating = false;
       notifyListeners();
     }
   }
-
-  // Future<void> createJournal(String des, String acc) async {
-  //   try {
-  //     var map = {
-  //       "profileId": _sharedPrefs.getUserId(),
-  //       "activityId": "<objectId>",
-  //       "emotion": slectedFeeling?.trim(),
-  //       "emotionDescription": des.trim(),
-  //       "accomplishments": acc.trim(),
-  //       "date": "2025-06-24",
-  //     };
-  //     log(map.toString());
-  //     // return;
-  //     await _routineData.createJournal(map);
-  //     // showCelebrateDailog();
-  //   } catch (e) {
-  //     SmartDialog.showToast('Something went wrong. Please try again later.');
-  //   }
-  // }
 }

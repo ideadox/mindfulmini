@@ -19,6 +19,7 @@ import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
 import 'package:mindfulminis/features/profile/screens/app_setting_screen.dart';
 import 'package:mindfulminis/features/profile/screens/edit_profile_screen.dart';
 import 'package:mindfulminis/features/profile/screens/language_screen.dart';
+import 'package:mindfulminis/features/routine/models/routine_model.dart';
 import 'package:mindfulminis/features/routine/screens/affirmation_screen.dart';
 import 'package:mindfulminis/features/routine/screens/create_routine_screen.dart';
 import 'package:mindfulminis/features/routine/screens/my_routine_screen.dart';
@@ -148,8 +149,12 @@ GoRouter buildRouter() {
         name: RoutineDetailScreen.routeName,
         builder: (context, state) {
           String id = state.pathParameters['routineId'] ?? "";
+          final routineModel = state.extra as RoutineModel?;
 
-          return RoutineDetailScreen(routineId: id);
+          return RoutineDetailScreen(
+            routineId: id,
+            routineModel: routineModel,
+          );
         },
       ),
       GoRoute(

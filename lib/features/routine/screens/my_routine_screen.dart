@@ -48,6 +48,11 @@ class MyRoutineScreen extends StatelessWidget {
                     child: Center(child: CircularProgressIndicator()),
                   );
                 }
+                // Bulletproof: if routines loaded but progress not yet fetched
+                if (provider.routines.isNotEmpty &&
+                    provider.routineProgress.isEmpty) {
+                  Future.microtask(() => provider.refreshProgress());
+                }
                 return Expanded(
                   child: RefreshIndicator(
                     onRefresh: () async {
@@ -59,14 +64,24 @@ class MyRoutineScreen extends StatelessWidget {
                       separatorBuilder: (context, index) => Space.h32,
                       itemBuilder: (context, index) {
                         final routineModel = provider.routines[index];
+                        final progress =
+                            provider.routineProgress[routineModel.id];
                         return InkWell(
-                          onTap: () {
-                            sl<GoRouter>().pushNamed(
+                          onTap: () async {
+                            await sl<GoRouter>().pushNamed(
                               RoutineDetailScreen.routeName,
                               pathParameters: {'routineId': routineModel.id},
+                              extra: routineModel,
                             );
+                            // Refresh progress when returning from detail
+                            if (context.mounted) {
+                              provider.refreshProgress();
+                            }
                           },
-                          child: MyroutineBriefCard(routineModel: routineModel),
+                          child: MyroutineBriefCard(
+                            routineModel: routineModel,
+                            activityProgress: progress,
+                          ),
                         );
                       },
                     ),

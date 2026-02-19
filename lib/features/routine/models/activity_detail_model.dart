@@ -39,19 +39,19 @@ class ActivityDetailModel {
 
   factory ActivityDetailModel.fromJson(Map<String, dynamic> json) {
     return ActivityDetailModel(
-      id: json['_id'] as String,
+      id: json['_id'] as String? ?? json['id'] as String? ?? '',
       date: DateTime.parse(json['date'] as String),
-      goal: json['goal'] as String,
-      routineId: json['routineId'] as String,
-      profileId: json['profileId'] as String,
+      goal: json['goal'] as String? ?? '',
+      routineId: json['routineId'] as String? ?? '',
+      profileId: json['profileId'] as String? ?? '',
       contentId: json['contentId'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String),
       hasDisliked: json['hasDisliked'] as bool? ?? false,
       hasFinished: json['hasFinished'] as bool? ?? false,
       hasLiked: json['hasLiked'] as bool? ?? false,
       hasStarted: json['hasStarted'] as bool? ?? false,
-      progressStatus: json['progressStatus'] as int? ?? 0,
-      status: json['status'] as String? ?? 'pending',
+      progressStatus: (json['progressStatus'] as num?)?.toInt() ?? 0,
+      status: json['status'] as String? ?? 'not-started',
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       viewCounted: json['viewCounted'] as bool? ?? false,
       content:
@@ -146,11 +146,12 @@ class ContentDetail {
 
   factory ContentDetail.fromJson(Map<String, dynamic> json) {
     return ContentDetail(
-      id: json['_id'] as String,
+      id: json['_id'] as String? ?? json['id'] as String? ?? '',
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
-      title: json['title'] as String,
-      contentDescription: json['contentDescription'] as Map<String, dynamic>,
+      title: json['title'] as String? ?? '',
+      contentDescription:
+          json['contentDescription'] as Map<String, dynamic>? ?? {},
       media:
           json['media'] != null
               ? MediaDetail.fromJson(json['media'] as Map<String, dynamic>)
@@ -161,7 +162,7 @@ class ContentDetail {
               .toList(),
       inSeries: json['inSeries'] as bool?,
       seriesName: json['seriesName'] as String?,
-      seriesIndex: json['seriesIndex'] as int?,
+      seriesIndex: (json['seriesIndex'] as num?)?.toInt(),
     );
   }
 
@@ -234,17 +235,17 @@ class MediaDetail {
 
   factory MediaDetail.fromJson(Map<String, dynamic> json) {
     return MediaDetail(
-      id: json['_id'] as String,
+      id: json['_id'] as String? ?? json['id'] as String? ?? '',
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
-      filename: json['filename'] as String,
-      mimeType: json['mimeType'] as String,
-      filesize: json['filesize'] as int,
-      width: json['width'] as int,
-      height: json['height'] as int,
-      focalX: json['focalX'] as int,
-      focalY: json['focalY'] as int,
-      prefix: json['prefix'] as String,
+      filename: json['filename'] as String? ?? '',
+      mimeType: json['mimeType'] as String? ?? '',
+      filesize: (json['filesize'] as num?)?.toInt() ?? 0,
+      width: (json['width'] as num?)?.toInt() ?? 0,
+      height: (json['height'] as num?)?.toInt() ?? 0,
+      focalX: (json['focalX'] as num?)?.toInt() ?? 0,
+      focalY: (json['focalY'] as num?)?.toInt() ?? 0,
+      prefix: json['prefix'] as String? ?? '',
     );
   }
 

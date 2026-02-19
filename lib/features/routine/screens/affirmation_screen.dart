@@ -11,7 +11,6 @@ import 'package:mindfulminis/features/routine/models/affir_text_detail.dart';
 import 'package:mindfulminis/features/routine/providers/activities_provider.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
-import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import '../models/affir_container_design.dart';
 import '../widgets/complete_affirmation_widget.dart';
@@ -208,19 +207,40 @@ class _AffirmationScreenState extends State<AffirmationScreen>
       }
 
       if (_controller.isCompleted) {
-        SmartDialog.show(
-          clickMaskDismiss: false,
-          backType: SmartBackType.block,
-          maskWidget: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(color: Colors.black12),
-          ),
-          builder: (context) {
-            return CompleteAffirmationDialog();
-          },
-        );
+        _onAffirmationComplete();
       }
     });
+  }
+
+  bool _completionHandled = false;
+
+  /// Called when the affirmation animation finishes.
+  /// Updates the activity progress on the backend & shows the completion dialog.
+  Future<void> _onAffirmationComplete() async {
+    if (_completionHandled) return;
+    _completionHandled = true;
+
+    // Update activity progress to 100% for the affirmation activity.
+    // Await so the backend is updated before we show the dialog / user navigates back.
+    if (widget.routineId != null && widget.date != null) {
+      final provider = sl<ActivitiesProvider>();
+      final affirmationActivity = provider.getActivityByGoal('affirmation');
+      if (affirmationActivity != null) {
+        await provider.updateActivityProgress(affirmationActivity.id, 100);
+      }
+    }
+
+    SmartDialog.show(
+      clickMaskDismiss: false,
+      backType: SmartBackType.block,
+      maskWidget: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(color: Colors.black12),
+      ),
+      builder: (context) {
+        return CompleteAffirmationDialog();
+      },
+    );
   }
 
   void _initAnimations() {

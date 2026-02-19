@@ -13,6 +13,14 @@ class ActivitiesProvider with ChangeNotifier {
   String? error;
   List<ActivityDetailModel> activities = [];
 
+  /// Gratitude journal data returned alongside activities
+  Map<String, dynamic>? gratitude;
+
+  /// Affirmation content returned alongside activities
+  Map<String, dynamic>? affirmation;
+
+  /// GET /activities/activity?routineId=X&date=Y
+  /// Fetches all activities with their CMS content for a given routine+date
   Future<void> getActivities(String routineId, String date) async {
     try {
       loading = true;
@@ -20,7 +28,10 @@ class ActivitiesProvider with ChangeNotifier {
       notifyListeners();
 
       log('Fetching activities for routineId: $routineId, date: $date');
-      activities = await _routineData.getActivities(routineId, date);
+      final response = await _routineData.getActivities(routineId, date);
+      activities = response.activities;
+      gratitude = response.gratitude;
+      affirmation = response.affirmation;
 
       log('Fetched ${activities.length} activities');
     } catch (e) {
@@ -29,6 +40,48 @@ class ActivitiesProvider with ChangeNotifier {
     } finally {
       loading = false;
       notifyListeners();
+    }
+  }
+
+  /// Fetch and assign CMS content for a specific goal on a date.
+  /// This triggers the lazy content assignment on the backend.
+  Future<Map<String, dynamic>?> getActivityContent({
+    required String profileId,
+    required String goal,
+    required String date,
+  }) async {
+    try {
+      final data = await _routineData.getActivityContent(
+        profileId: profileId,
+        goal: goal,
+        date: date,
+      );
+      // Update the local activity with the returned data
+      if (data['activity'] != null) {
+        final updatedActivity = ActivityDetailModel.fromJson(
+          data['activity'] as Map<String, dynamic>,
+        );
+        final content =
+            data['content'] != null
+                ? ContentDetail.fromJson(
+                  data['content'] as Map<String, dynamic>,
+                )
+                : null;
+        final index = activities.indexWhere((a) => a.id == updatedActivity.id);
+        if (index != -1) {
+          activities[index] = activities[index].copyWith(
+            contentId: updatedActivity.contentId,
+            content: content,
+          );
+          notifyListeners();
+        }
+      }
+      return data;
+    } catch (e) {
+      log('Error fetching activity content: $e');
+      error = e.toString();
+      notifyListeners();
+      return null;
     }
   }
 
@@ -50,15 +103,30 @@ class ActivitiesProvider with ChangeNotifier {
     }
   }
 
+  /// PATCH /activities/progress — Update activity progress
   Future<void> updateActivityProgress(String activityId, int progress) async {
     try {
-      await _routineData.updateRoutineActivityPercent(activityId, progress);
+      await _routineData.updateActivityProgress(activityId, progress);
 
       // Update local activity
       final index = activities.indexWhere((a) => a.id == activityId);
       if (index != -1) {
+        final hasFinished =
+            activities[index].hasFinished || progress >= 100;
+        final hasStarted =
+            activities[index].hasStarted || progress > 0;
+        final status =
+            hasFinished
+                ? 'completed'
+                : progress > 0
+                    ? 'in-progress'
+                    : 'not-started';
+
         activities[index] = activities[index].copyWith(
           progressStatus: progress,
+          status: status,
+          hasFinished: hasFinished,
+          hasStarted: hasStarted,
         );
         notifyListeners();
       }
@@ -69,8 +137,33 @@ class ActivitiesProvider with ChangeNotifier {
     }
   }
 
+  /// PATCH /activities/reaction — Set like/dislike on an activity
+  Future<void> setActivityReaction(
+    String activityId,
+    String reaction,
+  ) async {
+    try {
+      await _routineData.setActivityReaction(activityId, reaction);
+
+      final index = activities.indexWhere((a) => a.id == activityId);
+      if (index != -1) {
+        activities[index] = activities[index].copyWith(
+          hasLiked: reaction == 'like',
+          hasDisliked: reaction == 'dislike',
+        );
+        notifyListeners();
+      }
+    } catch (e) {
+      log('Error setting activity reaction: $e');
+      error = e.toString();
+      notifyListeners();
+    }
+  }
+
   void clearActivities() {
     activities = [];
+    gratitude = null;
+    affirmation = null;
     error = null;
     notifyListeners();
   }

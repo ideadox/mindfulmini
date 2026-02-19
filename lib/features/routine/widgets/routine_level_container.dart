@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/widgets/custom_level_percent_indicator.dart';
 import 'package:mindfulminis/core/app_colors.dart';
+import 'package:mindfulminis/features/breathing/screens/breathing_screen.dart';
+import 'package:mindfulminis/features/meditation/screens/meditation_screen.dart';
 import 'package:mindfulminis/features/routine/screens/affirmation_screen.dart';
+import 'package:mindfulminis/features/stories/screens/stories_screen.dart';
+import 'package:mindfulminis/features/yoga/screens/yoga_main.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
 
@@ -15,6 +19,11 @@ class RoutineLevelContainer extends StatelessWidget {
   final Goal activityContentModel;
   final String? routineId;
   final String? date;
+  final int? dailyDurationMinutes;
+
+  /// Called after the user returns from an activity screen so the parent
+  /// can re-fetch progress data.
+  final VoidCallback? onReturn;
 
   const RoutineLevelContainer({
     super.key,
@@ -24,37 +33,87 @@ class RoutineLevelContainer extends StatelessWidget {
     required this.activityContentModel,
     this.routineId,
     this.date,
+    this.dailyDurationMinutes,
+    this.onReturn,
   });
+
+  /// Returns a goal-appropriate icon asset path
+  String _getGoalIcon(String goal) {
+    switch (goal.toLowerCase()) {
+      case 'affirmation':
+        return Assets.images.meditationRoutine.path;
+      case 'meditation':
+        return Assets.images.meditationRoutine.path;
+      case 'yoga':
+        return Assets.images.yogaRoutine.path;
+      case 'breathing':
+        return Assets.images.breathRoutine.path;
+      case 'story':
+      case 'stories':
+        return Assets.images.storyRoutine.path;
+      case 'mini body scan':
+      case 'minibodyscan':
+        return Assets.images.miniBodyScanRoutine.path;
+      default:
+        return Assets.images.meditationRoutine.path;
+    }
+  }
+
+  /// Navigate to the appropriate screen based on goal type.
+  /// Awaits the push so we can refresh data when the user returns.
+  Future<void> _onTap() async {
+    final goal = activityContentModel.title.toLowerCase();
+
+    switch (goal) {
+      case 'affirmation':
+        await sl<GoRouter>().pushNamed(
+          AffirmationScreen.routeName,
+          queryParameters: {
+            if (routineId != null) 'routineId': routineId!,
+            if (date != null) 'date': date!,
+          },
+        );
+        break;
+      case 'meditation':
+        await sl<GoRouter>().pushNamed(MeditationScreen.routeName);
+        break;
+      case 'yoga':
+        await sl<GoRouter>().pushNamed(YogaMain.routeName);
+        break;
+      case 'breathing':
+        await sl<GoRouter>().pushNamed(BreathingScreen.routeName);
+        break;
+      case 'story':
+      case 'stories':
+        await sl<GoRouter>().pushNamed(StoriesScreen.routeName);
+        break;
+      case 'gratitude journal':
+        // TODO: Navigate to Gratitude Journal creation screen
+        break;
+      case 'mini body scan':
+      case 'minibodyscan':
+        // TODO: Navigate to Mini Body Scan screen when available
+        break;
+      default:
+        return; // no navigation happened, skip onReturn
+    }
+
+    // Re-fetch progress data now that the user has returned
+    onReturn?.call();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final goalTitle = activityContentModel.title;
+    final displayTitle =
+        '${goalTitle[0].toUpperCase()}${goalTitle.substring(1)}';
+
+    // Calculate per-goal minutes from total daily minutes and number of goals
+    // Fallback to a reasonable default
+    final minutesPerDay = dailyDurationMinutes ?? 5;
+
     return InkWell(
-      onTap: () {
-        if (activityContentModel.title == 'Gratitude Journal') {
-          // sl<GoRouter>().pushNamed(
-          //   CreateJournalScreen.routeName,
-          //   pathParameters: {'activityId': activityContentModel.id},
-          // );
-        } else if (activityContentModel.title == 'affirmation') {
-          sl<GoRouter>().pushNamed(
-            AffirmationScreen.routeName,
-            queryParameters: {
-              if (routineId != null) 'routineId': routineId!,
-              if (date != null) 'date': date!,
-            },
-          );
-        } else if (activityContentModel.title == 'meditation') {
-          // Navigate to Meditation screen
-        } else if (activityContentModel.title == 'yoga') {
-          // Navigate to Yoga screen
-        } else if (activityContentModel.title == 'breathing') {
-          // Navigate to Breathing screen
-        } else if (activityContentModel.title == 'stories') {
-          // Navigate to Stories screen
-        } else if (activityContentModel.title == 'mini body scan') {
-          // Navigate to Mini body scan screen
-        }
-      },
+      onTap: _onTap,
       child: Container(
         decoration: BoxDecoration(
           border:
@@ -65,27 +124,26 @@ class RoutineLevelContainer extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
         ),
         child: Container(
-          margin: EdgeInsets.all(1),
+          margin: const EdgeInsets.all(1),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
           ),
           child: ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             leading: CircleAvatar(
               radius: 35,
-              backgroundImage: AssetImage(
-                Assets.dummy.breathingExeActivity.path,
-              ),
+              backgroundImage: AssetImage(_getGoalIcon(goalTitle)),
             ),
             title: Text(
-              '${activityContentModel.title[0].toUpperCase()}${activityContentModel.title.substring(1)}',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              displayTitle,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
             subtitle: Text(
-              '5 min per day',
+              '$minutesPerDay min per day',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,

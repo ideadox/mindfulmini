@@ -14,30 +14,50 @@ class RoutineDecider extends StatelessWidget {
     return Consumer<ProfileProvider>(
       builder: (context, profileProvider, _) {
         if (profileProvider.loading || profileProvider.userProfile == null) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
         final profileId = profileProvider.userProfile!.id;
 
         return ChangeNotifierProvider(
-      create: (context) => RoutineProvider(profileId),
-
-      builder: (context, child) {
-        return child!;
-      },
-
-      child: Consumer<RoutineProvider>(
-        builder: (context, p, _) {
-          if (p.loading) {
-            return Center(child: CircularProgressIndicator());
-          }
-          if (p.routines.isNotEmpty) {
-            return MyRoutineBaseScreen();
-          }
-          return RoutineScreen();
-        },
-      ),
-    );
+          create: (context) => RoutineProvider(profileId),
+          builder: (context, child) => child!,
+          child: Consumer<RoutineProvider>(
+            builder: (context, p, _) {
+              if (p.loading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (p.error != null) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.error_outline,
+                        size: 48,
+                        color: Colors.red,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Failed to load routines',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 8),
+                      TextButton(
+                        onPressed: () => p.getRoutines(),
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              if (p.routines.isNotEmpty) {
+                return MyRoutineBaseScreen();
+              }
+              return RoutineScreen();
+            },
+          ),
+        );
       },
     );
   }

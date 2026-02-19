@@ -27,10 +27,11 @@ class ApiConstants {
   //routine
   static String createRoutineUrl = '$baseUrl/routines';
   static String getRoutinesUrl = '$baseUrl/routines';
-  static String getRoutineActivityUrl = '$baseUrl/api/activity/getActivity';
+  static String getGoalsUrl = '$baseUrl/routines/goals';
   static String getActivitiesUrl = '$baseUrl/activities/activity';
-  static String updateRoutineActivityPercentUrl =
-      '$baseUrl/api/activityContent/updateActivityContentProgressById/';
+  static String updateActivityProgressUrl = '$baseUrl/activities/progress';
+  static String getActivityContentUrl = '$baseUrl/activities/content';
+  static String setActivityReactionUrl = '$baseUrl/activities/reaction';
 
   //gratitude journal
   static String addGratitudeJournalUrl = '$baseUrl/activities/gratitude';
@@ -42,7 +43,6 @@ class ApiConstants {
   static String cmsUrl = '$baseUrl/cms';
 
   static String cmsByIdUrl = '$baseUrl/cms/content';
-  static String getGoalsUrl = '$baseUrl/routines/goals';
   static String getMonthlyGratitudeUrl = '$baseUrl/activities/gratitude/month';
 
   // yoga

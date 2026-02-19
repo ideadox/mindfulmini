@@ -10,13 +10,11 @@ import 'package:mindfulminis/common/widgets/custom_dailog.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
 
-import '../../../core/services/shared_prefs.dart';
 import '../routine_data/routine_data.dart';
 
 class CreateRoutineProvider with ChangeNotifier {
   final _navigationService = sl<GoRouter>();
   final _routineData = sl<RoutineData>();
-  final _sharedPrefs = sl<SharedPrefs>();
 
   String? durationDays;
   String? timeOfDay;
@@ -89,16 +87,27 @@ class CreateRoutineProvider with ChangeNotifier {
     try {
       creating = true;
       notifyListeners();
-      goals = ['Affirmation', ...goals];
+      // Always include 'affirmation' as the first goal, then user-selected goals
+      final allGoals = <String>['Affirmation'];
+      for (final g in goals) {
+        if (g.toLowerCase() != 'affirmation' && !allGoals.contains(g)) {
+          allGoals.add(g);
+        }
+      }
+      // Also always include 'gratitude journal' as the last goal
+      if (!allGoals.any(
+        (g) => g.toLowerCase() == 'gratitude journal',
+      )) {
+        allGoals.add('Gratitude Journal');
+      }
+
       var map = {
         "profileId": profileId,
-        "startDate": DateFormat(
-          'yyyy-MM-dd',
-        ).format(DateTime.now().add(Duration(days: 1))),
+        "startDate": DateFormat('yyyy-MM-dd').format(DateTime.now()),
         "durationDays": int.parse(durationDays!),
         "timeOfDay": timeOfDay?.toLowerCase(),
         "dailyDurationMinutes": int.parse(dailyDurationMinutes!),
-        "goals": goals.map((g) => g.toLowerCase()).toList(),
+        "goals": allGoals.map((g) => g.toLowerCase()).toList(),
         "hasReminder": remainder,
         if (remainder) "reminderDays": selectedDay,
         if (remainder) "reminderTime": timeOfDayTo24Hour(selectedTime!),
