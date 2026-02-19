@@ -49,11 +49,11 @@ class _ChangeYourNameState extends State<ChangeYourName> {
 
               GradientButton(
                 onPressed:
-                    provider.updating
+                    provider.updating || provider.userProfile == null
                         ? null
                         : () async {
                           try {
-                            UserProfile updatedProfile = provider.userProfile
+                            UserProfile updatedProfile = provider.userProfile!
                                 .copyWith(fullname: nameController.text.trim());
                             await provider.updateProfile(updatedProfile);
                           } catch (e) {

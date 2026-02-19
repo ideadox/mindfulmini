@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../providers/shidi_chat_provider.dart';
 

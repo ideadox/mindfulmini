@@ -10,7 +10,7 @@ import 'package:mindfulminis/features/sidhi/providers/shidi_chat_provider.dart';
 import 'package:mindfulminis/features/sidhi/screens/shidi_voice_screen.dart';
 import 'package:mindfulminis/features/sidhi/widgets/shidi_chat_tile.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 class ShidiChatScreen extends StatelessWidget {

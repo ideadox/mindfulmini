@@ -4,10 +4,10 @@ import 'package:mindfulminis/common/widgets/time_widget.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 
 import '../../../common/widgets/views_widget.dart';
-import '../../play visuals/screen/play_visuals.dart';
+import '../../play_visuals/screen/play_visuals.dart';
 
 class StoriesCategories extends StatelessWidget {
   const StoriesCategories({super.key});

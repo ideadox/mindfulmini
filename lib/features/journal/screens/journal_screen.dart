@@ -17,9 +17,17 @@ class JournalScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final profileId = context.read<ProfileProvider>().userProfile.id;
+    return Consumer<ProfileProvider>(
+      builder: (context, profileProvider, _) {
+        if (profileProvider.loading || profileProvider.userProfile == null) {
+          return Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
 
-    String getGreeting() {
+        final profileId = profileProvider.userProfile!.id;
+
+        String getGreeting() {
       final hour = DateTime.now().hour;
 
       if (hour >= 5 && hour < 12) {
@@ -192,6 +200,8 @@ class JournalScreen extends StatelessWidget {
           },
         ),
       ),
+    );
+      },
     );
   }
 }

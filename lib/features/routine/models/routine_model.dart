@@ -29,14 +29,17 @@ class RoutineModel {
     required this.v,
   });
 
+  /// Returns the 0-based day number since the routine started.
+  /// If the routine hasn't started yet, returns 0.
   int dayNumberSinceStart() {
     final now = DateTime.now();
-    return now.difference(startDate).inDays;
+    final diff = now.difference(startDate).inDays;
+    return diff < 0 ? 0 : diff;
   }
 
   factory RoutineModel.fromJson(Map<String, dynamic> json) {
     return RoutineModel(
-      id: json['_id'] ?? '',
+      id: json['_id'] ?? json['id'] ?? '',
       profileId: json['profileId'] ?? '',
       startDate: DateTime.parse(json['startDate']),
       durationDays: json['durationDays'] ?? 0,

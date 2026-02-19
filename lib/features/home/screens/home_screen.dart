@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
+import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/home/providers/home_provider.dart';
 import 'package:mindfulminis/features/home/widgets/add_feeling/add_feeling_widget.dart';
 import 'package:mindfulminis/features/home/widgets/breathing/breathing.dart';
@@ -12,8 +16,9 @@ import 'package:mindfulminis/features/home/widgets/stories/stories.dart';
 import 'package:mindfulminis/features/home/widgets/yoga_flow/yoga_flow.dart';
 import 'package:mindfulminis/features/notifications/screens/notification_screen.dart';
 import 'package:mindfulminis/features/profile/providers/profile_provider.dart';
+import 'package:mindfulminis/features/routine/screens/create_routine_screen.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/active_routine_provider.dart';
@@ -36,15 +41,41 @@ class HomeScreen extends StatelessWidget {
         extendBodyBehindAppBar: true,
         body: Consumer2<ProfileProvider, HomeProvider>(
           builder: (context, pp, hp, _) {
-            if (!pp.loading) {
-              context.read<ActiveRoutineProvider>().getRoutines(
-                pp.userProfile.id,
-                notify: false,
-              );
+            // Only show loading if profile is actually loading
+            if (pp.loading) {
+              return const Center(child: CircularProgressIndicator());
             }
 
-            if (hp.isLoading) {
+            // Critical: If profile is missing after loading completes, log out immediately
+            // But only if not already logging out to prevent multiple calls
+            if (!pp.loading && pp.userProfile == null && !pp.isLoggingOut) {
+              // Use WidgetsBinding to avoid calling in build
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (context.mounted) {
+                  log('❌ Profile is missing in HomeScreen - logging out user');
+                  context.read<ProfileProvider>().logOutUser();
+                }
+              });
+              // Show loading while logout is in progress
               return const Center(child: CircularProgressIndicator());
+            }
+            
+            // Show loading while logout is in progress
+            if (pp.isLoggingOut) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            // If profile loaded successfully, get routines
+            if (!pp.loading && pp.userProfile != null) {
+              // Use WidgetsBinding to avoid calling in build
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (context.mounted) {
+                  context.read<ActiveRoutineProvider>().getRoutines(
+                    pp.userProfile!.id,
+                    notify: false,
+                  );
+                }
+              });
             }
 
             return SingleChildScrollView(
@@ -99,11 +130,43 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         Space.h12,
-                        // CreateRoutineButton(),
-                        Consumer<ActiveRoutineProvider>(
-                          builder: (context, p, _) {
+                        Consumer2<ActiveRoutineProvider, ProfileProvider>(
+                          builder: (context, p, pp, _) {
                             if (p.routines.isEmpty) {
-                              return SizedBox.shrink();
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 16),
+                                child: SizedBox(
+                                  width: 170,
+                                  height: 48,
+                                  child: GradientButton(
+                                    onPressed: () async {
+                                      await sl<GoRouter>().pushNamed(
+                                        CreateRoutineScreen.routeName,
+                                      );
+                                      if (context.mounted &&
+                                          pp.userProfile != null) {
+                                        context
+                                            .read<ActiveRoutineProvider>()
+                                            .getRoutines(
+                                              pp.userProfile!.id,
+                                              notify: false,
+                                            );
+                                      }
+                                    },
+                                    child: Center(
+                                      child: Text(
+                                        'Create Routine',
+                                        style: AppTextTheme.mainButtonTextStyle(
+                                          context,
+                                        ).titleLarge?.copyWith(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
                             }
                             return MyroutineSlider();
                           },

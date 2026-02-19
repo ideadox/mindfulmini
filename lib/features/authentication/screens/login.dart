@@ -7,7 +7,7 @@ import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/features/forgot_password/screens/forgot_password.dart';
 import 'package:mindfulminis/features/authentication/screens/create_account.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/widgets/common_text_form_field.dart';

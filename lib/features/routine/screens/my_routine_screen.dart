@@ -8,7 +8,7 @@ import 'package:mindfulminis/features/routine/providers/routine_provider.dart';
 import 'package:mindfulminis/features/routine/screens/create_routine_screen.dart';
 import 'package:mindfulminis/features/routine/screens/routine_detail_screen.dart';
 import 'package:mindfulminis/features/routine/widgets/myroutine_brief_card.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 class MyRoutineScreen extends StatelessWidget {
@@ -19,8 +19,16 @@ class MyRoutineScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final profileId = context.read<ProfileProvider>().userProfile.id;
-    return ChangeNotifierProvider(
+    return Consumer<ProfileProvider>(
+      builder: (context, profileProvider, _) {
+        if (profileProvider.loading || profileProvider.userProfile == null) {
+          return Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        final profileId = profileProvider.userProfile!.id;
+        return ChangeNotifierProvider(
       create: (context) => RoutineProvider(profileId),
       child: Scaffold(
         body: Column(
@@ -40,6 +48,11 @@ class MyRoutineScreen extends StatelessWidget {
                     child: Center(child: CircularProgressIndicator()),
                   );
                 }
+                // Bulletproof: if routines loaded but progress not yet fetched
+                if (provider.routines.isNotEmpty &&
+                    provider.routineProgress.isEmpty) {
+                  Future.microtask(() => provider.refreshProgress());
+                }
                 return Expanded(
                   child: RefreshIndicator(
                     onRefresh: () async {
@@ -51,14 +64,24 @@ class MyRoutineScreen extends StatelessWidget {
                       separatorBuilder: (context, index) => Space.h32,
                       itemBuilder: (context, index) {
                         final routineModel = provider.routines[index];
+                        final progress =
+                            provider.routineProgress[routineModel.id];
                         return InkWell(
-                          onTap: () {
-                            sl<GoRouter>().pushNamed(
+                          onTap: () async {
+                            await sl<GoRouter>().pushNamed(
                               RoutineDetailScreen.routeName,
                               pathParameters: {'routineId': routineModel.id},
+                              extra: routineModel,
                             );
+                            // Refresh progress when returning from detail
+                            if (context.mounted) {
+                              provider.refreshProgress();
+                            }
                           },
-                          child: MyroutineBriefCard(routineModel: routineModel),
+                          child: MyroutineBriefCard(
+                            routineModel: routineModel,
+                            activityProgress: progress,
+                          ),
                         );
                       },
                     ),
@@ -89,6 +112,8 @@ class MyRoutineScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+      },
     );
   }
 }

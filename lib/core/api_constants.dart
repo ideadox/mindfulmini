@@ -1,12 +1,20 @@
 class ApiConstants {
-  static String baseUrl = 'https://apiv1.mindfulminis.in/api/v1';
-  static String mediaBaseUrl =
-      'https://minfulminis.s3.eu-north-1.amazonaws.com/payloadcms';
+  // Production URL
+  static String baseUrl = 'https://devapi.mindfulminis.life/api/v1';
+  // Local testing: static String baseUrl = 'http://localhost:3000/api/v1';
+  
+  // Old bucket (deprecated)
+  // static String mediaBaseUrl =
+  // 'https://minfulminis.s3.eu-north-1.amazonaws.com/payloadcms/';
 
+  // New bucket in ap-south-1 (Mumbai) - with payloadcms folder
+  static String mediaBaseUrl =
+      'https://mm-lite-store.s3.ap-south-1.amazonaws.com/payloadcms/';
   //user
   static String createUserUrl = '$baseUrl/users';
   static String createProfileUrl = '$baseUrl/profiles';
-  static String loginUserUrl = '$baseUrl/users/login';
+  // Note: No /users/login route exists on the backend.
+  // Auth is handled via Firebase ID tokens verified by the auth middleware.
   static String listProfilesUrl = '$baseUrl/profiles';
   static String updateProfileUrl = '$baseUrl/profiles';
 
@@ -19,9 +27,11 @@ class ApiConstants {
   //routine
   static String createRoutineUrl = '$baseUrl/routines';
   static String getRoutinesUrl = '$baseUrl/routines';
-  static String getRoutineActivityUrl = '$baseUrl/api/activity/getActivity';
-  static String updateRoutineActivityPercentUrl =
-      '$baseUrl/api/activityContent/updateActivityContentProgressById/';
+  static String getGoalsUrl = '$baseUrl/routines/goals';
+  static String getActivitiesUrl = '$baseUrl/activities/activity';
+  static String updateActivityProgressUrl = '$baseUrl/activities/progress';
+  static String getActivityContentUrl = '$baseUrl/activities/content';
+  static String setActivityReactionUrl = '$baseUrl/activities/reaction';
 
   //gratitude journal
   static String addGratitudeJournalUrl = '$baseUrl/activities/gratitude';
@@ -33,8 +43,17 @@ class ApiConstants {
   static String cmsUrl = '$baseUrl/cms';
 
   static String cmsByIdUrl = '$baseUrl/cms/content';
-  static String getGoalsUrl = '$baseUrl/routines/goals';
-  static String getMonthlyGratitudeUrl = '$baseUrl//activities/gratitude/month';
+  static String getMonthlyGratitudeUrl = '$baseUrl/activities/gratitude/month';
+
+  // yoga
+  static String getYogaUrl = '$baseUrl/cms/yoga';
+
+  // meditation
+  static String getMeditationUrl = '$baseUrl/cms/meditation';
+  
+  // breathing
+  static String getBreathingUrl = '$baseUrl/cms/breathing';
   // /routines/goals?routineId=6912fd515fcf7118e9c04553&date=2025-11-11
   // /activities/gratitude/month?profileId=690dcfdc78f23500d69992bd&year=2025&month=11
+  static String getStoriesUrl = '$baseUrl/cms/stories';
 }

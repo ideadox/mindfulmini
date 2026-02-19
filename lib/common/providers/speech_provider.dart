@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/features/sidhi/providers/shidi_chat_provider.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SpeechProvider with ChangeNotifier {

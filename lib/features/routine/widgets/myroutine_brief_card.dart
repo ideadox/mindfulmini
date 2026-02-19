@@ -10,10 +10,34 @@ import 'package:mindfulminis/gen/assets.gen.dart';
 
 class MyroutineBriefCard extends StatelessWidget {
   final RoutineModel routineModel;
-  const MyroutineBriefCard({super.key, required this.routineModel});
+
+  /// Today's average activity-completion progress (0–100).
+  /// When provided, the card shows this instead of time-based progress.
+  final int? activityProgress;
+
+  const MyroutineBriefCard({
+    super.key,
+    required this.routineModel,
+    this.activityProgress,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final daysSinceStart = routineModel.dayNumberSinceStart();
+
+    // Use activity-based progress when available, otherwise fall back to
+    // time-based progress.
+    final double percentComplete;
+    if (activityProgress != null) {
+      percentComplete = activityProgress!.clamp(0, 100).toDouble();
+    } else {
+      final totalDays = routineModel.durationDays;
+      percentComplete =
+          totalDays > 0
+              ? ((daysSinceStart / totalDays) * 100).clamp(0, 100).toDouble()
+              : 0.0;
+    }
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade200),
@@ -25,13 +49,12 @@ class MyroutineBriefCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+            color: Colors.grey.withValues(alpha: 0.2),
             blurRadius: 1,
-            offset: Offset(0, 1),
+            offset: const Offset(0, 1),
           ),
         ],
       ),
-
       child: Stack(
         children: [
           Positioned(
@@ -42,10 +65,9 @@ class MyroutineBriefCard extends StatelessWidget {
             bottom: 0,
             child: SvgPicture.asset(Assets.vectors.myroutineCenter),
           ),
-
           Positioned(
             child: Padding(
-              padding: EdgeInsets.only(
+              padding: const EdgeInsets.only(
                 left: 20,
                 right: 12,
                 top: 15,
@@ -58,7 +80,11 @@ class MyroutineBriefCard extends StatelessWidget {
                     children: [
                       SvgPicture.asset(Assets.icons.sunIcon),
                       Space.w8,
-                      Text(routineModel.timeOfDay),
+                      Text(
+                        routineModel.timeOfDay.isNotEmpty
+                            ? '${routineModel.timeOfDay[0].toUpperCase()}${routineModel.timeOfDay.substring(1)}'
+                            : 'Routine',
+                      ),
                     ],
                   ),
                   Space.h12,
@@ -81,13 +107,13 @@ class MyroutineBriefCard extends StatelessWidget {
                             Row(
                               children: [
                                 Container(
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                     horizontal: 10,
                                     vertical: 2,
                                   ),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(30),
-                                    color: AppColors.purple.withOpacity(0.4),
+                                    color: AppColors.purple.withValues(alpha: 0.4),
                                   ),
                                   child: Row(
                                     children: [
@@ -97,9 +123,9 @@ class MyroutineBriefCard extends StatelessWidget {
                                                 .toString(),
                                       ),
                                       Space.w4,
-                                      Text('Tasks'),
+                                      const Text('Tasks'),
                                       Space.w4,
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 18,
                                         child: VerticalDivider(
                                           thickness: 1,
@@ -112,14 +138,16 @@ class MyroutineBriefCard extends StatelessWidget {
                                                 .toString(),
                                       ),
                                       Space.w4,
-                                      Text('Min'),
+                                      const Text('Min'),
                                     ],
                                   ),
                                 ),
                                 Space.w8,
                                 Text(
-                                  "Day ${routineModel.dayNumberSinceStart()}",
-                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                  "Day $daysSinceStart",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ],
                             ),
@@ -128,34 +156,28 @@ class MyroutineBriefCard extends StatelessWidget {
                       ),
                       Expanded(
                         flex: 1,
-                        child: Builder(
-                          builder: (context) {
-                            return Container(
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-
-                                gradient: AppColors.primaryGradient,
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            gradient: AppColors.primaryGradient,
+                          ),
+                          child: Container(
+                            height: 42,
+                            alignment: Alignment.center,
+                            margin: const EdgeInsets.all(1),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: const Text(
+                              'Get Started',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
                               ),
-                              child: Container(
-                                height: 42,
-
-                                alignment: Alignment.center,
-                                margin: EdgeInsets.all(1),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: Text(
-                                  'Get Started',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -163,9 +185,13 @@ class MyroutineBriefCard extends StatelessWidget {
                   Space.h16,
                   Row(
                     children: [
-                      Expanded(child: FiveStepProgressBar(percentComplete: 20)),
+                      Expanded(
+                        child: FiveStepProgressBar(
+                          percentComplete: percentComplete,
+                        ),
+                      ),
                       Space.w8,
-                      Text('10%'),
+                      Text('${percentComplete.round()}%'),
                       Expanded(child: Container()),
                     ],
                   ),

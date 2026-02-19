@@ -1,12 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mindfulminis/common/widgets/time_widget.dart';
 import 'package:mindfulminis/common/widgets/views_widget.dart';
 
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
+import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/features/breathing/providers/breathing_provider.dart';
-import 'package:mindfulminis/gen/assets.gen.dart';
+import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 class BreathingCategory extends StatelessWidget {
@@ -85,33 +89,113 @@ class CategoryWiseList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.symmetric(vertical: 14),
-      shrinkWrap: true,
-      itemCount: 10,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisExtent: 268,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-      ),
-      itemBuilder: (context, index) {
-        return Stack(
-          children: [
-            Container(
-              height: 268,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(Assets.dummy.meditationCard.path),
-                ),
+    return Consumer<BreathingProvider>(
+      builder: (context, provider, _) {
+        if (provider.isLoading) {
+          return Container(
+            padding: EdgeInsets.symmetric(vertical: 14),
+            height: 268,
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        if (provider.breathingSessions.isEmpty) {
+          return Container(
+            padding: EdgeInsets.symmetric(vertical: 14),
+            height: 268,
+            child: Center(
+              child: Text(
+                'No breathing exercises available',
+                style: TextStyle(color: Colors.black45),
               ),
             ),
+          );
+        }
 
-            Positioned(right: 10, bottom: 10, child: TimeWidget(totalTime: 5)),
+        return GridView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.symmetric(vertical: 14),
+          shrinkWrap: true,
+          itemCount: provider.breathingSessions.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisExtent: 268,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+          ),
+          itemBuilder: (context, index) {
+            final breathingItem = provider.breathingSessions[index];
+            return InkWell(
+              onTap: () {
+                sl<GoRouter>().pushNamed(
+                  PlayVisuals.routeName,
+                  pathParameters: {
+                    'collection': 'breaths',
+                    'id': breathingItem.id,
+                  },
+                );
+              },
+              child: Stack(
+                children: [
+                  Container(
+                    height: 268,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: Uri.encodeFull(
+                        '${ApiConstants.mediaBaseUrl}${breathingItem.media?['filename'] ?? ''}',
+                      ),
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Container(
+                        color: Colors.grey.shade200,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.grey.shade400,
+                            ),
+                          ),
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        color: Colors.grey.shade200,
+                        child: Icon(
+                          Icons.broken_image,
+                          color: Colors.grey.shade400,
+                        ),
+                      ),
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
 
-            Positioned(right: 10, top: 10, child: ViewsWidget(totalViews: 122)),
-          ],
+                  Positioned(
+                    right: 10,
+                    bottom: 10,
+                    child: TimeWidget(
+                      totalTime: 5,
+                    ),
+                  ),
+
+                  Positioned(
+                    right: 10,
+                    top: 10,
+                    child: ViewsWidget(
+                      totalViews: breathingItem.viewCount ?? 0,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         );
       },
     );

@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../injection/injection.dart';
-import '../../../services/image_picker_helper.dart';
-import '../../../services/upload_file_service.dart';
+import '../../../core/api_constants.dart';
+import '../../../core/injection/injection.dart';
+import '../../../core/services/image_picker_helper.dart';
+import '../../../core/services/upload_file_service.dart';
 import '../profile_data/profile_data.dart';
 
 class EditImageProvider with ChangeNotifier {
@@ -43,7 +44,7 @@ class EditImageProvider with ChangeNotifier {
       }
       await _profileData.editImage(
         profileId,
-        'https://minfulminis.s3.eu-north-1.amazonaws.com/$urlKey',
+        '${ApiConstants.mediaBaseUrl}$urlKey',
       );
       _navigationService.pop(true);
     } catch (e) {

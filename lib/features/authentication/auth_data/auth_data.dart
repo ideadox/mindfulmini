@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:mindfulminis/core/api_constants.dart';
-import 'package:mindfulminis/services/http_service.dart';
+import 'package:mindfulminis/core/services/http_service.dart';
 
 class AuthData {
   final HttpService httpService;
@@ -21,30 +21,4 @@ class AuthData {
     }
   }
 
-  Future<String> loginUser(var map) async {
-    try {
-      final res = await httpService.post(
-        ApiConstants.loginUserUrl,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(map),
-      );
-
-      return res['data']['token'];
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  // Future<void> createUser(var map) async {
-  //   try {
-  //     final res = httpService.post(
-  //       ApiConstants.createUser,
-  //       headers: {'Content-Type': 'application/json'},
-  //       body: jsonEncode(map),
-  //     );
-  //     log(res.toString());
-  //   } catch (e) {
-  //     rethrow;
-  //   }
-  // }
 }

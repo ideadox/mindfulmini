@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:mindfulminis/features/profile/models/user_profile.dart';
 
 import '../../../core/api_constants.dart';
-import '../../../services/http_service.dart';
+import '../../../core/services/exceptions.dart';
+import '../../../core/services/http_service.dart';
 
 class ProfileData {
   final HttpService httpService;
@@ -11,6 +12,11 @@ class ProfileData {
   Future<UserProfile> getUser() async {
     try {
       final res = await httpService.get(ApiConstants.listProfilesUrl);
+
+      if (res['data'] == null || (res['data'] as List).isEmpty) {
+        // Throw a specific exception for missing profile
+        throw ProfileNotFoundException('No profile found');
+      }
 
       return UserProfile.fromJson(res['data'][0]);
     } catch (e) {

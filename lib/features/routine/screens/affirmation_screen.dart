@@ -8,7 +8,9 @@ import 'package:lottie/lottie.dart';
 import 'package:mindfulminis/common/widgets/custom_gradient_text.dart';
 import 'package:mindfulminis/common/widgets/listening_widget.dart';
 import 'package:mindfulminis/features/routine/models/affir_text_detail.dart';
+import 'package:mindfulminis/features/routine/providers/activities_provider.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:video_player/video_player.dart';
 import '../models/affir_container_design.dart';
 import '../widgets/complete_affirmation_widget.dart';
@@ -16,7 +18,11 @@ import '../widgets/complete_affirmation_widget.dart';
 class AffirmationScreen extends StatefulWidget {
   static String routeName = 'affirmation-screen';
   static String routePath = '/affirmation-screen';
-  const AffirmationScreen({super.key});
+
+  final String? routineId;
+  final String? date;
+
+  const AffirmationScreen({super.key, this.routineId, this.date});
 
   @override
   State<AffirmationScreen> createState() => _AffirmationScreenState();
@@ -150,6 +156,14 @@ class _AffirmationScreenState extends State<AffirmationScreen>
     _setContainerDesign();
     _initAnimations();
     _runAnimation();
+
+    // Fetch activities if routineId and date are provided
+    if (widget.routineId != null && widget.date != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final provider = sl<ActivitiesProvider>();
+        provider.getActivities(widget.routineId!, widget.date!);
+      });
+    }
   }
 
   @override
@@ -193,19 +207,40 @@ class _AffirmationScreenState extends State<AffirmationScreen>
       }
 
       if (_controller.isCompleted) {
-        SmartDialog.show(
-          clickMaskDismiss: false,
-          backType: SmartBackType.block,
-          maskWidget: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(color: Colors.black12),
-          ),
-          builder: (context) {
-            return CompleteAffirmationDialog();
-          },
-        );
+        _onAffirmationComplete();
       }
     });
+  }
+
+  bool _completionHandled = false;
+
+  /// Called when the affirmation animation finishes.
+  /// Updates the activity progress on the backend & shows the completion dialog.
+  Future<void> _onAffirmationComplete() async {
+    if (_completionHandled) return;
+    _completionHandled = true;
+
+    // Update activity progress to 100% for the affirmation activity.
+    // Await so the backend is updated before we show the dialog / user navigates back.
+    if (widget.routineId != null && widget.date != null) {
+      final provider = sl<ActivitiesProvider>();
+      final affirmationActivity = provider.getActivityByGoal('affirmation');
+      if (affirmationActivity != null) {
+        await provider.updateActivityProgress(affirmationActivity.id, 100);
+      }
+    }
+
+    SmartDialog.show(
+      clickMaskDismiss: false,
+      backType: SmartBackType.block,
+      maskWidget: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(color: Colors.black12),
+      ),
+      builder: (context) {
+        return CompleteAffirmationDialog();
+      },
+    );
   }
 
   void _initAnimations() {
@@ -678,6 +713,55 @@ class _AffirmationScreenState extends State<AffirmationScreen>
 
   @override
   Widget build(BuildContext context) {
+    final activitiesProvider = sl<ActivitiesProvider>();
+
+    return ListenableBuilder(
+      listenable: activitiesProvider,
+      builder: (context, child) {
+        // Show loader while fetching activities
+        if (activitiesProvider.loading) {
+          return Scaffold(body: Center(child: CircularProgressIndicator()));
+        }
+
+        // Show error if fetching failed
+        if (activitiesProvider.error != null) {
+          return Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error_outline, color: Colors.red, size: 64),
+                  SizedBox(height: 16),
+                  Text(
+                    'Error loading activity',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    activitiesProvider.error ?? 'Unknown error',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                  SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () {
+                      activitiesProvider.clearError();
+                    },
+                    child: Text('Retry'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        // Build normal UI
+        return _buildAffirmationUI(context);
+      },
+    );
+  }
+
+  Widget _buildAffirmationUI(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(

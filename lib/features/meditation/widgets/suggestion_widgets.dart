@@ -1,14 +1,19 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
+import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
+import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 
-import '../../play visuals/screen/play_visuals.dart';
+import '../../play_visuals/screen/play_visuals.dart';
 
 class SuggestionWidgets extends StatelessWidget {
-  const SuggestionWidgets({super.key});
+  final List<YogaContentModel> meditationModel;
+  const SuggestionWidgets({super.key, required this.meditationModel});
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +36,21 @@ class SuggestionWidgets extends StatelessWidget {
           height: 268,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: 10,
+            itemCount: meditationModel.length,
             separatorBuilder: (context, index) {
               return Space.w16;
             },
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () {
-                  sl<GoRouter>().pushNamed(PlayVisuals.routeName);
+                  // Navigate to meditation detail with collection and id
+                  sl<GoRouter>().pushNamed(
+                    PlayVisuals.routeName,
+                    queryParameters: {
+                      'collection': 'meditations',
+                      'id': meditationModel[index].id,
+                    },
+                  );
                 },
                 child: Stack(
                   children: [
@@ -48,9 +60,14 @@ class SuggestionWidgets extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Image.asset(
-                        Assets.dummy.meditationSuggestionCard.path,
+                      child: CachedNetworkImage(
+                        imageUrl:
+                            ApiConstants.mediaBaseUrl +
+                            meditationModel[index].media!['filename'],
                       ),
+                      // Image.asset(
+                      //   Assets.dummy.meditationSuggestionCard.path,
+                      // ),
                     ),
                   ],
                 ),

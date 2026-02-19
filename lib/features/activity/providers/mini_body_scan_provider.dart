@@ -3,7 +3,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../../common/data/cms_data.dart';
 import '../../../common/models/cms_model.dart';
-import '../../../injection/injection.dart';
+import '../../../core/injection/injection.dart';
 
 class MiniBodyScanProvider with ChangeNotifier {
   final _data = sl<CmsData>();

@@ -1,91 +1,184 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
+import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
-import 'package:mindfulminis/features/play%20visuals/screen/play_visuals.dart';
+import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
+import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
+import 'package:mindfulminis/features/yoga/providers/yoga_provider.dart';
+import 'package:mindfulminis/features/yoga/screens/widgets/yoga_list_shimmer_loader.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:provider/provider.dart';
 
-class YogaList extends StatelessWidget {
+class YogaList extends StatefulWidget {
   static String routeName = 'yoga-list';
   static String routePath = '/yoga-list';
 
-  const YogaList({super.key});
+  final String id;
+
+  const YogaList({super.key, required this.id});
+
+  @override
+  State<YogaList> createState() => _YogaListState();
+}
+
+class _YogaListState extends State<YogaList> {
+  @override
+  void initState() {
+    super.initState();
+    // Fetch yoga content by ID
+    Future.microtask(() {
+      sl<YogaProvider>().fetchYogaContent(widget.id);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Space.h40,
-            Stack(
-              alignment: Alignment.center,
+    return Consumer<YogaProvider>(
+      builder: (context, yogaProvider, child) {
+        if (yogaProvider.isContentLoading) {
+          return Scaffold(body: YogaListShimmerLoader());
+        }
+
+        return Scaffold(
+          body: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Space.h40,
+                Stack(
+                  alignment: Alignment.center,
                   children: [
-                    IconButton(
-                      onPressed: () {
-                        sl<GoRouter>().pop();
-                      },
-                      icon: Image.asset(Assets.icons.chevron.path),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            sl<GoRouter>().pop();
+                          },
+                          icon: Image.asset(Assets.icons.chevron.path),
+                        ),
+                        SizedBox(width: 48),
+                      ],
                     ),
-                    SizedBox(width: 48),
+                    Center(
+                      child: Text(
+                        yogaProvider.selectedContent?.title ?? 'Spring Yoga',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ],
                 ),
-                Center(
-                  child: Text(
-                    'Spring Yoga',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (yogaProvider.contentError != null)
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 40),
+                            child: Text('Error: ${yogaProvider.contentError}'),
+                          ),
+                        )
+                      else
+                        Column(
+                          children: [
+                            if (yogaProvider.selectedContent?.media != null &&
+                                yogaProvider
+                                        .selectedContent
+                                        ?.media?['filename'] !=
+                                    null)
+                              Container(
+                                width: double.infinity,
+                                height: 250,
+                                margin: EdgeInsets.only(bottom: 20),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: CachedNetworkImage(
+                                  imageUrl:
+                                      ApiConstants.mediaBaseUrl +
+                                      (yogaProvider
+                                              .selectedContent
+                                              ?.media?['filename'] ??
+                                          ''),
+                                  fit: BoxFit.cover,
+                                  placeholder:
+                                      (context, url) => Container(
+                                        color: Colors.grey.shade200,
+                                        child: Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      ),
+                                  errorWidget:
+                                      (context, url, error) => Container(
+                                        color: Colors.grey.shade200,
+                                        child: Icon(Icons.error),
+                                      ),
+                                ),
+                              ),
+                            VerticalStepperList(
+                              yogaContent: yogaProvider.selectedContent!,
+                            ),
+                            Space.h40,
+                            Space.h40,
+                          ],
+                        ),
+                    ],
                   ),
                 ),
               ],
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [VerticalStepperList(), Space.h40, Space.h40],
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: GradientButton(
+              onPressed: () {
+                sl<GoRouter>().pushNamed(
+                  PlayVisuals.routeName,
+                  extra: yogaProvider.selectedContent,
+                );
+              },
+              child: Center(
+                child: Text(
+                  'Let\'s Go',
+                  style: AppTextTheme.mainButtonTextStyle(context).titleLarge,
+                ),
               ),
             ),
-          ],
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: GradientButton(
-          onPressed: () {
-            sl<GoRouter>().pushNamed(PlayVisuals.routeName);
-          },
-          child: Center(
-            child: Text(
-              'Let’s Go',
-              style: AppTextTheme.mainButtonTextStyle(context).titleLarge,
-            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
 
 class VerticalStepperList extends StatelessWidget {
-  const VerticalStepperList({super.key});
+  final YogaContentModel yogaContent;
+  const VerticalStepperList({super.key, required this.yogaContent});
 
   @override
   Widget build(BuildContext context) {
     const double cardHeight = 106 + 30;
 
-    const int stepCount = 6;
-    const int activeIndex = 2;
+    const int stepCount = 1;
+    const int activeIndex = 0;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -255,7 +348,11 @@ class VerticalStepperList extends StatelessWidget {
                           ],
                           image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: AssetImage(Assets.dummy.springYogaCard.path),
+                            image: CachedNetworkImageProvider(
+                              ApiConstants.mediaBaseUrl +
+                                  yogaContent.media!['filename'].toString(),
+                            ),
+                            // AssetImage(Assets.dummy.springYogaCard.path),
                           ),
                         ),
                       ),

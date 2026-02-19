@@ -9,7 +9,7 @@ import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../../injection/injection.dart';
+import '../../../core/injection/injection.dart';
 
 class OnboardScreen extends StatelessWidget {
   static String routeName = 'onboard-screen';

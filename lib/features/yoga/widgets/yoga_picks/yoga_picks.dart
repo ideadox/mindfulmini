@@ -5,7 +5,7 @@ import 'package:mindfulminis/gen/assets.gen.dart';
 
 import '../../../../core/app_spacing.dart';
 import '../../../../core/app_text_theme.dart';
-import '../../../../injection/injection.dart';
+import '../../../../core/injection/injection.dart';
 import '../../screens/yoga_list.dart';
 
 class YogaPicks extends StatelessWidget {
@@ -35,7 +35,11 @@ class YogaPicks extends StatelessWidget {
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () {
-                  sl<GoRouter>().pushNamed(YogaList.routeName);
+                  // TODO: Replace with actual yoga ID when available
+                  sl<GoRouter>().pushNamed(
+                    YogaList.routeName,
+                    pathParameters: {'id': 'placeholder-id'},
+                  );
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

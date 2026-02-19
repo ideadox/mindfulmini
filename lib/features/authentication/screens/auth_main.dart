@@ -8,7 +8,7 @@ import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/authentication/screens/login.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/phone_authh_provider.dart';
@@ -68,6 +68,11 @@ class AuthMain extends StatelessWidget {
                     child: CountryCodePicker(
                       initialSelection: countryCode,
                       favorite: ["+91"],
+                      onInit: (value) {
+                        // Set initial country code in provider when picker initializes
+                        context.read<PhoneAuthhProvider>().countryCode =
+                            value?.dialCode ?? '+91';
+                      },
                       onChanged: (value) {
                         context.read<PhoneAuthhProvider>().countryCode =
                             value.dialCode;

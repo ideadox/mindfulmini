@@ -28,6 +28,10 @@ class EditProfileScreen extends StatelessWidget {
       ),
       body: Consumer<ProfileProvider>(
         builder: (context, provider, _) {
+          if (provider.loading || provider.userProfile == null) {
+            return Center(child: CircularProgressIndicator());
+          }
+
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(12),
@@ -58,9 +62,9 @@ class EditProfileScreen extends StatelessWidget {
                               254,
                             ),
                             backgroundImage:
-                                provider.userProfile.profileImage != null
+                                provider.userProfile!.profileImage != null
                                     ? NetworkImage(
-                                      provider.userProfile.profileImage!,
+                                      provider.userProfile!.profileImage!,
                                     )
                                     : AssetImage(
                                       Assets.profileIcons.noProfilePng.path,
@@ -77,9 +81,9 @@ class EditProfileScreen extends StatelessWidget {
                                 context: context,
                                 builder: (context) {
                                   return ChangeImage(
-                                    userId: provider.userProfile.id,
+                                    userId: provider.userProfile!.id,
                                     hasAlreadyProfile:
-                                        provider.userProfile.profileImage !=
+                                        provider.userProfile!.profileImage !=
                                         null,
                                   );
                                 },
@@ -102,7 +106,7 @@ class EditProfileScreen extends StatelessWidget {
 
                   ProfileInfoRowWidget(
                     title: 'Name',
-                    value: provider.userProfile.fullname,
+                    value: provider.userProfile!.fullname,
                     trailing: IconButton(
                       onPressed: () {
                         showModalBottomSheet(
@@ -111,7 +115,7 @@ class EditProfileScreen extends StatelessWidget {
                           context: context,
                           builder: (context) {
                             return ChangeYourName(
-                              name: provider.userProfile.fullname,
+                              name: provider.userProfile!.fullname,
                             );
                           },
                         );

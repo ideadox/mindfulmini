@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mindfulminis/features/onbaord/screens/kid_name.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 
 import '../../../common/widgets/close_button_dailog.dart';
 import '../../../common/widgets/gradient_button.dart';

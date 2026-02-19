@@ -1,13 +1,15 @@
-import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mindfulminis/features/onboarding/screens/onboard_screen.dart';
+import 'package:mindfulminis/features/tab_view/screens/tab_view.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
+import 'package:mindfulminis/core/services/auth_service.dart';
 
-import '../../injection/injection.dart';
+import '../../core/injection/injection.dart';
 
 class SplashScreen extends StatefulWidget {
   static String routeName = 'splash-screen';
@@ -22,10 +24,22 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    _checkAuthAndNavigate();
+  }
 
-    Timer(const Duration(seconds: 2), () {
-      sl<GoRouter>().pushReplacementNamed(OnboardScreen.routeName);
-    });
+  Future<void> _checkAuthAndNavigate() async {
+    await Future.delayed(const Duration(seconds: 2));
+    if (!mounted) return;
+
+    final authService = sl<AuthService>();
+
+    if (authService.isAuthenticated) {
+      log('✅ Authenticated (${authService.currentUser!.uid}) → TabView');
+      if (mounted) sl<GoRouter>().goNamed(TabView.routeName);
+    } else {
+      log('ℹ️ Not authenticated → OnboardScreen');
+      if (mounted) sl<GoRouter>().goNamed(OnboardScreen.routeName);
+    }
   }
 
   @override

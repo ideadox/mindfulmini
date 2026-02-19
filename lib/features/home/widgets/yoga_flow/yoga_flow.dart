@@ -1,14 +1,15 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
-import 'package:mindfulminis/gen/assets.gen.dart';
+import 'package:mindfulminis/features/yoga/data/yoga_data.dart';
+import 'package:mindfulminis/features/yoga/screens/yoga_list.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../common/models/cms_model.dart';
-import '../../../../common/widgets/views_widget.dart';
 import '../../../../core/api_constants.dart';
 import '../../providers/home_provider.dart';
 
@@ -17,22 +18,78 @@ class YogaFlowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final p = context.read<HomeProvider>();
-    return PagingListener(
-      controller: p.yogaController,
-      builder: (context, state, fetchNextPage) {
-        // log(state.status.name.toString());
-        // log(state.keys?.length.toString() ?? 'null');
-        // if (state.isLoading) {
-        //   return const SizedBox(
-        //     height: 268,
-        //     child: Center(child: CircularProgressIndicator()),
-        //   );
-        // }
+    return Consumer<HomeProvider>(
+      builder: (context, provider, _) {
+        if (provider.isLoadingYoga) {
+          return Column(
+            children: [
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(
+                  'Yoga Flow',
+                  style: AppTextTheme.titleTextTheme(context).titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
+                ),
+                subtitle: Text(
+                  'Quick Yoga sequence for kids to slow down',
+                  style: AppTextTheme.bodyTextStyle(
+                    context,
+                  ).bodyMedium?.copyWith(fontSize: 12),
+                ),
+              ),
+              SizedBox(
+                height: 268,
+                child: Center(child: CircularProgressIndicator()),
+              ),
+            ],
+          );
+        }
 
-        // if (state.items == null || state.items!.isEmpty) {
-        //   return const SizedBox.shrink(); // after loaded but no data
-        // }
+        if (provider.yoga.isEmpty) {
+          return Column(
+            children: [
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(
+                  'Yoga Flow',
+                  style: AppTextTheme.titleTextTheme(context).titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
+                ),
+                subtitle: Text(
+                  'Quick Yoga sequence for kids to slow down',
+                  style: AppTextTheme.bodyTextStyle(
+                    context,
+                  ).bodyMedium?.copyWith(fontSize: 12),
+                ),
+              ),
+              SizedBox(
+                height: 268,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'No items found',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        'The list is currently empty.',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
 
         return Column(
           children: [
@@ -52,15 +109,49 @@ class YogaFlowWidget extends StatelessWidget {
             ),
             SizedBox(
               height: 268,
-              child: PagedListView<int, CmsModel>.separated(
-                state: state,
-                fetchNextPage: fetchNextPage,
+              child: ListView.separated(
                 scrollDirection: Axis.horizontal,
+                itemCount: provider.yoga.length,
                 separatorBuilder: (context, index) => Space.w16,
-                builderDelegate: PagedChildBuilderDelegate(
-                  itemBuilder: (context, item, index) {
-                    final story = item;
-                    return Stack(
+                itemBuilder: (context, index) {
+                  final yogaItem = provider.yoga[index];
+                  if (yogaItem.media?.filename == null) {
+                      return Container(
+                        width: 177,
+                        height: 268,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.grey.shade200,
+                        ),
+                        child: Icon(
+                          Icons.image_not_supported,
+                          color: Colors.grey.shade400,
+                        ),
+                      );
+                    }
+
+                    final imageUrl =
+                      '${ApiConstants.mediaBaseUrl}${yogaItem.media!.filename}';
+
+                  return InkWell(
+                    onTap: () async {
+                      try {
+                        final yogaData = sl<YogaData>();
+                        final yogaContent = await yogaData.getYogaContentById(
+                          yogaItem.id,
+                        );
+                        if (context.mounted) {
+                          sl<GoRouter>().pushNamed(
+                            YogaList.routeName,
+                            extra: yogaContent,
+                          );
+                        }
+                      } catch (e) {
+                        log('Error fetching yoga content: $e');
+                      }
+                    },
+                    borderRadius: BorderRadius.circular(12),
+                    child: Stack(
                       children: [
                         Container(
                           width: 177,
@@ -68,24 +159,36 @@ class YogaFlowWidget extends StatelessWidget {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                           ),
-
-                          child: CachedNetworkImage(
-                            imageUrl: Uri.encodeFull(
-                              '${ApiConstants.mediaBaseUrl}/${story.media?.filename}',
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: CachedNetworkImage(
+                              imageUrl: imageUrl,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Container(
+                                    color: Colors.grey.shade200,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                              Colors.grey.shade400,
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                              errorWidget: (context, url, error) => Container(
+                                    color: Colors.grey.shade200,
+                                    child: Icon(
+                                      Icons.broken_image,
+                                      color: Colors.grey.shade400,
+                                    ),
+                                  ),
                             ),
-
-                            errorListener: (value) {},
                           ),
                         ),
-                        Positioned(
-                          right: 8,
-                          top: 8,
-                          child: ViewsWidget(totalViews: story.viewCount),
-                        ),
                       ],
+                    ),
                     );
                   },
-                ),
               ),
             ),
           ],

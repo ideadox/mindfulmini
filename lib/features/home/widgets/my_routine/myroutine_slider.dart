@@ -7,9 +7,10 @@ import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import '../../../routine/models/routine_model.dart';
 import '../../../routine/screens/routine_detail_screen.dart';
 import '../../../routine/widgets/five_step_progressbar.dart';
 import '../../providers/active_routine_provider.dart';
@@ -40,39 +41,30 @@ class _MyroutineSliderState extends State<MyroutineSlider> {
       CarouselSliderController();
   int _currentIndex = 0;
 
-  final List<RoutineCardDataModel> items = [
-    RoutineCardDataModel(
-      icon: Assets.icons.sunIcon,
-      title: 'Morning Routine',
-      leftTask: 5,
-      percentComplete: 20,
-      linearGradient: LinearGradient(
-        colors: [HexColor('#CDCEFF'), HexColor('#FCFAFF')],
-
-        begin: Alignment.topRight,
-        end: Alignment.bottomLeft,
-      ),
-    ),
-    RoutineCardDataModel(
-      icon: Assets.icons.fullSunIcon,
-      title: 'Afternoon Routine',
-      leftTask: 2,
-      percentComplete: 50,
-      linearGradient: LinearGradient(
-        colors: [
-          HexColor('#FEFFCD').withValues(alpha: 0.3),
-          HexColor('#E2C7FF').withValues(alpha: 0.5),
-        ],
-
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-      ),
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    // Ensure activity-based progress is loaded when the slider is first shown
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<ActiveRoutineProvider>().refreshProgress();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final routines = context.read<ActiveRoutineProvider>().routines;
+    // Use watch so the slider rebuilds when ActiveRoutineProvider notifies
+    final provider = context.watch<ActiveRoutineProvider>();
+    final routines = provider.routines;
+    final progressMap = provider.routineProgress;
+
+    // Bulletproof: if routines are loaded but progress hasn't been fetched yet,
+    // trigger a fetch. The guard in _fetchTodayProgress prevents double-calls.
+    if (routines.isNotEmpty && progressMap.isEmpty) {
+      Future.microtask(() => provider.refreshProgress());
+    }
+
     return Column(
       children: [
         CarouselSlider(
@@ -90,10 +82,21 @@ class _MyroutineSliderState extends State<MyroutineSlider> {
           ),
           items:
               routines.map((i) {
+                // Use activity-based progress when available
+                final activityPct = progressMap[i.id];
+                final pct =
+                    activityPct ??
+                    (i.durationDays > 0
+                        ? ((i.dayNumberSinceStart() / i.durationDays) * 100)
+                            .clamp(0, 100)
+                            .round()
+                        : 0);
+
                 return Builder(
                   builder: (BuildContext context) {
                     return MyRoutineCard(
                       id: i.id,
+                      routineModel: i,
                       linearGradient:
                           i.timeOfDay == 'morning'
                               ? LinearGradient(
@@ -118,8 +121,8 @@ class _MyroutineSliderState extends State<MyroutineSlider> {
                               : Assets.icons.fullSunIcon,
                       title:
                           '${i.timeOfDay[0].toUpperCase()}${i.timeOfDay.substring(1)} Routine',
-                      leftTask: 0,
-                      percentComplete: 50,
+                      leftTask: i.goals.length,
+                      percentComplete: pct,
                     );
                   },
                 );
@@ -150,6 +153,7 @@ class MyRoutineCard extends StatelessWidget {
   final int leftTask;
   final int percentComplete;
   final String id;
+  final RoutineModel? routineModel;
 
   const MyRoutineCard({
     super.key,
@@ -159,6 +163,7 @@ class MyRoutineCard extends StatelessWidget {
     required this.leftTask,
     required this.percentComplete,
     required this.id,
+    this.routineModel,
   });
 
   @override
@@ -245,14 +250,18 @@ class MyRoutineCard extends StatelessWidget {
                         SizedBox(
                           height: 42,
                           child: GradientButton(
-                            onPressed: () {
-                              sl<GoRouter>().pushNamed(
+                            onPressed: () async {
+                              await sl<GoRouter>().pushNamed(
                                 RoutineDetailScreen.routeName,
                                 pathParameters: {'routineId': id},
+                                extra: routineModel,
                               );
-                              // sl<GoRouter>().pushNamed(
-                              //   MyRoutineScreen.routeName,
-                              // );
+                              // Refresh progress when returning
+                              if (context.mounted) {
+                                context
+                                    .read<ActiveRoutineProvider>()
+                                    .refreshProgress();
+                              }
                             },
                             child: Center(
                               child: Text(

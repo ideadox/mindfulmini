@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "326927403832-r7v81jcm4rh80ar1itnkpi8d8dsg5qj7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.mindfulmini.in",
+            "certificate_hash": "4e22e67e030271cfe1e9e8d31d3912890700906e"
+          }
+        },
+        {
           "client_id": "326927403832-jfdi0biha4nfmupgrrdvb74ee6l9fhac.apps.googleusercontent.com",
           "client_type": 3
         }

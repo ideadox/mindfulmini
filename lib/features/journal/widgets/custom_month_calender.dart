@@ -6,7 +6,7 @@ import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/journal/providers/journal_provider.dart';
 import 'package:mindfulminis/features/journal/screens/journal_detail1_screen.dart';
-import 'package:mindfulminis/utiles/basic_function.dart';
+import 'package:mindfulminis/core/utils/basic_function.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import '../models/gratiude_journal_model.dart';

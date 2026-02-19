@@ -7,7 +7,7 @@ import 'package:mindfulminis/common/widgets/gradient_scaffold.dart';
 import 'package:mindfulminis/features/forgot_password/providers/forgot_password_provider.dart';
 import 'package:mindfulminis/features/forgot_password/screens/change_password.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/widgets/common_text_form_field.dart';
@@ -71,10 +71,10 @@ class ForgotPassword extends StatelessWidget {
                           cap.isLoading
                               ? null
                               : () {
-                                // cap.sendResetLink();
-                                sl<GoRouter>().pushNamed(
-                                  ChangePassword.routeName,
-                                );
+                                cap.sendResetLink();
+                                // sl<GoRouter>().pushNamed(
+                                //   ChangePassword.routeName,
+                                // );
                               },
                       child:
                           cap.isLoading

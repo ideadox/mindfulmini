@@ -11,7 +11,7 @@ import 'package:mindfulminis/features/onbaord/widgets/agelimitdailog.dart';
 import 'package:mindfulminis/features/onbaord/widgets/allset_dailog.dart';
 import 'package:mindfulminis/features/tab_view/screens/tab_view.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 
 import '../onboard_data/onboard_data.dart';
 import '../screens/dob.dart';
@@ -84,7 +84,11 @@ class OnboardsProvider with ChangeNotifier {
       log(map.toString());
 
       await _onBoardData.addUser(map);
-      _navigation.pushNamed(FellingToday.routeName);
+      // Previously, after saving the profile we navigated to the
+      // "How are you feeling today" flow. That flow is no longer
+      // required, so once DOB is saved we send the user directly
+      // to the home screen (TabView).
+      _navigation.goNamed(TabView.routeName);
     } catch (e) {
       SmartDialog.showToast(e.toString());
     } finally {

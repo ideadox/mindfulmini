@@ -1,16 +1,27 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:mindfulminis/common/data/cms_data.dart';
-import 'package:mindfulminis/injection/injection.dart';
+import 'package:mindfulminis/features/stories/data/stories_data.dart';
+import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 
 import '../../../common/models/cms_model.dart';
 
 class SrotiesProvider with ChangeNotifier {
+  final StoriesData storiesData;
   final _data = sl<CmsData>();
   late PagingController<int, CmsModel> _storiesController;
+  List<YogaContentModel> _storiesSessions = [];
+  List<YogaContentModel> get storiesSessions => _storiesSessions;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+  String? _error;
+  String? get error => _error;
 
   PagingController<int, CmsModel> get storiesController => _storiesController;
-  SrotiesProvider() {
+  SrotiesProvider({required this.storiesData}) {
     _storiesController = PagingController<int, CmsModel>(
       getNextPageKey:
           (state) => state.lastPageIsEmpty ? null : state.nextIntPageKey,
@@ -19,8 +30,41 @@ class SrotiesProvider with ChangeNotifier {
             'stories',
             page: pageKey,
             limit: 10,
-            sort: 'createdAt',
+            sort: '-createdAt',
           ),
     );
+  }
+
+  Future<void> fetchStoriesSessions({
+    int limitRaw = 100,
+    int pageRaw = 1,
+    String sortRaw = 'createdAt',
+    bool append = false,
+  }) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final newSessions = await storiesData.getStoriesSessions(
+        limitRaw: limitRaw,
+        pageRaw: pageRaw,
+        sortRaw: sortRaw,
+      );
+      
+      if (append) {
+        _storiesSessions = [..._storiesSessions, ...newSessions];
+      } else {
+        _storiesSessions = newSessions;
+      }
+      _error = null;
+    } catch (e) {
+      _error = e.toString();
+      // SmartDialog.showToast(_error ?? 'Failed to load stories');
+      log('❌ Stories Provider Error: $_error');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 }

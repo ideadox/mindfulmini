@@ -9,87 +9,106 @@ import 'package:mindfulminis/features/breathing/widgets/breathing_suggestion.dar
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:provider/provider.dart';
 
-class BreathingScreen extends StatelessWidget {
+class BreathingScreen extends StatefulWidget {
   static String routeName = 'breadthing-main';
   static String routePath = '/breadthing-main';
 
   const BreathingScreen({super.key});
 
   @override
+  State<BreathingScreen> createState() => _BreathingScreenState();
+}
+
+class _BreathingScreenState extends State<BreathingScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Fetch breathing sessions when the screen initializes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final breathingProvider = Provider.of<BreathingProvider>(
+        context,
+        listen: false,
+      );
+      breathingProvider.fetchBreathingSessions();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => BreathingProvider(),
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    height: 400,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: AssetImage(
-                          Assets.images.breathingTopHeader.path,
+    return Scaffold(
+      body: Consumer<BreathingProvider>(
+        builder: (context, provider, _) {
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      height: 400,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: AssetImage(
+                            Assets.images.breathingTopHeader.path,
+                          ),
                         ),
                       ),
                     ),
-                  ),
 
-                  Positioned(
-                    bottom: 40,
-                    left: 0,
-                    right: 0,
-                    child: Column(
-                      children: [
-                        Text(
-                          'Breathing Exercise',
-                          textAlign: TextAlign.center,
-                          style: AppTextTheme.titleTextTheme(
-                            context,
-                          ).titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 22,
+                    Positioned(
+                      bottom: 40,
+                      left: 0,
+                      right: 0,
+                      child: Column(
+                        children: [
+                          Text(
+                            'Breathing Exercise',
+                            textAlign: TextAlign.center,
+                            style: AppTextTheme.titleTextTheme(
+                              context,
+                            ).titleMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 22,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 2),
-                        Text(
-                          'Blow away worries with each mindful breath.',
-                          textAlign: TextAlign.center,
-                          style: AppTextTheme.bodyTextStyle(
-                            context,
-                          ).bodyMedium?.copyWith(fontSize: 14),
-                        ),
-                      ],
+                          SizedBox(height: 2),
+                          Text(
+                            'Blow away worries with each mindful breath.',
+                            textAlign: TextAlign.center,
+                            style: AppTextTheme.bodyTextStyle(
+                              context,
+                            ).bodyMedium?.copyWith(fontSize: 14),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
 
-                  Positioned(
-                    left: 12,
-                    top: 50,
-                    child: CustomBackButton(hasBackground: true),
-                  ),
-                ],
-              ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Column(
-                  children: [
-                    BreathingSuggestion(),
-
-                    Space.h16,
-
-                    BreathingCategory(),
-                    Space.h20,
+                    Positioned(
+                      left: 12,
+                      top: 50,
+                      child: CustomBackButton(hasBackground: true),
+                    ),
                   ],
                 ),
-              ),
-            ],
-          ),
-        ),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Column(
+                    children: [
+                      BreathingSuggestion(),
+
+                      Space.h16,
+
+                      BreathingCategory(),
+                      Space.h20,
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
