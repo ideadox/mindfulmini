@@ -189,69 +189,93 @@ class _AudioProgressWithLyricsState extends State<AudioProgressWithLyrics> {
   }
 }
 
-class LyricLineBuilder extends StatefulWidget {
+/// Audio-synced lyric line builder.
+/// Shows the current lyric based on the audio position from [CmsProvider].
+class LyricLineBuilder extends StatelessWidget {
   final List<StorySegment> segments;
+  final Duration currentPosition;
 
-  const LyricLineBuilder({super.key, required this.segments});
-
-  @override
-  State<LyricLineBuilder> createState() => _LyricLineBuilderState();
-}
-
-class _LyricLineBuilderState extends State<LyricLineBuilder>
-    with TickerProviderStateMixin {
-  final List<String> shownLines = [];
-  int currentIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    playNext();
-  }
-
-  void playNext() async {
-    if (currentIndex >= widget.segments.length) return;
-
-    final seg = widget.segments[currentIndex];
-
-    if (seg.text.isNotEmpty) {
-      setState(() => shownLines.add(seg.text));
-    }
-
-    await Future.delayed(seg.delay + const Duration(milliseconds: 800));
-    currentIndex++;
-    playNext();
-  }
+  const LyricLineBuilder({
+    super.key,
+    required this.segments,
+    required this.currentPosition,
+  });
 
   @override
   Widget build(BuildContext context) {
-    if (shownLines.isEmpty) {
+    if (segments.isEmpty) {
       return const SizedBox.shrink();
     }
     
-    final currentLyric = shownLines.last;
-    final currentLyricIndex = shownLines.length - 1;
+    // Find the current segment index based on audio position
+    final currentIndex = _getSegmentIndexForPosition(currentPosition);
+    final currentLyric = _getCurrentLyricText(currentIndex);
+
+    if (currentLyric.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 500),
       transitionBuilder: (child, animation) {
         return SlideTransition(
           position: Tween<Offset>(
-            begin: const Offset(0, 0.2),
+            begin: const Offset(0, 0.15),
             end: Offset.zero,
-          ).animate(animation),
+          ).animate(CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOut,
+          )),
           child: FadeTransition(opacity: animation, child: child),
         );
       },
       child: Text(
         currentLyric,
-        key: ValueKey(currentLyricIndex),
+        key: ValueKey(currentIndex),
+        textAlign: TextAlign.left,
+        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
         style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          color: Colors.black87,
+          height: 1.4,
         ),
       ),
     );
+  }
+
+  /// Calculate cumulative timestamp for each segment and find the current one
+  int _getSegmentIndexForPosition(Duration position) {
+    Duration cumulative = Duration.zero;
+    int lastTextIndex = 0;
+
+    for (int i = 0; i < segments.length; i++) {
+      final seg = segments[i];
+      // Each text segment has an estimated reading duration + its delay
+      final segDuration = seg.text.isNotEmpty
+          ? Duration(milliseconds: 800 + (seg.text.length * 35)) + seg.delay
+          : seg.delay;
+      cumulative += segDuration;
+
+      if (seg.text.isNotEmpty) {
+        lastTextIndex = i;
+      }
+
+      if (position < cumulative) {
+        // Return the last text segment index at or before this point
+        return lastTextIndex;
+      }
+    }
+
+    return lastTextIndex;
+  }
+
+  /// Get the lyric text at a given index, skipping empty/break segments
+  String _getCurrentLyricText(int index) {
+    if (index >= 0 && index < segments.length) {
+      return segments[index].text;
+    }
+    return '';
   }
 }

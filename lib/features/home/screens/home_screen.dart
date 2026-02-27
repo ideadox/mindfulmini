@@ -179,12 +179,12 @@ class HomeScreen extends StatelessWidget {
                         YogaFlowWidget(),
                         Space.h16,
 
-                        AddFeelingWidget(),
-                        Space.h16,
+                        // AddFeelingWidget(),
+                        // Space.h16,
 
-                        FeelingBarChart(),
+                        // FeelingBarChart(),
 
-                        Space.h16,
+                        // Space.h16,
 
                         MeditationWidget(),
                         Space.h16,

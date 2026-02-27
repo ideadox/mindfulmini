@@ -101,7 +101,7 @@ class BreathingSuggestion extends StatelessWidget {
                     onTap: () {
                       sl<GoRouter>().pushNamed(
                         PlayVisuals.routeName,
-                        pathParameters: {
+                        queryParameters: {
                           'collection': 'breaths',
                           'id': breathingItem.id,
                         },
