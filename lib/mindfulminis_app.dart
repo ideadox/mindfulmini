@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_screen_size.dart';
 import 'package:mindfulminis/features/authentication/providers/phone_authh_provider.dart';
+import 'package:mindfulminis/features/authentication/providers/social_auth_provider.dart';
 import 'package:mindfulminis/features/breathing/providers/breathing_provider.dart';
 import 'package:mindfulminis/features/home/providers/rating_provider.dart';
 import 'package:mindfulminis/features/meditation/providers/meditation_provider.dart';
@@ -24,6 +25,7 @@ class MindfulminisApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => PhoneAuthhProvider()),
+        ChangeNotifierProvider(create: (context) => SocialAuthProvider()),
         ChangeNotifierProvider(
           lazy: false,
           create: (context) => ProfileProvider(),

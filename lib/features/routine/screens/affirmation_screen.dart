@@ -7,10 +7,12 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mindfulminis/common/widgets/custom_gradient_text.dart';
 import 'package:mindfulminis/common/widgets/listening_widget.dart';
+import 'package:mindfulminis/features/profile/providers/profile_provider.dart';
 import 'package:mindfulminis/features/routine/models/affir_text_detail.dart';
 import 'package:mindfulminis/features/routine/providers/activities_provider.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import '../models/affir_container_design.dart';
 import '../widgets/complete_affirmation_widget.dart';
@@ -157,11 +159,12 @@ class _AffirmationScreenState extends State<AffirmationScreen>
     _initAnimations();
     _runAnimation();
 
-    // Fetch activities if routineId and date are provided
+    // Fetch activities and update dynamic text content
     if (widget.routineId != null && widget.date != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
         final provider = sl<ActivitiesProvider>();
-        provider.getActivities(widget.routineId!, widget.date!);
+        await provider.getActivities(widget.routineId!, widget.date!);
+        _updateDynamicText();
       });
     }
   }
@@ -241,6 +244,90 @@ class _AffirmationScreenState extends State<AffirmationScreen>
         return CompleteAffirmationDialog();
       },
     );
+  }
+
+  /// Updates hardcoded text lines with dynamic content from CMS and profile.
+  void _updateDynamicText() {
+    if (!mounted) return;
+
+    final activitiesProvider = sl<ActivitiesProvider>();
+
+    // Get profile name
+    String profileName = 'there';
+    try {
+      final profileProvider = Provider.of<ProfileProvider>(
+        context,
+        listen: false,
+      );
+      if (profileProvider.userProfile != null) {
+        profileName =
+            profileProvider.userProfile!.fullname.split(' ').first;
+      }
+    } catch (e) {
+      log('Could not access ProfileProvider: $e');
+    }
+
+    // Get affirmation text from CMS
+    String affirmationText = '"I am brave, and I learn new things every day."';
+    if (activitiesProvider.affirmation != null) {
+      final extracted = _extractAffirmationText(activitiesProvider.affirmation!);
+      if (extracted.isNotEmpty) {
+        affirmationText = '"$extracted"';
+      }
+    }
+
+    setState(() {
+      // Update "Hi Tom!" → "Hi {Name}!"
+      if (textLines.isNotEmpty) {
+        textLines[0] = AffirTextDetail(
+          start: textLines[0].start,
+          end: textLines[0].end,
+          text: 'Hi $profileName!',
+        );
+      }
+      // Update the 3 affirmation text instances (indices 4, 6, 8)
+      for (int i in [4, 6, 8]) {
+        if (i < textLines.length) {
+          textLines[i] = AffirTextDetail(
+            start: textLines[i].start,
+            end: textLines[i].end,
+            text: affirmationText,
+          );
+        }
+      }
+    });
+  }
+
+  /// Extracts plain text from a CMS affirmation's contentDescription rich text.
+  String _extractAffirmationText(Map<String, dynamic> affirmation) {
+    try {
+      final contentDesc = affirmation['contentDescription'];
+      if (contentDesc is Map<String, dynamic> && contentDesc['root'] != null) {
+        final children = contentDesc['root']['children'] as List?;
+        if (children == null || children.isEmpty) return '';
+
+        String text = '';
+        for (var paragraph in children) {
+          if (paragraph['children'] != null) {
+            for (var child in paragraph['children']) {
+              if (child['type'] == 'text' && child['text'] != null) {
+                String t = child['text']!
+                    .replaceAll(RegExp(r'<break time="([\d.]+)s"\s*\/>'), '')
+                    .trim();
+                if (t.isNotEmpty) {
+                  text += '$t ';
+                }
+              }
+            }
+          }
+        }
+        return text.trim();
+      }
+      return '';
+    } catch (e) {
+      log('Error extracting affirmation text: $e');
+      return '';
+    }
   }
 
   void _initAnimations() {

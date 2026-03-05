@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,6 +14,7 @@ import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/phone_authh_provider.dart';
+import '../providers/social_auth_provider.dart';
 
 class AuthMain extends StatelessWidget {
   static String routeName = 'auth-main';
@@ -156,13 +159,49 @@ class AuthMain extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  AuthOption(icon: Assets.icons.appleLogo, onPressed: () {}),
-                  SizedBox(width: 20),
-                  AuthOption(icon: Assets.icons.googleLogo, onPressed: () {}),
-                ],
+              Consumer<SocialAuthProvider>(
+                builder: (context, socialAuth, _) {
+                  return Column(
+                    children: [
+                      if (socialAuth.isLoading)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                        )
+                      else
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Apple Sign-In: only shown on iOS
+                            if (Platform.isIOS) ...[
+                              AuthOption(
+                                icon: Assets.icons.appleLogo,
+                                onPressed: () => socialAuth.signInWithApple(),
+                              ),
+                              SizedBox(width: 20),
+                            ],
+                            AuthOption(
+                              icon: Assets.icons.googleLogo,
+                              onPressed: () => socialAuth.signInWithGoogle(),
+                            ),
+                          ],
+                        ),
+                      if (socialAuth.error != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            socialAuth.error!,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 12, color: Colors.red),
+                          ),
+                        ),
+                    ],
+                  );
+                },
               ),
 
               Row(

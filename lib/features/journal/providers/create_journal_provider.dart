@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:mindfulminis/common/widgets/custom_dailog.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:mindfulminis/features/routine/providers/activities_provider.dart';
 
 import '../journal_data/journal_data.dart';
 
@@ -42,6 +43,19 @@ class CreateJournalProvider with ChangeNotifier {
       log(map.toString());
 
       await journalData.createJournal(map);
+
+      // Update activity progress to 100% for the gratitude journal activity
+      if (activityId.isNotEmpty) {
+        try {
+          await sl<ActivitiesProvider>().updateActivityProgress(
+            activityId,
+            100,
+          );
+        } catch (e) {
+          log('Error updating gratitude activity progress: $e');
+        }
+      }
+
       showCelebrateDailog();
     } catch (e) {
       SmartDialog.showToast(e.toString());
