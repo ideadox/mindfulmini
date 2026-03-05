@@ -686,32 +686,33 @@ class BuildFifthPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Space.h20,
-                  ScrollTimePicker(
-                    disable: !rProvider.remainder,
-                    onTimeChanged: (p0) {
-                      rProvider.updateTime(p0);
-                      provider.updateTime(p0);
-                    },
-                  ),
-                  Space.h20,
-                  Row(
-                    children: [
-                      Text(
-                        'Select Day',
-                        style: TextStyle(color: Colors.black54),
-                      ),
-                    ],
-                  ),
-                  Space.h24,
-
-                  CreateWeekDays(
-                    rProvider: rProvider,
-                    disable: !rProvider.remainder,
-                    onSelect: (val) {
-                      provider.updateSelection(val);
-                    },
-                  ),
+                  if (rProvider.remainder) ...[
+                    Space.h20,
+                    ScrollTimePicker(
+                      disable: false,
+                      onTimeChanged: (p0) {
+                        rProvider.updateTime(p0);
+                        provider.updateTime(p0);
+                      },
+                    ),
+                    Space.h20,
+                    Row(
+                      children: [
+                        Text(
+                          'Select Day',
+                          style: TextStyle(color: Colors.black54),
+                        ),
+                      ],
+                    ),
+                    Space.h24,
+                    CreateWeekDays(
+                      rProvider: rProvider,
+                      disable: false,
+                      onSelect: (val) {
+                        provider.updateSelection(val);
+                      },
+                    ),
+                  ],
                   Space.h24,
                 ],
               ),
