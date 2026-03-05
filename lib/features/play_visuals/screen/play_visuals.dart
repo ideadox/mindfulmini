@@ -49,7 +49,6 @@ class _PlayVisualsState extends State<PlayVisuals>
   bool _yogaAnimationRunning = false;
   List<YogaSegment> _currentSegments = [];
   Timer? _progressTimer;
-  Duration _elapsedTime = Duration.zero;
 
   bool _showLottie = false;
 
@@ -175,7 +174,6 @@ class _PlayVisualsState extends State<PlayVisuals>
     setState(() {
       startAnimation = true;
       isPlaying = !isPlaying;
-      _elapsedTime = Duration.zero;
     });
     if (isPlaying) {
       _controller.forward();
@@ -183,22 +181,11 @@ class _PlayVisualsState extends State<PlayVisuals>
       if (widget.yogaContentModel != null && _lottiController.duration != null) {
         _lottiController.forward(from: 0.0);
       }
-      _startProgressTimer();
     } else {
       _segmentController.stop();
-      if (_progressTimer?.isActive ?? false) {
-        _progressTimer?.cancel();
-      }
     }
   }
 
-  void _startProgressTimer() {
-    _progressTimer = Timer.periodic(Duration(milliseconds: 100), (_) {
-      setState(() {
-        _elapsedTime += Duration(milliseconds: 100);
-      });
-    });
-  }
 
   String _extractDescription(dynamic contentDescription) {
     try {
@@ -470,7 +457,7 @@ class _PlayVisualsState extends State<PlayVisuals>
                       builder: (context, provider, _) {
                         return YogaProgressBar(
                           totalDuration: provider.totalDuration,
-                          currentPosition: _elapsedTime,
+                          currentPosition: provider.currentPosition,
                           progressColor: Theme.of(context).primaryColor,
                           backgroundColor: Colors.grey.shade300,
                           thumbColor: Theme.of(context).primaryColor,
@@ -506,7 +493,14 @@ class _PlayVisualsState extends State<PlayVisuals>
                           child: AnimatedOpacity(
                             opacity: startAnimation ? 1 : 0,
                             duration: const Duration(milliseconds: 200),
-                            child: _iconButton(Assets.icons.back10),
+                            child: Consumer<YogaPlayVisualsProvider>(
+                              builder: (context, provider, _) {
+                                return _iconButton(
+                                  Assets.icons.back10,
+                                  onPressed: () => provider.seekBackward(),
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -520,7 +514,14 @@ class _PlayVisualsState extends State<PlayVisuals>
                           child: AnimatedOpacity(
                             opacity: startAnimation ? 1 : 0,
                             duration: const Duration(milliseconds: 200),
-                            child: _iconButton(Assets.icons.forward10),
+                            child: Consumer<YogaPlayVisualsProvider>(
+                              builder: (context, provider, _) {
+                                return _iconButton(
+                                  Assets.icons.forward10,
+                                  onPressed: () => provider.seekForward(),
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -631,13 +632,20 @@ class _PlayVisualsState extends State<PlayVisuals>
           Positioned(
             top: 110,
             left: 0,
-            right: 100,
+            right: 0,
             child: AnimatedOpacity(
               opacity: !startAnimation ? 0 : 1,
               duration: Duration(milliseconds: 1000),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: LyricLineBuilder(segments: p.segments),
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Consumer<CmsProvider>(
+                  builder: (context, provider, _) {
+                    return LyricLineBuilder(
+                      segments: p.segments,
+                      currentPosition: provider.currentPosition,
+                    );
+                  },
+                ),
               ),
             ),
           ),
@@ -815,8 +823,10 @@ class _PlayVisualsState extends State<PlayVisuals>
     );
   }
 
-  /// Play button for yoga flow — uses local state only (no CmsProvider)
+  /// Play button for yoga flow — uses YogaPlayVisualsProvider for audio
   Widget _yogaPlayButton() {
+    return Consumer<YogaPlayVisualsProvider>(
+      builder: (context, provider, _) {
     return IconButton(
       style: IconButton.styleFrom(
         maximumSize: const Size(50, 50),
@@ -827,17 +837,16 @@ class _PlayVisualsState extends State<PlayVisuals>
       onPressed: () {
         if (!startAnimation) {
           start();
-        } else {
-          setState(() {
-            isPlaying = !isPlaying;
-          });
         }
+            provider.playPause();
       },
       icon: Icon(
-        isPlaying ? Icons.pause : Icons.play_arrow,
+            provider.isPlaying ? Icons.pause : Icons.play_arrow,
         color: Theme.of(context).primaryColor,
         size: 28,
       ),
+        );
+      },
     );
   }
 

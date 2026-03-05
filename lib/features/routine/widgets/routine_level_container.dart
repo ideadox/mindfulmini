@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/widgets/custom_level_percent_indicator.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/features/breathing/screens/breathing_screen.dart';
+import 'package:mindfulminis/features/journal/screens/create_journal_screen.dart';
 import 'package:mindfulminis/features/meditation/screens/meditation_screen.dart';
+import 'package:mindfulminis/features/routine/providers/activities_provider.dart';
 import 'package:mindfulminis/features/routine/screens/affirmation_screen.dart';
 import 'package:mindfulminis/features/stories/screens/stories_screen.dart';
 import 'package:mindfulminis/features/yoga/screens/yoga_main.dart';
@@ -64,8 +68,17 @@ class RoutineLevelContainer extends StatelessWidget {
   Future<void> _onTap() async {
     final goal = activityContentModel.title.toLowerCase();
 
+    // Pre-load activities so we can track progress by activityId
+    if (routineId != null && date != null) {
+      final activitiesProvider = sl<ActivitiesProvider>();
+      if (activitiesProvider.activities.isEmpty) {
+        await activitiesProvider.getActivities(routineId!, date!);
+      }
+    }
+
     switch (goal) {
       case 'affirmation':
+        // Affirmation handles its own progress internally
         await sl<GoRouter>().pushNamed(
           AffirmationScreen.routeName,
           queryParameters: {
@@ -88,7 +101,13 @@ class RoutineLevelContainer extends StatelessWidget {
         await sl<GoRouter>().pushNamed(StoriesScreen.routeName);
         break;
       case 'gratitude journal':
-        // TODO: Navigate to Gratitude Journal creation screen
+        // Get the activity ID for progress tracking
+        final activitiesProvider = sl<ActivitiesProvider>();
+        final activity = activitiesProvider.getActivityByGoal(goal);
+        await sl<GoRouter>().pushNamed(
+          CreateJournalScreen.routeName,
+          pathParameters: {'activityId': activity?.id ?? ''},
+        );
         break;
       case 'mini body scan':
       case 'minibodyscan':
@@ -96,6 +115,22 @@ class RoutineLevelContainer extends StatelessWidget {
         break;
       default:
         return; // no navigation happened, skip onReturn
+    }
+
+    // Update progress for activities that complete on return
+    // (Affirmation handles its own; gratitude is handled on journal submit)
+    if (routineId != null && date != null) {
+      if (goal != 'affirmation' && goal != 'gratitude journal') {
+        try {
+          final activitiesProvider = sl<ActivitiesProvider>();
+          final activity = activitiesProvider.getActivityByGoal(goal);
+          if (activity != null && activity.progressStatus < 100) {
+            await activitiesProvider.updateActivityProgress(activity.id, 100);
+          }
+        } catch (e) {
+          log('Error updating activity progress for $goal: $e');
+        }
+      }
     }
 
     // Re-fetch progress data now that the user has returned

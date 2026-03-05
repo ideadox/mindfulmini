@@ -88,7 +88,7 @@ class SpeechProvider with ChangeNotifier {
   }
 
   void startListening() async {
-    // await initSpeech();
+    await initSpeech();
     if (!_isListening) {
       _speech.listen(
         onResult: (val) {
