@@ -37,7 +37,6 @@ class _DescribeYourselfState extends State<DescribeYourself> {
       create:
           (context) =>
               SpeechProvider()
-                ..initSpeech()
                 ..startLis(),
       child: Consumer2<OnboardsProvider, SpeechProvider>(
         builder: (context, provider, speechProvider, _) {

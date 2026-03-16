@@ -6,12 +6,25 @@ import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SpeechProvider with ChangeNotifier {
-  final stt.SpeechToText _speech = stt.SpeechToText();
+  // SpeechToText() is a singleton (factory → same static instance).
+  // We make this explicit with a shared static reference.
+  static final stt.SpeechToText _speech = stt.SpeechToText();
+  static bool _initialized = false;
+
+  /// The provider that is currently listening. Only one can be active at a time
+  /// because the platform speech engine is singular.
+  static SpeechProvider? _activeProvider;
+
   final TextEditingController textController = TextEditingController();
   bool showIamListeningText = false;
 
   bool _isListening = false;
   bool get isListening => _isListening;
+
+  /// Text that existed in the controller BEFORE the current listening session.
+  /// Used to avoid duplication: on each onResult we set
+  /// textController.text = _textBeforeListening + " " + recognizedWords
+  String _textBeforeListening = '';
 
   // Stack to support undo/redo
   final List<String> _history = [];
@@ -36,44 +49,42 @@ class SpeechProvider with ChangeNotifier {
     });
   }
 
-  Future<void> initSpeech({
-    bool shidi = false,
-    ShidiChatProvider? scProvider,
-  }) async {
-    if (shidi) {
-      shidiChat = shidi;
-      shidiChatProvider = scProvider;
-    }
-    await _speech.initialize(
+  /// Ensures the speech engine is initialized exactly once.
+  static Future<bool> _ensureInitialized() async {
+    if (_initialized) return true;
+    _initialized = await _speech.initialize(
       onStatus: (val) {
         log('Speech status: $val');
-        if (val == 'notListening') {
-          _isListening = false;
-          notifyListeners();
-        } else if (val == 'listening') {
-          _isListening = true;
-          notifyListeners();
-        } else if (val == 'done') {
-          log('outside done');
-          if (shidiChat) {
-            log('done called in shsid true ${textController.text} value');
-            shidiChatProvider!.messageController.text = textController.text;
-            textController.clear;
+        // Route status events to whichever provider is currently active
+        final provider = _activeProvider;
+        if (provider == null) return;
+
+        if (val == 'notListening' || val == 'done') {
+          if (provider.shidiChat && val == 'done') {
+            log('done called in shidi true ${provider.textController.text}');
+            provider.shidiChatProvider!.messageController.text =
+                provider.textController.text;
+            provider.textController.clear();
             sl<GoRouter>().pop(false);
+            _activeProvider = null;
             return;
           }
-          _isListening = false;
-          notifyListeners();
+          provider._isListening = false;
+          _activeProvider = null;
+          provider.notifyListeners();
         }
-        log('staus comple');
       },
       onError: (val) {
-        log('error : $val');
-        _error = val.errorMsg;
-        _isListening = false;
-        notifyListeners();
+        log('Speech error: $val');
+        final provider = _activeProvider;
+        if (provider == null) return;
+        provider._error = val.errorMsg;
+        provider._isListening = false;
+        _activeProvider = null;
+        provider.notifyListeners();
       },
     );
+    return _initialized;
   }
 
   void addToHistory(String value) {
@@ -87,20 +98,51 @@ class SpeechProvider with ChangeNotifier {
     }
   }
 
-  void startListening() async {
-    await initSpeech();
+  void startListening({
+    bool shidi = false,
+    ShidiChatProvider? scProvider,
+  }) async {
+    if (shidi) {
+      shidiChat = shidi;
+      shidiChatProvider = scProvider;
+    }
+
+    await _ensureInitialized();
+
+    // If another provider is currently listening, stop it first
+    if (_activeProvider != null && _activeProvider != this) {
+      _activeProvider!.stopListening();
+    }
+
     if (!_isListening) {
+      // Register this provider as the active one
+      _activeProvider = this;
+
+      // Snapshot the current text so we can append new speech without duplication
+      _textBeforeListening = textController.text;
+
+      _isListening = true;
+      notifyListeners();
+
       _speech.listen(
         onResult: (val) {
-          log(val.recognizedWords.toString());
+          log('Recognized: ${val.recognizedWords} (final: ${val.finalResult})');
           if (val.recognizedWords.isNotEmpty) {
+            // Build the new text from the snapshot + full recognised words.
+            // recognizedWords contains the ENTIRE recognised text of this
+            // session, so we must NOT prepend the live textController value.
+            final separator = _textBeforeListening.isNotEmpty ? ' ' : '';
             final newText =
-                '${textController.text} ${val.recognizedWords}'.trim();
+                '$_textBeforeListening$separator${val.recognizedWords}'.trim();
             textController.text = newText;
             textController.selection = TextSelection.collapsed(
               offset: newText.length,
             );
-            addToHistory(newText);
+
+            // Only commit to history when the result is final (utterance done)
+            if (val.finalResult) {
+              addToHistory(newText);
+            }
             notifyListeners();
           }
         },
@@ -121,6 +163,11 @@ class SpeechProvider with ChangeNotifier {
   void stopListening() {
     if (_isListening) {
       _speech.stop();
+      _isListening = false;
+      if (_activeProvider == this) {
+        _activeProvider = null;
+      }
+      notifyListeners();
     }
   }
 
@@ -157,7 +204,10 @@ class SpeechProvider with ChangeNotifier {
 
   @override
   void dispose() {
-    _speech.cancel();
+    if (_activeProvider == this) {
+      _speech.stop();
+      _activeProvider = null;
+    }
     textController.dispose();
     super.dispose();
   }

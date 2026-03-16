@@ -6,7 +6,7 @@ import 'package:mindfulminis/gen/assets.gen.dart';
 import '../../../../core/app_spacing.dart';
 import '../../../../core/app_text_theme.dart';
 import '../../../../core/injection/injection.dart';
-import '../../screens/yoga_list.dart';
+import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
 
 class YogaPicks extends StatelessWidget {
   const YogaPicks({super.key});
@@ -37,7 +37,7 @@ class YogaPicks extends StatelessWidget {
                 onTap: () {
                   // TODO: Replace with actual yoga ID when available
                   sl<GoRouter>().pushNamed(
-                    YogaList.routeName,
+                    PlayVisuals.routeName,
                     pathParameters: {'id': 'placeholder-id'},
                   );
                 },

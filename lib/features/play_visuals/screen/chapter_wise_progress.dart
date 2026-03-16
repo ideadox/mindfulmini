@@ -191,14 +191,18 @@ class _AudioProgressWithLyricsState extends State<AudioProgressWithLyrics> {
 
 /// Audio-synced lyric line builder.
 /// Shows the current lyric based on the audio position from [CmsProvider].
+/// Scales the estimated segment timeline to match the actual audio duration
+/// so that seeking always shows the correct text.
 class LyricLineBuilder extends StatelessWidget {
   final List<StorySegment> segments;
   final Duration currentPosition;
+  final Duration totalDuration;
 
   const LyricLineBuilder({
     super.key,
     required this.segments,
     required this.currentPosition,
+    required this.totalDuration,
   });
 
   @override
@@ -206,7 +210,7 @@ class LyricLineBuilder extends StatelessWidget {
     if (segments.isEmpty) {
       return const SizedBox.shrink();
     }
-    
+
     // Find the current segment index based on audio position
     final currentIndex = _getSegmentIndexForPosition(currentPosition);
     final currentLyric = _getCurrentLyricText(currentIndex);
@@ -216,28 +220,31 @@ class LyricLineBuilder extends StatelessWidget {
     }
 
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 400),
       transitionBuilder: (child, animation) {
-        return SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(0, 0.15),
-            end: Offset.zero,
-          ).animate(CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeOut,
-          )),
-          child: FadeTransition(opacity: animation, child: child),
+        return FadeTransition(
+          opacity: animation,
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, 0.06),
+              end: Offset.zero,
+            ).animate(CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOut,
+            )),
+            child: child,
+          ),
         );
       },
       child: Text(
         currentLyric,
         key: ValueKey(currentIndex),
-        textAlign: TextAlign.left,
+        textAlign: TextAlign.center,
         maxLines: 3,
         overflow: TextOverflow.ellipsis,
         style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
           color: Colors.black87,
           height: 1.4,
         ),
@@ -245,25 +252,49 @@ class LyricLineBuilder extends StatelessWidget {
     );
   }
 
-  /// Calculate cumulative timestamp for each segment and find the current one
+  /// Maps the audio position to the correct segment using a fraction-based
+  /// approach. Each segment is given a **weight** proportional to its content:
+  ///  • Text segments  → character count  (longer text ≈ more speaking time)
+  ///  • Break segments → delay converted to character-equivalents at ~70 ms/char
+  ///
+  /// The audio position is converted to a fraction (0 → 1) and matched against
+  /// the cumulative weight fractions to find the active segment. This avoids
+  /// hard-coded millisecond estimates that drift from the real audio pace.
   int _getSegmentIndexForPosition(Duration position) {
-    Duration cumulative = Duration.zero;
+    if (totalDuration.inMilliseconds <= 0) return 0;
+
+    // ── 1. Compute weights ──
+    const double msPerChar = 70; // approximate speech rate
+    final weights = <double>[];
+    for (final seg in segments) {
+      if (seg.text.isNotEmpty) {
+        // Weight = character count (minimum 5 so very short lines still get time)
+        weights.add(seg.text.length.clamp(5, 99999).toDouble());
+      } else {
+        // Break: convert delay to character-equivalents
+        weights.add((seg.delay.inMilliseconds / msPerChar).clamp(1, 99999));
+      }
+    }
+
+    final totalWeight = weights.fold<double>(0, (a, b) => a + b);
+    if (totalWeight == 0) return 0;
+
+    // ── 2. Audio fraction (0 → 1) ──
+    final fraction =
+        (position.inMilliseconds / totalDuration.inMilliseconds).clamp(0.0, 1.0);
+
+    // ── 3. Walk segments by weight fraction ──
+    double cumulative = 0;
     int lastTextIndex = 0;
 
     for (int i = 0; i < segments.length; i++) {
-      final seg = segments[i];
-      // Each text segment has an estimated reading duration + its delay
-      final segDuration = seg.text.isNotEmpty
-          ? Duration(milliseconds: 800 + (seg.text.length * 35)) + seg.delay
-          : seg.delay;
-      cumulative += segDuration;
+      cumulative += weights[i];
 
-      if (seg.text.isNotEmpty) {
+      if (segments[i].text.isNotEmpty) {
         lastTextIndex = i;
       }
 
-      if (position < cumulative) {
-        // Return the last text segment index at or before this point
+      if (fraction <= cumulative / totalWeight) {
         return lastTextIndex;
       }
     }

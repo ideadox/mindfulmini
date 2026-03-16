@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/yoga/data/yoga_data.dart';
-import 'package:mindfulminis/features/yoga/screens/yoga_list.dart';
+import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
@@ -142,7 +142,7 @@ class YogaFlowWidget extends StatelessWidget {
                         );
                         if (context.mounted) {
                           sl<GoRouter>().pushNamed(
-                            YogaList.routeName,
+                            PlayVisuals.routeName,
                             extra: yogaContent,
                           );
                         }

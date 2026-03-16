@@ -36,6 +36,7 @@ class _AffirmationScreenState extends State<AffirmationScreen>
   bool _hasStartedBirds = false;
   bool _hasStartedBird = false;
   bool _butterFlyHasStarted = false;
+  bool _animationStarted = false;
   late AnimationController _controller;
   late final AnimationController _birdsLottieController;
   late final AnimationController _birdLottieController;
@@ -157,15 +158,23 @@ class _AffirmationScreenState extends State<AffirmationScreen>
     _plantGrowAnim();
     _setContainerDesign();
     _initAnimations();
-    _runAnimation();
 
-    // Fetch activities and update dynamic text content
+    // Fetch CMS data first, populate dynamic text, THEN start animation
     if (widget.routineId != null && widget.date != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         final provider = sl<ActivitiesProvider>();
         await provider.getActivities(widget.routineId!, widget.date!);
         _updateDynamicText();
+        // Now that text is populated from CMS, start the animation
+        if (mounted && !_animationStarted) {
+          _animationStarted = true;
+          _runAnimation();
+        }
       });
+    } else {
+      // No routine context — run with default text immediately
+      _animationStarted = true;
+      _runAnimation();
     }
   }
 
@@ -273,7 +282,11 @@ class _AffirmationScreenState extends State<AffirmationScreen>
       final extracted = _extractAffirmationText(activitiesProvider.affirmation!);
       if (extracted.isNotEmpty) {
         affirmationText = '"$extracted"';
+      } else {
+        log('CMS affirmation returned but extraction was empty, using fallback');
       }
+    } else {
+      log('No affirmation data returned from backend, using fallback text');
     }
 
     setState(() {
@@ -301,16 +314,29 @@ class _AffirmationScreenState extends State<AffirmationScreen>
   /// Extracts plain text from a CMS affirmation's contentDescription rich text.
   String _extractAffirmationText(Map<String, dynamic> affirmation) {
     try {
+      log('Affirmation data keys: ${affirmation.keys.toList()}');
+
       final contentDesc = affirmation['contentDescription'];
+      if (contentDesc == null) {
+        log('Affirmation contentDescription is null');
+        return '';
+      }
+
       if (contentDesc is Map<String, dynamic> && contentDesc['root'] != null) {
         final children = contentDesc['root']['children'] as List?;
-        if (children == null || children.isEmpty) return '';
+        if (children == null || children.isEmpty) {
+          log('Affirmation contentDescription root has no children');
+          return '';
+        }
 
         String text = '';
         for (var paragraph in children) {
-          if (paragraph['children'] != null) {
+          if (paragraph is Map<String, dynamic> &&
+              paragraph['children'] != null) {
             for (var child in paragraph['children']) {
-              if (child['type'] == 'text' && child['text'] != null) {
+              if (child is Map<String, dynamic> &&
+                  child['type'] == 'text' &&
+                  child['text'] != null) {
                 String t = child['text']!
                     .replaceAll(RegExp(r'<break time="([\d.]+)s"\s*\/>'), '')
                     .trim();
@@ -321,11 +347,27 @@ class _AffirmationScreenState extends State<AffirmationScreen>
             }
           }
         }
-        return text.trim();
+
+        final result = text.trim();
+        if (result.isEmpty) {
+          log('Affirmation text extraction returned empty from non-empty content');
+        } else {
+          log('Extracted affirmation text: $result');
+        }
+        return result;
       }
+
+      // Try flat 'title' field as fallback
+      if (affirmation['title'] != null &&
+          affirmation['title'].toString().isNotEmpty) {
+        log('Using affirmation title as fallback: ${affirmation['title']}');
+        return affirmation['title'].toString();
+      }
+
+      log('Affirmation contentDescription format unrecognised: ${contentDesc.runtimeType}');
       return '';
-    } catch (e) {
-      log('Error extracting affirmation text: $e');
+    } catch (e, stack) {
+      log('Error extracting affirmation text: $e\n$stack');
       return '';
     }
   }
