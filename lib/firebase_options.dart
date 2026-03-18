@@ -59,13 +59,13 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDTnuoV8PXrpZJvmC4n0dRKgLgiCxn-0pg',
-    appId: '1:326927403832:ios:78c0d169f6e555be68cfcd',
+    appId: '1:326927403832:ios:2a85e568928b837d68cfcd',
     messagingSenderId: '326927403832',
     projectId: 'mindful-minis-app',
     storageBucket: 'mindful-minis-app.firebasestorage.app',
     androidClientId: '326927403832-pg4lgm0qjsavcsntv01vsecsvvecc8in.apps.googleusercontent.com',
-    iosClientId: '326927403832-vv7bodddh67b34ljmfar56uk75nthaoe.apps.googleusercontent.com',
-    iosBundleId: 'app.mindfulmini.com',
+    iosClientId: '326927403832-sen3gj7ja4mffgua6k5gno9tquo4il4b.apps.googleusercontent.com',
+    iosBundleId: 'app.mindfulmini.in',
   );
 
 }

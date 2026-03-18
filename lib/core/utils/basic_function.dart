@@ -11,7 +11,7 @@ class BasicFunction {
         ) // Split by any whitespace (space, tabs, newlines)
         .length;
   }
-
+ 
   static getJounalEmoji(String emotion) {
     switch (emotion) {
       case 'Amazing':
