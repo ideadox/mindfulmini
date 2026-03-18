@@ -1,13 +1,16 @@
+import 'dart:developer';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mindfulminis/common/data/discover_data.dart';
 import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/play_visuals/provider/cms_provider.dart';
 import 'package:mindfulminis/features/play_visuals/screen/chapter_wise_progress.dart';
+import 'package:mindfulminis/features/profile/providers/profile_provider.dart';
 import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
 import 'package:mindfulminis/features/yoga/providers/yoga_play_visuals_provider.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
@@ -35,6 +38,7 @@ class PlayVisuals extends StatefulWidget {
 class _PlayVisualsState extends State<PlayVisuals>
     with TickerProviderStateMixin {
   bool startAnimation = false;
+  bool _hasMarkedViewed = false;
 
   late AnimationController _lottiController;
 
@@ -64,6 +68,35 @@ class _PlayVisualsState extends State<PlayVisuals>
     });
   }
 
+  void _tryMarkViewed({String? contentId, String? collection}) {
+    if (_hasMarkedViewed) return;
+    if (contentId == null || contentId.isEmpty) return;
+
+    final effectiveCollection = collection ??
+        widget.collection ??
+        (widget.yogaContentModel != null ? 'yoga' : null);
+    if (effectiveCollection == null) return;
+
+    _hasMarkedViewed = true;
+
+    try {
+      final profileProvider =
+          Provider.of<ProfileProvider>(context, listen: false);
+      final profileId = profileProvider.userProfile?.id;
+      if (profileId == null || profileId.isEmpty) return;
+
+      sl<DiscoverData>().markContentViewed(
+        profileId: profileId,
+        contentId: contentId,
+        collection: effectiveCollection,
+      ).catchError((e) {
+        log('Error marking content viewed: $e');
+      });
+    } catch (e) {
+      log('Error marking content viewed (sync): $e');
+    }
+  }
+
   @override
   void dispose() {
     _lottiController.dispose();
@@ -76,7 +109,11 @@ class _PlayVisualsState extends State<PlayVisuals>
     setState(() => startAnimation = true);
     _playPulseController.stop();
     _playPulseController.value = 0;
-      }
+
+    final contentId =
+        widget.yogaContentModel?.id ?? widget.id;
+    _tryMarkViewed(contentId: contentId);
+  }
 
   String _extractDescription(dynamic contentDescription) {
     try {
@@ -119,27 +156,38 @@ class _PlayVisualsState extends State<PlayVisuals>
   @override
   Widget build(BuildContext context) {
     if (widget.yogaContentModel != null) {
-      return ChangeNotifierProvider(
-        create: (context) =>
-                YogaPlayVisualsProvider(yogaContent: widget.yogaContentModel!),
-        child: Scaffold(
-          body: Consumer<YogaPlayVisualsProvider>(
-            builder: (context, yogaProvider, _) {
-              if (!yogaProvider.isInitialized) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              return _buildYogaDisplay(context, yogaProvider);
-            },
+      return PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop) sl<GoRouter>().pop(startAnimation);
+        },
+        child: ChangeNotifierProvider(
+          create: (context) =>
+                  YogaPlayVisualsProvider(yogaContent: widget.yogaContentModel!),
+          child: Scaffold(
+            body: Consumer<YogaPlayVisualsProvider>(
+              builder: (context, yogaProvider, _) {
+                if (!yogaProvider.isInitialized) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                return _buildYogaDisplay(context, yogaProvider);
+              },
+            ),
           ),
         ),
       );
     }
 
-    return ChangeNotifierProvider(
-      create: (context) =>
-          CmsProvider(widget.collection ?? '', widget.id ?? ''),
-      child: Scaffold(
-        body: Consumer<CmsProvider>(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) sl<GoRouter>().pop(startAnimation);
+      },
+      child: ChangeNotifierProvider(
+        create: (context) =>
+            CmsProvider(widget.collection ?? '', widget.id ?? ''),
+        child: Scaffold(
+          body: Consumer<CmsProvider>(
           builder: (context, p, _) {
             if (p.isLoading) {
               return const Center(child: CircularProgressIndicator());
@@ -149,6 +197,7 @@ class _PlayVisualsState extends State<PlayVisuals>
             }
             return _buildCmsDisplay(context, p);
           },
+        ),
         ),
       ),
     );
@@ -170,26 +219,39 @@ class _PlayVisualsState extends State<PlayVisuals>
       width: double.infinity,
       child: Stack(
         children: [
-          // 1. Full-screen background image (no bottom gap)
-          if (_showLottie)
-            Positioned.fill(
-              child: Hero(
-                tag: 'audio',
-                child: CachedNetworkImage(
-                  imageUrl: ApiConstants.mediaBaseUrl +
-                      (widget.yogaContentModel?.media?['filename'] ?? ''),
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Container(
-                    color: Colors.grey.shade200,
-                    child: const Center(child: CircularProgressIndicator()),
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    color: Colors.grey.shade200,
-                    child: const Center(child: Icon(Icons.error)),
+          // 1. Full-screen background image
+          // Before play: thumbnail (fallback media). During play: motionPicture (fallback media/thumbnail).
+          if (_showLottie) ...[
+            if (widget.yogaContentModel?.stillImageFilename != null)
+              Positioned.fill(
+                child: Hero(
+                  tag: 'audio',
+                  child: CachedNetworkImage(
+                    imageUrl: ApiConstants.mediaBaseUrl +
+                        (widget.yogaContentModel!.stillImageFilename!),
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      color: Colors.grey.shade200,
+                      child: const Center(child: CircularProgressIndicator()),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      color: Colors.grey.shade200,
+                      child: const Center(child: Icon(Icons.error)),
+                    ),
                   ),
                 ),
               ),
-            ),
+            if (startAnimation && widget.yogaContentModel?.playingImageFilename != null)
+              Positioned.fill(
+                child: CachedNetworkImage(
+                  imageUrl: ApiConstants.mediaBaseUrl +
+                      (widget.yogaContentModel!.playingImageFilename!),
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => const SizedBox.shrink(),
+                  errorWidget: (context, url, error) => const SizedBox.shrink(),
+                ),
+              ),
+          ],
 
           // 2. Gradient overlay for readability
           _buildGradientOverlay(),
@@ -276,26 +338,39 @@ class _PlayVisualsState extends State<PlayVisuals>
       width: double.infinity,
       child: Stack(
         children: [
-          // 1. Full-screen background image (no bottom gap)
-          if (_showLottie && p.cms?.media?.filename != null)
-            Positioned.fill(
-              child: Hero(
-                tag: 'audio',
-                child: CachedNetworkImage(
-                  imageUrl:
-                      '${ApiConstants.mediaBaseUrl}${p.cms!.media!.filename}',
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Container(
-                    color: Colors.grey.shade200,
-                    child: const Center(child: CircularProgressIndicator()),
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    color: Colors.grey.shade200,
-                    child: const Center(child: Icon(Icons.error)),
+          // 1. Full-screen background image
+          // Before play: thumbnail (fallback media). During play: motionPicture (fallback media/thumbnail).
+          if (_showLottie) ...[
+            if (p.cms?.stillImageFilename != null)
+              Positioned.fill(
+                child: Hero(
+                  tag: 'audio',
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        '${ApiConstants.mediaBaseUrl}${p.cms!.stillImageFilename}',
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      color: Colors.grey.shade200,
+                      child: const Center(child: CircularProgressIndicator()),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      color: Colors.grey.shade200,
+                      child: const Center(child: Icon(Icons.error)),
+                    ),
                   ),
                 ),
               ),
-            ),
+            if (startAnimation && p.cms?.playingImageFilename != null)
+              Positioned.fill(
+                child: CachedNetworkImage(
+                  imageUrl:
+                      '${ApiConstants.mediaBaseUrl}${p.cms!.playingImageFilename}',
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => const SizedBox.shrink(),
+                  errorWidget: (context, url, error) => const SizedBox.shrink(),
+                ),
+              ),
+          ],
 
           // 2. Gradient overlay for readability
           _buildGradientOverlay(),
@@ -409,7 +484,7 @@ class _PlayVisualsState extends State<PlayVisuals>
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
           _buildTopButton(
-            onPressed: () => sl<GoRouter>().pop(),
+            onPressed: () => sl<GoRouter>().pop(startAnimation),
             icon: Icons.keyboard_arrow_down_rounded,
           ),
           _buildTopButton(

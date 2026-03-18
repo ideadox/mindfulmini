@@ -11,25 +11,25 @@ import '../../../../common/widgets/views_widget.dart';
 import '../../../../core/api_constants.dart';
 import '../../providers/home_provider.dart';
 
-class BreathingWidget extends StatelessWidget {
-  const BreathingWidget({super.key});
+class BodyScanWidget extends StatelessWidget {
+  const BodyScanWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<HomeProvider>(
       builder: (context, provider, _) {
-        if (provider.isLoadingBreathing) {
+        if (provider.isLoadingBodyScan) {
           return Column(
             children: [
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Breathing',
+                  'Mini Body Scan',
                   style: AppTextTheme.titleTextTheme(context).titleMedium
                       ?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
                 ),
                 subtitle: Text(
-                  'Simple breathing meditations to relax young minds.',
+                  'Guided body scans to help kids relax and feel calm.',
                   style: AppTextTheme.bodyTextStyle(
                     context,
                   ).bodyMedium?.copyWith(fontSize: 12),
@@ -43,50 +43,8 @@ class BreathingWidget extends StatelessWidget {
           );
         }
 
-        if (provider.breathing.isEmpty) {
-          return Column(
-            children: [
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(
-                  'Breathing',
-                  style: AppTextTheme.titleTextTheme(context).titleMedium
-                      ?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
-                ),
-                subtitle: Text(
-                  'Simple breathing meditations to relax young minds.',
-                  style: AppTextTheme.bodyTextStyle(
-                    context,
-                  ).bodyMedium?.copyWith(fontSize: 12),
-                ),
-              ),
-              SizedBox(
-                height: 268,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'No items found',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        'The list is currently empty.',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          );
+        if (provider.bodyScan.isEmpty) {
+          return const SizedBox.shrink();
         }
 
         return Column(
@@ -94,12 +52,12 @@ class BreathingWidget extends StatelessWidget {
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: Text(
-                'Breathing',
+                'Mini Body Scan',
                 style: AppTextTheme.titleTextTheme(context).titleMedium
                     ?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
               ),
               subtitle: Text(
-                'Simple breathing meditations to relax young minds.',
+                'Guided body scans to help kids relax and feel calm.',
                 style: AppTextTheme.bodyTextStyle(
                   context,
                 ).bodyMedium?.copyWith(fontSize: 12),
@@ -109,17 +67,17 @@ class BreathingWidget extends StatelessWidget {
               height: 268,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
-                itemCount: provider.breathing.length,
+                itemCount: provider.bodyScan.length,
                 separatorBuilder: (context, index) => Space.w16,
                 itemBuilder: (context, index) {
-                  final breathingItem = provider.breathing[index];
+                  final item = provider.bodyScan[index];
                   return InkWell(
                     onTap: () {
                       sl<GoRouter>().pushNamed(
                         PlayVisuals.routeName,
                         queryParameters: {
-                          'collection': 'breaths',
-                          'id': breathingItem.id,
+                          'collection': 'minibodyscans',
+                          'id': item.id,
                         },
                       );
                     },
@@ -134,7 +92,7 @@ class BreathingWidget extends StatelessWidget {
                           ),
                           child: CachedNetworkImage(
                             imageUrl: Uri.encodeFull(
-                              '${ApiConstants.mediaBaseUrl}${breathingItem.cardImageFilename ?? ''}',
+                              '${ApiConstants.mediaBaseUrl}${item.cardImageFilename ?? ''}',
                             ),
                             fit: BoxFit.cover,
                             placeholder: (context, url) => Container(
@@ -160,12 +118,12 @@ class BreathingWidget extends StatelessWidget {
                         Positioned(
                           right: 8,
                           top: 8,
-                          child: ViewsWidget(totalViews: breathingItem.viewCount),
+                          child: ViewsWidget(totalViews: item.viewCount),
                         ),
                       ],
                     ),
-                    );
-                  },
+                  );
+                },
               ),
             ),
           ],
@@ -174,45 +132,3 @@ class BreathingWidget extends StatelessWidget {
     );
   }
 }
-
-
-   // return Column(
-    //   children: [
-    //     ListTile(
-    //       contentPadding: EdgeInsets.zero,
-    //       title: Text(
-    //         'Breathing',
-    //         style: AppTextTheme.titleTextTheme(
-    //           context,
-    //         ).titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
-    //       ),
-    //       subtitle: Text(
-    //         'Quick Meditation for Kids to Calm Down.',
-    //         style: AppTextTheme.bodyTextStyle(
-    //           context,
-    //         ).bodyMedium?.copyWith(fontSize: 12),
-    //       ),
-    //     ),
-    //     SizedBox(
-    //       height: 268,
-    //       child: ListView.separated(
-    //         scrollDirection: Axis.horizontal,
-    //         itemCount: 10,
-    //         separatorBuilder: (context, index) {
-    //           return Space.w16;
-    //         },
-    //         itemBuilder: (context, index) {
-    //           return Container(
-    //             width: 177,
-    //             height: 268,
-    //             decoration: BoxDecoration(
-    //               borderRadius: BorderRadius.circular(12),
-    //             ),
-
-    //             child: Image.asset(Assets.dummy.breathuing.path, height: 268),
-    //           );
-    //         },
-    //       ),
-    //     ),
-    //   ],
-    // );

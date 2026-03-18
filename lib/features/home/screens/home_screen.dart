@@ -12,6 +12,7 @@ import 'package:mindfulminis/features/home/widgets/breathing/breathing.dart';
 import 'package:mindfulminis/features/home/widgets/daily_activity/daily_activity.dart';
 import 'package:mindfulminis/features/home/widgets/meditation/meditation.dart';
 import 'package:mindfulminis/features/home/widgets/my_routine/myroutine_slider.dart';
+import 'package:mindfulminis/features/home/widgets/body_scan/body_scan.dart';
 import 'package:mindfulminis/features/home/widgets/stories/stories.dart';
 import 'package:mindfulminis/features/home/widgets/yoga_flow/yoga_flow.dart';
 import 'package:mindfulminis/features/notifications/screens/notification_screen.dart';
@@ -190,6 +191,8 @@ class HomeScreen extends StatelessWidget {
                         Space.h16,
 
                         BreathingWidget(),
+                        Space.h16,
+                        BodyScanWidget(),
                         Space.h16,
                         StoriesWidget(),
                         Space.h16,

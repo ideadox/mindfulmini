@@ -42,7 +42,8 @@ class _MyRoutineBaseScreenState extends State<MyRoutineBaseScreen> {
             children: [
               Column(
                 children: [
-                  Space.h32,
+                  Space.h40,
+                  Space.h8,
                   CommonAppbar(
                     applyLeading: false,
                     title: Text(

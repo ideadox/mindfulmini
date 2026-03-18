@@ -133,7 +133,7 @@ class StoriesWidget extends StatelessWidget {
                           ),
                           child: CachedNetworkImage(
                             imageUrl: Uri.encodeFull(
-                              '${ApiConstants.mediaBaseUrl}${storyItem.media?.filename ?? ''}',
+                              '${ApiConstants.mediaBaseUrl}${storyItem.cardImageFilename ?? ''}',
                             ),
                             fit: BoxFit.cover,
                             placeholder: (context, url) => Container(

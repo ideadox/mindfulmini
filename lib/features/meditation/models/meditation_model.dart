@@ -5,7 +5,7 @@ class MeditationModel {
   final Map<String, dynamic>? media;
   final List<Map<String, dynamic>>? tags;
   final bool? inSeries;
-  final String? seriesName;
+  final String? seriesId;
   final int? seriesIndex;
   final int? viewCount;
   final String? createdAt;
@@ -18,7 +18,7 @@ class MeditationModel {
     this.media,
     this.tags,
     this.inSeries,
-    this.seriesName,
+    this.seriesId,
     this.seriesIndex,
     this.viewCount,
     this.createdAt,
@@ -36,7 +36,7 @@ class MeditationModel {
               ? List<Map<String, dynamic>>.from(json['tags'])
               : null,
       inSeries: json['inSeries'],
-      seriesName: json['seriesName'],
+      seriesId: json['series']?.toString(),
       seriesIndex: json['seriesIndex'],
       viewCount: json['viewCount'],
       createdAt: json['createdAt'],
@@ -52,7 +52,7 @@ class MeditationModel {
       'media': media,
       'tags': tags,
       'inSeries': inSeries,
-      'seriesName': seriesName,
+      'series': seriesId,
       'seriesIndex': seriesIndex,
       'viewCount': viewCount,
       'createdAt': createdAt,

@@ -115,23 +115,23 @@ class YogaFlowWidget extends StatelessWidget {
                 separatorBuilder: (context, index) => Space.w16,
                 itemBuilder: (context, index) {
                   final yogaItem = provider.yoga[index];
-                  if (yogaItem.media?.filename == null) {
-                      return Container(
-                        width: 177,
-                        height: 268,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: Colors.grey.shade200,
-                        ),
-                        child: Icon(
-                          Icons.image_not_supported,
-                          color: Colors.grey.shade400,
-                        ),
-                      );
-                    }
+                  if (yogaItem.cardImageFilename == null) {
+                    return Container(
+                      width: 177,
+                      height: 268,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.grey.shade200,
+                      ),
+                      child: Icon(
+                        Icons.image_not_supported,
+                        color: Colors.grey.shade400,
+                      ),
+                    );
+                  }
 
-                    final imageUrl =
-                      '${ApiConstants.mediaBaseUrl}${yogaItem.media!.filename}';
+                  final imageUrl =
+                      '${ApiConstants.mediaBaseUrl}${yogaItem.cardImageFilename}';
 
                   return InkWell(
                     onTap: () async {

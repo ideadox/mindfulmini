@@ -47,7 +47,7 @@ class ShortStories extends StatelessWidget {
                       fit: BoxFit.cover,
                       image: CachedNetworkImageProvider(
                         Uri.encodeFull(
-                          '${ApiConstants.mediaBaseUrl}${story.media?['filename'] ?? ''}',
+                          '${ApiConstants.mediaBaseUrl}${story.cardImageFilename ?? ''}',
                         ),
                       ),
                     ),

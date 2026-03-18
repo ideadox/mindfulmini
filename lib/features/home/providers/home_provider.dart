@@ -13,26 +13,29 @@ class HomeProvider with ChangeNotifier {
   List<CmsModel> _breathing = [];
   List<CmsModel> _meditation = [];
   List<CmsModel> _yoga = [];
+  List<CmsModel> _bodyScan = [];
 
   // Getters
   List<CmsModel> get stories => _stories;
   List<CmsModel> get breathing => _breathing;
   List<CmsModel> get meditation => _meditation;
   List<CmsModel> get yoga => _yoga;
+  List<CmsModel> get bodyScan => _bodyScan;
 
   // Loading states
   bool _isLoadingStories = false;
   bool _isLoadingBreathing = false;
   bool _isLoadingMeditation = false;
   bool _isLoadingYoga = false;
+  bool _isLoadingBodyScan = false;
 
   bool get isLoadingStories => _isLoadingStories;
   bool get isLoadingBreathing => _isLoadingBreathing;
   bool get isLoadingMeditation => _isLoadingMeditation;
   bool get isLoadingYoga => _isLoadingYoga;
-  
-  // Overall loading state - true if any content is loading
-  bool get isLoading => _isLoadingStories || _isLoadingBreathing || _isLoadingMeditation || _isLoadingYoga;
+  bool get isLoadingBodyScan => _isLoadingBodyScan;
+
+  bool get isLoading => _isLoadingStories || _isLoadingBreathing || _isLoadingMeditation || _isLoadingYoga || _isLoadingBodyScan;
 
   HomeProvider() {
     // Load data when provider is created - don't await to avoid blocking
@@ -46,6 +49,7 @@ class HomeProvider with ChangeNotifier {
       loadBreathing(),
       loadMeditation(),
       loadYoga(),
+      loadBodyScan(),
     ], eagerError: false);
   }
 
@@ -137,6 +141,25 @@ class HomeProvider with ChangeNotifier {
       log('Error loading yoga: $e');
     } finally {
       _isLoadingYoga = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> loadBodyScan() async {
+    try {
+      _isLoadingBodyScan = true;
+      notifyListeners();
+      _bodyScan = await _data.getCMSContentByCollection(
+        'minibodyscans',
+        page: 1,
+        limit: 20,
+        sort: 'createdAt',
+      );
+    } catch (e) {
+      log('Error loading body scan: $e');
+      _bodyScan = [];
+    } finally {
+      _isLoadingBodyScan = false;
       notifyListeners();
     }
   }

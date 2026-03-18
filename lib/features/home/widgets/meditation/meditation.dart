@@ -129,7 +129,7 @@ class MeditationWidget extends StatelessWidget {
                           ),
                           child: CachedNetworkImage(
                             imageUrl: Uri.encodeFull(
-                              '${ApiConstants.mediaBaseUrl}${meditationItem.media?.filename ?? ''}',
+                              '${ApiConstants.mediaBaseUrl}${meditationItem.cardImageFilename ?? ''}',
                             ),
                             fit: BoxFit.cover,
                             placeholder:

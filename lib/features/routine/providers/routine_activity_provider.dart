@@ -40,6 +40,19 @@ class RoutineActivityProvider with ChangeNotifier {
 
       log('Fetching routine activity for id: $id, date: $date');
       activityModel = await _routineData.getRoutineActivity(id, date);
+
+      if (activityModel != null) {
+        const lastGoals = {'affirmation', 'gratitude journal'};
+        final sorted = [
+          ...activityModel!.goals.where(
+            (g) => !lastGoals.contains(g.title.toLowerCase()),
+          ),
+          ...activityModel!.goals.where(
+            (g) => lastGoals.contains(g.title.toLowerCase()),
+          ),
+        ];
+        activityModel = activityModel!.copyWith(goals: sorted);
+      }
     } catch (e) {
       log('Error fetching routine activity: $e');
       // Don't rethrow — show empty state instead of crashing

@@ -97,11 +97,7 @@ class _YogaListState extends State<YogaList> {
                       else
                         Column(
                           children: [
-                            if (yogaProvider.selectedContent?.media != null &&
-                                yogaProvider
-                                        .selectedContent
-                                        ?.media?['filename'] !=
-                                    null)
+                            if (yogaProvider.selectedContent?.cardImageFilename != null)
                               Container(
                                 width: double.infinity,
                                 height: 250,
@@ -112,10 +108,7 @@ class _YogaListState extends State<YogaList> {
                                 child: CachedNetworkImage(
                                   imageUrl:
                                       ApiConstants.mediaBaseUrl +
-                                      (yogaProvider
-                                              .selectedContent
-                                              ?.media?['filename'] ??
-                                          ''),
+                                      yogaProvider.selectedContent!.cardImageFilename!,
                                   fit: BoxFit.cover,
                                   placeholder:
                                       (context, url) => Container(

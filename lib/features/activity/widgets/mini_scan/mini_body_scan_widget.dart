@@ -75,7 +75,7 @@ class MiniBodyScanWidget extends StatelessWidget {
                           child: ActivityHomeCard(
                             isNetwrok: true,
                             image: Uri.encodeFull(
-                              '${ApiConstants.mediaBaseUrl}${item.media?.filename}',
+                              '${ApiConstants.mediaBaseUrl}${item.cardImageFilename ?? ''}',
                             ),
                           ),
                         );

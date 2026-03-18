@@ -1,16 +1,16 @@
 import 'dart:developer';
+import 'dart:math' hide log;
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mindfulminis/common/data/discover_data.dart';
 import 'package:mindfulminis/common/widgets/custom_level_percent_indicator.dart';
 import 'package:mindfulminis/core/app_colors.dart';
-import 'package:mindfulminis/features/breathing/screens/breathing_screen.dart';
 import 'package:mindfulminis/features/journal/screens/create_journal_screen.dart';
-import 'package:mindfulminis/features/meditation/screens/meditation_screen.dart';
+import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
 import 'package:mindfulminis/features/routine/providers/activities_provider.dart';
 import 'package:mindfulminis/features/routine/screens/affirmation_screen.dart';
-import 'package:mindfulminis/features/stories/screens/stories_screen.dart';
-import 'package:mindfulminis/features/yoga/screens/yoga_main.dart';
+import 'package:mindfulminis/features/yoga/data/yoga_data.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
 
@@ -24,6 +24,7 @@ class RoutineLevelContainer extends StatelessWidget {
   final String? routineId;
   final String? date;
   final int? dailyDurationMinutes;
+  final String? profileId;
 
   /// Called after the user returns from an activity screen so the parent
   /// can re-fetch progress data.
@@ -38,6 +39,7 @@ class RoutineLevelContainer extends StatelessWidget {
     this.routineId,
     this.date,
     this.dailyDurationMinutes,
+    this.profileId,
     this.onReturn,
   });
 
@@ -63,6 +65,75 @@ class RoutineLevelContainer extends StatelessWidget {
     }
   }
 
+  static const _collectionGoals = {
+    'meditation': 'meditation',
+    'yoga': 'yoga',
+    'breathing': 'breathing',
+    'story': 'stories',
+    'stories': 'stories',
+  };
+
+  /// Fetches a random unwatched item from the collection and navigates
+  /// directly to PlayVisuals. If all items have been viewed, loops back
+  /// to the first item in the list.
+  /// Returns true if the user actually played the content.
+  Future<bool> _navigateToRandomContent(String collectionSlug) async {
+    try {
+      final discoverData = sl<DiscoverData>();
+      final sections = await discoverData.getDiscoverContent(collectionSlug);
+
+      final allItems = sections.expand((section) {
+        if (section.isSingle && section.item != null) {
+          return [section.item!];
+        } else if (section.isSeries && section.series != null) {
+          return section.series!.items;
+        }
+        return <dynamic>[];
+      }).toList();
+
+      if (allItems.isEmpty) return false;
+
+      var candidates = allItems;
+
+      if (profileId != null && profileId!.isNotEmpty) {
+        final viewedIds = await discoverData.getViewedContentIds(
+          collection: collectionSlug,
+          profileId: profileId!,
+        );
+        final viewedSet = viewedIds.toSet();
+        final unwatched =
+            allItems.where((item) => !viewedSet.contains(item.id)).toList();
+        if (unwatched.isNotEmpty) {
+          candidates = unwatched;
+        }
+      }
+
+      final picked = candidates[Random().nextInt(candidates.length)];
+
+      Object? result;
+      if (collectionSlug == 'yoga') {
+        final yogaData = sl<YogaData>();
+        final yogaContent = await yogaData.getYogaContentById(picked.id);
+        result = await sl<GoRouter>().pushNamed(
+          PlayVisuals.routeName,
+          extra: yogaContent,
+        );
+      } else {
+        result = await sl<GoRouter>().pushNamed(
+          PlayVisuals.routeName,
+          queryParameters: {
+            'collection': collectionSlug,
+            'id': picked.id,
+          },
+        );
+      }
+      return result == true;
+    } catch (e) {
+      log('Error navigating to random content for $collectionSlug: $e');
+      return false;
+    }
+  }
+
   /// Navigate to the appropriate screen based on goal type.
   /// Awaits the push so we can refresh data when the user returns.
   Future<void> _onTap() async {
@@ -76,50 +147,41 @@ class RoutineLevelContainer extends StatelessWidget {
       }
     }
 
-    switch (goal) {
-      case 'affirmation':
-        // Affirmation handles its own progress internally
-        await sl<GoRouter>().pushNamed(
-          AffirmationScreen.routeName,
-          queryParameters: {
-            if (routineId != null) 'routineId': routineId!,
-            if (date != null) 'date': date!,
-          },
-        );
-        break;
-      case 'meditation':
-        await sl<GoRouter>().pushNamed(MeditationScreen.routeName);
-        break;
-      case 'yoga':
-        await sl<GoRouter>().pushNamed(YogaMain.routeName);
-        break;
-      case 'breathing':
-        await sl<GoRouter>().pushNamed(BreathingScreen.routeName);
-        break;
-      case 'story':
-      case 'stories':
-        await sl<GoRouter>().pushNamed(StoriesScreen.routeName);
-        break;
-      case 'gratitude journal':
-        // Get the activity ID for progress tracking
-        final activitiesProvider = sl<ActivitiesProvider>();
-        final activity = activitiesProvider.getActivityByGoal(goal);
-        await sl<GoRouter>().pushNamed(
-          CreateJournalScreen.routeName,
-          pathParameters: {'activityId': activity?.id ?? ''},
-        );
-        break;
-      case 'mini body scan':
-      case 'minibodyscan':
-        // TODO: Navigate to Mini Body Scan screen when available
-        break;
-      default:
-        return; // no navigation happened, skip onReturn
+    bool didPlay = false;
+
+    final collectionSlug = _collectionGoals[goal];
+    if (collectionSlug != null) {
+      didPlay = await _navigateToRandomContent(collectionSlug);
+    } else {
+      switch (goal) {
+        case 'affirmation':
+          await sl<GoRouter>().pushNamed(
+            AffirmationScreen.routeName,
+            queryParameters: {
+              if (routineId != null) 'routineId': routineId!,
+              if (date != null) 'date': date!,
+            },
+          );
+          break;
+        case 'gratitude journal':
+          final activitiesProvider = sl<ActivitiesProvider>();
+          final activity = activitiesProvider.getActivityByGoal(goal);
+          await sl<GoRouter>().pushNamed(
+            CreateJournalScreen.routeName,
+            pathParameters: {'activityId': activity?.id ?? ''},
+          );
+          break;
+        case 'mini body scan':
+        case 'minibodyscan':
+          // TODO: Navigate to Mini Body Scan screen when available
+          break;
+        default:
+          return;
+      }
     }
 
-    // Update progress for activities that complete on return
-    // (Affirmation handles its own; gratitude is handled on journal submit)
-    if (routineId != null && date != null) {
+    // Only mark progress if the user actually played the content
+    if (didPlay && routineId != null && date != null) {
       if (goal != 'affirmation' && goal != 'gratitude journal') {
         try {
           final activitiesProvider = sl<ActivitiesProvider>();
@@ -133,7 +195,6 @@ class RoutineLevelContainer extends StatelessWidget {
       }
     }
 
-    // Re-fetch progress data now that the user has returned
     onReturn?.call();
   }
 

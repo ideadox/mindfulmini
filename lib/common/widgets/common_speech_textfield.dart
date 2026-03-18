@@ -3,7 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mindfulminis/common/providers/speech_provider.dart';
 import 'package:mindfulminis/core/app_colors.dart';
-import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:provider/provider.dart';
 
@@ -151,23 +150,6 @@ class _CommonSpeechTextfieldState extends State<CommonSpeechTextfield>
                 left: 10,
                 child: Row(
                   children: [
-                    IconButton.outlined(
-                      icon: SvgPicture.asset(Assets.icons.undo),
-                      onPressed: provider.isListening
-                          ? null
-                          : () {
-                              provider.undo();
-                            },
-                    ),
-                    Space.w12,
-                    IconButton.outlined(
-                      icon: SvgPicture.asset(Assets.icons.redo),
-                      onPressed: provider.isListening
-                          ? null
-                          : () {
-                              provider.redo();
-                            },
-                    ),
                     Spacer(),
                     // Hold-to-speak mic button
                     GestureDetector(

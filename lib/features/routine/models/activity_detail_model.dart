@@ -128,7 +128,7 @@ class ContentDetail {
   final MediaDetail? media;
   final List<Tag>? tags;
   final bool? inSeries;
-  final String? seriesName;
+  final String? seriesId;
   final int? seriesIndex;
 
   ContentDetail({
@@ -140,7 +140,7 @@ class ContentDetail {
     this.media,
     this.tags,
     this.inSeries,
-    this.seriesName,
+    this.seriesId,
     this.seriesIndex,
   });
 
@@ -161,7 +161,7 @@ class ContentDetail {
               ?.map((e) => Tag.fromJson(e as Map<String, dynamic>))
               .toList(),
       inSeries: json['inSeries'] as bool?,
-      seriesName: json['seriesName'] as String?,
+      seriesId: json['series']?.toString(),
       seriesIndex: (json['seriesIndex'] as num?)?.toInt(),
     );
   }
@@ -175,7 +175,7 @@ class ContentDetail {
     'media': media?.toJson(),
     'tags': tags?.map((t) => t.toJson()).toList(),
     'inSeries': inSeries,
-    'seriesName': seriesName,
+    'series': seriesId,
     'seriesIndex': seriesIndex,
   };
 
@@ -188,7 +188,7 @@ class ContentDetail {
     MediaDetail? media,
     List<Tag>? tags,
     bool? inSeries,
-    String? seriesName,
+    String? seriesId,
     int? seriesIndex,
   }) {
     return ContentDetail(
@@ -200,7 +200,7 @@ class ContentDetail {
       media: media ?? this.media,
       tags: tags ?? this.tags,
       inSeries: inSeries ?? this.inSeries,
-      seriesName: seriesName ?? this.seriesName,
+      seriesId: seriesId ?? this.seriesId,
       seriesIndex: seriesIndex ?? this.seriesIndex,
     );
   }

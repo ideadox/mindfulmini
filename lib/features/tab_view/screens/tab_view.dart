@@ -293,15 +293,15 @@ class _TabViewState extends State<TabView> with TickerProviderStateMixin {
                     !osp.connected
                         ? OfflineScreen()
                         : provider.screens[provider.currentIndex],
-                floatingActionButton:
-                    provider.currentIndex == 3
-                        ? null
-                        : IconButton(
-                          onPressed: () {
-                            sl<GoRouter>().pushNamed(ShidiChatScreen.routeName);
-                          },
-                          icon: Image.asset(Assets.icons.floatingButton.path),
-                        ),
+                // floatingActionButton:
+                //     provider.currentIndex == 3
+                //         ? null
+                //         : IconButton(
+                //           onPressed: () {
+                //             sl<GoRouter>().pushNamed(ShidiChatScreen.routeName);
+                //           },
+                //           icon: Image.asset(Assets.icons.floatingButton.path),
+                //         ),
                 bottomNavigationBar: SizedBox(
                   height: 80,
                   child: CustomNavigationBar(

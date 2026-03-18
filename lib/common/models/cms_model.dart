@@ -4,15 +4,27 @@ class CmsModel {
   final DateTime updatedAt;
   final String title;
   final ContentDescription contentDescription;
+  final Media? thumbnail;
   final Media? media;
+  final Media? motionPicture;
   final Media? audio;
   final List<Tag> tags;
   final bool inSeries;
-  final String seriesName;
+  final String seriesId;
   final int seriesIndex;
   final int v;
   final int viewCount;
   final Map<String, dynamic> contentDescriptionJson;
+
+  /// Preferred image for cards/lists: thumbnail first, then media.
+  String? get cardImageFilename => thumbnail?.filename ?? media?.filename;
+
+  /// Image shown on PlayVisuals before audio plays: thumbnail first, then media.
+  String? get stillImageFilename => thumbnail?.filename ?? media?.filename;
+
+  /// Image/gif shown on PlayVisuals while audio is playing: motionPicture first, then media, then thumbnail.
+  String? get playingImageFilename =>
+      motionPicture?.filename ?? media?.filename ?? thumbnail?.filename;
 
   CmsModel({
     required this.id,
@@ -20,11 +32,13 @@ class CmsModel {
     required this.updatedAt,
     required this.title,
     required this.contentDescription,
+    this.thumbnail,
     required this.media,
+    this.motionPicture,
     this.audio,
     required this.tags,
     required this.inSeries,
-    required this.seriesName,
+    required this.seriesId,
     required this.seriesIndex,
     required this.v,
     required this.viewCount,
@@ -44,13 +58,19 @@ class CmsModel {
       contentDescription: json['contentDescription'] != null
           ? ContentDescription.fromJson(json['contentDescription'])
           : ContentDescription(root: ContentRoot(children: [])),
+      thumbnail: json['thumbnail'] != null && json['thumbnail'] is Map
+          ? Media.fromJson(json['thumbnail'])
+          : null,
       media: json['media'] != null ? Media.fromJson(json['media']) : null,
+      motionPicture: json['motionPicture'] != null && json['motionPicture'] is Map
+          ? Media.fromJson(json['motionPicture'])
+          : null,
       audio: json['audio'] != null ? Media.fromJson(json['audio']) : null,
       tags: json['tags'] != null && json['tags'] is List
           ? (json['tags'] as List).map((t) => Tag.fromJson(t)).toList()
           : [],
       inSeries: json['inSeries'] ?? false,
-      seriesName: json['seriesName'] ?? '',
+      seriesId: json['series']?.toString() ?? json['seriesName']?.toString() ?? '',
       seriesIndex: json['seriesIndex'] ?? 0,
       v: json['__v'] ?? 0,
       viewCount: json['viewCount'] ?? 0,
@@ -65,11 +85,13 @@ class CmsModel {
       'updatedAt': updatedAt.toIso8601String(),
       'title': title,
       'contentDescription': contentDescription.toJson(),
+      if (thumbnail != null) 'thumbnail': thumbnail!.toJson(),
       if (media != null) 'media': media!.toJson(),
+      if (motionPicture != null) 'motionPicture': motionPicture!.toJson(),
       if (audio != null) 'audio': audio!.toJson(),
       'tags': tags.map((t) => t.toJson()).toList(),
       'inSeries': inSeries,
-      'seriesName': seriesName,
+      'series': seriesId,
       'seriesIndex': seriesIndex,
       '__v': v,
       'viewCount': viewCount,

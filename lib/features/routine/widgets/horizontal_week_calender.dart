@@ -27,11 +27,11 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
   }
 
   void scrollToSelected() {
-    DateTime today = DateTime.now();
-    DateTime startOfWeek = today.subtract(Duration(days: today.weekday - 1));
-    int selectedIndex = widget.selectedDate.difference(startOfWeek).inDays;
+    DateTime today = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    int selectedIndex = widget.selectedDate.difference(today).inDays;
+    int daysRemaining = 8 - today.weekday;
 
-    if (selectedIndex >= 0 && selectedIndex < 7) {
+    if (selectedIndex >= 0 && selectedIndex < daysRemaining) {
       double itemWidth = 62 + 12;
       _scrollController.animateTo(
         selectedIndex * itemWidth,
@@ -51,8 +51,10 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    DateTime today = DateTime.now();
-    DateTime startOfWeek = today.subtract(Duration(days: today.weekday - 1));
+    DateTime now = DateTime.now();
+    DateTime today = DateTime(now.year, now.month, now.day);
+    // Show from today through end of week (Sunday)
+    int daysRemaining = 8 - today.weekday; // Mon=1 → 7 days, Tue=2 → 6, ... Sun=7 → 1
 
     return SizedBox(
       height: 90,
@@ -60,12 +62,12 @@ class _HorizontalWeekCalendarState extends State<HorizontalWeekCalendar> {
         controller: _scrollController,
         padding: EdgeInsets.symmetric(horizontal: 12),
         scrollDirection: Axis.horizontal,
-        itemCount: 7,
+        itemCount: daysRemaining,
         separatorBuilder: (context, index) {
           return Space.w12;
         },
         itemBuilder: (context, index) {
-          DateTime date = startOfWeek.add(Duration(days: index));
+          DateTime date = today.add(Duration(days: index));
           bool isSelected =
               date.day == widget.selectedDate.day &&
               date.month == widget.selectedDate.month &&

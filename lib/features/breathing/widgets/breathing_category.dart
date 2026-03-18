@@ -144,7 +144,7 @@ class CategoryWiseList extends StatelessWidget {
                     ),
                     child: CachedNetworkImage(
                       imageUrl: Uri.encodeFull(
-                        '${ApiConstants.mediaBaseUrl}${breathingItem.media?['filename'] ?? ''}',
+                        '${ApiConstants.mediaBaseUrl}${breathingItem.cardImageFilename ?? ''}',
                       ),
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Container(

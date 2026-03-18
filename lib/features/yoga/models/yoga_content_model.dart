@@ -2,25 +2,40 @@ class YogaContentModel {
   final String id;
   final String title;
   final Map<String, dynamic>? contentDescription;
+  final Map<String, dynamic>? thumbnail;
   final Map<String, dynamic>? media;
+  final Map<String, dynamic>? motionPicture;
   final Map<String, dynamic>? audio;
   final List<Map<String, dynamic>>? tags;
   final bool? inSeries;
-  final String? seriesName;
+  final String? seriesId;
   final int? seriesIndex;
   final int? viewCount;
   final String? createdAt;
   final String? updatedAt;
 
+  String? get cardImageFilename =>
+      thumbnail?['filename'] as String? ?? media?['filename'] as String?;
+
+  String? get stillImageFilename =>
+      thumbnail?['filename'] as String? ?? media?['filename'] as String?;
+
+  String? get playingImageFilename =>
+      motionPicture?['filename'] as String? ??
+      media?['filename'] as String? ??
+      thumbnail?['filename'] as String?;
+
   YogaContentModel({
     required this.id,
     required this.title,
     this.contentDescription,
+    this.thumbnail,
     this.media,
+    this.motionPicture,
     this.audio,
     this.tags,
     this.inSeries,
-    this.seriesName,
+    this.seriesId,
     this.seriesIndex,
     this.viewCount,
     this.createdAt,
@@ -32,14 +47,16 @@ class YogaContentModel {
       id: json['_id'] ?? '',
       title: json['title'] ?? '',
       contentDescription: json['contentDescription'],
+      thumbnail: json['thumbnail'] is Map<String, dynamic> ? json['thumbnail'] : null,
       media: json['media'],
+      motionPicture: json['motionPicture'] is Map<String, dynamic> ? json['motionPicture'] : null,
       audio: json['audio'] is Map<String, dynamic> ? json['audio'] : null,
       tags:
           json['tags'] != null
               ? List<Map<String, dynamic>>.from(json['tags'])
               : null,
       inSeries: json['inSeries'],
-      seriesName: json['seriesName'],
+      seriesId: json['series']?.toString(),
       seriesIndex: json['seriesIndex'],
       viewCount: json['viewCount'],
       createdAt: json['createdAt'],
@@ -52,11 +69,13 @@ class YogaContentModel {
       '_id': id,
       'title': title,
       'contentDescription': contentDescription,
+      if (thumbnail != null) 'thumbnail': thumbnail,
       'media': media,
+      if (motionPicture != null) 'motionPicture': motionPicture,
       'audio': audio,
       'tags': tags,
       'inSeries': inSeries,
-      'seriesName': seriesName,
+      'series': seriesId,
       'seriesIndex': seriesIndex,
       'viewCount': viewCount,
       'createdAt': createdAt,

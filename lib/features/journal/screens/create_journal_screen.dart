@@ -194,7 +194,7 @@ class _CreateJournalScreenState extends State<CreateJournalScreen> {
 
                             Space.h40,
                             Text(
-                              "3 things I'll accomplish today",
+                              "Things I'll accomplish today",
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -214,6 +214,7 @@ class _CreateJournalScreenState extends State<CreateJournalScreen> {
                                   provider.loading
                                       ? null
                                       : () {
+                                        FocusScope.of(context).unfocus();
                                         provider.createJournal(
                                           _provider1.textController.text,
                                           _provider2.textController.text,

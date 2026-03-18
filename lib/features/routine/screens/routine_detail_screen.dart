@@ -5,6 +5,7 @@ import 'package:mindfulminis/common/widgets/custom_back_button.dart';
 import 'package:mindfulminis/common/widgets/custom_precentage_indicator.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
+import 'package:mindfulminis/features/profile/providers/profile_provider.dart';
 import 'package:mindfulminis/features/routine/providers/routine_activity_provider.dart';
 import 'package:mindfulminis/features/routine/widgets/horizontal_week_calender.dart';
 import 'package:mindfulminis/features/routine/widgets/routine_level_container.dart';
@@ -41,6 +42,11 @@ class RoutineDetailScreen extends StatelessWidget {
         (dailyMinutes != null && goalCount != null && goalCount > 0)
             ? (dailyMinutes / goalCount).round()
             : null;
+
+    final profileId = Provider.of<ProfileProvider>(
+      context,
+      listen: false,
+    ).userProfile?.id;
 
     // Use routine's startDate if today is before it, otherwise use today
     final now = DateTime.now();
@@ -82,6 +88,7 @@ class RoutineDetailScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
+                            
                             Text(
                               routineTitle,
                               style: const TextStyle(
@@ -340,6 +347,7 @@ class RoutineDetailScreen extends StatelessWidget {
                                             'yyyy-MM-dd',
                                           ).format(provider.selectedDate),
                                           dailyDurationMinutes: minutesPerGoal,
+                                          profileId: profileId,
                                           onReturn: () {
                                             // Re-fetch goals progress when
                                             // user returns from an activity

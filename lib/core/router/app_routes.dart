@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/screens/splash_screen.dart';
@@ -32,6 +33,9 @@ import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
 import 'package:mindfulminis/features/yoga/screens/yoga_list.dart';
 import 'package:mindfulminis/features/yoga/screens/yoga_main.dart';
 
+import '../../common/screens/series_list_screen.dart';
+import '../../common/models/series_model.dart';
+import '../../common/providers/collection_discover_provider.dart';
 import '../../features/about/screens/about_screen.dart';
 import '../../features/help_center/screens/help_center_screen.dart';
 import '../../features/library/screens/library_screen.dart';
@@ -183,6 +187,24 @@ GoRouter buildRouter() {
         path: BreathingScreen.routePath,
         name: BreathingScreen.routeName,
         builder: (context, state) => BreathingScreen(),
+      ),
+      GoRoute(
+        path: SeriesListScreen.routePath,
+        name: SeriesListScreen.routeName,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          if (extra == null) {
+            return Scaffold(
+              body: Center(child: Text('Invalid navigation')),
+            );
+          }
+          return SeriesListScreen(
+            series: extra['series'] as SeriesModel,
+            collectionSlug: extra['collectionSlug'] as String,
+            discoverProvider:
+                extra['provider'] as CollectionDiscoverProvider,
+          );
+        },
       ),
       GoRoute(
         path: PlayVisuals.routePath,

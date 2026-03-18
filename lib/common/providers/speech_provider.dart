@@ -50,40 +50,45 @@ class SpeechProvider with ChangeNotifier {
   }
 
   /// Ensures the speech engine is initialized exactly once.
+  /// Returns false if speech recognition is unavailable or permission denied.
   static Future<bool> _ensureInitialized() async {
     if (_initialized) return true;
-    _initialized = await _speech.initialize(
-      onStatus: (val) {
-        log('Speech status: $val');
-        // Route status events to whichever provider is currently active
-        final provider = _activeProvider;
-        if (provider == null) return;
+    try {
+      _initialized = await _speech.initialize(
+        onStatus: (val) {
+          log('Speech status: $val');
+          final provider = _activeProvider;
+          if (provider == null) return;
 
-        if (val == 'notListening' || val == 'done') {
-          if (provider.shidiChat && val == 'done') {
-            log('done called in shidi true ${provider.textController.text}');
-            provider.shidiChatProvider!.messageController.text =
-                provider.textController.text;
-            provider.textController.clear();
-            sl<GoRouter>().pop(false);
+          if (val == 'notListening' || val == 'done') {
+            if (provider.shidiChat && val == 'done') {
+              log('done called in shidi true ${provider.textController.text}');
+              provider.shidiChatProvider!.messageController.text =
+                  provider.textController.text;
+              provider.textController.clear();
+              sl<GoRouter>().pop(false);
+              _activeProvider = null;
+              return;
+            }
+            provider._isListening = false;
             _activeProvider = null;
-            return;
+            provider.notifyListeners();
           }
+        },
+        onError: (val) {
+          log('Speech error: $val');
+          final provider = _activeProvider;
+          if (provider == null) return;
+          provider._error = val.errorMsg;
           provider._isListening = false;
           _activeProvider = null;
           provider.notifyListeners();
-        }
-      },
-      onError: (val) {
-        log('Speech error: $val');
-        final provider = _activeProvider;
-        if (provider == null) return;
-        provider._error = val.errorMsg;
-        provider._isListening = false;
-        _activeProvider = null;
-        provider.notifyListeners();
-      },
-    );
+        },
+      );
+    } catch (e) {
+      log('Speech initialization failed: $e');
+      _initialized = false;
+    }
     return _initialized;
   }
 
@@ -107,7 +112,17 @@ class SpeechProvider with ChangeNotifier {
       shidiChatProvider = scProvider;
     }
 
-    await _ensureInitialized();
+    final available = await _ensureInitialized();
+    if (!available) {
+      // Retry once in case the user just granted permission
+      _initialized = false;
+      final retried = await _ensureInitialized();
+      if (!retried) {
+        _error = 'Speech recognition not available. Please check microphone permissions.';
+        notifyListeners();
+        return;
+      }
+    }
 
     // If another provider is currently listening, stop it first
     if (_activeProvider != null && _activeProvider != this) {
@@ -115,39 +130,40 @@ class SpeechProvider with ChangeNotifier {
     }
 
     if (!_isListening) {
-      // Register this provider as the active one
       _activeProvider = this;
-
-      // Snapshot the current text so we can append new speech without duplication
       _textBeforeListening = textController.text;
-
       _isListening = true;
+      _error = null;
       notifyListeners();
 
-      _speech.listen(
-        onResult: (val) {
-          log('Recognized: ${val.recognizedWords} (final: ${val.finalResult})');
-          if (val.recognizedWords.isNotEmpty) {
-            // Build the new text from the snapshot + full recognised words.
-            // recognizedWords contains the ENTIRE recognised text of this
-            // session, so we must NOT prepend the live textController value.
-            final separator = _textBeforeListening.isNotEmpty ? ' ' : '';
-            final newText =
-                '$_textBeforeListening$separator${val.recognizedWords}'.trim();
-            textController.text = newText;
-            textController.selection = TextSelection.collapsed(
-              offset: newText.length,
-            );
+      try {
+        _speech.listen(
+          onResult: (val) {
+            log('Recognized: ${val.recognizedWords} (final: ${val.finalResult})');
+            if (val.recognizedWords.isNotEmpty) {
+              final separator = _textBeforeListening.isNotEmpty ? ' ' : '';
+              final newText =
+                  '$_textBeforeListening$separator${val.recognizedWords}'.trim();
+              textController.text = newText;
+              textController.selection = TextSelection.collapsed(
+                offset: newText.length,
+              );
 
-            // Only commit to history when the result is final (utterance done)
-            if (val.finalResult) {
-              addToHistory(newText);
+              if (val.finalResult) {
+                addToHistory(newText);
+              }
+              notifyListeners();
             }
-            notifyListeners();
-          }
-        },
-      );
-      _handleListeningText();
+          },
+        );
+        _handleListeningText();
+      } catch (e) {
+        log('Speech listen failed: $e');
+        _error = 'Could not start speech recognition.';
+        _isListening = false;
+        _activeProvider = null;
+        notifyListeners();
+      }
     }
   }
 

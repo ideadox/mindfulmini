@@ -6,6 +6,7 @@ import 'package:mindfulminis/core/services/http_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/data/cms_data.dart';
+import '../../common/data/discover_data.dart';
 import '../../features/authentication/auth_data/auth_data.dart';
 import '../../features/breathing/data/breathing_data.dart';
 import '../../features/breathing/providers/breathing_provider.dart';
@@ -58,6 +59,9 @@ Future<void> setupInjection() async {
     () => BreathingData(httpService: sl()),
   );
   sl.registerLazySingleton<StoriesData>(() => StoriesData(httpService: sl()));
+  sl.registerLazySingleton<DiscoverData>(
+    () => DiscoverData(httpService: sl()),
+  );
 
   //providers
   sl.registerLazySingleton<ActivitiesProvider>(() => ActivitiesProvider());
