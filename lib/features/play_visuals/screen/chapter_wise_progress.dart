@@ -197,12 +197,19 @@ class LyricLineBuilder extends StatelessWidget {
   final List<StorySegment> segments;
   final Duration currentPosition;
   final Duration totalDuration;
+  final TextStyle textStyle;
 
   const LyricLineBuilder({
     super.key,
     required this.segments,
     required this.currentPosition,
     required this.totalDuration,
+    this.textStyle = const TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w700,
+      color: Colors.black87,
+      height: 1.4,
+    ),
   });
 
   @override
@@ -242,12 +249,7 @@ class LyricLineBuilder extends StatelessWidget {
         textAlign: TextAlign.center,
         maxLines: 3,
         overflow: TextOverflow.ellipsis,
-        style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w700,
-          color: Colors.black87,
-          height: 1.4,
-        ),
+        style: textStyle,
       ),
     );
   }

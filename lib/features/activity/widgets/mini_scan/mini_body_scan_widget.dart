@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:mindfulminis/features/activity/providers/mini_body_scan_provider.dart';
 import 'package:mindfulminis/features/activity/widgets/activity_home_card.dart';
-
+import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../common/models/cms_model.dart';
@@ -77,6 +79,15 @@ class MiniBodyScanWidget extends StatelessWidget {
                             image: Uri.encodeFull(
                               '${ApiConstants.mediaBaseUrl}${item.cardImageFilename ?? ''}',
                             ),
+                            onTap: () {
+                              sl<GoRouter>().pushNamed(
+                                PlayVisuals.routeName,
+                                queryParameters: {
+                                  'collection': 'minibodyscans',
+                                  'id': item.id,
+                                },
+                              );
+                            },
                           ),
                         );
                       },

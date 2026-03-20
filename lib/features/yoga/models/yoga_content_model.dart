@@ -17,13 +17,32 @@ class YogaContentModel {
   String? get cardImageFilename =>
       thumbnail?['filename'] as String? ?? media?['filename'] as String?;
 
+  /// Initial hero: **media** first, then thumbnail (matches [CmsModel.stillVisualMedia]).
+  Map<String, dynamic>? get stillVisualMap {
+    if (media is Map<String, dynamic>) return media as Map<String, dynamic>;
+    if (thumbnail is Map<String, dynamic>) {
+      return thumbnail as Map<String, dynamic>;
+    }
+    return null;
+  }
+
+  /// Motion → media → thumbnail.
+  Map<String, dynamic>? get playingVisualMap {
+    if (motionPicture is Map<String, dynamic>) {
+      return motionPicture as Map<String, dynamic>;
+    }
+    if (media is Map<String, dynamic>) return media as Map<String, dynamic>;
+    if (thumbnail is Map<String, dynamic>) {
+      return thumbnail as Map<String, dynamic>;
+    }
+    return null;
+  }
+
   String? get stillImageFilename =>
-      thumbnail?['filename'] as String? ?? media?['filename'] as String?;
+      stillVisualMap?['filename'] as String?;
 
   String? get playingImageFilename =>
-      motionPicture?['filename'] as String? ??
-      media?['filename'] as String? ??
-      thumbnail?['filename'] as String?;
+      playingVisualMap?['filename'] as String?;
 
   YogaContentModel({
     required this.id,

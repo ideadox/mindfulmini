@@ -19,12 +19,18 @@ class CmsModel {
   /// Preferred image for cards/lists: thumbnail first, then media.
   String? get cardImageFilename => thumbnail?.filename ?? media?.filename;
 
-  /// Image shown on PlayVisuals before audio plays: thumbnail first, then media.
-  String? get stillImageFilename => thumbnail?.filename ?? media?.filename;
+  /// Hero / initial play screen: **media** first, then thumbnail.
+  Media? get stillVisualMedia => media ?? thumbnail;
 
-  /// Image/gif shown on PlayVisuals while audio is playing: motionPicture first, then media, then thumbnail.
-  String? get playingImageFilename =>
-      motionPicture?.filename ?? media?.filename ?? thumbnail?.filename;
+  /// While audio plays: motion first, then media, then thumbnail.
+  Media? get playingVisualMedia =>
+      motionPicture ?? media ?? thumbnail;
+
+  /// Filename for initial play hero ([stillVisualMedia]).
+  String? get stillImageFilename => stillVisualMedia?.filename;
+
+  /// Filename for the playing-state visual ([playingVisualMedia]).
+  String? get playingImageFilename => playingVisualMedia?.filename;
 
   CmsModel({
     required this.id,
