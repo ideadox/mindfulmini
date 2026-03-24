@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/widgets/custom_back_button.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/common/widgets/gradient_scaffold.dart';
 import 'package:mindfulminis/features/forgot_password/providers/forgot_password_provider.dart';
-import 'package:mindfulminis/features/forgot_password/screens/change_password.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/widgets/common_text_form_field.dart';

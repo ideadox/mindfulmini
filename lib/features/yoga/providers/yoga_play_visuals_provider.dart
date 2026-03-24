@@ -1,11 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/core/utils/yoga_rich_text_parser.dart';
 import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
 
-/// Independent provider for managing yoga content display in PlayVisualsCopy
 class YogaPlayVisualsProvider with ChangeNotifier {
   final YogaContentModel yogaContent;
   final AudioPlayer audioPlayer = AudioPlayer();
@@ -15,12 +15,11 @@ class YogaPlayVisualsProvider with ChangeNotifier {
   bool _isInitialized = false;
   bool _isDisposed = false;
 
-  // Audio state
   bool isPlaying = false;
+  bool audioReady = false;
   Duration currentPosition = Duration.zero;
   Duration audioDuration = Duration.zero;
 
-  // Stream subscriptions
   StreamSubscription? _playerStateSubscription;
   StreamSubscription? _positionSubscription;
   StreamSubscription? _durationSubscription;
@@ -30,17 +29,16 @@ class YogaPlayVisualsProvider with ChangeNotifier {
   }
 
   List<YogaSegment> get segments => _segments;
-  Duration get totalDuration => audioDuration > Duration.zero ? audioDuration : _totalDuration;
+  Duration get totalDuration =>
+      audioDuration > Duration.zero ? audioDuration : _totalDuration;
   bool get isInitialized => _isInitialized;
 
-  /// Initialize by parsing yoga content and setting up audio
   Future<void> _initialize() async {
     try {
       _segments = YogaRichTextParser.parseYogaContent(
         yogaContent.contentDescription,
       );
 
-      // Calculate total duration from segments as fallback
       _totalDuration = Duration(
         milliseconds: _segments.fold<int>(
           0,
@@ -48,81 +46,88 @@ class YogaPlayVisualsProvider with ChangeNotifier {
         ),
       );
 
-      // Initialize audio if available
       await _initializeAudio();
 
       _isInitialized = true;
       notifyListeners();
     } catch (e) {
-      print('Error initializing YogaPlayVisualsProvider: $e');
+      log('YogaPlayVisualsProvider: init failed – $e');
       _isInitialized = false;
       notifyListeners();
     }
   }
 
-  /// Initialize audio player with the yoga content's audio file
   Future<void> _initializeAudio() async {
     final audioFilename = yogaContent.audio?['filename'];
-    if (audioFilename != null) {
-      try {
-        final audioUrl = '${ApiConstants.mediaBaseUrl}$audioFilename';
-        await audioPlayer.setUrl(audioUrl);
+    if (audioFilename == null) return;
 
-        // Listen to player state changes
-        _playerStateSubscription = audioPlayer.playerStateStream.listen((state) {
-          if (!_isDisposed) {
-            isPlaying = state.playing;
-            notifyListeners();
-          }
-        });
+    try {
+      final audioUrl = '${ApiConstants.mediaBaseUrl}$audioFilename';
+      await audioPlayer.setUrl(audioUrl);
 
-        // Listen to position changes
-        _positionSubscription = audioPlayer.positionStream.listen((position) {
-          if (!_isDisposed) {
-            currentPosition = position;
-            notifyListeners();
-          }
-        });
+      _playerStateSubscription =
+          audioPlayer.playerStateStream.listen((state) {
+        if (_isDisposed) return;
+        final wasPlaying = isPlaying;
+        isPlaying = state.playing;
 
-        // Listen to duration changes
-        _durationSubscription = audioPlayer.durationStream.listen((duration) {
-          if (!_isDisposed && duration != null) {
-            audioDuration = duration;
-            notifyListeners();
-          }
-        });
-      } catch (e) {
-        print('Error initializing yoga audio: $e');
-      }
+        if (state.processingState == ProcessingState.completed) {
+          isPlaying = false;
+        }
+
+        if (wasPlaying != isPlaying) notifyListeners();
+      });
+
+      _positionSubscription = audioPlayer.positionStream.listen((position) {
+        if (_isDisposed) return;
+        currentPosition = position;
+        notifyListeners();
+      });
+
+      _durationSubscription = audioPlayer.durationStream.listen((duration) {
+        if (_isDisposed || duration == null) return;
+        audioDuration = duration;
+        notifyListeners();
+      });
+
+      audioReady = true;
+    } catch (e) {
+      log('YogaPlayVisualsProvider: audio init failed – $e');
+      audioReady = false;
     }
   }
 
-  /// Play or pause audio
   Future<void> playPause() async {
-    if (isPlaying) {
-      await audioPlayer.pause();
-    } else {
-      await audioPlayer.play();
+    try {
+      if (isPlaying) {
+        await audioPlayer.pause();
+      } else {
+        if (audioPlayer.processingState == ProcessingState.completed) {
+          await audioPlayer.seek(Duration.zero);
+        }
+        await audioPlayer.play();
+      }
+    } catch (e) {
+      log('YogaPlayVisualsProvider: playPause error – $e');
     }
-    notifyListeners();
   }
 
-  /// Seek to a specific position
   Future<void> seek(Duration position) async {
-    await audioPlayer.seek(position);
+    try {
+      await audioPlayer.seek(position);
+    } catch (e) {
+      log('YogaPlayVisualsProvider: seek error – $e');
+    }
   }
 
-  /// Seek forward 10 seconds
   Future<void> seekForward() async {
-    final newPosition = currentPosition + const Duration(seconds: 10);
-    final maxDuration = totalDuration;
-    await seek(newPosition > maxDuration ? maxDuration : newPosition);
+    final target = currentPosition + const Duration(seconds: 10);
+    await seek(target > totalDuration ? totalDuration : target);
   }
 
-  /// Seek backward 10 seconds
   Future<void> seekBackward() async {
-    final newPosition = currentPosition - const Duration(seconds: 10);
-    await seek(newPosition < Duration.zero ? Duration.zero : newPosition);
+    final target = currentPosition - const Duration(seconds: 10);
+    await seek(target < Duration.zero ? Duration.zero : target);
   }
 
   /// Get segment at specific index

@@ -167,10 +167,13 @@ class SpeechProvider with ChangeNotifier {
     }
   }
 
+  bool _disposed = false;
+
   _handleListeningText() {
     showIamListeningText = true;
     notifyListeners();
     Future.delayed(const Duration(seconds: 2), () {
+      if (_disposed) return;
       showIamListeningText = false;
       notifyListeners();
     });
@@ -220,6 +223,7 @@ class SpeechProvider with ChangeNotifier {
 
   @override
   void dispose() {
+    _disposed = true;
     if (_activeProvider == this) {
       _speech.stop();
       _activeProvider = null;

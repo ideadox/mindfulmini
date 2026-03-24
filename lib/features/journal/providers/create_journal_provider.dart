@@ -26,7 +26,37 @@ class CreateJournalProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Non-empty lines only. Backend should accept any length (including zero);
+  /// padding with empty strings fails APIs that require min 1 character per item.
+  static List<String> accomplishmentsPayload(String acc) {
+    return acc
+        .split('\n')
+        .map((s) => s.trim())
+        .where((s) => s.isNotEmpty)
+        .toList();
+  }
+
+  /// True when the user typed something real (not only spaces/newlines).
+  static bool hasAtLeastOneWord(String text) => text.trim().isNotEmpty;
+
   Future<void> createJournal(String des, String acc, String activityId) async {
+    if (slectedFeeling == null) {
+      SmartDialog.showToast('Please choose how you’re feeling today.');
+      return;
+    }
+    if (!hasAtLeastOneWord(des)) {
+      SmartDialog.showToast(
+        'Please write at least a word for what you’re grateful for.',
+      );
+      return;
+    }
+    if (!hasAtLeastOneWord(acc)) {
+      SmartDialog.showToast(
+        'Please write at least a word for what you’ll accomplish today.',
+      );
+      return;
+    }
+
     try {
       loading = true;
       notifyListeners();
@@ -38,7 +68,7 @@ class CreateJournalProvider with ChangeNotifier {
         'mood': slectedFeeling,
         "date": dateFormat.format(now),
         'description': des,
-        'accomplishments': acc.split('\n'),
+        'accomplishments': accomplishmentsPayload(acc),
       };
       log(map.toString());
 

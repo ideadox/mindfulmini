@@ -7,7 +7,6 @@ import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/home/providers/home_provider.dart';
-import 'package:mindfulminis/features/home/widgets/add_feeling/add_feeling_widget.dart';
 import 'package:mindfulminis/features/home/widgets/breathing/breathing.dart';
 import 'package:mindfulminis/features/home/widgets/daily_activity/daily_activity.dart';
 import 'package:mindfulminis/features/home/widgets/meditation/meditation.dart';
@@ -21,9 +20,7 @@ import 'package:mindfulminis/features/routine/screens/create_routine_screen.dart
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
-
 import '../providers/active_routine_provider.dart';
-import '../widgets/add_feeling/feeling_bar_chart.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

@@ -12,6 +12,7 @@ class WeekHorizCalender extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.sizeOf(context).width;
+    // ignore: unused_local_variable
     double availableSpace = width - 25;
     DateTime today = DateTime.now();
     DateTime startOfWeek = today.subtract(Duration(days: today.weekday));
@@ -29,6 +30,7 @@ class WeekHorizCalender extends StatelessWidget {
           DateTime date = startOfWeek.add(Duration(days: index));
 
           DateTime today = DateTime.now();
+          // ignore: unused_local_variable
           bool isToday =
               date.day == today.day &&
               date.month == today.month &&

@@ -41,7 +41,6 @@ class PlayVisualStack extends StatelessWidget {
     return Hero(
       tag: heroTag,
       child: PlayVisualSurface(
-        key: ValueKey<String>(effective.url),
         asset: effective,
         sessionStarted: sessionStarted,
         audioPlaying: audioPlaying,
@@ -208,12 +207,21 @@ class _PlayVisualSurfaceState extends State<PlayVisualSurface> {
     return CachedNetworkImage(
       imageUrl: widget.asset.url,
       fit: BoxFit.cover,
+      alignment: Alignment.topCenter,
       width: double.infinity,
       height: double.infinity,
-      placeholder: (context, url) => _loadingPlaceholder(),
-      errorWidget: (context, url, error) => Container(
-        color: Colors.grey.shade200,
-        child: const Center(child: Icon(Icons.error_outline)),
+      fadeInDuration: const Duration(milliseconds: 300),
+      fadeOutDuration: Duration.zero,
+      useOldImageOnUrlChange: true,
+      memCacheWidth: (MediaQuery.sizeOf(context).width *
+              MediaQuery.devicePixelRatioOf(context))
+          .toInt(),
+      placeholder: (context, url) => const SizedBox.shrink(),
+      errorWidget: (context, url, error) => const ColoredBox(
+        color: Color(0xFF1A1A1A),
+        child: Center(
+          child: Icon(Icons.error_outline, color: Colors.white38),
+        ),
       ),
     );
   }
@@ -238,10 +246,7 @@ class _PlayVisualSurfaceState extends State<PlayVisualSurface> {
   }
 
   Widget _loadingPlaceholder() {
-    return Container(
-      color: Colors.grey.shade200,
-      child: const Center(child: CircularProgressIndicator()),
-    );
+    return const ColoredBox(color: Color(0xFF1A1A1A));
   }
 }
 

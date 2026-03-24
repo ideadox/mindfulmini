@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:mindfulminis/common/data/cms_data.dart';
@@ -15,7 +16,6 @@ class CmsProvider with ChangeNotifier {
   late String id;
   late String collection;
 
-  // Stream subscriptions for proper disposal
   StreamSubscription? _playerStateSubscription;
   StreamSubscription? _positionSubscription;
   StreamSubscription? _durationSubscription;
@@ -28,8 +28,10 @@ class CmsProvider with ChangeNotifier {
   List<StorySegment> segments = [];
   bool isLoading = false;
   bool isPlaying = false;
+  bool audioReady = false;
   Duration currentPosition = Duration.zero;
   Duration totalDuration = Duration.zero;
+
   Future<void> getCMSContentByCollection() async {
     try {
       isLoading = true;
@@ -47,63 +49,78 @@ class CmsProvider with ChangeNotifier {
   }
 
   Future<void> _initializeAudio() async {
-    if (cms?.audio?.filename != null) {
-      try {
-        final audioUrl = '${ApiConstants.mediaBaseUrl}${cms!.audio!.filename}';
-        await audioPlayer.setUrl(audioUrl);
-        
-        // Listen to player state changes
-        _playerStateSubscription = audioPlayer.playerStateStream.listen((state) {
-          if (!_isDisposed) {
-            isPlaying = state.playing;
-            notifyListeners();
-          }
-        });
-        
-        // Listen to position changes
-        _positionSubscription = audioPlayer.positionStream.listen((position) {
-          if (!_isDisposed) {
-            currentPosition = position;
-            notifyListeners();
-          }
-        });
-        
-        // Listen to duration changes
-        _durationSubscription = audioPlayer.durationStream.listen((duration) {
-          if (!_isDisposed && duration != null) {
-            totalDuration = duration;
-            notifyListeners();
-          }
-        });
-      } catch (e) {
-        print('Error initializing audio: $e');
-      }
+    if (cms?.audio?.filename == null) return;
+
+    try {
+      final audioUrl = '${ApiConstants.mediaBaseUrl}${cms!.audio!.filename}';
+      await audioPlayer.setUrl(audioUrl);
+
+      _playerStateSubscription =
+          audioPlayer.playerStateStream.listen((state) {
+        if (_isDisposed) return;
+        final wasPlaying = isPlaying;
+        isPlaying = state.playing;
+
+        if (state.processingState == ProcessingState.completed) {
+          isPlaying = false;
+        }
+
+        if (wasPlaying != isPlaying) notifyListeners();
+      });
+
+      _positionSubscription = audioPlayer.positionStream.listen((position) {
+        if (_isDisposed) return;
+        currentPosition = position;
+        notifyListeners();
+      });
+
+      _durationSubscription = audioPlayer.durationStream.listen((duration) {
+        if (_isDisposed || duration == null) return;
+        totalDuration = duration;
+        notifyListeners();
+      });
+
+      audioReady = true;
+    } catch (e) {
+      log('CmsProvider: audio init failed – $e');
+      audioReady = false;
     }
   }
 
   bool _isDisposed = false;
 
   Future<void> playPause() async {
-    if (isPlaying) {
-      await audioPlayer.pause();
-    } else {
-      await audioPlayer.play();
+    try {
+      if (isPlaying) {
+        await audioPlayer.pause();
+      } else {
+        // On some Android devices play() silently fails after completion.
+        if (audioPlayer.processingState == ProcessingState.completed) {
+          await audioPlayer.seek(Duration.zero);
+        }
+        await audioPlayer.play();
+      }
+    } catch (e) {
+      log('CmsProvider: playPause error – $e');
     }
-    notifyListeners();
   }
 
   Future<void> seek(Duration position) async {
-    await audioPlayer.seek(position);
+    try {
+      await audioPlayer.seek(position);
+    } catch (e) {
+      log('CmsProvider: seek error – $e');
+    }
   }
 
   Future<void> seekForward() async {
-    final newPosition = currentPosition + Duration(seconds: 10);
-    await seek(newPosition > totalDuration ? totalDuration : newPosition);
+    final target = currentPosition + const Duration(seconds: 10);
+    await seek(target > totalDuration ? totalDuration : target);
   }
 
   Future<void> seekBackward() async {
-    final newPosition = currentPosition - Duration(seconds: 10);
-    await seek(newPosition < Duration.zero ? Duration.zero : newPosition);
+    final target = currentPosition - const Duration(seconds: 10);
+    await seek(target < Duration.zero ? Duration.zero : target);
   }
 
   @override

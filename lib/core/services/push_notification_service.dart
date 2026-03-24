@@ -71,6 +71,7 @@ class PushNotificationService {
       log("📩 Foreground message: ${message.notification?.title}");
       final title = message.notification?.title ?? '';
       final body = message.notification?.body ?? '';
+      // ignore: unused_local_variable
       final imageUrl = message.notification?.android?.imageUrl;
 
       if (Platform.isAndroid) {

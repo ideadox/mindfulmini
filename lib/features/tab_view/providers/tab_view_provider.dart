@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mindfulminis/features/activity/screens/activity_screen.dart';
 import 'package:mindfulminis/features/home/screens/home_screen.dart';
 import 'package:mindfulminis/features/journal/screens/journal_screen.dart';
-import 'package:mindfulminis/features/routine/screens/routine_screen.dart';
-
 import '../../profile/screens/profile_screen.dart';
 import '../../routine/screens/routine_decider.dart';
 

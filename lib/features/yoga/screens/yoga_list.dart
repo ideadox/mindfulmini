@@ -250,8 +250,11 @@ class VerticalStepperList extends StatelessWidget {
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
+              // ignore: unused_local_variable
               final isFirst = index == 0;
+              // ignore: unused_local_variable
               final isLast = index == stepCount - 1;
+              // ignore: unused_local_variable
               final bool isActive = index <= activeIndex;
               return SizedBox(
                 height: cardHeight,

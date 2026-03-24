@@ -132,6 +132,7 @@ class YogaRichTextParser {
     return YogaSegment(textSpans: textSpans, duration: duration);
   }
 
+  // ignore: unused_element
   static YogaSegment? _parseParagraph(Map<String, dynamic> paragraph) {
     final children = paragraph['children'] as List<dynamic>? ?? [];
     final textSpans = <YogaTextSpan>[];

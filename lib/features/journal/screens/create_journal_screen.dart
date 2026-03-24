@@ -186,8 +186,6 @@ class _CreateJournalScreenState extends State<CreateJournalScreen> {
                             ),
                             Space.h20,
                             CommonSpeechTextfield(
-                              maxLines: 6,
-                              minLines: 6,
                               hintText: 'Playing with my best friend...',
                               speechProvider: _provider1,
                             ),
@@ -202,8 +200,6 @@ class _CreateJournalScreenState extends State<CreateJournalScreen> {
                             ),
                             Space.h20,
                             CommonSpeechTextfield(
-                              maxLines: 6,
-                              minLines: 6,
                               hintText: 'I will finish my coloring or drawing.',
                               speechProvider: _provider2,
                             ),

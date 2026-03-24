@@ -2,16 +2,13 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/yoga/data/yoga_data.dart';
-import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
 import 'package:mindfulminis/features/yoga/models/yoga_model.dart';
 import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
-import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
 
 class FeaturedCollection extends StatelessWidget {
@@ -42,6 +39,7 @@ class FeaturedCollection extends StatelessWidget {
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () async {
+                  // ignore: unnecessary_non_null_assertion
                   log(featuredPoses[index].id!);
                   try {
                     final yogaData = sl<YogaData>();

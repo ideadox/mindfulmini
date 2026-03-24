@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:mindfulminis/common/providers/speech_provider.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
@@ -9,15 +10,15 @@ import 'package:provider/provider.dart';
 class CommonSpeechTextfield extends StatefulWidget {
   final String hintText;
   final int minLines;
-  final int maxLines;
+  final int? maxLines;
   final SpeechProvider speechProvider;
 
   const CommonSpeechTextfield({
     super.key,
     required this.hintText,
     required this.speechProvider,
-    this.minLines = 8,
-    this.maxLines = 8,
+    this.minLines = 1,
+    this.maxLines,
   });
 
   @override
@@ -25,18 +26,158 @@ class CommonSpeechTextfield extends StatefulWidget {
 }
 
 class _CommonSpeechTextfieldState extends State<CommonSpeechTextfield>
-    with SingleTickerProviderStateMixin {
-  bool _showTooltip = false;
+    with TickerProviderStateMixin {
+  static const double _micInset = 10;
+  static const double _micSize = 48;
+  static const Duration _holdThreshold = Duration(milliseconds: 150);
 
-  void _onMicTap() {
-    // Single tap → show tooltip hint
-    if (!widget.speechProvider.isListening) {
-      setState(() => _showTooltip = true);
-      Future.delayed(const Duration(seconds: 2), () {
-        if (mounted) setState(() => _showTooltip = false);
-      });
+  static const EdgeInsets _textPadding = EdgeInsets.fromLTRB(
+    16,
+    16,
+    16,
+    _micInset + _micSize + 6,
+  );
+
+  bool _showTooltip = false;
+  bool _holding = false;
+  bool _wantsStop = false;
+  Timer? _holdTimer;
+
+  /// Single controller for the mic button: 0 = idle, 1 = active.
+  /// forward() fires on pointer-down (instant feedback).
+  /// reverse() fires on pointer-up (smooth wind-down).
+  /// All decoration, scale, and icon changes derive from this one value.
+  late AnimationController _micAnim;
+  late CurvedAnimation _micCurved;
+
+  late AnimationController _pulseAnim;
+  late Animation<double> _pulseScale;
+  late Animation<double> _pulseOpacity;
+
+  static final BoxDecoration _idleMicDecor = BoxDecoration(
+    shape: BoxShape.circle,
+    color: Colors.white,
+    border: Border.all(color: Colors.grey.shade400),
+  );
+
+  static final BoxDecoration _activeMicDecor = BoxDecoration(
+    shape: BoxShape.circle,
+    gradient: AppColors.primaryGradient,
+    boxShadow: [
+      BoxShadow(
+        color: AppColors.primary.withValues(alpha: 0.35),
+        blurRadius: 16,
+        spreadRadius: 2,
+      ),
+    ],
+  );
+
+  @override
+  void initState() {
+    super.initState();
+
+    _micAnim = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+      reverseDuration: const Duration(milliseconds: 250),
+    );
+    _micCurved = CurvedAnimation(
+      parent: _micAnim,
+      curve: Curves.easeOutCubic,
+      reverseCurve: Curves.easeInCubic,
+    );
+
+    _pulseAnim = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
+    _pulseScale = Tween(begin: 1.0, end: 2.2).animate(
+      CurvedAnimation(parent: _pulseAnim, curve: Curves.easeOut),
+    );
+    _pulseOpacity = Tween(begin: 0.5, end: 0.0).animate(
+      CurvedAnimation(parent: _pulseAnim, curve: Curves.easeOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _holdTimer?.cancel();
+    _micCurved.dispose();
+    _micAnim.dispose();
+    _pulseAnim.dispose();
+    super.dispose();
+  }
+
+  // ── pointer handlers ──────────────────────────────────────────────
+
+  void _onPointerDown(PointerDownEvent _) {
+    _holdTimer?.cancel();
+    _wantsStop = false;
+    _micAnim.forward();
+    setState(() => _showTooltip = false);
+
+    _holdTimer = Timer(_holdThreshold, () {
+      _holding = true;
+      _startRecording();
+    });
+  }
+
+  void _onPointerUp(PointerUpEvent _) {
+    if (_holdTimer?.isActive ?? false) {
+      _holdTimer!.cancel();
+      _micAnim.reverse();
+      _onQuickTap();
+    } else if (_holding) {
+      _holding = false;
+      _stopRecording();
+    } else {
+      _micAnim.reverse();
     }
   }
+
+  void _onPointerCancel(PointerCancelEvent _) {
+    _holdTimer?.cancel();
+    _micAnim.reverse();
+    if (_holding) {
+      _holding = false;
+      _stopRecording();
+    }
+  }
+
+  void _startRecording() {
+    final provider = widget.speechProvider;
+    if (!provider.isListening) {
+      _wantsStop = false;
+      provider.startListening();
+      _pulseAnim.repeat();
+    }
+  }
+
+  void _stopRecording() {
+    final provider = widget.speechProvider;
+    if (provider.isListening) {
+      provider.stopListening();
+    } else {
+      _wantsStop = true;
+    }
+    _micAnim.reverse();
+    _pulseAnim
+      ..stop()
+      ..reset();
+  }
+
+  void _onQuickTap() {
+    if (widget.speechProvider.isListening) {
+      _stopRecording();
+      return;
+    }
+    setState(() => _showTooltip = true);
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) setState(() => _showTooltip = false);
+    });
+  }
+
+  // ── build ─────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
@@ -44,177 +185,212 @@ class _CommonSpeechTextfieldState extends State<CommonSpeechTextfield>
       value: widget.speechProvider,
       child: Consumer<SpeechProvider>(
         builder: (context, provider, _) {
+          final isRecording = provider.isListening;
+
+          if (_wantsStop && isRecording) {
+            _wantsStop = false;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) _stopRecording();
+            });
+          }
+
+          if (!isRecording && (_pulseAnim.isAnimating || _micAnim.value > 0)) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) return;
+              _micAnim.reverse();
+              _pulseAnim
+                ..stop()
+                ..reset();
+            });
+          }
+
           return Stack(
             clipBehavior: Clip.none,
             children: [
-              // Text field
-              TextFormField(
-                controller: provider.textController,
-                minLines: widget.minLines,
-                maxLines: widget.maxLines,
-                keyboardType: TextInputType.multiline,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: widget.hintText,
-                  hintStyle: TextStyle(color: Colors.grey),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                  ),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                  ),
-                  contentPadding: EdgeInsets.all(16),
+              // ── text field ────────────────────────────────────────
+              Theme(
+                data: Theme.of(context).copyWith(
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  visualDensity: VisualDensity.compact,
                 ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter something.';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  provider.addToHistory(value);
-                },
+                child: TextFormField(
+                  controller: provider.textController,
+                  minLines: widget.minLines,
+                  maxLines: widget.maxLines,
+                  keyboardType: TextInputType.multiline,
+                  textAlignVertical: TextAlignVertical.top,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    filled: true,
+                    fillColor: Colors.white,
+                    hintText: widget.hintText,
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: isRecording
+                            ? AppColors.primary.withValues(alpha: 0.5)
+                            : Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: isRecording
+                            ? AppColors.primary.withValues(alpha: 0.5)
+                            : AppColors.purple,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    contentPadding: _textPadding,
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) return 'Please enter something.';
+                    return null;
+                  },
+                  onChanged: (value) => provider.addToHistory(value),
+                ),
               ),
 
-              // Recording overlay — shown when listening
-              if (provider.isListening)
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.94),
-                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                      border: Border.all(
-                        color: AppColors.primary.withValues(alpha: 0.4),
-                        width: 2,
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _PulsingMicIcon(),
-                        SizedBox(height: 14),
-                        Text(
-                          'Listening... speak now',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.primary,
+              // ── "Listening…" badge ────────────────────────────────
+              Positioned(
+                bottom: _micInset + _micSize + 8,
+                right: _micInset,
+                child: IgnorePointer(
+                  child: AnimatedOpacity(
+                    opacity: isRecording ? 1.0 : 0.0,
+                    duration: const Duration(milliseconds: 200),
+                    child: AnimatedSlide(
+                      offset:
+                          isRecording ? Offset.zero : const Offset(0, 0.3),
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeOut,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: AppColors.primary.withValues(alpha: 0.2),
                           ),
                         ),
-                        SizedBox(height: 10),
-                        // Prominent "release to stop" chip
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: Colors.grey.shade300,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const _RecordingDot(),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Listening…',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              // ── pulse ripple ──────────────────────────────────────
+              Positioned(
+                bottom: _micInset,
+                right: _micInset,
+                child: IgnorePointer(
+                  child: SizedBox(
+                    width: _micSize,
+                    height: _micSize,
+                    child: AnimatedBuilder(
+                      animation: _pulseAnim,
+                      builder: (context, _) {
+                        if (!_pulseAnim.isAnimating && _pulseAnim.value == 0) {
+                          return const SizedBox.shrink();
+                        }
+                        return Transform.scale(
+                          scale: _pulseScale.value,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.primary.withValues(
+                                alpha: _pulseOpacity.value,
+                              ),
                             ),
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.touch_app_rounded,
-                                size: 16,
-                                color: Colors.grey.shade700,
-                              ),
-                              SizedBox(width: 6),
-                              Text(
-                                'Release to stop recording',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey.shade700,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                        );
+                      },
                     ),
                   ),
                 ),
+              ),
 
-              // Bottom toolbar
+              // ── mic button ────────────────────────────────────────
               Positioned(
-                bottom: 10,
-                right: 10,
-                left: 10,
-                child: Row(
-                  children: [
-                    Spacer(),
-                    // Hold-to-speak mic button
-                    GestureDetector(
-                      onTap: _onMicTap,
-                      onLongPressStart: (_) {
-                        // Dismiss tooltip if it's showing
-                        if (_showTooltip) {
-                          setState(() => _showTooltip = false);
-                        }
-                        if (!provider.isListening) {
-                          provider.startListening();
-                        }
-                      },
-                      onLongPressEnd: (_) {
-                        if (provider.isListening) {
-                          provider.stopListening();
-                        }
-                      },
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        height: 48,
-                        width: 48,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: provider.isListening
-                              ? LinearGradient(
-                                  begin: Alignment.bottomCenter,
-                                  end: Alignment.topCenter,
-                                  colors: [
-                                    HexColor('#6E40F9'),
-                                    HexColor('#A569FB'),
-                                    HexColor('#CE89FF'),
-                                  ],
-                                )
-                              : null,
-                          color: provider.isListening ? null : Colors.white,
-                          border: provider.isListening
-                              ? null
-                              : Border.all(color: Colors.grey.shade400),
-                        ),
-                        child: Center(
-                          child: provider.isListening
-                              ? Icon(
-                                  Icons.mic,
-                                  color: Colors.white,
-                                  size: 24,
-                                )
-                              : SvgPicture.asset(
-                                  Assets.icons.mic,
-                                  width: 22,
-                                  height: 22,
+                key: const ValueKey('mic-btn'),
+                bottom: _micInset,
+                right: _micInset,
+                child: Listener(
+                  onPointerDown: _onPointerDown,
+                  onPointerUp: _onPointerUp,
+                  onPointerCancel: _onPointerCancel,
+                  child: AnimatedBuilder(
+                    animation: _micCurved,
+                    builder: (context, _) {
+                      final t = _micCurved.value;
+                      final scale = 1.0 + 0.2 * t;
+                      final decor =
+                          BoxDecoration.lerp(_idleMicDecor, _activeMicDecor, t)!;
+
+                      return Transform.scale(
+                        scale: scale,
+                        child: Container(
+                          height: _micSize,
+                          width: _micSize,
+                          decoration: decor,
+                          child: Center(
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Opacity(
+                                  opacity: (1.0 - t).clamp(0.0, 1.0),
+                                  child: SvgPicture.asset(
+                                    Assets.icons.mic,
+                                    width: 22,
+                                    height: 22,
+                                  ),
                                 ),
+                                Opacity(
+                                  opacity: t.clamp(0.0, 1.0),
+                                  child: const Icon(
+                                    Icons.mic,
+                                    color: Colors.white,
+                                    size: 24,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
+                      );
+                    },
+                  ),
                 ),
               ),
 
-              // "Hold to speak" tooltip — appears on single tap
+              // ── tooltip ───────────────────────────────────────────
               if (_showTooltip)
                 Positioned(
-                  bottom: 64,
-                  right: 10,
-                  child: _HoldToSpeakTooltip(),
+                  bottom: _micInset + _micSize + 8,
+                  right: _micInset,
+                  child: const _HoldToSpeakTooltip(),
                 ),
             ],
           );
@@ -224,7 +400,53 @@ class _CommonSpeechTextfieldState extends State<CommonSpeechTextfield>
   }
 }
 
-/// Tooltip bubble that tells the user to hold the mic.
+// ── helper widgets ──────────────────────────────────────────────────────
+
+class _RecordingDot extends StatefulWidget {
+  const _RecordingDot();
+
+  @override
+  State<_RecordingDot> createState() => _RecordingDotState();
+}
+
+class _RecordingDotState extends State<_RecordingDot>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        return Container(
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color:
+                Colors.red.withValues(alpha: 0.4 + 0.6 * _controller.value),
+          ),
+        );
+      },
+    );
+  }
+}
+
 class _HoldToSpeakTooltip extends StatelessWidget {
   const _HoldToSpeakTooltip();
 
@@ -244,7 +466,7 @@ class _HoldToSpeakTooltip extends StatelessWidget {
         );
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
           color: Colors.grey.shade900,
           borderRadius: BorderRadius.circular(12),
@@ -252,11 +474,11 @@ class _HoldToSpeakTooltip extends StatelessWidget {
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.15),
               blurRadius: 8,
-              offset: Offset(0, 2),
+              offset: const Offset(0, 2),
             ),
           ],
         ),
-        child: Row(
+        child: const Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.mic, color: Colors.white, size: 16),
@@ -272,81 +494,6 @@ class _HoldToSpeakTooltip extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-/// A pulsing microphone icon for the recording overlay.
-class _PulsingMicIcon extends StatefulWidget {
-  const _PulsingMicIcon();
-
-  @override
-  State<_PulsingMicIcon> createState() => _PulsingMicIconState();
-}
-
-class _PulsingMicIconState extends State<_PulsingMicIcon>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnim;
-  late Animation<double> _opacityAnim;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1200),
-    )..repeat(reverse: true);
-
-    _scaleAnim = Tween<double>(begin: 1.0, end: 1.3).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-    _opacityAnim = Tween<double>(begin: 0.3, end: 0.08).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        return Stack(
-          alignment: Alignment.center,
-          children: [
-            // Pulse ring
-            Transform.scale(
-              scale: _scaleAnim.value,
-              child: Container(
-                width: 64,
-                height: 64,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.primary.withValues(
-                    alpha: _opacityAnim.value,
-                  ),
-                ),
-              ),
-            ),
-            // Icon
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: AppColors.primaryGradient,
-              ),
-              child: Icon(Icons.mic, color: Colors.white, size: 28),
-            ),
-          ],
-        );
-      },
     );
   }
 }

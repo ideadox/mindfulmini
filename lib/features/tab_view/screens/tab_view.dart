@@ -4,23 +4,18 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mindfulminis/features/home/providers/home_provider.dart';
 import 'package:mindfulminis/features/offline_status/providers/offline_status_provider.dart';
 import 'package:mindfulminis/features/profile/providers/profile_provider.dart';
-
 import 'package:mindfulminis/gen/assets.gen.dart';
-import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
-
 import '../../../common/bottom_bar/src/custom_navigation_bar_item.dart';
 import '../../../common/bottom_bar/src/custome_navigation_bar.dart';
 import '../../../core/services/push_notification_service.dart';
 import '../../offline_status/screens/offline_screen.dart';
-import '../../sidhi/screens/shidi_chat_screen.dart';
 import '../models/tabview_model.dart';
 import '../providers/tab_view_provider.dart';
 import '../widgets/tab_text.dart';

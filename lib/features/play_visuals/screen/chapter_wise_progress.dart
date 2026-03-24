@@ -84,6 +84,7 @@ class _AudioProgressWithLyricsState extends State<AudioProgressWithLyrics> {
             final isCompleted = currentPosition >= chapter.end;
 
             // progress within current chapter (0.0 to 1.0)
+            // ignore: unused_local_variable
             double progress = 0;
             if (isActive) {
               final chapterDuration = chapter.end - chapter.start;
