@@ -247,8 +247,8 @@ class LyricLineBuilder extends StatelessWidget {
       child: Text(
         currentLyric,
         key: ValueKey(currentIndex),
-        textAlign: TextAlign.center,
-        maxLines: 3,
+        textAlign: TextAlign.left,
+        maxLines: 4,
         overflow: TextOverflow.ellipsis,
         style: textStyle,
       ),

@@ -15,6 +15,8 @@ class MediaControls extends StatelessWidget {
     required this.sessionStarted,
     this.onBack10,
     this.onForward10,
+    this.onHeart,
+    this.isFavorited = false,
     this.repeatAsset,
     this.back10Asset,
     this.forward10Asset,
@@ -27,6 +29,8 @@ class MediaControls extends StatelessWidget {
   final bool sessionStarted;
   final VoidCallback? onBack10;
   final VoidCallback? onForward10;
+  final VoidCallback? onHeart;
+  final bool isFavorited;
   final String? repeatAsset;
   final String? back10Asset;
   final String? forward10Asset;
@@ -73,7 +77,11 @@ class MediaControls extends StatelessWidget {
             _AnimatedAction(
               visible: sessionStarted,
               padding: const EdgeInsets.only(left: 12),
-              child: LiquidGlassIconButton(assetPath: heartAsset!),
+              child: _HeartButton(
+                assetPath: heartAsset!,
+                isFavorited: isFavorited,
+                onPressed: onHeart,
+              ),
             ),
         ],
       ),
@@ -226,6 +234,112 @@ class _AnimatedAction extends StatelessWidget {
         child: visible
             ? Padding(padding: padding, child: child)
             : const SizedBox.shrink(),
+      ),
+    );
+  }
+}
+
+/// Heart button with animated toggle between outline and filled states.
+class _HeartButton extends StatefulWidget {
+  const _HeartButton({
+    required this.assetPath,
+    required this.isFavorited,
+    this.onPressed,
+  });
+
+  final String assetPath;
+  final bool isFavorited;
+  final VoidCallback? onPressed;
+
+  @override
+  State<_HeartButton> createState() => _HeartButtonState();
+}
+
+class _HeartButtonState extends State<_HeartButton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _bounceController;
+  late Animation<double> _bounceAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _bounceController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    _bounceAnimation = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.3), weight: 50),
+      TweenSequenceItem(tween: Tween(begin: 1.3, end: 1.0), weight: 50),
+    ]).animate(CurvedAnimation(
+      parent: _bounceController,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void didUpdateWidget(covariant _HeartButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.isFavorited != widget.isFavorited) {
+      _bounceController.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _bounceController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaleTransition(
+      scale: _bounceAnimation,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(22),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+          child: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(22),
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: widget.isFavorited
+                    ? [
+                        Colors.red.withValues(alpha: 0.45),
+                        Colors.red.withValues(alpha: 0.20),
+                      ]
+                    : [
+                        Colors.white.withValues(alpha: 0.32),
+                        Colors.white.withValues(alpha: 0.08),
+                      ],
+              ),
+              border: Border.all(
+                color: widget.isFavorited
+                    ? Colors.red.withValues(alpha: 0.60)
+                    : Colors.white.withValues(alpha: 0.50),
+                width: 1.5,
+              ),
+            ),
+            child: IconButton(
+              onPressed: widget.onPressed ?? () {},
+              padding: EdgeInsets.zero,
+              icon: widget.isFavorited
+                  ? const Icon(Icons.favorite_rounded, size: 20, color: Colors.red)
+                  : SvgPicture.asset(
+                      widget.assetPath,
+                      width: 20,
+                      height: 20,
+                      colorFilter: ColorFilter.mode(
+                        Colors.white.withValues(alpha: 0.95),
+                        BlendMode.srcIn,
+                      ),
+                    ),
+            ),
+          ),
+        ),
       ),
     );
   }

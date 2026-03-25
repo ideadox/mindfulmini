@@ -1,17 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:mindfulminis/common/widgets/custom_back_button.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:mindfulminis/features/library/providers/library_provider.dart';
 import 'package:mindfulminis/features/library/widgets/myfavorites.dart';
 import 'package:mindfulminis/features/library/widgets/recent_watched.dart';
+import 'package:mindfulminis/features/profile/providers/profile_provider.dart';
+import 'package:provider/provider.dart';
 
-class LibraryScreen extends StatelessWidget {
+class LibraryScreen extends StatefulWidget {
   static String routeName = 'library-screen';
   static String routePath = '/library-screen';
 
   const LibraryScreen({super.key});
+
+  @override
+  State<LibraryScreen> createState() => _LibraryScreenState();
+}
+
+class _LibraryScreenState extends State<LibraryScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  void _loadData() {
+    final profileId =
+        Provider.of<ProfileProvider>(context, listen: false).userProfile?.id;
+    if (profileId == null || profileId.isEmpty) return;
+
+    final libraryProvider = sl<LibraryProvider>();
+    libraryProvider.loadFavorites(profileId);
+    libraryProvider.loadRecentlyViewed(profileId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +44,8 @@ class LibraryScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          leading: CustomBackButton(),
-          title: Text('Library'),
+          leading: const CustomBackButton(),
+          title: const Text('Library'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(12),
@@ -32,7 +56,6 @@ class LibraryScreen extends StatelessWidget {
               Space.h8,
               Container(
                 height: 48,
-
                 decoration: BoxDecoration(
                   color: AppColors.purple.withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(30),
@@ -46,7 +69,6 @@ class LibraryScreen extends StatelessWidget {
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                   ),
-
                   unselectedLabelStyle: GoogleFonts.nunito(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -56,14 +78,16 @@ class LibraryScreen extends StatelessWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(300),
                   ),
-                  padding: EdgeInsets.all(3),
-                  tabs: [Tab(text: 'My Favorites'), Tab(text: 'Recent Viewed')],
+                  padding: const EdgeInsets.all(3),
+                  tabs: const [
+                    Tab(text: 'My Favorites'),
+                    Tab(text: 'Recent Viewed'),
+                  ],
                 ),
               ),
               Space.h20,
               Space.h12,
-
-              Expanded(
+              const Expanded(
                 child: TabBarView(
                   physics: NeverScrollableScrollPhysics(),
                   children: [Myfavorites(), RecentWatched()],

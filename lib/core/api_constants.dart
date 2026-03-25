@@ -1,7 +1,7 @@
 class ApiConstants {
   // Production URL
   static String baseUrl = 'https://devapi.mindfulminis.life/api/v1';
-  // Local testing: static String baseUrl = 'http://localhost:3000/api/v1';
+  //static String baseUrl = 'http://localhost:3000/api/v1';
   
   // Old bucket (deprecated)
   // static String mediaBaseUrl =

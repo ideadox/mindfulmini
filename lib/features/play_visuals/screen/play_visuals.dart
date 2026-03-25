@@ -1,16 +1,17 @@
+import 'dart:async';
 import 'dart:developer';
+import 'dart:ui' as ui;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/data/discover_data.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
+import 'package:mindfulminis/features/library/providers/library_provider.dart';
 import 'package:mindfulminis/features/play_visuals/models/play_visual_asset.dart';
 import 'package:mindfulminis/features/play_visuals/provider/cms_provider.dart';
 import 'package:mindfulminis/features/play_visuals/screen/chapter_wise_progress.dart';
 import 'package:mindfulminis/features/play_visuals/widgets/audio_progress_bar.dart';
-import 'package:mindfulminis/features/play_visuals/widgets/glass_panel.dart';
-import 'package:mindfulminis/features/play_visuals/widgets/glass_styles.dart';
 import 'package:mindfulminis/features/play_visuals/widgets/media_controls.dart';
 import 'package:mindfulminis/features/play_visuals/widgets/play_visual_stack.dart';
 import 'package:mindfulminis/features/play_visuals/widgets/top_bar.dart';
@@ -43,14 +44,30 @@ class _PlayVisualsState extends State<PlayVisuals>
     with TickerProviderStateMixin {
   bool startAnimation = false;
   bool _hasMarkedViewed = false;
-
-  late final AnimationController _lottiController;
   bool _showLottie = false;
 
+  bool _isDarkBackground = false;
+  String? _lastAnalyzedUrl;
+
+  // Adaptive text colors based on background brightness
+  Color get _titleColor =>
+      _isDarkBackground ? Colors.white : Colors.black;
+  Color get _subtitleColor => _isDarkBackground
+      ? Colors.white.withValues(alpha: 0.65)
+      : Colors.black.withValues(alpha: 0.5);
+  Color get _lyricColor =>
+      _isDarkBackground ? Colors.white.withValues(alpha: 0.9) : const Color(0xFF757575);
+
+  late final AnimationController _lottiController;
   late final AnimationController _playPulseController;
   late final Animation<double> _playPulseAnimation;
 
-  late final AnimationController _panelSnapController;
+  String get _contentId =>
+      widget.yogaContentModel?.id ?? widget.id ?? '';
+
+  String get _effectiveCollection =>
+      widget.collection ??
+      (widget.yogaContentModel != null ? 'yoga' : '');
 
   @override
   void initState() {
@@ -66,67 +83,49 @@ class _PlayVisualsState extends State<PlayVisuals>
       CurvedAnimation(parent: _playPulseController, curve: Curves.easeInOut),
     );
 
-    _panelSnapController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 380),
-      value: 1.0,
-    );
-
     Future.delayed(const Duration(milliseconds: 300), () {
       if (mounted) setState(() => _showLottie = true);
     });
+
+    _checkFavoriteStatus();
+  }
+
+  void _checkFavoriteStatus() {
+    if (_contentId.isEmpty) return;
+    try {
+      final profileId = Provider.of<ProfileProvider>(context, listen: false)
+          .userProfile?.id;
+      if (profileId == null || profileId.isEmpty) return;
+      sl<LibraryProvider>().checkFavoriteStatus(
+        profileId: profileId,
+        contentId: _contentId,
+      );
+    } catch (e) {
+      log('Error checking favorite status: $e');
+    }
+  }
+
+  void _handleToggleFavorite() {
+    if (_contentId.isEmpty || _effectiveCollection.isEmpty) return;
+    try {
+      final profileId = Provider.of<ProfileProvider>(context, listen: false)
+          .userProfile?.id;
+      if (profileId == null || profileId.isEmpty) return;
+      sl<LibraryProvider>().toggleFavorite(
+        profileId: profileId,
+        contentId: _contentId,
+        collection: _effectiveCollection,
+      );
+    } catch (e) {
+      log('Error toggling favorite: $e');
+    }
   }
 
   @override
   void dispose() {
     _lottiController.dispose();
     _playPulseController.dispose();
-    _panelSnapController.dispose();
     super.dispose();
-  }
-
-  // ── Panel drag ──
-
-  static const double _panelDragSensitivity = 280;
-
-  Animation<double> get _panelRevealAnimation =>
-      startAnimation
-          ? _panelSnapController
-          : const AlwaysStoppedAnimation(1.0);
-
-  void _onPanelVerticalDragUpdate(DragUpdateDetails details) {
-    if (!startAnimation) return;
-    final delta = details.primaryDelta! / _panelDragSensitivity;
-    _panelSnapController.value =
-        (_panelSnapController.value - delta).clamp(0.0, 1.0);
-  }
-
-  Future<void> _onPanelVerticalDragEnd(DragEndDetails details) async {
-    if (!startAnimation) return;
-    final v = details.velocity.pixelsPerSecond.dy;
-    final t = _panelSnapController.value;
-    final bool collapse;
-    if (v > 900) {
-      collapse = true;
-    } else if (v < -900) {
-      collapse = false;
-    } else {
-      collapse = t < 0.45;
-    }
-    await _snapPanelExpanded(!collapse);
-  }
-
-  Future<void> _snapPanelExpanded(bool expanded) async {
-    final target = expanded ? 1.0 : 0.0;
-    if ((_panelSnapController.value - target).abs() < 0.02) return;
-    try {
-      await _panelSnapController.animateTo(
-        target,
-        duration: const Duration(milliseconds: 360),
-        curve: Curves.easeOutCubic,
-      );
-    } catch (_) {}
-    if (mounted) HapticFeedback.lightImpact();
   }
 
   // ── First-play trigger ──
@@ -153,10 +152,8 @@ class _PlayVisualsState extends State<PlayVisuals>
     _hasMarkedViewed = true;
 
     try {
-      final profileProvider = Provider.of<ProfileProvider>(
-        context,
-        listen: false,
-      );
+      final profileProvider =
+          Provider.of<ProfileProvider>(context, listen: false);
       final profileId = profileProvider.userProfile?.id;
       if (profileId == null || profileId.isEmpty) return;
 
@@ -166,9 +163,7 @@ class _PlayVisualsState extends State<PlayVisuals>
             contentId: contentId,
             collection: effectiveCollection,
           )
-          .catchError((e) {
-            log('Error marking content viewed: $e');
-          });
+          .catchError((e) => log('Error marking content viewed: $e'));
     } catch (e) {
       log('Error marking content viewed (sync): $e');
     }
@@ -193,9 +188,7 @@ class _PlayVisualsState extends State<PlayVisuals>
               String text = child['text']!
                   .replaceAll(RegExp(r'<break time="([\d.]+)s"\s*\/>'), '')
                   .trim();
-              if (text.isNotEmpty) {
-                description += '$text ';
-              }
+              if (text.isNotEmpty) description += '$text ';
             }
           }
           return description.trim();
@@ -204,6 +197,60 @@ class _PlayVisualsState extends State<PlayVisuals>
       return '';
     } catch (e) {
       return '';
+    }
+  }
+
+  // ── Background brightness detection ──
+
+  void _analyzeBackgroundColor(PlayVisualAsset? still) {
+    final url = still?.url;
+    if (url == null || url == _lastAnalyzedUrl) return;
+    _lastAnalyzedUrl = url;
+    if (still!.isVideo) return;
+    _computeImageBrightness(url);
+  }
+
+  Future<void> _computeImageBrightness(String url) async {
+    try {
+      final provider = ResizeImage(
+        CachedNetworkImageProvider(url),
+        width: 50,
+        height: 50,
+      );
+      final completer = Completer<ui.Image>();
+      final stream = provider.resolve(ImageConfiguration.empty);
+      late ImageStreamListener listener;
+      listener = ImageStreamListener(
+        (info, _) {
+          if (!completer.isCompleted) completer.complete(info.image);
+          stream.removeListener(listener);
+        },
+        onError: (error, _) {
+          if (!completer.isCompleted) completer.completeError(error);
+          stream.removeListener(listener);
+        },
+      );
+      stream.addListener(listener);
+
+      final image = await completer.future;
+      final data = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
+      image.dispose();
+      if (data == null || !mounted) return;
+
+      final bytes = data.buffer.asUint8List();
+      double totalLum = 0;
+      int count = 0;
+      for (int i = 0; i + 3 < bytes.length; i += 4) {
+        totalLum += 0.2126 * bytes[i] / 255 +
+            0.7152 * bytes[i + 1] / 255 +
+            0.0722 * bytes[i + 2] / 255;
+        count++;
+      }
+
+      if (count == 0 || !mounted) return;
+      setState(() => _isDarkBackground = (totalLum / count) < 0.5);
+    } catch (e) {
+      log('Background brightness analysis failed: $e');
     }
   }
 
@@ -235,41 +282,26 @@ class _PlayVisualsState extends State<PlayVisuals>
                     widget.yogaContentModel?.playingVisualMap,
                   ),
                   audioPlaying: yogaProvider.isPlaying,
-                  titleSection: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        widget.yogaContentModel!.title,
-                        textAlign: TextAlign.center,
-                        style: GlassStyles.titleStyle,
-                      ),
-                      Space.h4,
-                      Text(
+                  titleSection: _buildTitleBlock(
+                    title: widget.yogaContentModel!.title,
+                    subtitle:
                         widget.yogaContentModel!.contentDescription?['en'] ??
                             '',
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: GlassStyles.subtitleStyle,
-                      ),
-                      Space.h8,
-                    ],
                   ),
                   activeContent: Consumer<YogaPlayVisualsProvider>(
                     builder: (context, provider, _) {
                       return _YogaTextContent(
                         provider: provider,
-                        textShadows: GlassStyles.textShadows,
+                        textColor: _lyricColor,
                       );
                     },
                   ),
-                  progressBuilder: (minimal) => Consumer<YogaPlayVisualsProvider>(
+                  progressSection: Consumer<YogaPlayVisualsProvider>(
                     builder: (context, provider, _) {
                       return AudioProgressBar(
                         currentPosition: provider.currentPosition,
                         totalDuration: provider.totalDuration,
                         onSeek: provider.seek,
-                        minimalTransport: minimal,
                         isPlaying: provider.isPlaying,
                         onPlayPause: () {
                           if (!startAnimation) _onFirstPlay();
@@ -278,22 +310,29 @@ class _PlayVisualsState extends State<PlayVisuals>
                       );
                     },
                   ),
-                  controlBuilder: () => Consumer<YogaPlayVisualsProvider>(
+                  controlSection: Consumer<YogaPlayVisualsProvider>(
                     builder: (context, provider, _) {
-                      return MediaControls(
-                        isPlaying: provider.isPlaying,
-                        sessionStarted: startAnimation,
-                        playPulseAnimation: _playPulseAnimation,
-                        repeatAsset: Assets.icons.repeatIcon,
-                        back10Asset: Assets.icons.back10,
-                        forward10Asset: Assets.icons.forward10,
-                        heartAsset: Assets.icons.heartButton,
-                        onPlayPause: () {
-                          if (!startAnimation) _onFirstPlay();
-                          provider.playPause();
+                      return ListenableBuilder(
+                        listenable: sl<LibraryProvider>(),
+                        builder: (context, _) {
+                          return MediaControls(
+                            isPlaying: provider.isPlaying,
+                            sessionStarted: startAnimation,
+                            playPulseAnimation: _playPulseAnimation,
+                            repeatAsset: Assets.icons.repeatIcon,
+                            back10Asset: Assets.icons.back10,
+                            forward10Asset: Assets.icons.forward10,
+                            heartAsset: Assets.icons.heartButton,
+                            isFavorited: sl<LibraryProvider>().isFavorited(_contentId),
+                            onHeart: _handleToggleFavorite,
+                            onPlayPause: () {
+                              if (!startAnimation) _onFirstPlay();
+                              provider.playPause();
+                            },
+                            onBack10: provider.seekBackward,
+                            onForward10: provider.seekForward,
+                          );
                         },
-                        onBack10: provider.seekBackward,
-                        onForward10: provider.seekForward,
                       );
                     },
                   ),
@@ -325,24 +364,9 @@ class _PlayVisualsState extends State<PlayVisuals>
                 still: PlayVisualAsset.stillFromCms(p.cms),
                 playing: PlayVisualAsset.playingFromCms(p.cms),
                 audioPlaying: p.isPlaying,
-                titleSection: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      p.cms?.title ?? '',
-                      textAlign: TextAlign.center,
-                      style: GlassStyles.titleStyle,
-                    ),
-                    Space.h4,
-                    Text(
-                      _extractDescription(p.cms?.contentDescription),
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: GlassStyles.subtitleStyle,
-                    ),
-                    Space.h8,
-                  ],
+                titleSection: _buildTitleBlock(
+                  title: p.cms?.title ?? '',
+                  subtitle: _extractDescription(p.cms?.contentDescription),
                 ),
                 activeContent: Consumer<CmsProvider>(
                   builder: (context, provider, _) {
@@ -350,17 +374,21 @@ class _PlayVisualsState extends State<PlayVisuals>
                       segments: p.segments,
                       currentPosition: provider.currentPosition,
                       totalDuration: provider.totalDuration,
-                      textStyle: GlassStyles.lyricStyle,
+                      textStyle: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        height: 1.4,
+                        color: _lyricColor,
+                      ),
                     );
                   },
                 ),
-                progressBuilder: (minimal) => Consumer<CmsProvider>(
+                progressSection: Consumer<CmsProvider>(
                   builder: (context, provider, _) {
                     return AudioProgressBar(
                       currentPosition: provider.currentPosition,
                       totalDuration: provider.totalDuration,
                       onSeek: provider.seek,
-                      minimalTransport: minimal,
                       isPlaying: provider.isPlaying,
                       onPlayPause: () {
                         if (!startAnimation) _onFirstPlay();
@@ -369,22 +397,29 @@ class _PlayVisualsState extends State<PlayVisuals>
                     );
                   },
                 ),
-                controlBuilder: () => Consumer<CmsProvider>(
+                controlSection: Consumer<CmsProvider>(
                   builder: (context, provider, _) {
-                    return MediaControls(
-                      isPlaying: provider.isPlaying,
-                      sessionStarted: startAnimation,
-                      playPulseAnimation: _playPulseAnimation,
-                      repeatAsset: Assets.icons.repeatIcon,
-                      back10Asset: Assets.icons.back10,
-                      forward10Asset: Assets.icons.forward10,
-                      heartAsset: Assets.icons.heartButton,
-                      onPlayPause: () {
-                        if (!startAnimation) _onFirstPlay();
-                        provider.playPause();
+                    return ListenableBuilder(
+                      listenable: sl<LibraryProvider>(),
+                      builder: (context, _) {
+                        return MediaControls(
+                          isPlaying: provider.isPlaying,
+                          sessionStarted: startAnimation,
+                          playPulseAnimation: _playPulseAnimation,
+                          repeatAsset: Assets.icons.repeatIcon,
+                          back10Asset: Assets.icons.back10,
+                          forward10Asset: Assets.icons.forward10,
+                          heartAsset: Assets.icons.heartButton,
+                          isFavorited: sl<LibraryProvider>().isFavorited(_contentId),
+                          onHeart: _handleToggleFavorite,
+                          onPlayPause: () {
+                            if (!startAnimation) _onFirstPlay();
+                            provider.playPause();
+                          },
+                          onBack10: provider.seekBackward,
+                          onForward10: provider.seekForward,
+                        );
                       },
-                      onBack10: provider.seekBackward,
-                      onForward10: provider.seekForward,
                     );
                   },
                 ),
@@ -396,6 +431,40 @@ class _PlayVisualsState extends State<PlayVisuals>
     );
   }
 
+  // ── Shared widgets ──
+
+  Widget _buildTitleBlock({required String title, required String subtitle}) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          title,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            height: 1.25,
+            color: _titleColor,
+          ),
+        ),
+        if (subtitle.isNotEmpty) ...[
+          Space.h4,
+          Text(
+            subtitle,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 13,
+              height: 1.35,
+              color: _subtitleColor,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
   // ── Unified layout ──
 
   Widget _buildDisplay({
@@ -404,9 +473,11 @@ class _PlayVisualsState extends State<PlayVisuals>
     required bool audioPlaying,
     required Widget titleSection,
     required Widget activeContent,
-    required Widget Function(bool minimal) progressBuilder,
-    required Widget Function() controlBuilder,
+    required Widget progressSection,
+    required Widget controlSection,
   }) {
+    _analyzeBackgroundColor(still);
+
     final size = MediaQuery.sizeOf(context);
     final safeTop = MediaQuery.of(context).padding.top;
     final safeBottom = MediaQuery.of(context).padding.bottom;
@@ -427,40 +498,87 @@ class _PlayVisualsState extends State<PlayVisuals>
               ),
             ),
 
-          // 2. Light vignette — top only, bottom stays transparent for motion visibility
+          // 2. Gradient overlays for readability
           _buildGradientOverlay(),
 
           // 3. Top bar
-          PlayVisualsTopBar(
-            safeTop: safeTop,
-            onBack: () => sl<GoRouter>().pop(startAnimation),
-            favouriteAsset: Assets.icons.heartButton,
+          ListenableBuilder(
+            listenable: sl<LibraryProvider>(),
+            builder: (context, _) {
+              return PlayVisualsTopBar(
+                safeTop: safeTop,
+                onBack: () => sl<GoRouter>().pop(startAnimation),
+                favouriteAsset: Assets.icons.heartButton,
+                isFavorited: sl<LibraryProvider>().isFavorited(_contentId),
+                onFavourite: _handleToggleFavorite,
+              );
+            },
           ),
 
-          // 4. Glass bottom panel
+          // 4. Top-left lyrics — fades in after play starts
+          Positioned(
+            top: safeTop + 64,
+            left: 20,
+            right: 20,
+            child: IgnorePointer(
+              ignoring: !startAnimation,
+              child: AnimatedOpacity(
+                opacity: startAnimation ? 1 : 0,
+                duration: const Duration(milliseconds: 400),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 140),
+                  child: activeContent,
+                ),
+              ),
+            ),
+          ),
+
+          // 5. Bottom controls — title (pre-play) + progress bar + media buttons
           Positioned(
             left: 0,
             right: 0,
-            bottom: 0,
-            child: AnimatedBuilder(
-              animation: _panelSnapController,
-              builder: (context, _) {
-                final minimal =
-                    startAnimation && _panelSnapController.value < 0.22;
-                return GlassBottomPanel(
-                  safeBottom: safeBottom,
-                  panelRevealAnimation: _panelRevealAnimation,
-                  sessionStarted: startAnimation,
-                  panelValue: _panelSnapController.value,
-                  onDragUpdate: _onPanelVerticalDragUpdate,
-                  onDragEnd: _onPanelVerticalDragEnd,
-                  onGripTap: () => _snapPanelExpanded(true),
-                  titleSection: titleSection,
-                  activeContent: activeContent,
-                  progressSection: progressBuilder(minimal),
-                  controlSection: controlBuilder(),
-                );
-              },
+            bottom: safeBottom + 10,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Title — shown just above play button before session starts
+                AnimatedOpacity(
+                  opacity: startAnimation ? 0 : 1,
+                  duration: const Duration(milliseconds: 400),
+                  child: AnimatedSize(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOut,
+                    child: startAnimation
+                        ? const SizedBox.shrink()
+                        : Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: 20,
+                              left: 32,
+                              right: 32,
+                            ),
+                            child: titleSection,
+                          ),
+                  ),
+                ),
+                // Progress bar — appears after play starts
+                AnimatedOpacity(
+                  opacity: startAnimation ? 1 : 0,
+                  duration: const Duration(milliseconds: 600),
+                  child: AnimatedSize(
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeOut,
+                    child: startAnimation
+                        ? Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8),
+                            child: progressSection,
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+                ),
+                Space.h4,
+                controlSection,
+              ],
             ),
           ),
         ],
@@ -469,20 +587,31 @@ class _PlayVisualsState extends State<PlayVisuals>
   }
 
   Widget _buildGradientOverlay() {
+    final colors = _isDarkBackground
+        ? [
+            Colors.black.withValues(alpha: 0.40),
+            Colors.black.withValues(alpha: 0.12),
+            Colors.transparent,
+            Colors.black.withValues(alpha: 0.15),
+            Colors.black.withValues(alpha: 0.45),
+          ]
+        : [
+            Colors.white.withValues(alpha: 0.45),
+            Colors.white.withValues(alpha: 0.15),
+            Colors.transparent,
+            Colors.black.withValues(alpha: 0.10),
+            Colors.black.withValues(alpha: 0.30),
+          ];
+
     return Positioned.fill(
-      child: DecoratedBox(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 500),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            stops: const [0.0, 0.18, 0.5, 0.85, 1.0],
-            colors: [
-              Colors.black.withValues(alpha: 0.35),
-              Colors.black.withValues(alpha: 0.05),
-              Colors.transparent,
-              Colors.transparent,
-              Colors.black.withValues(alpha: 0.08),
-            ],
+            stops: const [0.0, 0.25, 0.55, 0.80, 1.0],
+            colors: colors,
           ),
         ),
       ),
@@ -495,11 +624,11 @@ class _PlayVisualsState extends State<PlayVisuals>
 class _YogaTextContent extends StatelessWidget {
   const _YogaTextContent({
     required this.provider,
-    required this.textShadows,
+    required this.textColor,
   });
 
   final YogaPlayVisualsProvider provider;
-  final List<Shadow> textShadows;
+  final Color textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -514,7 +643,8 @@ class _YogaTextContent extends StatelessWidget {
     final totalWeight = weights.fold<double>(0, (a, b) => a + b);
 
     final fraction =
-        (provider.currentPosition.inMilliseconds / audioTotalMs).clamp(0.0, 1.0);
+        (provider.currentPosition.inMilliseconds / audioTotalMs)
+            .clamp(0.0, 1.0);
     double cumulative = 0;
     int segmentIndex = provider.segments.length - 1;
     for (int i = 0; i < provider.segments.length; i++) {
@@ -526,14 +656,12 @@ class _YogaTextContent extends StatelessWidget {
     }
 
     if (segmentIndex >= provider.segments.length) {
-      return Text(
+      return const Text(
         'Complete!',
-        textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w700,
-          color: const Color(0xFF8FF5C8),
-          shadows: textShadows,
+          color: Color(0xFF4CAF50),
         ),
       );
     }
@@ -558,17 +686,16 @@ class _YogaTextContent extends StatelessWidget {
       },
       child: RichText(
         key: ValueKey(segmentIndex),
-        textAlign: TextAlign.center,
+        textAlign: TextAlign.left,
         text: TextSpan(
           children: segment.textSpans.map((span) {
             return TextSpan(
               text: span.text,
               style: span.textStyle.copyWith(
                 fontSize: 20,
-                color: Colors.white.withValues(alpha: 0.96),
+                color: textColor,
                 fontWeight: FontWeight.w600,
                 height: 1.5,
-                shadows: textShadows,
               ),
             );
           }).toList(),
