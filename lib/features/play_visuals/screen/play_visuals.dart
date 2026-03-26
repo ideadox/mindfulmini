@@ -375,7 +375,7 @@ class _PlayVisualsState extends State<PlayVisuals>
                       currentPosition: provider.currentPosition,
                       totalDuration: provider.totalDuration,
                       textStyle: TextStyle(
-                        fontSize: 20,
+                        fontSize: 24,
                         fontWeight: FontWeight.w700,
                         height: 1.4,
                         color: _lyricColor,
@@ -526,7 +526,7 @@ class _PlayVisualsState extends State<PlayVisuals>
                 opacity: startAnimation ? 1 : 0,
                 duration: const Duration(milliseconds: 400),
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 140),
+                  constraints: const BoxConstraints(maxHeight: 120),
                   child: activeContent,
                 ),
               ),
@@ -687,12 +687,14 @@ class _YogaTextContent extends StatelessWidget {
       child: RichText(
         key: ValueKey(segmentIndex),
         textAlign: TextAlign.left,
+        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
         text: TextSpan(
           children: segment.textSpans.map((span) {
             return TextSpan(
               text: span.text,
               style: span.textStyle.copyWith(
-                fontSize: 20,
+                fontSize: 24,
                 color: textColor,
                 fontWeight: FontWeight.w600,
                 height: 1.5,

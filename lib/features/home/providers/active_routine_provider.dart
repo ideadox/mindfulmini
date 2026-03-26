@@ -10,6 +10,7 @@ import '../../routine/routine_data/routine_data.dart';
 class ActiveRoutineProvider with ChangeNotifier {
   final _routineData = sl<RoutineData>();
 
+  bool _disposed = false;
   bool loading = false;
   String? error;
   List<RoutineModel> routines = [];
@@ -17,23 +18,34 @@ class ActiveRoutineProvider with ChangeNotifier {
   /// Today's average activity-completion progress per routine (0–100).
   Map<String, int> routineProgress = {};
 
+  /// Prevents re-fetching routines when they're already loaded or in-flight.
+  bool _routinesFetched = false;
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  void _safeNotify() {
+    if (!_disposed) notifyListeners();
+  }
+
   Future<void> getRoutines(String profileId, {bool notify = true}) async {
+    if (_routinesFetched || loading) return;
     try {
       loading = true;
       error = null;
-      if (notify) {
-        notifyListeners();
-      }
+      if (notify) _safeNotify();
       routines = await _routineData.getRoutines(profileId);
-
-      // Fetch today's activity-based progress for each routine in parallel
+      _routinesFetched = true;
       await _fetchTodayProgress();
     } catch (e) {
       log('Error fetching active routines: $e');
       error = e.toString();
     } finally {
       loading = false;
-      notifyListeners();
+      _safeNotify();
     }
   }
 
@@ -45,7 +57,7 @@ class ActiveRoutineProvider with ChangeNotifier {
     } catch (e) {
       log('[ActiveRoutineProvider] refreshProgress error: $e');
     } finally {
-      notifyListeners();
+      _safeNotify();
     }
   }
 

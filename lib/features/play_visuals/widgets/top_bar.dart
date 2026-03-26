@@ -45,6 +45,7 @@ class _WhiteCircleButton extends StatelessWidget {
   const _WhiteCircleButton({
     this.onPressed,
     this.icon,
+    // ignore: unused_element_parameter
     this.iconAsset,
   });
 

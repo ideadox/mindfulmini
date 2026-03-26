@@ -30,79 +30,131 @@ class JournalDetail1Screen extends StatefulWidget {
   State<JournalDetail1Screen> createState() => _JournalDetail1ScreenState();
 }
 
-class _JournalDetail1ScreenState extends State<JournalDetail1Screen> {
-  bool _moveUp = false;
+class _JournalDetail1ScreenState extends State<JournalDetail1Screen>
+    with SingleTickerProviderStateMixin {
+  /// SVGs are deferred until after the route transition completes
+  /// so they don't block the transition animation frames.
+  bool _svgsReady = false;
+
+  late final AnimationController _anim;
+
+  // Background SVG: slides up + scales over the first 60%
+  late final Animation<double> _bgSlide;
+  late final Animation<double> _bgScale;
+
+  // SVG cross-fade: quick swap in the first 25%
+  late final Animation<double> _svgFadeOut;
+  late final Animation<double> _svgFadeIn;
+
+  // Content: slides up over 5%→50%
+  late final Animation<Offset> _contentSlide;
+
+  // Emoji: scales over 5%→35%
+  late final Animation<double> _emojiScale;
+
+  // Detail text + volume button: fades in over 40%→70%
+  late final Animation<double> _detailOpacity;
 
   @override
   void initState() {
     super.initState();
-    // Trigger the animation after 800ms
-    Future.delayed(const Duration(milliseconds: 800), () {
-      setState(() {
-        _moveUp = true;
-      });
+
+    _anim = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1800),
+    );
+
+    final bgCurve = CurvedAnimation(
+      parent: _anim,
+      curve: const Interval(0.0, 0.65, curve: Curves.easeOut),
+    );
+    _bgSlide = Tween<double>(begin: 0.0, end: 1.0).animate(bgCurve);
+    _bgScale = Tween<double>(begin: 1.0, end: 2.0).animate(bgCurve);
+
+    final svgCurve = CurvedAnimation(
+      parent: _anim,
+      curve: const Interval(0.0, 0.25, curve: Curves.easeIn),
+    );
+    _svgFadeOut = Tween<double>(begin: 1.0, end: 0.0).animate(svgCurve);
+    _svgFadeIn = Tween<double>(begin: 0.0, end: 1.0).animate(svgCurve);
+
+    _contentSlide = Tween<Offset>(
+      begin: Offset.zero,
+      end: const Offset(0, -0.18),
+    ).animate(CurvedAnimation(
+      parent: _anim,
+      curve: const Interval(0.05, 0.5, curve: Curves.easeOutCubic),
+    ));
+
+    _emojiScale = Tween<double>(begin: 1.0, end: 1.2).animate(CurvedAnimation(
+      parent: _anim,
+      curve: const Interval(0.05, 0.35, curve: Curves.easeOut),
+    ));
+
+    _detailOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _anim,
+        curve: const Interval(0.4, 0.7, curve: Curves.easeIn),
+      ),
+    );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _waitForTransition();
+    });
+  }
+
+  void _waitForTransition() {
+    final route = ModalRoute.of(context);
+    if (route?.animation == null || route!.animation!.isCompleted) {
+      _onTransitionDone();
+      return;
+    }
+    void listener(AnimationStatus status) {
+      if (status == AnimationStatus.completed) {
+        route.animation!.removeStatusListener(listener);
+        if (mounted) _onTransitionDone();
+      }
+    }
+    route.animation!.addStatusListener(listener);
+  }
+
+  void _onTransitionDone() {
+    // Parse SVGs now — route transition is finished so no jank
+    setState(() => _svgsReady = true);
+    // Give SVGs one frame to rasterize, then start the reveal
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _anim.forward();
     });
   }
 
   @override
+  void dispose() {
+    _anim.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
+    final screenHeight = MediaQuery.sizeOf(context).height;
+
     return Scaffold(
       body: Stack(
-        alignment: Alignment.center,
         children: [
-          Container(
-            height: screenHeight,
-            width: double.infinity,
-            alignment: Alignment.bottomCenter,
-            child: Stack(
-              children: [
-                Positioned(
-                  bottom: 0,
-                  child: Image.asset(Assets.images.journalBottom1.path),
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  child: Image.asset(Assets.images.journalBottomleft.path),
-                ),
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: Image.asset(Assets.images.journalBottomright.path),
-                ),
-
-                AnimatedPositioned(
-                  duration: Duration(milliseconds: 2000),
-                  curve: Curves.easeOutBack,
-                  bottom: _moveUp ? screenHeight * 0.7 : 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    width: double.infinity,
-                    height: screenHeight,
-                    alignment: Alignment.bottomCenter,
-                    child: AnimatedScale(
-                      scale: _moveUp ? 4 : 1.0,
-                      duration: Duration(milliseconds: 2000),
-                      curve: Curves.easeOutBack,
-                      child: SvgPicture.asset(
-                        _moveUp
-                            ? Assets.images.rainbow
-                            : Assets.images.jouralDetailBottom,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          ContentScreen(
-            moveUp: _moveUp,
+          _BackgroundLayer(
             screenHeight: screenHeight,
-            gratiudeJournalModel: widget.gratitudeJournal,
-            provider: widget.journalProvider,
+            anim: _anim,
+            bgSlide: _bgSlide,
+            bgScale: _bgScale,
+            svgFadeOut: _svgFadeOut,
+            svgFadeIn: _svgFadeIn,
+            svgsReady: _svgsReady,
+          ),
+          _ContentLayer(
+            screenHeight: screenHeight,
+            contentSlide: _contentSlide,
+            emojiScale: _emojiScale,
+            detailOpacity: _detailOpacity,
+            journal: widget.gratitudeJournal,
           ),
         ],
       ),
@@ -110,31 +162,131 @@ class _JournalDetail1ScreenState extends State<JournalDetail1Screen> {
   }
 }
 
-class ContentScreen extends StatelessWidget {
-  final bool moveUp;
+// ── Background ──────────────────────────────────────────────────────────────
+
+class _BackgroundLayer extends StatelessWidget {
   final double screenHeight;
-  final GratiudeJournalModel gratiudeJournalModel;
-  final JournalProvider provider;
-  const ContentScreen({
-    super.key,
-    required this.moveUp,
+  final AnimationController anim;
+  final Animation<double> bgSlide;
+  final Animation<double> bgScale;
+  final Animation<double> svgFadeOut;
+  final Animation<double> svgFadeIn;
+  final bool svgsReady;
+
+  const _BackgroundLayer({
     required this.screenHeight,
-    required this.gratiudeJournalModel,
-    required this.provider,
+    required this.anim,
+    required this.bgSlide,
+    required this.bgScale,
+    required this.svgFadeOut,
+    required this.svgFadeIn,
+    required this.svgsReady,
   });
 
   @override
   Widget build(BuildContext context) {
-    int countWord = BasicFunction.countWords(
-      gratiudeJournalModel.emotionDescription,
+    return SizedBox.expand(
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          // Static PNGs — decoded async by Flutter, no main-thread cost
+          RepaintBoundary(
+            child: Image.asset(Assets.images.journalBottom1.path),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            child: RepaintBoundary(
+              child: Image.asset(Assets.images.journalBottomleft.path),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: RepaintBoundary(
+              child: Image.asset(Assets.images.journalBottomright.path),
+            ),
+          ),
+
+          if (svgsReady)
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: AnimatedBuilder(
+                animation: anim,
+                builder: (context, child) {
+                  return Transform(
+                    transform: Matrix4.identity()
+                      ..translate(0.0, -bgSlide.value * screenHeight * 0.7)
+                      ..scale(bgScale.value),
+                    alignment: Alignment.bottomCenter,
+                    child: child,
+                  );
+                },
+                // RepaintBoundary INSIDE the child: SVGs rasterize once,
+                // then Transform + FadeTransition operate at the
+                // compositing layer only — no SVG re-rasterization per tick.
+                child: RepaintBoundary(
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Stack(
+                      children: [
+                        FadeTransition(
+                          opacity: svgFadeOut,
+                          child: SvgPicture.asset(
+                            Assets.images.jouralDetailBottom,
+                          ),
+                        ),
+                        FadeTransition(
+                          opacity: svgFadeIn,
+                          child: SvgPicture.asset(Assets.images.rainbow),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
+  }
+}
+
+// ── Content ─────────────────────────────────────────────────────────────────
+//
+// Uses *Transition widgets (SlideTransition, ScaleTransition, FadeTransition)
+// which listen to their Animation directly — the widget itself never rebuilds
+// during the animation, only its render object repaints.
+
+class _ContentLayer extends StatelessWidget {
+  final double screenHeight;
+  final Animation<Offset> contentSlide;
+  final Animation<double> emojiScale;
+  final Animation<double> detailOpacity;
+  final GratiudeJournalModel journal;
+
+  const _ContentLayer({
+    required this.screenHeight,
+    required this.contentSlide,
+    required this.emojiScale,
+    required this.detailOpacity,
+    required this.journal,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final countWord = BasicFunction.countWords(journal.emotionDescription);
+
     return SizedBox(
       height: screenHeight,
       width: double.infinity,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
+
+          // Top bar
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Stack(
@@ -144,10 +296,10 @@ class ContentScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CustomBackButton(hasBackground: true),
-                    SizedBox(width: 48),
+                    const SizedBox(width: 48),
                   ],
                 ),
-                Text(
+                const Text(
                   'Journal Details',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
@@ -155,56 +307,40 @@ class ContentScreen extends StatelessWidget {
             ),
           ),
 
-          Builder(
-            builder: (context) {
-              return moveUp ? SizedBox(height: 130) : SizedBox(height: 100);
-            },
-          ),
+          const SizedBox(height: 100),
 
-          /// Main Content
+          // Main content
           Flexible(
             child: Stack(
               alignment: Alignment.center,
               children: [
-                AnimatedSlide(
-                  offset:
-                      moveUp
-                          ? Offset(0, -0.2)
-                          : Offset.zero, // move up slightly
-                  duration: Duration(milliseconds: 800),
-                  curve: Curves.easeOutBack,
+                SlideTransition(
+                  position: contentSlide,
                   child: Padding(
                     padding: const EdgeInsets.all(12),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-
                       children: [
-                        AnimatedScale(
-                          scale: moveUp ? 1.2 : 1.0,
-                          duration: Duration(milliseconds: 600),
-                          curve: Curves.easeOut,
+                        ScaleTransition(
+                          scale: emojiScale,
                           child: Container(
                             width: 90,
                             height: 90,
-                            padding: EdgeInsets.all(2),
+                            padding: const EdgeInsets.all(2),
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
+                              shape: BoxShape.circle,
                               color: Colors.grey.shade300,
                             ),
                             child: SvgPicture.asset(
-                              BasicFunction.getJounalEmoji(
-                                gratiudeJournalModel.emotion,
-                              ),
+                              BasicFunction.getJounalEmoji(journal.emotion),
                               height: 90,
                               width: 90,
                             ),
                           ),
                         ),
-
-                        // Rest of content
                         Space.h20,
+
                         Container(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                             horizontal: 12,
                             vertical: 4,
                           ),
@@ -213,114 +349,99 @@ class ContentScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(30),
                           ),
                           child: Text(
-                            gratiudeJournalModel.emotion,
+                            journal.emotion,
                             style: TextStyle(color: HexColor('#8E00FF')),
                           ),
                         ),
                         Space.h16,
 
-                        /// Time info with dots
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              DateFormat(
-                                'MMM dd, yyyy',
-                              ).format(gratiudeJournalModel.date),
-                              style: TextStyle(fontSize: 12),
+                              DateFormat('MMM dd, yyyy').format(journal.date),
+                              style: const TextStyle(fontSize: 12),
                             ),
-                            SizedBox(width: 8),
-                            Text('•', style: TextStyle(fontSize: 12)),
-                            // SizedBox(width: 8),
-                            // Text('02:22 AM', style: TextStyle(fontSize: 12)),
-                            // SizedBox(width: 8),
-                            // Text('•', style: TextStyle(fontSize: 12)),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
+                            const Text('•', style: TextStyle(fontSize: 12)),
+                            const SizedBox(width: 8),
                             Text(
                               '$countWord Words',
-                              style: TextStyle(fontSize: 12),
+                              style: const TextStyle(fontSize: 12),
                             ),
                           ],
                         ),
 
                         Space.h20,
                         Text(
-                          'Feeling ${gratiudeJournalModel.emotion} Today! 😊',
-                          style: TextStyle(
+                          'Feeling ${journal.emotion} Today! 😊',
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Space.h20,
-                        Builder(
-                          builder: (context) {
-                            return AnimatedSwitcher(
-                              duration: Duration(milliseconds: 600),
-                              child:
-                                  !moveUp
-                                      ? SizedBox.shrink()
-                                      : Column(
-                                        children: [
-                                          Divider(
-                                            thickness: 0.8,
-                                            color: AppColors.dividerColor,
-                                          ),
-                                          Space.h20,
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 20,
-                                            ),
-                                            child: Text(
-                                              textAlign: TextAlign.start,
-                                              gratiudeJournalModel
-                                                  .emotionDescription,
-                                            ),
-                                          ),
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 20,
-                                            ),
-                                            child: Text(
-                                              textAlign: TextAlign.start,
-                                              gratiudeJournalModel
-                                                  .accomplishments
-                                                  .join('\n'),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                            );
-                          },
+
+                        // Detail section: starts invisible, fades in mid-animation
+                        FadeTransition(
+                          opacity: detailOpacity,
+                          child: Column(
+                            children: [
+                              Divider(
+                                thickness: 0.8,
+                                color: AppColors.dividerColor,
+                              ),
+                              Space.h20,
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
+                                child: Text(
+                                  journal.emotionDescription,
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                              if (journal.accomplishments.isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                  ),
+                                  child: Text(
+                                    journal.accomplishments.join('\n'),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ),
+
+                // Volume button
                 Positioned(
                   bottom: 50,
-                  child: AnimatedSwitcher(
-                    duration: Duration(milliseconds: 600),
-                    child:
-                        !moveUp
-                            ? SizedBox.shrink()
-                            : Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 6,
-                                    offset: Offset(0, 3),
-                                  ),
-                                ],
-                              ),
-                              child: IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.volume_up),
-                                color: Colors.black,
-                              ),
-                            ),
+                  child: FadeTransition(
+                    opacity: detailOpacity,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 6,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.volume_up),
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                 ),
               ],

@@ -206,7 +206,7 @@ class LyricLineBuilder extends StatelessWidget {
     required this.currentPosition,
     required this.totalDuration,
     this.textStyle = const TextStyle(
-      fontSize: 20,
+      fontSize: 24,
       fontWeight: FontWeight.w700,
       color: Colors.black87,
       height: 1.4,
@@ -248,7 +248,7 @@ class LyricLineBuilder extends StatelessWidget {
         currentLyric,
         key: ValueKey(currentIndex),
         textAlign: TextAlign.left,
-        maxLines: 4,
+        maxLines: 3,
         overflow: TextOverflow.ellipsis,
         style: textStyle,
       ),

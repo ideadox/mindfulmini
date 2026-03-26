@@ -21,14 +21,16 @@ class GratiudeJournalModel {
 
   factory GratiudeJournalModel.fromJson(Map<String, dynamic> json) {
     return GratiudeJournalModel(
-      id: json['_id'],
-      profileId: json['profileId'],
-      emotion: json['mood'],
-      emotionDescription: json["description"],
-      accomplishments: List<String>.from(json["accomplishments"]),
-      date: DateTime.parse(json['date']),
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      id: json['_id'] ?? '',
+      profileId: json['profileId'] ?? '',
+      emotion: json['mood'] ?? '',
+      emotionDescription: json['description'] ?? '',
+      accomplishments: json['accomplishments'] != null
+          ? List<String>.from(json['accomplishments'])
+          : [],
+      date: DateTime.tryParse(json['date'] ?? '') ?? DateTime.now(),
+      createdAt: DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
+      updatedAt: DateTime.tryParse(json['updatedAt'] ?? '') ?? DateTime.now(),
     );
   }
 

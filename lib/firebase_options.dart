@@ -64,7 +64,7 @@ class DefaultFirebaseOptions {
     projectId: 'mindful-minis-app',
     storageBucket: 'mindful-minis-app.firebasestorage.app',
     androidClientId: '326927403832-pg4lgm0qjsavcsntv01vsecsvvecc8in.apps.googleusercontent.com',
-    iosClientId: '326927403832-sen3gj7ja4mffgua6k5gno9tquo4il4b.apps.googleusercontent.com',
+    iosClientId: '326927403832-qf11af4b351oqovf8sd28pmgfoc69jdg.apps.googleusercontent.com',
     iosBundleId: 'app.mindfulmini.in',
   );
 

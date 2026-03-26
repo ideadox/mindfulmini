@@ -212,18 +212,6 @@ class MyRoutineCard extends StatelessWidget {
                         Row(children: [Text(title)]),
                         Space.h4,
 
-                        Row(
-                          children: [
-                            Text(
-                              '$leftTask Task Left',
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ],
-                        ),
-
                         Expanded(
                           child: Row(
                             children: [
@@ -265,7 +253,7 @@ class MyRoutineCard extends StatelessWidget {
                             },
                             child: Center(
                               child: Text(
-                                'Get Started',
+                                percentComplete > 0 ? 'Start' : 'Get Started',
                                 style: AppTextTheme.mainButtonTextStyle(
                                   context,
                                 ).titleLarge?.copyWith(

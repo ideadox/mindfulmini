@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:developer';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:mindfulminis/common/data/cms_data.dart';
@@ -40,8 +40,8 @@ class CmsProvider with ChangeNotifier {
         segments = parseLexicalJson(cms!.contentDescriptionJson);
         await _initializeAudio();
       }
-    } catch (e) {
-      rethrow;
+    } catch (e, stack) {
+      FirebaseCrashlytics.instance.recordError(e, stack, reason: 'CmsProvider fetch failed for $collection/$id');
     } finally {
       isLoading = false;
       notifyListeners();
@@ -81,8 +81,11 @@ class CmsProvider with ChangeNotifier {
       });
 
       audioReady = true;
-    } catch (e) {
-      log('CmsProvider: audio init failed – $e');
+    } catch (e, stack) {
+      FirebaseCrashlytics.instance.recordError(
+        e, stack,
+        reason: 'CmsProvider audio init failed for id=$id collection=$collection',
+      );
       audioReady = false;
     }
   }
@@ -94,22 +97,21 @@ class CmsProvider with ChangeNotifier {
       if (isPlaying) {
         await audioPlayer.pause();
       } else {
-        // On some Android devices play() silently fails after completion.
         if (audioPlayer.processingState == ProcessingState.completed) {
           await audioPlayer.seek(Duration.zero);
         }
         await audioPlayer.play();
       }
-    } catch (e) {
-      log('CmsProvider: playPause error – $e');
+    } catch (e, stack) {
+      FirebaseCrashlytics.instance.recordError(e, stack, reason: 'CmsProvider playPause failed');
     }
   }
 
   Future<void> seek(Duration position) async {
     try {
       await audioPlayer.seek(position);
-    } catch (e) {
-      log('CmsProvider: seek error – $e');
+    } catch (e, stack) {
+      FirebaseCrashlytics.instance.recordError(e, stack, reason: 'CmsProvider seek failed');
     }
   }
 

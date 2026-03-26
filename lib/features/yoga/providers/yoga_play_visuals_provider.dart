@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:developer';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:mindfulminis/core/api_constants.dart';
@@ -50,8 +50,8 @@ class YogaPlayVisualsProvider with ChangeNotifier {
 
       _isInitialized = true;
       notifyListeners();
-    } catch (e) {
-      log('YogaPlayVisualsProvider: init failed – $e');
+    } catch (e, stack) {
+      FirebaseCrashlytics.instance.recordError(e, stack, reason: 'YogaPlayVisualsProvider init failed');
       _isInitialized = false;
       notifyListeners();
     }
@@ -91,8 +91,11 @@ class YogaPlayVisualsProvider with ChangeNotifier {
       });
 
       audioReady = true;
-    } catch (e) {
-      log('YogaPlayVisualsProvider: audio init failed – $e');
+    } catch (e, stack) {
+      FirebaseCrashlytics.instance.recordError(
+        e, stack,
+        reason: 'YogaPlayVisualsProvider audio init failed for ${yogaContent.id}',
+      );
       audioReady = false;
     }
   }
@@ -107,16 +110,16 @@ class YogaPlayVisualsProvider with ChangeNotifier {
         }
         await audioPlayer.play();
       }
-    } catch (e) {
-      log('YogaPlayVisualsProvider: playPause error – $e');
+    } catch (e, stack) {
+      FirebaseCrashlytics.instance.recordError(e, stack, reason: 'YogaPlayVisualsProvider playPause failed');
     }
   }
 
   Future<void> seek(Duration position) async {
     try {
       await audioPlayer.seek(position);
-    } catch (e) {
-      log('YogaPlayVisualsProvider: seek error – $e');
+    } catch (e, stack) {
+      FirebaseCrashlytics.instance.recordError(e, stack, reason: 'YogaPlayVisualsProvider seek failed');
     }
   }
 

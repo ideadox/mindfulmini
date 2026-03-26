@@ -12,24 +12,20 @@ class BasicFunction {
         .length;
   }
  
-  static getJounalEmoji(String emotion) {
-    switch (emotion) {
-      case 'Amazing':
+  static String getJounalEmoji(String emotion) {
+    switch (emotion.toLowerCase()) {
+      case 'amazing':
         return Assets.icons.amazingEmoji;
-      case 'Happy':
+      case 'happy':
         return Assets.icons.happy;
-
-      case 'Confused':
+      case 'confused':
         return Assets.icons.confushedEmoji;
-
-      case 'Sad':
+      case 'sad':
         return Assets.icons.sadEmoji;
-
-      case 'Upset':
+      case 'upset':
         return Assets.icons.upsetEmoji;
-
       default:
-        return '';
+        return Assets.icons.happy;
     }
   }
 }
