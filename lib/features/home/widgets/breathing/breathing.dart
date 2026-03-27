@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../common/widgets/views_widget.dart';
 import '../../../../core/api_constants.dart';
+import '../../../../core/app_formate.dart';
 import '../../providers/home_provider.dart';
 
 class BreathingWidget extends StatelessWidget {
@@ -162,6 +163,26 @@ class BreathingWidget extends StatelessWidget {
                           top: 8,
                           child: ViewsWidget(totalViews: breathingItem.viewCount),
                         ),
+                        if (breathingItem.estimatedDuration.inMinutes > 0)
+                          Positioned(
+                            left: 8,
+                            bottom: 8,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withValues(alpha: 0.6),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                AppFormate.formatReadDuration(breathingItem.estimatedDuration),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                     );

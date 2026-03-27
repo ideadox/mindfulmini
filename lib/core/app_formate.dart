@@ -42,6 +42,22 @@ class AppFormate {
     }
   }
 
+  static const _wordsPerMinute = 200;
+
+  static Duration estimateReadDuration(String text) {
+    final trimmed = text.trim();
+    if (trimmed.isEmpty) return Duration.zero;
+    final wordCount = trimmed.split(RegExp(r'\s+')).length;
+    final minutes = (wordCount / _wordsPerMinute).ceil();
+    return Duration(minutes: minutes);
+  }
+
+  static String formatReadDuration(Duration duration) {
+    if (duration.inMinutes <= 0) return '<1 min';
+    if (duration.inMinutes == 1) return '1 min';
+    return '${duration.inMinutes} min';
+  }
+
   static int calculateAge(DateTime dob) {
     final today = DateTime.now();
     int age = today.year - dob.year;

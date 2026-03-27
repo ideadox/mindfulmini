@@ -9,6 +9,7 @@ import 'package:mindfulminis/common/providers/collection_discover_provider.dart'
 import 'package:mindfulminis/common/widgets/custom_back_button.dart';
 import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/core/app_colors.dart';
+import 'package:mindfulminis/core/app_formate.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
@@ -113,7 +114,7 @@ class SeriesListScreen extends StatelessWidget {
                         ],
                         const SizedBox(height: 8),
                         Text(
-                          '${series.itemCount} items',
+                          _headerSubtitle(),
                           style: TextStyle(
                             color: Colors.white.withValues(alpha: 0.7),
                             fontSize: 13,
@@ -246,7 +247,7 @@ class SeriesListScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${item.viewCount} views',
+                      _episodeMetadata(item),
                       style: TextStyle(
                         fontSize: 11,
                         color: Colors.grey.shade500,
@@ -279,6 +280,25 @@ class SeriesListScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _headerSubtitle() {
+    final totalMinutes = series.items.fold<int>(
+      0,
+      (sum, item) => sum + item.estimatedDuration.inMinutes,
+    );
+    final itemsLabel = '${series.itemCount} items';
+    if (totalMinutes <= 0) return itemsLabel;
+    return '$itemsLabel · ${AppFormate.formatReadDuration(Duration(minutes: totalMinutes))}';
+  }
+
+  String _episodeMetadata(CmsModel item) {
+    final parts = <String>[];
+    if (item.viewCount > 0) parts.add('${item.viewCount} views');
+    if (item.estimatedDuration.inMinutes > 0) {
+      parts.add(AppFormate.formatReadDuration(item.estimatedDuration));
+    }
+    return parts.isEmpty ? '' : parts.join(' · ');
   }
 
   void _navigateToPlayVisuals(CmsModel item) async {

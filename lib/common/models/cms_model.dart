@@ -32,6 +32,32 @@ class CmsModel {
   /// Filename for the playing-state visual ([playingVisualMedia]).
   String? get playingImageFilename => playingVisualMedia?.filename;
 
+  String? _plainTextCache;
+
+  /// Flattens the Lexical content description tree into plain text.
+  String get plainTextContent {
+    if (_plainTextCache != null) return _plainTextCache!;
+    final buffer = StringBuffer();
+    for (final paragraph in contentDescription.root.children) {
+      for (final child in paragraph.children) {
+        if (child.text != null && child.text!.isNotEmpty) {
+          buffer.write(child.text);
+          buffer.write(' ');
+        }
+      }
+    }
+    _plainTextCache = buffer.toString().trim();
+    return _plainTextCache!;
+  }
+
+  /// Estimated listen/read duration based on word count (200 WPM).
+  Duration get estimatedDuration {
+    final trimmed = plainTextContent;
+    if (trimmed.isEmpty) return Duration.zero;
+    final wordCount = trimmed.split(RegExp(r'\s+')).length;
+    return Duration(minutes: (wordCount / 200).ceil());
+  }
+
   CmsModel({
     required this.id,
     required this.createdAt,

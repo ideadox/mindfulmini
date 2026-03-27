@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mindfulminis/common/widgets/views_widget.dart';
+import 'package:mindfulminis/core/app_formate.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/yoga/data/yoga_data.dart';
@@ -185,6 +187,31 @@ class YogaFlowWidget extends StatelessWidget {
                             ),
                           ),
                         ),
+                        Positioned(
+                          right: 8,
+                          top: 8,
+                          child: ViewsWidget(totalViews: yogaItem.viewCount),
+                        ),
+                        if (yogaItem.estimatedDuration.inMinutes > 0)
+                          Positioned(
+                            left: 8,
+                            bottom: 8,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withValues(alpha: 0.6),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                AppFormate.formatReadDuration(yogaItem.estimatedDuration),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                     );

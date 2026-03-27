@@ -12,6 +12,7 @@ import 'package:mindfulminis/common/widgets/custom_back_button.dart';
 import 'package:mindfulminis/common/widgets/views_widget.dart';
 import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/core/app_colors.dart';
+import 'package:mindfulminis/core/app_formate.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
@@ -299,7 +300,7 @@ class _CollectionDiscoverScreenState extends State<CollectionDiscoverScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '${series.itemCount} items',
+                        _seriesSubtitle(series),
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.85),
                           fontSize: 13,
@@ -388,6 +389,26 @@ class _CollectionDiscoverScreenState extends State<CollectionDiscoverScreen> {
                   child: const Icon(Icons.check, color: Colors.white, size: 14),
                 ),
               ),
+            if (item.estimatedDuration.inMinutes > 0)
+              Positioned(
+                left: 8,
+                bottom: 8,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.6),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    AppFormate.formatReadDuration(item.estimatedDuration),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
@@ -415,6 +436,16 @@ class _CollectionDiscoverScreenState extends State<CollectionDiscoverScreen> {
         },
       );
     }
+  }
+
+  String _seriesSubtitle(SeriesModel series) {
+    final totalMinutes = series.items.fold<int>(
+      0,
+      (sum, item) => sum + item.estimatedDuration.inMinutes,
+    );
+    final itemsLabel = '${series.itemCount} items';
+    if (totalMinutes <= 0) return itemsLabel;
+    return '$itemsLabel · ${AppFormate.formatReadDuration(Duration(minutes: totalMinutes))}';
   }
 
   Widget _buildViewedBadge() {

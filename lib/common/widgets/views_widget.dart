@@ -24,7 +24,7 @@ class ViewsWidget extends StatelessWidget {
             Icon(Icons.visibility, size: 18),
 
             Space.w4,
-            Text(AppFormate.formatViews(248), style: TextStyle(fontSize: 12)),
+            Text(AppFormate.formatViews(totalViews), style: TextStyle(fontSize: 12)),
           ],
         ),
       ),
