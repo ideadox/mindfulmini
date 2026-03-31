@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mindfulminis/common/providers/speech_provider.dart';
 import 'package:mindfulminis/common/widgets/common_speech_textfield.dart';
 import 'package:mindfulminis/common/widgets/custom_back_button.dart';
@@ -6,6 +7,8 @@ import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/common/widgets/gradient_scaffold.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:mindfulminis/features/journal/providers/create_journal_provider.dart';
 import 'package:mindfulminis/features/journal/widgets/feeling_container_widget.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
@@ -44,6 +47,8 @@ class _CreateJournalScreenState extends State<CreateJournalScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
+    final todayLabel = DateFormat('EEE, MMM d').format(DateTime.now());
     return Consumer<ProfileProvider>(
       builder: (context, profileProvider, _) {
         if (profileProvider.loading || profileProvider.userProfile == null) {
@@ -78,7 +83,7 @@ class _CreateJournalScreenState extends State<CreateJournalScreen> {
 
                       Center(
                         child: Text(
-                          'Thu, Feb 6',
+                          todayLabel,
                           style: AppTextTheme.titleTextTheme(
                             context,
                           ).titleLarge?.copyWith(
@@ -99,7 +104,10 @@ class _CreateJournalScreenState extends State<CreateJournalScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'How are you feeling today?',
+                              strings.journal(
+                                'create.feeling_prompt',
+                                fallback: 'How are you feeling today?',
+                              ),
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -122,7 +130,10 @@ class _CreateJournalScreenState extends State<CreateJournalScreen> {
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
                                   FeelingContainerWidget(
-                                    title: 'Amazing',
+                                    title: strings.journal(
+                                      'create.feeling_amazing',
+                                      fallback: 'Amazing',
+                                    ),
                                     icon: Assets.icons.amazingEmoji,
                                     selected:
                                         provider.slectedFeeling == 'Amazing',
@@ -132,7 +143,10 @@ class _CreateJournalScreenState extends State<CreateJournalScreen> {
                                     },
                                   ),
                                   FeelingContainerWidget(
-                                    title: 'Happy',
+                                    title: strings.journal(
+                                      'create.feeling_happy',
+                                      fallback: 'Happy',
+                                    ),
                                     icon: Assets.icons.happy,
                                     selected:
                                         provider.slectedFeeling == 'Happy',
@@ -142,7 +156,10 @@ class _CreateJournalScreenState extends State<CreateJournalScreen> {
                                     },
                                   ),
                                   FeelingContainerWidget(
-                                    title: 'Confused',
+                                    title: strings.journal(
+                                      'create.feeling_confused',
+                                      fallback: 'Confused',
+                                    ),
                                     icon: Assets.icons.confushedEmoji,
                                     makeGrey: provider.slectedFeeling != null,
                                     selected:
@@ -153,7 +170,10 @@ class _CreateJournalScreenState extends State<CreateJournalScreen> {
                                     },
                                   ),
                                   FeelingContainerWidget(
-                                    title: 'Sad',
+                                    title: strings.journal(
+                                      'create.feeling_sad',
+                                      fallback: 'Sad',
+                                    ),
                                     icon: Assets.icons.sadEmoji,
                                     makeGrey: provider.slectedFeeling != null,
                                     selected: provider.slectedFeeling == 'Sad',
@@ -163,7 +183,10 @@ class _CreateJournalScreenState extends State<CreateJournalScreen> {
                                     },
                                   ),
                                   FeelingContainerWidget(
-                                    title: 'Upset',
+                                    title: strings.journal(
+                                      'create.feeling_upset',
+                                      fallback: 'Upset',
+                                    ),
                                     icon: Assets.icons.upsetEmoji,
                                     makeGrey: provider.slectedFeeling != null,
                                     selected:
@@ -178,7 +201,10 @@ class _CreateJournalScreenState extends State<CreateJournalScreen> {
                             ),
                             Space.h40,
                             Text(
-                              'Today I am grateful for?',
+                              strings.journal(
+                                'create.grateful_prompt',
+                                fallback: 'Today I am grateful for?',
+                              ),
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -186,13 +212,19 @@ class _CreateJournalScreenState extends State<CreateJournalScreen> {
                             ),
                             Space.h20,
                             CommonSpeechTextfield(
-                              hintText: 'Playing with my best friend...',
+                              hintText: strings.journal(
+                                'create.grateful_hint',
+                                fallback: 'Playing with my best friend...',
+                              ),
                               speechProvider: _provider1,
                             ),
 
                             Space.h40,
                             Text(
-                              "Things I'll accomplish today",
+                              strings.journal(
+                                'create.accomplish_prompt',
+                                fallback: "Things I'll accomplish today",
+                              ),
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -200,7 +232,10 @@ class _CreateJournalScreenState extends State<CreateJournalScreen> {
                             ),
                             Space.h20,
                             CommonSpeechTextfield(
-                              hintText: 'I will finish my coloring or drawing.',
+                              hintText: strings.journal(
+                                'create.accomplish_hint',
+                                fallback: 'I will finish my coloring or drawing.',
+                              ),
                               speechProvider: _provider2,
                             ),
                             Space.h40,
@@ -222,7 +257,10 @@ class _CreateJournalScreenState extends State<CreateJournalScreen> {
                                     provider.loading
                                         ? CircularProgressIndicator()
                                         : Text(
-                                          'Done',
+                                          strings.journal(
+                                            'create.done_cta',
+                                            fallback: 'Done',
+                                          ),
 
                                           style:
                                               AppTextTheme.mainButtonTextStyle(

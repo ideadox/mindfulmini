@@ -4,6 +4,8 @@ import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/common/widgets/video_progress_bar.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 
 class RecentCollection extends StatelessWidget {
@@ -11,12 +13,13 @@ class RecentCollection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     return Column(
       children: [
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(
-            'Recently  Watched',
+            strings.yoga('recent.title', fallback: 'Recently Watched'),
             style: AppTextTheme.titleTextTheme(
               context,
             ).titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
@@ -88,7 +91,10 @@ class RecentCollection extends StatelessWidget {
                                 ),
                                 Space.w4,
                                 Text(
-                                  '5 min left',
+                                  strings.yoga(
+                                    'recent.time_left_label',
+                                    fallback: '5 min left',
+                                  ),
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.white,
@@ -107,7 +113,10 @@ class RecentCollection extends StatelessWidget {
                                 onPressed: () {},
                                 child: Center(
                                   child: Text(
-                                    'Resume',
+                                    strings.yoga(
+                                      'recent.resume_cta',
+                                      fallback: 'Resume',
+                                    ),
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 10,
@@ -121,7 +130,10 @@ class RecentCollection extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Text('6 Poses', style: TextStyle(color: Colors.black45)),
+                  Text(
+                    strings.yoga('recent.poses_suffix', fallback: '6 Poses'),
+                    style: TextStyle(color: Colors.black45),
+                  ),
                 ],
               );
             },

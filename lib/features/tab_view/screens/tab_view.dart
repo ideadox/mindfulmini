@@ -287,7 +287,10 @@ class _TabViewState extends State<TabView> with TickerProviderStateMixin {
                 body:
                     !osp.connected
                         ? OfflineScreen()
-                        : provider.screens[provider.currentIndex],
+                        : IndexedStack(
+                          index: provider.currentIndex,
+                          children: provider.screens,
+                        ),
                 // floatingActionButton:
                 //     provider.currentIndex == 3
                 //         ? null

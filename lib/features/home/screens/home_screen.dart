@@ -19,6 +19,7 @@ import 'package:mindfulminis/features/profile/providers/profile_provider.dart';
 import 'package:mindfulminis/features/routine/screens/create_routine_screen.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:provider/provider.dart';
 import '../providers/active_routine_provider.dart';
 
@@ -29,16 +30,24 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // bool hasRoutine = false;
     // context.read<RatingProvider>().showRatingDailog();
+    final remoteConfig = sl<RemoteConfigService>();
+    final strings = remoteConfig.strings;
+    final flags = remoteConfig.flags;
+    final showCreateRoutineCta = flags.home(
+      'show_create_routine_cta',
+      fallback: true,
+    );
+    final showDailyActivity = flags.home('show_daily_activity', fallback: true);
+    final showYogaFlow = flags.home('show_yoga_flow', fallback: true);
+    final showMeditation = flags.home('show_meditation', fallback: true);
+    final showBreathing = flags.home('show_breathing', fallback: true);
+    final showBodyScan = flags.home('show_body_scan', fallback: true);
+    final showStories = flags.home('show_stories', fallback: true);
 
-    return MultiProvider(
-      providers: [
-        // ChangeNotifierProvider(create: (context) => HomeProvider()),
-        ChangeNotifierProvider(create: (context) => ActiveRoutineProvider()),
-      ],
-      child: Scaffold(
-        extendBodyBehindAppBar: true,
-        body: Consumer2<ProfileProvider, HomeProvider>(
-          builder: (context, pp, hp, _) {
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      body: Consumer2<ProfileProvider, HomeProvider>(
+        builder: (context, pp, hp, _) {
             // Only show loading if profile is actually loading
             if (pp.loading) {
               return const Center(child: CircularProgressIndicator());
@@ -76,9 +85,9 @@ class HomeScreen extends StatelessWidget {
               });
             }
 
-            return SingleChildScrollView(
-              child: Column(
-                children: [
+          return SingleChildScrollView(
+            child: Column(
+              children: [
                   Container(
                     height: 250,
                     width: double.infinity,
@@ -130,7 +139,7 @@ class HomeScreen extends StatelessWidget {
                         Space.h12,
                         Consumer2<ActiveRoutineProvider, ProfileProvider>(
                           builder: (context, p, pp, _) {
-                            if (p.routines.isEmpty) {
+                            if (p.routines.isEmpty && showCreateRoutineCta) {
                               return Padding(
                                 padding: const EdgeInsets.only(top: 16),
                                 child: SizedBox(
@@ -148,12 +157,16 @@ class HomeScreen extends StatelessWidget {
                                             .getRoutines(
                                               pp.userProfile!.id,
                                               notify: false,
+                                              force: true,
                                             );
                                       }
                                     },
                                     child: Center(
                                       child: Text(
-                                        'Create Routine',
+                                        strings.home(
+                                          'create_routine.cta',
+                                          fallback: 'Create Routine',
+                                        ),
                                         style: AppTextTheme.mainButtonTextStyle(
                                           context,
                                         ).titleLarge?.copyWith(
@@ -166,16 +179,23 @@ class HomeScreen extends StatelessWidget {
                                 ),
                               );
                             }
+                            if (p.routines.isEmpty && !showCreateRoutineCta) {
+                              return const SizedBox.shrink();
+                            }
                             return MyroutineSlider();
                           },
                         ),
                         Space.h32,
 
-                        DailyActivityWidget(),
-                        Space.h16,
+                        if (showDailyActivity) ...[
+                          DailyActivityWidget(),
+                          Space.h16,
+                        ],
 
-                        YogaFlowWidget(),
-                        Space.h16,
+                        if (showYogaFlow) ...[
+                          YogaFlowWidget(),
+                          Space.h16,
+                        ],
 
                         // AddFeelingWidget(),
                         // Space.h16,
@@ -184,25 +204,32 @@ class HomeScreen extends StatelessWidget {
 
                         // Space.h16,
 
-                        MeditationWidget(),
-                        Space.h16,
+                        if (showMeditation) ...[
+                          MeditationWidget(),
+                          Space.h16,
+                        ],
 
-                        BreathingWidget(),
-                        Space.h16,
-                        BodyScanWidget(),
-                        Space.h16,
-                        StoriesWidget(),
-                        Space.h16,
+                        if (showBreathing) ...[
+                          BreathingWidget(),
+                          Space.h16,
+                        ],
+                        if (showBodyScan) ...[
+                          BodyScanWidget(),
+                          Space.h16,
+                        ],
+                        if (showStories) ...[
+                          StoriesWidget(),
+                          Space.h16,
+                        ],
 
                         SizedBox(height: kToolbarHeight + 40),
                       ],
                     ),
                   ),
-                ],
-              ),
-            );
-          },
-        ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

@@ -1,3 +1,5 @@
+import '../../../core/api_constants.dart';
+
 class UserProfile {
   final String id;
   final String userId;
@@ -20,17 +22,26 @@ class UserProfile {
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
+    final rawImage = json['image'];
+    String? resolvedImage;
+    if (rawImage is String && rawImage.isNotEmpty) {
+      resolvedImage = rawImage;
+      if (resolvedImage.contains('/payloadcms/uploads/')) {
+        resolvedImage = resolvedImage.replaceFirst(
+          '/payloadcms/uploads/',
+          '/uploads/',
+        );
+      } else {
+        resolvedImage = ApiConstants.resolveUploadPublicUrl(resolvedImage);
+      }
+    }
+
     return UserProfile(
       id: json['_id'] ?? '',
       userId: json['userId'] ?? '',
       fullname: json['fullname'] ?? '',
       dob: DateTime.parse(json['dob']),
-      profileImage:
-          json['image'] == null
-              ? null
-              : (json['image'] as String).isEmpty
-              ? null
-              : json['image'],
+      profileImage: resolvedImage,
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       v: json['__v'] ?? 0,

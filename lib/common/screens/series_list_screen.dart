@@ -264,7 +264,7 @@ class SeriesListScreen extends StatelessWidget {
                         height: 28,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.green.shade600,
+                          color: AppColors.primary,
                         ),
                         child:
                             Icon(Icons.check, color: Colors.white, size: 16),

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
 import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
@@ -14,18 +15,22 @@ class SuggestionWidgets extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     return Column(
       children: [
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(
-            'Suggested For You',
+            strings.meditation('suggestion.title', fallback: 'Suggested For You'),
             style: AppTextTheme.titleTextTheme(
               context,
             ).titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
           ),
           subtitle: Text(
-            'Short meditations to help kids slow down and feel calm',
+            strings.meditation(
+              'suggestion.subtitle',
+              fallback: 'Short meditations to help kids slow down and feel calm',
+            ),
             style: TextStyle(color: Colors.black45, fontSize: 12),
           ),
         ),

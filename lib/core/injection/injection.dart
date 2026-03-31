@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/core/router/app_routes.dart';
 import 'package:mindfulminis/core/services/auth_service.dart';
 import 'package:mindfulminis/core/services/http_service.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/data/cms_data.dart';
@@ -39,6 +40,7 @@ Future<void> setupInjection() async {
 
   //services
   sl.registerLazySingleton<AuthService>(() => AuthService());
+  sl.registerLazySingleton<RemoteConfigService>(() => RemoteConfigService());
   sl.registerLazySingleton(() => SharedPrefs(prefs: sl()));
   sl.registerLazySingleton<HttpService>(() => HttpService());
   sl.registerLazySingleton<ImagePickerHelper>(() => ImagePickerHelper());

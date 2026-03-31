@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mindfulminis/common/widgets/collection_card_duration_badge.dart';
 import 'package:mindfulminis/common/widgets/views_widget.dart';
 import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/core/app_formate.dart';
@@ -9,6 +10,7 @@ import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/home/providers/home_provider.dart';
 import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:provider/provider.dart';
 
 class StoriesWidget extends StatelessWidget {
@@ -16,6 +18,7 @@ class StoriesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     return Consumer<HomeProvider>(
       builder: (context, provider, _) {
         if (provider.isLoadingStories) {
@@ -24,12 +27,15 @@ class StoriesWidget extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Short Stories',
+                  strings.home('stories.title', fallback: 'Short Stories'),
                   style: AppTextTheme.titleTextTheme(context).titleMedium
                       ?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
                 ),
                 subtitle: Text(
-                  'Calming stories to help kids unwind and relax.',
+                  strings.home(
+                    'stories.subtitle',
+                    fallback: 'Calming stories to help kids unwind and relax.',
+                  ),
                   style: AppTextTheme.bodyTextStyle(
                     context,
                   ).bodyMedium?.copyWith(fontSize: 12),
@@ -49,12 +55,15 @@ class StoriesWidget extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Short Stories',
+                  strings.home('stories.title', fallback: 'Short Stories'),
                   style: AppTextTheme.titleTextTheme(context).titleMedium
                       ?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
                 ),
                 subtitle: Text(
-                  'Calming stories to help kids unwind and relax.',
+                  strings.home(
+                    'stories.subtitle',
+                    fallback: 'Calming stories to help kids unwind and relax.',
+                  ),
                   style: AppTextTheme.bodyTextStyle(
                     context,
                   ).bodyMedium?.copyWith(fontSize: 12),
@@ -67,7 +76,10 @@ class StoriesWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'No items found',
+                        strings.home(
+                          'stories.empty_title',
+                          fallback: 'No items found',
+                        ),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -75,7 +87,10 @@ class StoriesWidget extends StatelessWidget {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        'The list is currently empty.',
+                        strings.home(
+                          'stories.empty_subtitle',
+                          fallback: 'The list is currently empty.',
+                        ),
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey,
@@ -94,12 +109,15 @@ class StoriesWidget extends StatelessWidget {
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: Text(
-                'Short Stories',
+                strings.home('stories.title', fallback: 'Short Stories'),
                 style: AppTextTheme.titleTextTheme(context).titleMedium
                     ?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
               ),
               subtitle: Text(
-                'Calming stories to help kids unwind and relax.',
+                strings.home(
+                  'stories.subtitle',
+                  fallback: 'Calming stories to help kids unwind and relax.',
+                ),
                 style: AppTextTheme.bodyTextStyle(
                   context,
                 ).bodyMedium?.copyWith(fontSize: 12),
@@ -164,21 +182,11 @@ class StoriesWidget extends StatelessWidget {
                         ),
                         if (storyItem.estimatedDuration.inMinutes > 0)
                           Positioned(
-                            left: 8,
+                            right: 8,
                             bottom: 8,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withValues(alpha: 0.6),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                AppFormate.formatReadDuration(storyItem.estimatedDuration),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                            child: CollectionCardDurationBadge(
+                              label: AppFormate.formatReadDuration(
+                                storyItem.estimatedDuration,
                               ),
                             ),
                           ),

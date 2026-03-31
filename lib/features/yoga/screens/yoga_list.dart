@@ -7,6 +7,7 @@ import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
 import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
 import 'package:mindfulminis/features/yoga/providers/yoga_provider.dart';
@@ -39,6 +40,7 @@ class _YogaListState extends State<YogaList> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     return Consumer<YogaProvider>(
       builder: (context, yogaProvider, child) {
         if (yogaProvider.isContentLoading) {
@@ -69,7 +71,11 @@ class _YogaListState extends State<YogaList> {
                     ),
                     Center(
                       child: Text(
-                        yogaProvider.selectedContent?.title ?? 'Spring Yoga',
+                        yogaProvider.selectedContent?.title ??
+                            strings.yoga(
+                              'list.fallback_title',
+                              fallback: 'Spring Yoga',
+                            ),
                         style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w600,
@@ -150,7 +156,7 @@ class _YogaListState extends State<YogaList> {
               },
               child: Center(
                 child: Text(
-                  'Let\'s Go',
+                  strings.yoga('list.cta_lets_go', fallback: "Let's Go"),
                   style: AppTextTheme.mainButtonTextStyle(context).titleLarge,
                 ),
               ),

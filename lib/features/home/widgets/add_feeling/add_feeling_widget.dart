@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:mindfulminis/features/onbaord/screens/felling_today.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
@@ -12,6 +13,7 @@ class AddFeelingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     return Container(
       width: double.infinity,
       height: 190,
@@ -30,7 +32,10 @@ class AddFeelingWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'How is Your Child\nFeeling Now?',
+                  strings.home(
+                    'add_feeling.title',
+                    fallback: 'How is Your Child\nFeeling Now?',
+                  ),
                   style: AppTextTheme.titleTextTheme(context).titleLarge
                       ?.copyWith(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
@@ -45,7 +50,7 @@ class AddFeelingWidget extends StatelessWidget {
                       Icon(Icons.add, color: Colors.white),
                       Space.w12,
                       Text(
-                        'Add Feeling',
+                        strings.home('add_feeling.cta', fallback: 'Add Feeling'),
                         style:
                             AppTextTheme.mainButtonTextStyle(
                               context,

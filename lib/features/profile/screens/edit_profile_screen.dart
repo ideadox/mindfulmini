@@ -31,6 +31,14 @@ class EditProfileScreen extends StatelessWidget {
           if (provider.loading || provider.userProfile == null) {
             return Center(child: CircularProgressIndicator());
           }
+          final emailText =
+              (provider.currentUser?.email?.isNotEmpty ?? false)
+                  ? provider.currentUser!.email!
+                  : 'N/A';
+          final phoneText =
+              (provider.currentUser?.phoneNumber?.isNotEmpty ?? false)
+                  ? provider.currentUser!.phoneNumber!
+                  : 'N/A';
 
           return SingleChildScrollView(
             child: Padding(
@@ -131,7 +139,7 @@ class EditProfileScreen extends StatelessWidget {
 
                   ProfileInfoRowWidget(
                     title: 'Email',
-                    value: provider.currentUser?.email ?? "",
+                    value: emailText,
                   ),
 
                   Space.h20,
@@ -139,7 +147,7 @@ class EditProfileScreen extends StatelessWidget {
                   Divider(thickness: 1, color: Colors.blueGrey.shade50),
                   Space.h20,
 
-                  ProfileInfoRowWidget(title: 'Phone Number', value: ''),
+                  ProfileInfoRowWidget(title: 'Phone Number', value: phoneText),
                 ],
               ),
             ),

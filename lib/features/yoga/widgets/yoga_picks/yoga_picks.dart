@@ -6,6 +6,7 @@ import 'package:mindfulminis/gen/assets.gen.dart';
 import '../../../../core/app_spacing.dart';
 import '../../../../core/app_text_theme.dart';
 import '../../../../core/injection/injection.dart';
+import '../../../../core/services/remote_config_service.dart';
 import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
 
 class YogaPicks extends StatelessWidget {
@@ -13,12 +14,13 @@ class YogaPicks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     return Column(
       children: [
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(
-            'Yoga Picks Just for You',
+            strings.yoga('picks.title', fallback: 'Yoga Picks Just for You'),
             style: AppTextTheme.titleTextTheme(
               context,
             ).titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
@@ -60,7 +62,10 @@ class YogaPicks extends StatelessWidget {
                       ],
                     ),
 
-                    Text('6 Poses', style: TextStyle(color: Colors.black45)),
+                    Text(
+                      strings.yoga('picks.poses_suffix', fallback: '6 Poses'),
+                      style: TextStyle(color: Colors.black45),
+                    ),
                   ],
                 ),
               );

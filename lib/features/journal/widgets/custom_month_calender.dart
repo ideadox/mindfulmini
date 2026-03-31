@@ -6,14 +6,26 @@ import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/journal/providers/journal_provider.dart';
 import 'package:mindfulminis/features/journal/screens/journal_detail1_screen.dart';
+import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/core/utils/basic_function.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import '../models/gratiude_journal_model.dart';
 
-class CustomMonthCalender extends StatelessWidget {
+class CustomMonthCalender extends StatefulWidget {
   final JournalProvider provider;
   const CustomMonthCalender({super.key, required this.provider});
+
+  @override
+  State<CustomMonthCalender> createState() => _CustomMonthCalenderState();
+}
+
+class _CustomMonthCalenderState extends State<CustomMonthCalender> {
+  DateTime? _tooltipDate;
+
+  bool _isSameDate(DateTime a, DateTime b) {
+    return a.day == b.day && a.month == b.month && a.year == b.year;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +54,13 @@ class CustomMonthCalender extends StatelessWidget {
             height: 450,
             child: SfCalendar(
               onTap: (calendarTapDetails) {
-                final journal = provider.gratitudeJournals.lastWhere(
+                final tappedDate = calendarTapDetails.date;
+                if (tappedDate == null) return;
+                final journal = widget.provider.gratitudeJournals.lastWhere(
                   (element) {
-                    return element.date.day == calendarTapDetails.date?.day &&
-                        element.date.month == calendarTapDetails.date?.month &&
-                        element.date.year == calendarTapDetails.date?.year;
+                    return element.date.day == tappedDate.day &&
+                        element.date.month == tappedDate.month &&
+                        element.date.year == tappedDate.year;
                   },
                   orElse:
                       () => GratiudeJournalModel(
@@ -56,14 +70,24 @@ class CustomMonthCalender extends StatelessWidget {
                         emotion: '',
                         emotionDescription: '',
                         accomplishments: [],
-                        date: calendarTapDetails.date ?? DateTime.now(),
+                        date: tappedDate,
                         createdAt: DateTime.now(),
                         updatedAt: DateTime.now(),
                       ),
                 );
                 if (journal.id.isEmpty) {
+                  setState(() {
+                    _tooltipDate =
+                        _tooltipDate != null &&
+                                _isSameDate(_tooltipDate!, tappedDate)
+                            ? null
+                            : tappedDate;
+                  });
                   return;
                 }
+                setState(() {
+                  _tooltipDate = null;
+                });
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -71,7 +95,7 @@ class CustomMonthCalender extends StatelessWidget {
                       return JournalDetail1Screen(
                         gratitudeJournal: journal,
                         gratitudeId: journal.id,
-                        journalProvider: provider,
+                        journalProvider: widget.provider,
                       );
                     },
                   ),
@@ -84,7 +108,12 @@ class CustomMonthCalender extends StatelessWidget {
               showDatePickerButton: false,
               headerHeight: 0,
 
-              todayHighlightColor: AppColors.primary,
+              // Custom cell draws selection; disable default border/fill.
+              todayHighlightColor: Colors.transparent,
+              selectionDecoration: const BoxDecoration(
+                color: Colors.transparent,
+                border: Border.fromBorderSide(BorderSide.none),
+              ),
 
               cellBorderColor: Colors.transparent,
               monthViewSettings: MonthViewSettings(
@@ -107,7 +136,7 @@ class CustomMonthCalender extends StatelessWidget {
                 final isOtherMonth =
                     details.date.month != details.visibleDates[10].month;
 
-                final journal = provider.gratitudeJournals.lastWhere(
+                final journal = widget.provider.gratitudeJournals.lastWhere(
                   (element) {
                     return element.date.day == details.date.day &&
                         element.date.month == details.date.month &&
@@ -126,22 +155,34 @@ class CustomMonthCalender extends StatelessWidget {
                         updatedAt: DateTime.now(),
                       ),
                 );
+                final showTooltip =
+                    _tooltipDate != null && _isSameDate(_tooltipDate!, details.date);
+                final isSelected =
+                    isToday ||
+                    (_tooltipDate != null &&
+                        _isSameDate(_tooltipDate!, details.date));
 
-                return Column(
+                final cellContent = Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
                       height: 40,
                       width: 40,
-
-                      padding: !isToday ? null : EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
                         borderRadius: BorderRadius.circular(100),
-                        border:
-                            !isToday
+                        boxShadow:
+                            !isSelected
                                 ? null
-                                : Border.all(color: AppColors.primary),
+                                : [
+                                  BoxShadow(
+                                    color: HexColor('#6E40F9').withValues(
+                                      alpha: 0.16,
+                                    ),
+                                    blurRadius: 7,
+                                    spreadRadius: 0,
+                                    offset: const Offset(0, 1),
+                                  ),
+                                ],
                       ),
                       child:
                           journal.id.isNotEmpty
@@ -150,7 +191,14 @@ class CustomMonthCalender extends StatelessWidget {
                                 width: 24,
                                 height: 24,
                               )
-                              : null,
+                              : Opacity(
+                                opacity: 0.25,
+                                child: SvgPicture.asset(
+                                  Assets.icons.happy,
+                                  width: 24,
+                                  height: 24,
+                                ),
+                              ),
                     ),
                     const SizedBox(height: 6),
                     Container(
@@ -185,6 +233,81 @@ class CustomMonthCalender extends StatelessWidget {
                         ),
                       ),
                     ),
+                  ],
+                );
+
+                return Stack(
+                  clipBehavior: Clip.none,
+                  alignment: Alignment.topCenter,
+                  children: [
+                    cellContent,
+                    if (showTooltip)
+                      Positioned(
+                        top: -112,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: Container(
+                            width: 210,
+                            padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.08),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Text(
+                                  'Tap a day to log your mood and track your happiness journey over time.',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                SizedBox(
+                                  height: 30,
+                                  width: 90,
+                                  child: DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
+                                        colors: [
+                                          Color(0xFF6E40F9),
+                                          Color(0xFFA569FB),
+                                          Color(0xFFCE89FF),
+                                        ],
+                                      ),
+                                      borderRadius: BorderRadius.circular(24),
+                                    ),
+                                    child: TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _tooltipDate = null;
+                                        });
+                                      },
+                                      child: const Text(
+                                        'Got it!',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 );
               },

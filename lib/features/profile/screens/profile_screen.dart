@@ -50,6 +50,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 if (provider.loading || provider.userProfile == null) {
                   return Center(child: CircularProgressIndicator());
                 }
+                final contactText =
+                    provider.currentUser?.email?.isNotEmpty == true
+                        ? provider.currentUser!.email!
+                        : (provider.currentUser?.phoneNumber ?? "");
                 return SingleChildScrollView(
                   child: Column(
                     children: [
@@ -93,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                         subtitle: Text(
-                          provider.currentUser?.email ?? "",
+                          contactText,
                           style: TextStyle(color: Colors.black54),
                         ),
                       ),

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/common/widgets/time_widget.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
 
@@ -14,18 +15,22 @@ class StoriesCategories extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     return Column(
       children: [
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(
-            'Story Collections',
+            strings.stories('category.title', fallback: 'Story Collections'),
             style: AppTextTheme.titleTextTheme(
               context,
             ).titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
           ),
           subtitle: Text(
-            'A handpicked set of calming, thoughtful tales',
+            strings.stories(
+              'category.subtitle',
+              fallback: 'A handpicked set of calming, thoughtful tales',
+            ),
             style: TextStyle(color: Colors.black45, fontSize: 12),
           ),
         ),

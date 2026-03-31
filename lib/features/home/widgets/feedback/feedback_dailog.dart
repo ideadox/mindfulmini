@@ -4,6 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:mindfulminis/features/home/providers/rating_provider.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +17,7 @@ class FeedbackDailog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     return Consumer<RatingProvider>(
       builder: (context, rp, _) {
         double height = 488;
@@ -75,7 +78,10 @@ class FeedbackDailog extends StatelessWidget {
                               Column(
                                 children: [
                                   Text(
-                                    'Rate your experience!',
+                                    strings.home(
+                                      'feedback.title',
+                                      fallback: 'Rate your experience!',
+                                    ),
                                     style: TextStyle(
                                       fontSize: 22,
                                       fontWeight: FontWeight.w600,
@@ -86,7 +92,10 @@ class FeedbackDailog extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        'Give us ',
+                                        strings.home(
+                                          'feedback.prefix',
+                                          fallback: 'Give us ',
+                                        ),
                                         style: TextStyle(
                                           fontSize: 17,
                                           color: Colors.black45,
@@ -111,7 +120,10 @@ class FeedbackDailog extends StatelessWidget {
                                               ),
                                             ),
                                         child: Text(
-                                          '5 stars ',
+                                          strings.home(
+                                            'feedback.five_stars',
+                                            fallback: '5 stars ',
+                                          ),
                                           style: TextStyle(
                                             fontSize: 17,
                                             fontWeight: FontWeight.w500,
@@ -119,7 +131,10 @@ class FeedbackDailog extends StatelessWidget {
                                         ),
                                       ),
                                       Text(
-                                        'if you like',
+                                        strings.home(
+                                          'feedback.suffix',
+                                          fallback: 'if you like',
+                                        ),
                                         style: TextStyle(
                                           fontSize: 17,
                                           color: Colors.black45,
@@ -188,7 +203,10 @@ class FeedbackDailog extends StatelessWidget {
                                   Space.h16,
                                   if (rp.ratingCount <= 3) ...[
                                     Text(
-                                      'What can we improve?',
+                                      strings.home(
+                                        'feedback.improve_prompt',
+                                        fallback: 'What can we improve?',
+                                      ),
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500,
@@ -212,7 +230,10 @@ class FeedbackDailog extends StatelessWidget {
                                         maxLines: 5,
                                         minLines: 1,
                                         decoration: InputDecoration(
-                                          hintText: 'Tell us in words..',
+                                          hintText: strings.home(
+                                            'feedback.input_hint',
+                                            fallback: 'Tell us in words..',
+                                          ),
                                           hintStyle: TextStyle(
                                             fontSize: 14,
                                             color: Colors.grey,
@@ -250,7 +271,10 @@ class FeedbackDailog extends StatelessWidget {
 
                                   if (rp.ratingCount >= 4) ...[
                                     Text(
-                                      'What can we improve?',
+                                      strings.home(
+                                        'feedback.improve_prompt',
+                                        fallback: 'What can we improve?',
+                                      ),
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.w500,
@@ -258,7 +282,11 @@ class FeedbackDailog extends StatelessWidget {
                                     ),
                                     Space.h4,
                                     Text(
-                                      'Would you like to rate us on Playstore?',
+                                      strings.home(
+                                        'feedback.playstore_prompt',
+                                        fallback:
+                                            'Would you like to rate us on Playstore?',
+                                      ),
                                     ),
                                   ],
                                   Space.h20,
@@ -268,8 +296,14 @@ class FeedbackDailog extends StatelessWidget {
                                     child: Center(
                                       child: Text(
                                         rp.ratingCount >= 4
-                                            ? 'Rate on Playstore'
-                                            : 'Submit',
+                                            ? strings.home(
+                                              'feedback.rate_playstore_cta',
+                                              fallback: 'Rate on Playstore',
+                                            )
+                                            : strings.home(
+                                              'feedback.submit_cta',
+                                              fallback: 'Submit',
+                                            ),
                                         style: TextStyle(color: Colors.white),
                                       ),
                                     ),
@@ -378,32 +412,33 @@ class BuildText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     switch (rating) {
       case 1:
         return Text(
-          'Very Bad!',
+          strings.home('feedback.rating_1_label', fallback: 'Very Bad!'),
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
         );
 
       case 2:
         return Text(
-          'Very Bad!',
+          strings.home('feedback.rating_2_label', fallback: 'Very Bad!'),
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
         );
 
       case 3:
         return Text(
-          'Average!',
+          strings.home('feedback.rating_3_label', fallback: 'Average!'),
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
         );
       case 4:
         return Text(
-          'Good!',
+          strings.home('feedback.rating_4_label', fallback: 'Good!'),
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
         );
       case 5:
         return Text(
-          'Love It!',
+          strings.home('feedback.rating_5_label', fallback: 'Love It!'),
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
         );
 

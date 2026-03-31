@@ -5,8 +5,10 @@ import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../common/widgets/collection_card_duration_badge.dart';
 import '../../../../common/widgets/views_widget.dart';
 import '../../../../core/api_constants.dart';
 import '../../../../core/app_formate.dart';
@@ -17,6 +19,7 @@ class BreathingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     return Consumer<HomeProvider>(
       builder: (context, provider, _) {
         if (provider.isLoadingBreathing) {
@@ -25,12 +28,15 @@ class BreathingWidget extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Breathing',
+                  strings.home('breathing.title', fallback: 'Breathing'),
                   style: AppTextTheme.titleTextTheme(context).titleMedium
                       ?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
                 ),
                 subtitle: Text(
-                  'Simple breathing meditations to relax young minds.',
+                  strings.home(
+                    'breathing.subtitle',
+                    fallback: 'Simple breathing meditations to relax young minds.',
+                  ),
                   style: AppTextTheme.bodyTextStyle(
                     context,
                   ).bodyMedium?.copyWith(fontSize: 12),
@@ -50,12 +56,15 @@ class BreathingWidget extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Breathing',
+                  strings.home('breathing.title', fallback: 'Breathing'),
                   style: AppTextTheme.titleTextTheme(context).titleMedium
                       ?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
                 ),
                 subtitle: Text(
-                  'Simple breathing meditations to relax young minds.',
+                  strings.home(
+                    'breathing.subtitle',
+                    fallback: 'Simple breathing meditations to relax young minds.',
+                  ),
                   style: AppTextTheme.bodyTextStyle(
                     context,
                   ).bodyMedium?.copyWith(fontSize: 12),
@@ -68,7 +77,10 @@ class BreathingWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'No items found',
+                        strings.home(
+                          'breathing.empty_title',
+                          fallback: 'No items found',
+                        ),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -76,7 +88,10 @@ class BreathingWidget extends StatelessWidget {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        'The list is currently empty.',
+                        strings.home(
+                          'breathing.empty_subtitle',
+                          fallback: 'The list is currently empty.',
+                        ),
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey,
@@ -95,12 +110,15 @@ class BreathingWidget extends StatelessWidget {
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: Text(
-                'Breathing',
+                strings.home('breathing.title', fallback: 'Breathing'),
                 style: AppTextTheme.titleTextTheme(context).titleMedium
                     ?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
               ),
               subtitle: Text(
-                'Simple breathing meditations to relax young minds.',
+                strings.home(
+                  'breathing.subtitle',
+                  fallback: 'Simple breathing meditations to relax young minds.',
+                ),
                 style: AppTextTheme.bodyTextStyle(
                   context,
                 ).bodyMedium?.copyWith(fontSize: 12),
@@ -165,21 +183,11 @@ class BreathingWidget extends StatelessWidget {
                         ),
                         if (breathingItem.estimatedDuration.inMinutes > 0)
                           Positioned(
-                            left: 8,
+                            right: 8,
                             bottom: 8,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withValues(alpha: 0.6),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                AppFormate.formatReadDuration(breathingItem.estimatedDuration),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                            child: CollectionCardDurationBadge(
+                              label: AppFormate.formatReadDuration(
+                                breathingItem.estimatedDuration,
                               ),
                             ),
                           ),

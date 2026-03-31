@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 
 import 'package:mindfulminis/common/widgets/custom_back_button.dart';
 import 'package:mindfulminis/core/app_colors.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/journal/models/gratiude_journal_model.dart';
 
@@ -277,6 +279,7 @@ class _ContentLayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     final countWord = BasicFunction.countWords(journal.emotionDescription);
 
     return SizedBox(
@@ -299,9 +302,9 @@ class _ContentLayer extends StatelessWidget {
                     const SizedBox(width: 48),
                   ],
                 ),
-                const Text(
-                  'Journal Details',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                Text(
+                  strings.journal('detail.title', fallback: 'Journal Details'),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
               ],
             ),
@@ -366,7 +369,7 @@ class _ContentLayer extends StatelessWidget {
                             const Text('•', style: TextStyle(fontSize: 12)),
                             const SizedBox(width: 8),
                             Text(
-                              '$countWord Words',
+                              '$countWord ${strings.journal('detail.words_suffix', fallback: 'Words')}',
                               style: const TextStyle(fontSize: 12),
                             ),
                           ],
@@ -374,7 +377,7 @@ class _ContentLayer extends StatelessWidget {
 
                         Space.h20,
                         Text(
-                          'Feeling ${journal.emotion} Today! 😊',
+                          '${strings.journal('detail.feeling_today_prefix', fallback: 'Feeling')} ${journal.emotion} ${strings.journal('detail.feeling_today_suffix', fallback: 'Today! 😊')}',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

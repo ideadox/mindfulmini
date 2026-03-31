@@ -66,16 +66,25 @@ class MyRoutineScreen extends StatelessWidget {
                         final routineModel = provider.routines[index];
                         final progress =
                             provider.routineProgress[routineModel.id];
+                        final isExpired =
+                            routineModel.dayNumberSinceStart() >=
+                            routineModel.durationDays;
                         return InkWell(
                           onTap: () async {
-                            await sl<GoRouter>().pushNamed(
-                              RoutineDetailScreen.routeName,
-                              pathParameters: {'routineId': routineModel.id},
-                              extra: routineModel,
-                            );
-                            // Refresh progress when returning from detail
                             if (context.mounted) {
-                              provider.refreshProgress();
+                              if (isExpired) {
+                                await sl<GoRouter>().pushNamed(
+                                  CreateRoutineScreen.routeName,
+                                );
+                                provider.getRoutines(notify: false);
+                              } else {
+                                await sl<GoRouter>().pushNamed(
+                                  RoutineDetailScreen.routeName,
+                                  pathParameters: {'routineId': routineModel.id},
+                                  extra: routineModel,
+                                );
+                                provider.refreshProgress();
+                              }
                             }
                           },
                           child: MyroutineBriefCard(

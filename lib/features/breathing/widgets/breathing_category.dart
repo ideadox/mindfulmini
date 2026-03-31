@@ -8,6 +8,7 @@ import 'package:mindfulminis/common/widgets/views_widget.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/core/api_constants.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:mindfulminis/features/breathing/providers/breathing_provider.dart';
 import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
@@ -18,6 +19,7 @@ class BreathingCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     return DefaultTabController(
       length: 3,
       child: Consumer<BreathingProvider>(
@@ -27,12 +29,16 @@ class BreathingCategory extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Category',
+                  strings.breathing('category.title', fallback: 'Category'),
                   style: AppTextTheme.titleTextTheme(context).titleMedium
                       ?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
                 ),
                 subtitle: Text(
-                  'Breathing routines to support kids throughout the day',
+                  strings.breathing(
+                    'category.subtitle',
+                    fallback:
+                        'Breathing routines to support kids throughout the day',
+                  ),
                   style: TextStyle(color: Colors.black45, fontSize: 12),
                 ),
               ),
@@ -69,9 +75,24 @@ class BreathingCategory extends StatelessWidget {
                     borderRadius: BorderRadius.circular(300),
                   ),
                   tabs: [
-                    Tab(text: 'Morning'),
-                    Tab(text: 'Afternoon'),
-                    Tab(text: 'Evening'),
+                    Tab(
+                      text: strings.breathing(
+                        'category.tab_morning',
+                        fallback: 'Morning',
+                      ),
+                    ),
+                    Tab(
+                      text: strings.breathing(
+                        'category.tab_afternoon',
+                        fallback: 'Afternoon',
+                      ),
+                    ),
+                    Tab(
+                      text: strings.breathing(
+                        'category.tab_evening',
+                        fallback: 'Evening',
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -89,6 +110,7 @@ class CategoryWiseList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     return Consumer<BreathingProvider>(
       builder: (context, provider, _) {
         if (provider.isLoading) {
@@ -105,7 +127,10 @@ class CategoryWiseList extends StatelessWidget {
             height: 268,
             child: Center(
               child: Text(
-                'No breathing exercises available',
+                strings.breathing(
+                  'category.empty_label',
+                  fallback: 'No breathing exercises available',
+                ),
                 style: TextStyle(color: Colors.black45),
               ),
             ),

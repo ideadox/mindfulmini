@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mindfulminis/common/widgets/collection_card_duration_badge.dart';
 import 'package:mindfulminis/common/widgets/views_widget.dart';
 import 'package:mindfulminis/core/app_formate.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
@@ -10,6 +11,7 @@ import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/yoga/data/yoga_data.dart';
 import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/api_constants.dart';
@@ -20,6 +22,7 @@ class YogaFlowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     return Consumer<HomeProvider>(
       builder: (context, provider, _) {
         if (provider.isLoadingYoga) {
@@ -28,12 +31,15 @@ class YogaFlowWidget extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Yoga Flow',
+                  strings.home('yoga_flow.title', fallback: 'Yoga Flow'),
                   style: AppTextTheme.titleTextTheme(context).titleMedium
                       ?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
                 ),
                 subtitle: Text(
-                  'Quick Yoga sequence for kids to slow down',
+                  strings.home(
+                    'yoga_flow.subtitle',
+                    fallback: 'Quick Yoga sequence for kids to slow down',
+                  ),
                   style: AppTextTheme.bodyTextStyle(
                     context,
                   ).bodyMedium?.copyWith(fontSize: 12),
@@ -53,12 +59,15 @@ class YogaFlowWidget extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Yoga Flow',
+                  strings.home('yoga_flow.title', fallback: 'Yoga Flow'),
                   style: AppTextTheme.titleTextTheme(context).titleMedium
                       ?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
                 ),
                 subtitle: Text(
-                  'Quick Yoga sequence for kids to slow down',
+                  strings.home(
+                    'yoga_flow.subtitle',
+                    fallback: 'Quick Yoga sequence for kids to slow down',
+                  ),
                   style: AppTextTheme.bodyTextStyle(
                     context,
                   ).bodyMedium?.copyWith(fontSize: 12),
@@ -71,7 +80,10 @@ class YogaFlowWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'No items found',
+                        strings.home(
+                          'yoga_flow.empty_title',
+                          fallback: 'No items found',
+                        ),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -79,7 +91,10 @@ class YogaFlowWidget extends StatelessWidget {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        'The list is currently empty.',
+                        strings.home(
+                          'yoga_flow.empty_subtitle',
+                          fallback: 'The list is currently empty.',
+                        ),
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey,
@@ -98,12 +113,15 @@ class YogaFlowWidget extends StatelessWidget {
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: Text(
-                'Yoga Flow',
+                strings.home('yoga_flow.title', fallback: 'Yoga Flow'),
                 style: AppTextTheme.titleTextTheme(context).titleMedium
                     ?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
               ),
               subtitle: Text(
-                'Quick Yoga sequence for kids to slow down',
+                strings.home(
+                  'yoga_flow.subtitle',
+                  fallback: 'Quick Yoga sequence for kids to slow down',
+                ),
                 style: AppTextTheme.bodyTextStyle(
                   context,
                 ).bodyMedium?.copyWith(fontSize: 12),
@@ -194,21 +212,11 @@ class YogaFlowWidget extends StatelessWidget {
                         ),
                         if (yogaItem.estimatedDuration.inMinutes > 0)
                           Positioned(
-                            left: 8,
+                            right: 8,
                             bottom: 8,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withValues(alpha: 0.6),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                AppFormate.formatReadDuration(yogaItem.estimatedDuration),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                            child: CollectionCardDurationBadge(
+                              label: AppFormate.formatReadDuration(
+                                yogaItem.estimatedDuration,
                               ),
                             ),
                           ),

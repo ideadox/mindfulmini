@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 
 import '../../../../gen/assets.gen.dart';
 
@@ -10,10 +12,11 @@ class DailyActivityWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     return Column(
       children: [
         Text(
-          'Daily Activities',
+          strings.home('daily_activity.title', fallback: 'Daily Activities'),
           style: AppTextTheme.titleTextTheme(
             context,
           ).headlineLarge?.copyWith(fontSize: 22, fontWeight: FontWeight.w600),
@@ -21,7 +24,10 @@ class DailyActivityWidget extends StatelessWidget {
         Space.h8,
         Text(
           textAlign: TextAlign.center,
-          'Pick a card to begin your mindfulness adventure!',
+          strings.home(
+            'daily_activity.subtitle',
+            fallback: 'Pick a card to begin your mindfulness adventure!',
+          ),
           style: AppTextTheme.bodyTextStyle(context).bodyMedium,
         ),
         Space.h20,

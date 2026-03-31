@@ -10,6 +10,22 @@ class ApiConstants {
   // New bucket in ap-south-1 (Mumbai) - with payloadcms folder
   static String mediaBaseUrl =
       'https://mm-lite-store.s3.ap-south-1.amazonaws.com/payloadcms/';
+  static String mediaBucketRootUrl =
+      'https://mm-lite-store.s3.ap-south-1.amazonaws.com/';
+
+  /// Converts an upload key into a public S3 URL.
+  ///
+  /// Upload API currently returns keys like `uploads/yyyy/mm/dd/file.png`,
+  /// while CMS media typically lives under `payloadcms/`.
+  static String resolveUploadPublicUrl(String keyOrUrl) {
+    final value = keyOrUrl.trim();
+    if (value.isEmpty) return value;
+    if (value.startsWith('http://') || value.startsWith('https://')) {
+      return value;
+    }
+    final normalized = value.startsWith('/') ? value.substring(1) : value;
+    return '$mediaBucketRootUrl$normalized';
+  }
   //user
   static String createUserUrl = '$baseUrl/users';
   static String createProfileUrl = '$baseUrl/profiles';

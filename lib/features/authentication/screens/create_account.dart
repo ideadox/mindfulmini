@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 
 import '../../../common/widgets/common_text_form_field.dart';
 import '../../../core/injection/injection.dart';
+import '../../../core/services/remote_config_service.dart';
 
 class CreateAccount extends StatelessWidget {
   static String routeName = 'create-account';
@@ -20,6 +21,7 @@ class CreateAccount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     return ChangeNotifierProvider(
       create: (context) => CreateAccountProvoider(),
       child: GradientScaffold(
@@ -41,7 +43,10 @@ class CreateAccount extends StatelessWidget {
                     children: [
                       CustomBackButton(),
                       Text(
-                        'Create an account',
+                        strings.auth(
+                          'create_account_title',
+                          fallback: 'Create an account',
+                        ),
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontSize: 30,
                           fontWeight: FontWeight.w600,
@@ -52,7 +57,10 @@ class CreateAccount extends StatelessWidget {
                       CommonTextFormField(
                         controller: cap.nameController,
                         prefixIcon: SvgPicture.asset(Assets.icons.user),
-                        hintText: 'Enter Full Name',
+                        hintText: strings.auth(
+                          'create_account_name_hint',
+                          fallback: 'Enter Full Name',
+                        ),
                         keyboardType: TextInputType.name,
                         validator: (p0) {
                           if (p0!.isEmpty) {
@@ -66,7 +74,10 @@ class CreateAccount extends StatelessWidget {
                       CommonTextFormField(
                         controller: cap.emailController,
                         prefixIcon: SvgPicture.asset(Assets.icons.mail),
-                        hintText: 'Email Address',
+                        hintText: strings.auth(
+                          'create_account_email_hint',
+                          fallback: 'Email Address',
+                        ),
                         keyboardType: TextInputType.emailAddress,
                         validator: (p0) {
                           if (p0!.isEmpty) {
@@ -92,7 +103,10 @@ class CreateAccount extends StatelessWidget {
                                 : Assets.icons.invisbleEye,
                           ),
                         ),
-                        hintText: 'Create Password',
+                        hintText: strings.auth(
+                          'create_account_password_hint',
+                          fallback: 'Create Password',
+                        ),
                         keyboardType: TextInputType.visiblePassword,
                         validator: (p0) {
                           if (p0!.isEmpty) {
@@ -129,7 +143,10 @@ class CreateAccount extends StatelessWidget {
                               cap.loading
                                   ? CircularProgressIndicator()
                                   : Text(
-                                    'Create',
+                                    strings.auth(
+                                      'create_account_primary_cta',
+                                      fallback: 'Create',
+                                    ),
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -141,14 +158,24 @@ class CreateAccount extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Already have any account? "),
+                          Text(
+                            strings.auth(
+                              'create_account_login_prefix',
+                              fallback: 'Already have any account?',
+                            ),
+                          ),
                           TextButton(
                             onPressed: () {
                               sl<GoRouter>().pushReplacementNamed(
                                 Login.routeName,
                               );
                             },
-                            child: Text('Log In'),
+                            child: Text(
+                              strings.auth(
+                                'create_account_login_cta',
+                                fallback: 'Log In',
+                              ),
+                            ),
                           ),
                         ],
                       ),

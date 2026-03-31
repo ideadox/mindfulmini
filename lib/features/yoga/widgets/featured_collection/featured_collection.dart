@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:mindfulminis/features/yoga/data/yoga_data.dart';
 import 'package:mindfulminis/features/yoga/models/yoga_model.dart';
 import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
@@ -17,12 +18,13 @@ class FeaturedCollection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     return Column(
       children: [
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(
-            'Featured Flow',
+            strings.yoga('featured_collection.title', fallback: 'Featured Flow'),
             style: AppTextTheme.titleTextTheme(
               context,
             ).titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
@@ -80,7 +82,13 @@ class FeaturedCollection extends StatelessWidget {
                       ],
                     ),
 
-                    Text('6 Poses', style: TextStyle(color: Colors.black45)),
+                    Text(
+                      strings.yoga(
+                        'featured_collection.poses_suffix',
+                        fallback: '6 Poses',
+                      ),
+                      style: TextStyle(color: Colors.black45),
+                    ),
                   ],
                 ),
               );

@@ -4,6 +4,8 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:mindfulminis/common/widgets/custom_gradient_text.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:mindfulminis/features/routine/models/routine_model.dart';
 import 'package:mindfulminis/features/routine/widgets/five_step_progressbar.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
@@ -23,6 +25,7 @@ class MyroutineBriefCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     final daysSinceStart = routineModel.dayNumberSinceStart();
 
     // Use activity-based progress when available, otherwise fall back to
@@ -36,6 +39,33 @@ class MyroutineBriefCard extends StatelessWidget {
           totalDays > 0
               ? ((daysSinceStart / totalDays) * 100).clamp(0, 100).toDouble()
               : 0.0;
+    }
+    final isExpired = daysSinceStart >= routineModel.durationDays;
+    final isFirstDay = daysSinceStart == 0;
+    final String ctaText;
+    if (isExpired) {
+      ctaText = strings.routine(
+        'my_routine_brief.cta_extend',
+        fallback: 'Extend',
+      );
+    } else if (percentComplete == 0) {
+      ctaText =
+          isFirstDay
+              ? strings.routine(
+                'my_routine_brief.cta_get_started',
+                fallback: 'Get Started',
+              )
+              : strings.routine(
+                'my_routine_brief.cta_start',
+                fallback: 'Start',
+              );
+    } else if (percentComplete < 100) {
+      ctaText = strings.routine(
+        'my_routine_brief.cta_resume',
+        fallback: 'Resume',
+      );
+    } else {
+      ctaText = strings.routine('my_routine_brief.cta_start', fallback: 'Start');
     }
 
     return Container(
@@ -83,7 +113,10 @@ class MyroutineBriefCard extends StatelessWidget {
                       Text(
                         routineModel.timeOfDay.isNotEmpty
                             ? '${routineModel.timeOfDay[0].toUpperCase()}${routineModel.timeOfDay.substring(1)}'
-                            : 'Routine',
+                            : strings.routine(
+                              'my_routine_brief.fallback_title',
+                              fallback: 'Routine',
+                            ),
                       ),
                     ],
                   ),
@@ -96,7 +129,7 @@ class MyroutineBriefCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${routineModel.durationDays}-Days',
+                              '${routineModel.durationDays}${strings.routine('my_routine_brief.days_suffix', fallback: '-Days')}',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
@@ -123,7 +156,12 @@ class MyroutineBriefCard extends StatelessWidget {
                                                 .toString(),
                                       ),
                                       Space.w4,
-                                      const Text('Tasks'),
+                                      Text(
+                                        strings.routine(
+                                          'my_routine_brief.tasks_label',
+                                          fallback: 'Tasks',
+                                        ),
+                                      ),
                                       Space.w4,
                                       const SizedBox(
                                         height: 18,
@@ -138,16 +176,29 @@ class MyroutineBriefCard extends StatelessWidget {
                                                 .toString(),
                                       ),
                                       Space.w4,
-                                      const Text('Min'),
+                                      Text(
+                                        strings.routine(
+                                          'my_routine_brief.minutes_label',
+                                          fallback: 'Min',
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
                                 Space.w8,
                                 Text(
-                                  "Day $daysSinceStart",
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  isExpired
+                                      ? 'Expired'
+                                      : '${strings.routine('my_routine_brief.day_prefix', fallback: 'Day')} $daysSinceStart',
+                                  style:
+                                      isExpired
+                                          ? TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.red.shade700,
+                                          )
+                                          : const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                 ),
                               ],
                             ),
@@ -170,8 +221,8 @@ class MyroutineBriefCard extends StatelessWidget {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(30),
                             ),
-                            child: const Text(
-                              'Get Started',
+                            child: Text(
+                              ctaText,
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,

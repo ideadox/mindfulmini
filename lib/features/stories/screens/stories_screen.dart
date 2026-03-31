@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mindfulminis/common/screens/collection_discover_screen.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 
 class StoriesScreen extends StatelessWidget {
@@ -10,11 +12,14 @@ class StoriesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     return CollectionDiscoverScreen(
       collectionSlug: 'stories',
-      title: 'Stories',
-      subtitle:
-          'Spark imagination, curiosity, and emotional learning through tales.',
+      title: strings.stories('screen.title', fallback: 'Stories'),
+      subtitle: strings.stories(
+        'screen.subtitle',
+        fallback: 'Spark imagination, curiosity, and emotional learning through tales.',
+      ),
       headerImage: Assets.images.storyTopBackground.path,
     );
   }

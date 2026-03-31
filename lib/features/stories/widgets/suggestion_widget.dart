@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
 
@@ -13,18 +14,22 @@ class SuggestionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     return Column(
       children: [
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: Text(
-            'Suggested For You',
+            strings.stories('suggestion.title', fallback: 'Suggested For You'),
             style: AppTextTheme.titleTextTheme(
               context,
             ).titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
           ),
           subtitle: Text(
-            'Short mindful stories to calm and inspire kids',
+            strings.stories(
+              'suggestion.subtitle',
+              fallback: 'Short mindful stories to calm and inspire kids',
+            ),
             style: TextStyle(color: Colors.black45, fontSize: 12),
           ),
         ),

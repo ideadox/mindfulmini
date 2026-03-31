@@ -8,6 +8,7 @@ import 'package:mindfulminis/features/forgot_password/screens/forgot_password.da
 import 'package:mindfulminis/features/authentication/screens/create_account.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/widgets/common_text_form_field.dart';
@@ -21,6 +22,14 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final remoteConfig = sl<RemoteConfigService>();
+    final strings = remoteConfig.strings;
+    final flags = remoteConfig.flags;
+    final showForgotPassword = flags.auth(
+      'enable_forgot_password',
+      fallback: true,
+    );
+
     return ChangeNotifierProvider(
       create: (context) => LoginProvider(),
       child: GradientScaffold(
@@ -41,14 +50,17 @@ class Login extends StatelessWidget {
                     children: [
                       CustomBackButton(),
                       Text(
-                        'Let’s Log In',
+                        strings.auth('login_title', fallback: 'Let\'s Log In'),
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontSize: 30,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       Text(
-                        'Welcome Back,You have been missed.',
+                        strings.auth(
+                          'login_subtitle',
+                          fallback: 'Welcome Back,You have been missed.',
+                        ),
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: AppColors.grey45,
                         ),
@@ -58,7 +70,10 @@ class Login extends StatelessWidget {
                       CommonTextFormField(
                         controller: cap.emailController,
                         prefixIcon: SvgPicture.asset(Assets.icons.mail),
-                        hintText: 'Email Address',
+                        hintText: strings.auth(
+                          'login_email_hint',
+                          fallback: 'Email Address',
+                        ),
                         keyboardType: TextInputType.emailAddress,
                         validator: (p0) {
                           if (p0!.isEmpty) {
@@ -83,7 +98,10 @@ class Login extends StatelessWidget {
                                 : Assets.icons.invisbleEye,
                           ),
                         ),
-                        hintText: 'Enter Password',
+                        hintText: strings.auth(
+                          'login_password_hint',
+                          fallback: 'Enter Password',
+                        ),
                         keyboardType: TextInputType.visiblePassword,
                         validator: (p0) {
                           if (p0!.isEmpty) {
@@ -108,19 +126,23 @@ class Login extends StatelessWidget {
                         ),
                       SizedBox(height: 30),
 
-                      Center(
-                        child: InkWell(
-                          onTap: () {
-                            sl<GoRouter>().pushNamed(ForgotPassword.routeName);
-                          },
-                          child: Text(
-                            'Forgot Password ',
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
+                      if (showForgotPassword)
+                        Center(
+                          child: InkWell(
+                            onTap: () {
+                              sl<GoRouter>().pushNamed(ForgotPassword.routeName);
+                            },
+                            child: Text(
+                              strings.auth(
+                                'login_forgot_password',
+                                fallback: 'Forgot Password',
+                              ),
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
                           ),
                         ),
-                      ),
                       Spacer(),
 
                       GradientButton(
@@ -141,7 +163,7 @@ class Login extends StatelessWidget {
                               cap.isLoading
                                   ? CircularProgressIndicator()
                                   : Text(
-                                    'Go',
+                                    strings.auth('login_primary_cta', fallback: 'Go'),
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -153,14 +175,24 @@ class Login extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Don’t have any account? "),
+                          Text(
+                            strings.auth(
+                              'login_register_prefix',
+                              fallback: "Don't have any account?",
+                            ),
+                          ),
                           TextButton(
                             onPressed: () {
                               sl<GoRouter>().pushReplacementNamed(
                                 CreateAccount.routeName,
                               );
                             },
-                            child: Text('Register Now'),
+                            child: Text(
+                              strings.auth(
+                                'login_register_cta',
+                                fallback: 'Register Now',
+                              ),
+                            ),
                           ),
                         ],
                       ),

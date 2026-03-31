@@ -8,6 +8,7 @@ import 'package:mindfulminis/common/models/cms_model.dart';
 import 'package:mindfulminis/common/models/series_model.dart';
 import 'package:mindfulminis/common/providers/collection_discover_provider.dart';
 import 'package:mindfulminis/common/screens/series_list_screen.dart';
+import 'package:mindfulminis/common/widgets/collection_card_duration_badge.dart';
 import 'package:mindfulminis/common/widgets/custom_back_button.dart';
 import 'package:mindfulminis/common/widgets/views_widget.dart';
 import 'package:mindfulminis/core/api_constants.dart';
@@ -384,29 +385,17 @@ class _CollectionDiscoverScreenState extends State<CollectionDiscoverScreen> {
                   height: 24,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.green.shade600,
+                    color: AppColors.primary,
                   ),
                   child: const Icon(Icons.check, color: Colors.white, size: 14),
                 ),
               ),
             if (item.estimatedDuration.inMinutes > 0)
               Positioned(
-                left: 8,
+                right: 8,
                 bottom: 8,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.6),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    AppFormate.formatReadDuration(item.estimatedDuration),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                child: CollectionCardDurationBadge(
+                  label: AppFormate.formatReadDuration(item.estimatedDuration),
                 ),
               ),
           ],
@@ -452,7 +441,7 @@ class _CollectionDiscoverScreenState extends State<CollectionDiscoverScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: Colors.green.shade600,
+        color: AppColors.primary,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(

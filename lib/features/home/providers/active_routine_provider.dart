@@ -31,12 +31,19 @@ class ActiveRoutineProvider with ChangeNotifier {
     if (!_disposed) notifyListeners();
   }
 
-  Future<void> getRoutines(String profileId, {bool notify = true}) async {
-    if (_routinesFetched || loading) return;
+  Future<void> getRoutines(
+    String profileId, {
+    bool notify = true,
+    bool force = false,
+  }) async {
+    if (!force && (_routinesFetched || loading)) return;
     try {
       loading = true;
       error = null;
       if (notify) _safeNotify();
+      if (force) {
+        routineProgress = {};
+      }
       routines = await _routineData.getRoutines(profileId);
       _routinesFetched = true;
       await _fetchTodayProgress();

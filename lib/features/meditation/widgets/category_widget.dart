@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:mindfulminis/features/meditation/providers/meditation_provider.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +16,7 @@ class CategoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     return DefaultTabController(
       length: 3,
       child: Consumer<MeditationProvider>(
@@ -23,12 +26,16 @@ class CategoryWidget extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Category',
+                  strings.meditation('category.title', fallback: 'Category'),
                   style: AppTextTheme.titleTextTheme(context).titleMedium
                       ?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
                 ),
                 subtitle: Text(
-                  'Mindful moments throughout the day for kids to reset and recharge',
+                  strings.meditation(
+                    'category.subtitle',
+                    fallback:
+                        'Mindful moments throughout the day for kids to reset and recharge',
+                  ),
                   style: TextStyle(color: Colors.black45, fontSize: 12),
                 ),
               ),
@@ -66,9 +73,24 @@ class CategoryWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(300),
                   ),
                   tabs: [
-                    Tab(text: 'Morning'),
-                    Tab(text: 'Afternoon'),
-                    Tab(text: 'Evening'),
+                    Tab(
+                      text: strings.meditation(
+                        'category.tab_morning',
+                        fallback: 'Morning',
+                      ),
+                    ),
+                    Tab(
+                      text: strings.meditation(
+                        'category.tab_afternoon',
+                        fallback: 'Afternoon',
+                      ),
+                    ),
+                    Tab(
+                      text: strings.meditation(
+                        'category.tab_evening',
+                        fallback: 'Evening',
+                      ),
+                    ),
                   ],
                 ),
               ),

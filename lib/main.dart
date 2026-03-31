@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:mindfulminis/core/services/auth_service.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'firebase_options.dart';
 import 'package:mindfulminis/mindfulminis_app.dart';
 
@@ -37,6 +38,9 @@ void main() async {
   // Setup dependency injection
   await setupInjection();
   await sl.allReady();
+
+  // Initialize remote config with default/fetched values.
+  await sl<RemoteConfigService>().initialize();
 
   // Initialize auth service (lightweight check + auth-state listener)
   await sl<AuthService>().initialize();

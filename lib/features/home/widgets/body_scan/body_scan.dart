@@ -5,8 +5,10 @@ import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
 import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../common/widgets/collection_card_duration_badge.dart';
 import '../../../../common/widgets/views_widget.dart';
 import '../../../../core/api_constants.dart';
 import '../../../../core/app_formate.dart';
@@ -17,6 +19,7 @@ class BodyScanWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     return Consumer<HomeProvider>(
       builder: (context, provider, _) {
         if (provider.isLoadingBodyScan) {
@@ -25,12 +28,15 @@ class BodyScanWidget extends StatelessWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Mini Body Scan',
+                  strings.home('body_scan.title', fallback: 'Mini Body Scan'),
                   style: AppTextTheme.titleTextTheme(context).titleMedium
                       ?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
                 ),
                 subtitle: Text(
-                  'Guided body scans to help kids relax and feel calm.',
+                  strings.home(
+                    'body_scan.subtitle',
+                    fallback: 'Guided body scans to help kids relax and feel calm.',
+                  ),
                   style: AppTextTheme.bodyTextStyle(
                     context,
                   ).bodyMedium?.copyWith(fontSize: 12),
@@ -53,12 +59,15 @@ class BodyScanWidget extends StatelessWidget {
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: Text(
-                'Mini Body Scan',
+                strings.home('body_scan.title', fallback: 'Mini Body Scan'),
                 style: AppTextTheme.titleTextTheme(context).titleMedium
                     ?.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
               ),
               subtitle: Text(
-                'Guided body scans to help kids relax and feel calm.',
+                strings.home(
+                  'body_scan.subtitle',
+                  fallback: 'Guided body scans to help kids relax and feel calm.',
+                ),
                 style: AppTextTheme.bodyTextStyle(
                   context,
                 ).bodyMedium?.copyWith(fontSize: 12),
@@ -123,21 +132,11 @@ class BodyScanWidget extends StatelessWidget {
                         ),
                         if (item.estimatedDuration.inMinutes > 0)
                           Positioned(
-                            left: 8,
+                            right: 8,
                             bottom: 8,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withValues(alpha: 0.6),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                AppFormate.formatReadDuration(item.estimatedDuration),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                            child: CollectionCardDurationBadge(
+                              label: AppFormate.formatReadDuration(
+                                item.estimatedDuration,
                               ),
                             ),
                           ),

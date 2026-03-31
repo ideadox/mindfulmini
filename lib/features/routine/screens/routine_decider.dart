@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
 import 'package:provider/provider.dart';
 
 import '../../profile/providers/profile_provider.dart';
@@ -11,6 +13,7 @@ class RoutineDecider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     return Consumer<ProfileProvider>(
       builder: (context, profileProvider, _) {
         if (profileProvider.loading || profileProvider.userProfile == null) {
@@ -39,13 +42,18 @@ class RoutineDecider extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'Failed to load routines',
+                        strings.routine(
+                          'decider.load_error_title',
+                          fallback: 'Failed to load routines',
+                        ),
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 8),
                       TextButton(
                         onPressed: () => p.getRoutines(),
-                        child: const Text('Retry'),
+                        child: Text(
+                          strings.routine('decider.retry_cta', fallback: 'Retry'),
+                        ),
                       ),
                     ],
                   ),

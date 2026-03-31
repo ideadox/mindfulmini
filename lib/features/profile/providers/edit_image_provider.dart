@@ -44,7 +44,7 @@ class EditImageProvider with ChangeNotifier {
       }
       await _profileData.editImage(
         profileId,
-        '${ApiConstants.mediaBaseUrl}$urlKey',
+        ApiConstants.resolveUploadPublicUrl(urlKey),
       );
       _navigationService.pop(true);
     } catch (e) {

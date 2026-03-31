@@ -6,11 +6,14 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:mindfulminis/common/widgets/gradient_button.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/app_text_theme.dart';
+import 'package:mindfulminis/core/services/remote_config_service.dart';
+import 'package:mindfulminis/features/profile/providers/profile_provider.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../routine/models/routine_model.dart';
+import '../../../routine/screens/create_routine_screen.dart';
 import '../../../routine/screens/routine_detail_screen.dart';
 import '../../../routine/widgets/five_step_progressbar.dart';
 import '../../providers/active_routine_provider.dart';
@@ -54,6 +57,7 @@ class _MyroutineSliderState extends State<MyroutineSlider> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = sl<RemoteConfigService>().strings;
     // Use watch so the slider rebuilds when ActiveRoutineProvider notifies
     final provider = context.watch<ActiveRoutineProvider>();
     final routines = provider.routines;
@@ -91,6 +95,36 @@ class _MyroutineSliderState extends State<MyroutineSlider> {
                             .clamp(0, 100)
                             .round()
                         : 0);
+                final isExpired = i.dayNumberSinceStart() >= i.durationDays;
+                final isFirstDay = i.dayNumberSinceStart() == 0;
+                final String ctaLabel;
+                if (isExpired) {
+                  ctaLabel = strings.home(
+                    'my_routine.extend_cta',
+                    fallback: 'Extend',
+                  );
+                } else if (pct == 0) {
+                  ctaLabel =
+                      isFirstDay
+                          ? strings.home(
+                            'my_routine.get_started_cta',
+                            fallback: 'Get Started',
+                          )
+                          : strings.home(
+                            'my_routine.start_cta',
+                            fallback: 'Start',
+                          );
+                } else if (pct < 100) {
+                  ctaLabel = strings.home(
+                    'my_routine.resume_cta',
+                    fallback: 'Resume',
+                  );
+                } else {
+                  ctaLabel = strings.home(
+                    'my_routine.start_cta',
+                    fallback: 'Start',
+                  );
+                }
 
                 return Builder(
                   builder: (BuildContext context) {
@@ -123,6 +157,8 @@ class _MyroutineSliderState extends State<MyroutineSlider> {
                           '${i.timeOfDay[0].toUpperCase()}${i.timeOfDay.substring(1)} Routine',
                       leftTask: i.goals.length,
                       percentComplete: pct,
+                      ctaLabel: ctaLabel,
+                      isExpired: isExpired,
                     );
                   },
                 );
@@ -152,6 +188,8 @@ class MyRoutineCard extends StatelessWidget {
   final String icon, title;
   final int leftTask;
   final int percentComplete;
+  final String ctaLabel;
+  final bool isExpired;
   final String id;
   final RoutineModel? routineModel;
 
@@ -162,6 +200,8 @@ class MyRoutineCard extends StatelessWidget {
     required this.title,
     required this.leftTask,
     required this.percentComplete,
+    required this.ctaLabel,
+    required this.isExpired,
     required this.id,
     this.routineModel,
   });
@@ -210,6 +250,31 @@ class MyRoutineCard extends StatelessWidget {
                     child: Column(
                       children: [
                         Row(children: [Text(title)]),
+                        if (isExpired)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.red.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  'Expired',
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         Space.h4,
 
                         Expanded(
@@ -239,21 +304,38 @@ class MyRoutineCard extends StatelessWidget {
                           height: 42,
                           child: GradientButton(
                             onPressed: () async {
-                              await sl<GoRouter>().pushNamed(
-                                RoutineDetailScreen.routeName,
-                                pathParameters: {'routineId': id},
-                                extra: routineModel,
-                              );
-                              // Refresh progress when returning
+                              if (isExpired) {
+                                await sl<GoRouter>().pushNamed(
+                                  CreateRoutineScreen.routeName,
+                                );
+                              } else {
+                                await sl<GoRouter>().pushNamed(
+                                  RoutineDetailScreen.routeName,
+                                  pathParameters: {'routineId': id},
+                                  extra: routineModel,
+                                );
+                              }
                               if (context.mounted) {
-                                context
-                                    .read<ActiveRoutineProvider>()
-                                    .refreshProgress();
+                                final profile =
+                                    context.read<ProfileProvider>().userProfile;
+                                if (isExpired && profile != null) {
+                                  context
+                                      .read<ActiveRoutineProvider>()
+                                      .getRoutines(
+                                        profile.id,
+                                        notify: false,
+                                        force: true,
+                                      );
+                                } else {
+                                  context
+                                      .read<ActiveRoutineProvider>()
+                                      .refreshProgress();
+                                }
                               }
                             },
                             child: Center(
                               child: Text(
-                                percentComplete > 0 ? 'Start' : 'Get Started',
+                                ctaLabel,
                                 style: AppTextTheme.mainButtonTextStyle(
                                   context,
                                 ).titleLarge?.copyWith(
