@@ -463,6 +463,14 @@ class $AssetsImagesGen {
   /// File path: assets/images/angry_feel.svg
   String get angryFeel => 'assets/images/angry_feel.svg';
 
+  /// File path: assets/images/app_icon.png
+  AssetGenImage get appIcon =>
+      const AssetGenImage('assets/images/app_icon.png');
+
+  /// File path: assets/images/app_logo.png
+  AssetGenImage get appLogo =>
+      const AssetGenImage('assets/images/app_logo.png');
+
   /// File path: assets/images/breadthing_avatar.png
   AssetGenImage get breadthingAvatar =>
       const AssetGenImage('assets/images/breadthing_avatar.png');
@@ -538,6 +546,10 @@ class $AssetsImagesGen {
   AssetGenImage get miniBodyScanRoutine =>
       const AssetGenImage('assets/images/mini_body_scan_routine.png');
 
+  /// File path: assets/images/minibodyscan_top_background.png
+  AssetGenImage get minibodyscanTopBackground =>
+      const AssetGenImage('assets/images/minibodyscan_top_background.png');
+
   /// File path: assets/images/myfav_img.png
   AssetGenImage get myfavImg =>
       const AssetGenImage('assets/images/myfav_img.png');
@@ -569,6 +581,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/phoneverficationdailog.svg
   String get phoneverficationdailog =>
       'assets/images/phoneverficationdailog.svg';
+
+  /// Directory path: assets/images/placeholders
+  $AssetsImagesPlaceholdersGen get placeholders =>
+      const $AssetsImagesPlaceholdersGen();
 
   /// File path: assets/images/rainbow.svg
   String get rainbow => 'assets/images/rainbow.svg';
@@ -659,6 +675,8 @@ class $AssetsImagesGen {
     allset,
     amazingFeel,
     angryFeel,
+    appIcon,
+    appLogo,
     breadthingAvatar,
     breathRoutine,
     breathingTopHeader,
@@ -679,6 +697,7 @@ class $AssetsImagesGen {
     meditationAvatar,
     meditationRoutine,
     miniBodyScanRoutine,
+    minibodyscanTopBackground,
     myfavImg,
     offlineBackground,
     offlineImg,
@@ -710,6 +729,16 @@ class $AssetsImagesGen {
     yogaRoutine,
     yogaTopBackgroud,
   ];
+}
+
+class $AssetsLottiesGen {
+  const $AssetsLottiesGen();
+
+  /// File path: assets/lotties/visual_loading.json
+  String get visualLoading => 'assets/lotties/visual_loading.json';
+
+  /// List of all assets
+  List<String> get values => [visualLoading];
 }
 
 class $AssetsProfileIconsGen {
@@ -1227,6 +1256,43 @@ class $AssetsVectorsGen {
   ];
 }
 
+class $AssetsImagesPlaceholdersGen {
+  const $AssetsImagesPlaceholdersGen();
+
+  /// File path: assets/images/placeholders/explore-bodyscan-banner.png
+  AssetGenImage get exploreBodyscanBanner => const AssetGenImage(
+    'assets/images/placeholders/explore-bodyscan-banner.png',
+  );
+
+  /// File path: assets/images/placeholders/explore-breathing-banner.png
+  AssetGenImage get exploreBreathingBanner => const AssetGenImage(
+    'assets/images/placeholders/explore-breathing-banner.png',
+  );
+
+  /// File path: assets/images/placeholders/explore-meditation-banner.png
+  AssetGenImage get exploreMeditationBanner => const AssetGenImage(
+    'assets/images/placeholders/explore-meditation-banner.png',
+  );
+
+  /// File path: assets/images/placeholders/explore-stories-banner.png
+  AssetGenImage get exploreStoriesBanner => const AssetGenImage(
+    'assets/images/placeholders/explore-stories-banner.png',
+  );
+
+  /// File path: assets/images/placeholders/explore-yoga-banner.png
+  AssetGenImage get exploreYogaBanner =>
+      const AssetGenImage('assets/images/placeholders/explore-yoga-banner.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [
+    exploreBodyscanBanner,
+    exploreBreathingBanner,
+    exploreMeditationBanner,
+    exploreStoriesBanner,
+    exploreYogaBanner,
+  ];
+}
+
 class Assets {
   const Assets._();
 
@@ -1234,6 +1300,7 @@ class Assets {
   static const $AssetsFontsGen fonts = $AssetsFontsGen();
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
+  static const $AssetsLottiesGen lotties = $AssetsLottiesGen();
   static const $AssetsProfileIconsGen profileIcons = $AssetsProfileIconsGen();
   static const $AssetsTabiconsGen tabicons = $AssetsTabiconsGen();
   static const $AssetsVectorsGen vectors = $AssetsVectorsGen();

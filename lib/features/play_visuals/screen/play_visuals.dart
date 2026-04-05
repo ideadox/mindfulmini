@@ -17,7 +17,6 @@ import 'package:mindfulminis/features/play_visuals/widgets/play_visual_stack.dar
 import 'package:mindfulminis/features/play_visuals/widgets/top_bar.dart';
 import 'package:mindfulminis/features/profile/providers/profile_provider.dart';
 import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
-import 'package:mindfulminis/features/yoga/providers/yoga_play_visuals_provider.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
@@ -44,7 +43,7 @@ class _PlayVisualsState extends State<PlayVisuals>
     with TickerProviderStateMixin {
   bool startAnimation = false;
   bool _hasMarkedViewed = false;
-  bool _showLottie = false;
+  bool _showBackground = false;
 
   bool _isDarkBackground = false;
   String? _lastAnalyzedUrl;
@@ -54,25 +53,32 @@ class _PlayVisualsState extends State<PlayVisuals>
       _isDarkBackground ? Colors.white : Colors.black;
   Color get _subtitleColor => _isDarkBackground
       ? Colors.white.withValues(alpha: 0.65)
-      : Colors.black.withValues(alpha: 0.5);
+      : Colors.black.withValues(alpha: 0.8);
   Color get _lyricColor =>
-      _isDarkBackground ? Colors.white.withValues(alpha: 0.9) : const Color(0xFF757575);
+      _isDarkBackground
+          ? Colors.white.withValues(alpha: 0.9)
+          : Colors.black.withValues(alpha: 0.8);
 
-  late final AnimationController _lottiController;
+  late final AnimationController _shimmerController;
   late final AnimationController _playPulseController;
   late final Animation<double> _playPulseAnimation;
+
+  bool get _isYoga => widget.yogaContentModel != null;
 
   String get _contentId =>
       widget.yogaContentModel?.id ?? widget.id ?? '';
 
   String get _effectiveCollection =>
-      widget.collection ??
-      (widget.yogaContentModel != null ? 'yoga' : '');
+      widget.collection ?? (_isYoga ? 'yoga' : '');
 
   @override
   void initState() {
     super.initState();
-    _lottiController = AnimationController(vsync: this);
+
+    _shimmerController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    )..repeat();
 
     _playPulseController = AnimationController(
       vsync: this,
@@ -84,7 +90,7 @@ class _PlayVisualsState extends State<PlayVisuals>
     );
 
     Future.delayed(const Duration(milliseconds: 300), () {
-      if (mounted) setState(() => _showLottie = true);
+      if (mounted) setState(() => _showBackground = true);
     });
 
     _checkFavoriteStatus();
@@ -123,7 +129,7 @@ class _PlayVisualsState extends State<PlayVisuals>
 
   @override
   void dispose() {
-    _lottiController.dispose();
+    _shimmerController.dispose();
     _playPulseController.dispose();
     super.dispose();
   }
@@ -254,26 +260,115 @@ class _PlayVisualsState extends State<PlayVisuals>
     }
   }
 
+  // ── Full-page shimmer matching the play_visuals layout ──
+
+  Widget _buildShimmer() {
+    final safeTop = MediaQuery.of(context).padding.top;
+    final safeBottom = MediaQuery.of(context).padding.bottom;
+
+    return AnimatedBuilder(
+      animation: _shimmerController,
+      builder: (context, _) {
+        final position = _shimmerController.value;
+        return ColoredBox(
+          color: Colors.white,
+          child: Stack(
+            children: [
+              // Top bar: back button + favourite
+              Positioned(
+                top: safeTop + 12,
+                left: 16,
+                right: 16,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _shimmerBox(position, 40, 40, isCircle: true),
+                    _shimmerBox(position, 40, 40, isCircle: true),
+                  ],
+                ),
+              ),
+
+              // Center image placeholder
+              Center(
+                child: _shimmerBox(position, 300, 430, borderRadius: 24),
+              ),
+
+              // Bottom section: title + play button
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: safeBottom + 10,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Title placeholder
+                    _shimmerBox(position, 180, 22),
+                    const SizedBox(height: 8),
+                    // Subtitle placeholder
+                    _shimmerBox(position, 240, 14),
+                    const SizedBox(height: 28),
+                    // Play button placeholder
+                    _shimmerBox(position, 64, 64, isCircle: true),
+                    const SizedBox(height: 8),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _shimmerBox(
+    double position,
+    double width,
+    double height, {
+    double borderRadius = 8,
+    bool isCircle = false,
+  }) {
+    return ShaderMask(
+      shaderCallback: (bounds) {
+        return LinearGradient(
+          begin: Alignment(position * 2 - 1.3, 0),
+          end: Alignment(position * 2 - 0.7, 0),
+          colors: [Colors.grey[200]!, Colors.grey[100]!, Colors.grey[200]!],
+        ).createShader(bounds);
+      },
+      child: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
+          borderRadius: isCircle ? null : BorderRadius.circular(borderRadius),
+        ),
+      ),
+    );
+  }
+
   // ── Build ──
 
   @override
   Widget build(BuildContext context) {
-    if (widget.yogaContentModel != null) {
-      return PopScope(
-        canPop: false,
-        onPopInvokedWithResult: (didPop, _) {
-          if (!didPop) sl<GoRouter>().pop(startAnimation);
-        },
-        child: ChangeNotifierProvider(
-          create: (_) => YogaPlayVisualsProvider(
-            yogaContent: widget.yogaContentModel!,
-          ),
-          child: Scaffold(
-            body: Consumer<YogaPlayVisualsProvider>(
-              builder: (context, yogaProvider, _) {
-                if (!yogaProvider.isInitialized) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) sl<GoRouter>().pop(startAnimation);
+      },
+      child: ChangeNotifierProvider(
+        create: (_) => _isYoga
+            ? CmsProvider.yoga(widget.yogaContentModel!)
+            : CmsProvider(widget.collection ?? '', widget.id ?? ''),
+        child: Scaffold(
+          body: Consumer<CmsProvider>(
+            builder: (context, p, _) {
+              if (p.isLoading) {
+                return _buildShimmer();
+              }
+
+              // Yoga content path
+              if (_isYoga) {
                 return _buildDisplay(
                   still: PlayVisualAsset.tryParseMap(
                     widget.yogaContentModel?.stillVisualMap,
@@ -281,22 +376,25 @@ class _PlayVisualsState extends State<PlayVisuals>
                   playing: PlayVisualAsset.tryParseMap(
                     widget.yogaContentModel?.playingVisualMap,
                   ),
-                  audioPlaying: yogaProvider.isPlaying,
+                  audioPlaying: p.isPlaying,
                   titleSection: _buildTitleBlock(
                     title: widget.yogaContentModel!.title,
                     subtitle:
                         widget.yogaContentModel!.contentDescription?['en'] ??
                             '',
                   ),
-                  activeContent: Consumer<YogaPlayVisualsProvider>(
+                  activeContent: Consumer<CmsProvider>(
                     builder: (context, provider, _) {
-                      return _YogaTextContent(
-                        provider: provider,
-                        textColor: _lyricColor,
+                      return LyricLineBuilder(
+                        yogaSegments: provider.yogaSegments,
+                        currentPosition: provider.currentPosition,
+                        totalDuration: provider.totalDuration,
+                        activeColor: _lyricColor,
+                        inactiveColor: _lyricColor,
                       );
                     },
                   ),
-                  progressSection: Consumer<YogaPlayVisualsProvider>(
+                  progressSection: Consumer<CmsProvider>(
                     builder: (context, provider, _) {
                       return AudioProgressBar(
                         currentPosition: provider.currentPosition,
@@ -310,7 +408,7 @@ class _PlayVisualsState extends State<PlayVisuals>
                       );
                     },
                   ),
-                  controlSection: Consumer<YogaPlayVisualsProvider>(
+                  controlSection: Consumer<CmsProvider>(
                     builder: (context, provider, _) {
                       return ListenableBuilder(
                         listenable: sl<LibraryProvider>(),
@@ -318,12 +416,14 @@ class _PlayVisualsState extends State<PlayVisuals>
                           return MediaControls(
                             isPlaying: provider.isPlaying,
                             sessionStarted: startAnimation,
+                            audioReady: provider.audioReady,
                             playPulseAnimation: _playPulseAnimation,
                             repeatAsset: Assets.icons.repeatIcon,
                             back10Asset: Assets.icons.back10,
                             forward10Asset: Assets.icons.forward10,
                             heartAsset: Assets.icons.heartButton,
-                            isFavorited: sl<LibraryProvider>().isFavorited(_contentId),
+                            isFavorited:
+                                sl<LibraryProvider>().isFavorited(_contentId),
                             onHeart: _handleToggleFavorite,
                             onPlayPause: () {
                               if (!startAnimation) _onFirstPlay();
@@ -337,26 +437,9 @@ class _PlayVisualsState extends State<PlayVisuals>
                     },
                   ),
                 );
-              },
-            ),
-          ),
-        ),
-      );
-    }
-
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) sl<GoRouter>().pop(startAnimation);
-      },
-      child: ChangeNotifierProvider(
-        create: (_) => CmsProvider(widget.collection ?? '', widget.id ?? ''),
-        child: Scaffold(
-          body: Consumer<CmsProvider>(
-            builder: (context, p, _) {
-              if (p.isLoading) {
-                return const Center(child: CircularProgressIndicator());
               }
+
+              // CMS content path
               if (p.cms == null) {
                 return const Center(child: Text('No data found'));
               }
@@ -374,12 +457,8 @@ class _PlayVisualsState extends State<PlayVisuals>
                       segments: p.segments,
                       currentPosition: provider.currentPosition,
                       totalDuration: provider.totalDuration,
-                      textStyle: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        height: 1.4,
-                        color: _lyricColor,
-                      ),
+                      activeColor: _lyricColor,
+                      inactiveColor: _lyricColor,
                     );
                   },
                 ),
@@ -405,12 +484,14 @@ class _PlayVisualsState extends State<PlayVisuals>
                         return MediaControls(
                           isPlaying: provider.isPlaying,
                           sessionStarted: startAnimation,
+                          audioReady: provider.audioReady,
                           playPulseAnimation: _playPulseAnimation,
                           repeatAsset: Assets.icons.repeatIcon,
                           back10Asset: Assets.icons.back10,
                           forward10Asset: Assets.icons.forward10,
                           heartAsset: Assets.icons.heartButton,
-                          isFavorited: sl<LibraryProvider>().isFavorited(_contentId),
+                          isFavorited:
+                              sl<LibraryProvider>().isFavorited(_contentId),
                           onHeart: _handleToggleFavorite,
                           onPlayPause: () {
                             if (!startAnimation) _onFirstPlay();
@@ -436,12 +517,14 @@ class _PlayVisualsState extends State<PlayVisuals>
   Widget _buildTitleBlock({required String title, required String subtitle}) {
     return Column(
       mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           title,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 22,
             fontWeight: FontWeight.w700,
             height: 1.25,
             color: _titleColor,
@@ -488,7 +571,7 @@ class _PlayVisualsState extends State<PlayVisuals>
       child: Stack(
         children: [
           // 1. Full-screen motion / still background
-          if (_showLottie)
+          if (_showBackground)
             Positioned.fill(
               child: PlayVisualStack(
                 still: still,
@@ -526,7 +609,7 @@ class _PlayVisualsState extends State<PlayVisuals>
                 opacity: startAnimation ? 1 : 0,
                 duration: const Duration(milliseconds: 400),
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 120),
+                  constraints: const BoxConstraints(maxHeight: 300),
                   child: activeContent,
                 ),
               ),
@@ -619,90 +702,3 @@ class _PlayVisualsState extends State<PlayVisuals>
   }
 }
 
-// ── Yoga text content ──
-
-class _YogaTextContent extends StatelessWidget {
-  const _YogaTextContent({
-    required this.provider,
-    required this.textColor,
-  });
-
-  final YogaPlayVisualsProvider provider;
-  final Color textColor;
-
-  @override
-  Widget build(BuildContext context) {
-    if (provider.segments.isEmpty) return const SizedBox.shrink();
-
-    final audioTotalMs = provider.totalDuration.inMilliseconds;
-    if (audioTotalMs <= 0) return const SizedBox.shrink();
-
-    final weights = provider.segments
-        .map((s) => s.charCount.clamp(5, 99999).toDouble())
-        .toList();
-    final totalWeight = weights.fold<double>(0, (a, b) => a + b);
-
-    final fraction =
-        (provider.currentPosition.inMilliseconds / audioTotalMs)
-            .clamp(0.0, 1.0);
-    double cumulative = 0;
-    int segmentIndex = provider.segments.length - 1;
-    for (int i = 0; i < provider.segments.length; i++) {
-      cumulative += weights[i];
-      if (fraction <= cumulative / totalWeight) {
-        segmentIndex = i;
-        break;
-      }
-    }
-
-    if (segmentIndex >= provider.segments.length) {
-      return const Text(
-        'Complete!',
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w700,
-          color: Color(0xFF4CAF50),
-        ),
-      );
-    }
-
-    final segment = provider.segments[segmentIndex];
-
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 400),
-      transitionBuilder: (child, animation) {
-        return FadeTransition(
-          opacity: animation,
-          child: SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0, 0.06),
-              end: Offset.zero,
-            ).animate(
-              CurvedAnimation(parent: animation, curve: Curves.easeOut),
-            ),
-            child: child,
-          ),
-        );
-      },
-      child: RichText(
-        key: ValueKey(segmentIndex),
-        textAlign: TextAlign.left,
-        maxLines: 3,
-        overflow: TextOverflow.ellipsis,
-        text: TextSpan(
-          children: segment.textSpans.map((span) {
-            return TextSpan(
-              text: span.text,
-              style: span.textStyle.copyWith(
-                fontSize: 24,
-                color: textColor,
-                fontWeight: FontWeight.w600,
-                height: 1.5,
-              ),
-            );
-          }).toList(),
-        ),
-      ),
-    );
-  }
-}

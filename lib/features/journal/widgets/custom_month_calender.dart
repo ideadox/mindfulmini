@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/journal/providers/journal_provider.dart';
-import 'package:mindfulminis/features/journal/screens/journal_detail1_screen.dart';
+import 'package:mindfulminis/features/journal/screens/journal_detail_screen.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:mindfulminis/core/utils/basic_function.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -27,8 +27,33 @@ class _CustomMonthCalenderState extends State<CustomMonthCalender> {
     return a.day == b.day && a.month == b.month && a.year == b.year;
   }
 
+  static String _dayKey(DateTime d) =>
+      '${d.year}-${d.month}-${d.day}';
+
+  GratiudeJournalModel _journalForDay(
+    DateTime day,
+    Map<String, GratiudeJournalModel> byDay,
+  ) {
+    return byDay[_dayKey(day)] ??
+        GratiudeJournalModel(
+          id: '',
+          profileId: '',
+          emotion: '',
+          emotionDescription: '',
+          accomplishments: [],
+          date: day,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final byDay = <String, GratiudeJournalModel>{};
+    for (final j in widget.provider.gratitudeJournals) {
+      byDay[_dayKey(j.date)] = j;
+    }
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade400),
@@ -56,25 +81,7 @@ class _CustomMonthCalenderState extends State<CustomMonthCalender> {
               onTap: (calendarTapDetails) {
                 final tappedDate = calendarTapDetails.date;
                 if (tappedDate == null) return;
-                final journal = widget.provider.gratitudeJournals.lastWhere(
-                  (element) {
-                    return element.date.day == tappedDate.day &&
-                        element.date.month == tappedDate.month &&
-                        element.date.year == tappedDate.year;
-                  },
-                  orElse:
-                      () => GratiudeJournalModel(
-                        id: '',
-                        profileId: '',
-
-                        emotion: '',
-                        emotionDescription: '',
-                        accomplishments: [],
-                        date: tappedDate,
-                        createdAt: DateTime.now(),
-                        updatedAt: DateTime.now(),
-                      ),
-                );
+                final journal = _journalForDay(tappedDate, byDay);
                 if (journal.id.isEmpty) {
                   setState(() {
                     _tooltipDate =
@@ -92,7 +99,7 @@ class _CustomMonthCalenderState extends State<CustomMonthCalender> {
                   context,
                   MaterialPageRoute(
                     builder: (context) {
-                      return JournalDetail1Screen(
+                      return JournalDetailScreen(
                         gratitudeJournal: journal,
                         gratitudeId: journal.id,
                         journalProvider: widget.provider,
@@ -136,25 +143,7 @@ class _CustomMonthCalenderState extends State<CustomMonthCalender> {
                 final isOtherMonth =
                     details.date.month != details.visibleDates[10].month;
 
-                final journal = widget.provider.gratitudeJournals.lastWhere(
-                  (element) {
-                    return element.date.day == details.date.day &&
-                        element.date.month == details.date.month &&
-                        element.date.year == details.date.year;
-                  },
-                  orElse:
-                      () => GratiudeJournalModel(
-                        id: '',
-                        profileId: '',
-
-                        emotion: '',
-                        emotionDescription: '',
-                        accomplishments: [],
-                        date: details.date,
-                        createdAt: DateTime.now(),
-                        updatedAt: DateTime.now(),
-                      ),
-                );
+                final journal = _journalForDay(details.date, byDay);
                 final showTooltip =
                     _tooltipDate != null && _isSameDate(_tooltipDate!, details.date);
                 final isSelected =

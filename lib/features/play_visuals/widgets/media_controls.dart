@@ -13,6 +13,7 @@ class MediaControls extends StatelessWidget {
     required this.isPlaying,
     required this.onPlayPause,
     required this.sessionStarted,
+    this.audioReady = true,
     this.onBack10,
     this.onForward10,
     this.onHeart,
@@ -27,6 +28,7 @@ class MediaControls extends StatelessWidget {
   final bool isPlaying;
   final VoidCallback onPlayPause;
   final bool sessionStarted;
+  final bool audioReady;
   final VoidCallback? onBack10;
   final VoidCallback? onForward10;
   final VoidCallback? onHeart;
@@ -59,11 +61,26 @@ class MediaControls extends StatelessWidget {
                 onPressed: onBack10,
               ),
             ),
-          LiquidGlassPlayButton(
-            isPlaying: isPlaying,
-            onPressed: onPlayPause,
-            pulseAnimation: !sessionStarted ? playPulseAnimation : null,
-          ),
+          if (audioReady)
+            LiquidGlassPlayButton(
+              isPlaying: isPlaying,
+              onPressed: onPlayPause,
+              pulseAnimation: !sessionStarted ? playPulseAnimation : null,
+            )
+          else
+            SizedBox(
+              width: 120,
+              height: 4,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(2),
+                child: LinearProgressIndicator(
+                  backgroundColor: Colors.white.withValues(alpha: 0.2),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    AppColors.primaryGradientColors[1].withValues(alpha: 0.8),
+                  ),
+                ),
+              ),
+            ),
           if (forward10Asset != null)
             _AnimatedAction(
               visible: sessionStarted,

@@ -7,6 +7,7 @@ import 'package:mindfulminis/common/data/discover_data.dart';
 import 'package:mindfulminis/common/widgets/custom_level_percent_indicator.dart';
 import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/features/journal/screens/create_journal_screen.dart';
+import 'package:mindfulminis/features/mini_body_scan/screens/mini_body_scan_screen.dart';
 import 'package:mindfulminis/features/play_visuals/screen/play_visuals.dart';
 import 'package:mindfulminis/features/routine/providers/activities_provider.dart';
 import 'package:mindfulminis/features/routine/screens/affirmation_screen.dart';
@@ -173,7 +174,7 @@ class RoutineLevelContainer extends StatelessWidget {
           break;
         case 'mini body scan':
         case 'minibodyscan':
-          // TODO: Navigate to Mini Body Scan screen when available
+          await sl<GoRouter>().pushNamed(MiniBodyScanScreen.routeName);
           break;
         default:
           return;

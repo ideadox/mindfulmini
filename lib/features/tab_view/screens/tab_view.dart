@@ -303,12 +303,12 @@ class _TabViewState extends State<TabView> with TickerProviderStateMixin {
                 bottomNavigationBar: SizedBox(
                   height: 80,
                   child: CustomNavigationBar(
-                    borderRadius: Radius.circular(50),
+                    borderRadius: Radius.circular(32),
                     iconSize: 28.0,
                     selectedColor: Colors.transparent,
                     strokeColor: Colors.transparent,
                     unSelectedColor: Color(0xffacacac),
-                    backgroundColor: Colors.blueGrey.shade50,
+                    backgroundColor: Color(0xffF7F8F8),
                     items: List.generate(tabs.length, (index) {
                       final tab = tabs[index];
                       return CustomNavigationBarItem(

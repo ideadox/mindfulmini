@@ -10,7 +10,7 @@ import 'package:mindfulminis/gen/assets.gen.dart';
 import 'package:provider/provider.dart';
 
 import '../../profile/providers/profile_provider.dart';
-import 'journal_detail1_screen.dart';
+import 'journal_detail_screen.dart';
 
 class JournalScreen extends StatelessWidget {
   const JournalScreen({super.key});
@@ -60,19 +60,19 @@ class JournalScreen extends StatelessWidget {
                       alignment: Alignment.center,
                       children: [
                         Container(
-                          height: 480,
+                          height: 440,
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               alignment: Alignment.topCenter,
                               fit: BoxFit.cover,
                               image: AssetImage(
-                                Assets.images.journalTopBackground2.path,
+                                Assets.images.journalTopBackground.path,
                               ),
                             ),
                           ),
                         ),
                         Positioned(
-                          top: kToolbarHeight - 15,
+                          top: kToolbarHeight + 8,
                           child: Container(
                             alignment: Alignment.center,
                             padding: EdgeInsets.symmetric(
@@ -172,7 +172,7 @@ class JournalScreen extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) {
-                                      return JournalDetail1Screen(
+                                      return JournalDetailScreen(
                                         gratitudeId:
                                             provider.gratitudeJournals.last.id,
                                         gratitudeJournal:

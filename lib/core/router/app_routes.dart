@@ -6,6 +6,7 @@ import 'package:mindfulminis/core/services/auth_service.dart';
 import 'package:mindfulminis/features/analytices/screens/analytic_screen.dart';
 import 'package:mindfulminis/features/authentication/screens/auth_main.dart';
 import 'package:mindfulminis/features/authentication/screens/phone_verification.dart';
+import 'package:mindfulminis/features/mini_body_scan/screens/mini_body_scan_screen.dart';
 import 'package:mindfulminis/features/breathing/screens/breathing_screen.dart';
 import 'package:mindfulminis/features/forgot_password/screens/change_password.dart';
 import 'package:mindfulminis/features/forgot_password/screens/forgot_password.dart';
@@ -187,6 +188,11 @@ GoRouter buildRouter() {
         path: BreathingScreen.routePath,
         name: BreathingScreen.routeName,
         builder: (context, state) => BreathingScreen(),
+      ),
+      GoRoute(
+        path: MiniBodyScanScreen.routePath,
+        name: MiniBodyScanScreen.routeName,
+        builder: (context, state) => const MiniBodyScanScreen(),
       ),
       GoRoute(
         path: SeriesListScreen.routePath,

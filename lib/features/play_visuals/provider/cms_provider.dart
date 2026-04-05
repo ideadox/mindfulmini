@@ -1,58 +1,105 @@
 import 'dart:async';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:mindfulminis/common/data/cms_data.dart';
 import 'package:mindfulminis/core/api_constants.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
+import 'package:mindfulminis/core/utils/yoga_rich_text_parser.dart';
+import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
 
 import '../../../common/models/cms_model.dart';
 import '../../../common/models/story_segment.dart';
 
+/// Unified provider for all play-visuals content (stories, meditation,
+/// breathing, yoga, etc.). Handles CMS fetch + audio lifecycle.
 class CmsProvider with ChangeNotifier {
   final _data = sl<CmsData>();
   final AudioPlayer audioPlayer = AudioPlayer();
 
-  late String id;
-  late String collection;
+  late final String id;
+  late final String collection;
 
   StreamSubscription? _playerStateSubscription;
   StreamSubscription? _positionSubscription;
   StreamSubscription? _durationSubscription;
 
-  CmsProvider(this.collection, this.id) {
-    getCMSContentByCollection();
-  }
+  // ── Content ──
 
   CmsModel? cms;
   List<StorySegment> segments = [];
-  bool isLoading = false;
+  List<YogaSegment> yogaSegments = [];
+
+  bool isLoading = true;
   bool isPlaying = false;
   bool audioReady = false;
   Duration currentPosition = Duration.zero;
   Duration totalDuration = Duration.zero;
 
-  Future<void> getCMSContentByCollection() async {
+  /// True when this provider was created for yoga content.
+  final bool isYoga;
+
+  // ── Constructors ──
+
+  /// CMS-based content (stories, meditation, breathing, …).
+  CmsProvider(this.collection, this.id) : isYoga = false {
+    _fetchCmsContent();
+  }
+
+  /// Yoga content – data is already available, only needs parsing + audio.
+  CmsProvider.yoga(YogaContentModel yogaContent)
+      : id = yogaContent.id,
+        collection = 'yoga',
+        isYoga = true {
+    _initFromYoga(yogaContent);
+  }
+
+  // ── Initialisation ──
+
+  Future<void> _fetchCmsContent() async {
     try {
       isLoading = true;
       cms = await _data.getCMSById(collection, id);
       if (cms != null) {
         segments = parseLexicalJson(cms!.contentDescriptionJson);
-        await _initializeAudio();
       }
     } catch (e, stack) {
-      FirebaseCrashlytics.instance.recordError(e, stack, reason: 'CmsProvider fetch failed for $collection/$id');
+      FirebaseCrashlytics.instance.recordError(e, stack,
+          reason: 'CmsProvider fetch failed for $collection/$id');
     } finally {
       isLoading = false;
       notifyListeners();
     }
+    // Audio init in background – UI is already visible
+    _initializeAudio(cms?.audio?.filename);
   }
 
-  Future<void> _initializeAudio() async {
-    if (cms?.audio?.filename == null) return;
+  Future<void> _initFromYoga(YogaContentModel yogaContent) async {
+    try {
+      isLoading = true;
+      yogaSegments = YogaRichTextParser.parseYogaContent(
+        yogaContent.contentDescription,
+      );
+    } catch (e, stack) {
+      FirebaseCrashlytics.instance.recordError(e, stack,
+          reason: 'CmsProvider yoga init failed for ${yogaContent.id}');
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+    // Audio init in background – UI is already visible
+    final audioFilename = yogaContent.audio?['filename'] as String?;
+    _initializeAudio(audioFilename);
+  }
+
+  // ── Audio ──
+
+  Future<void> _initializeAudio(String? filename) async {
+    if (filename == null) return;
 
     try {
-      final audioUrl = '${ApiConstants.mediaBaseUrl}${cms!.audio!.filename}';
+      final audioUrl = '${ApiConstants.mediaBaseUrl}$filename';
       await audioPlayer.setUrl(audioUrl);
 
       _playerStateSubscription =
@@ -81,9 +128,16 @@ class CmsProvider with ChangeNotifier {
       });
 
       audioReady = true;
+      notifyListeners();
+    } on MissingPluginException {
+      // setPitch not implemented on some platforms – safe to ignore since
+      // audio playback still works without pitch control.
+      audioReady = true;
+      notifyListeners();
     } catch (e, stack) {
       FirebaseCrashlytics.instance.recordError(
-        e, stack,
+        e,
+        stack,
         reason: 'CmsProvider audio init failed for id=$id collection=$collection',
       );
       audioReady = false;
@@ -92,7 +146,10 @@ class CmsProvider with ChangeNotifier {
 
   bool _isDisposed = false;
 
+  // ── Playback controls ──
+
   Future<void> playPause() async {
+    if (!audioReady) return;
     try {
       if (isPlaying) {
         await audioPlayer.pause();
@@ -102,8 +159,11 @@ class CmsProvider with ChangeNotifier {
         }
         await audioPlayer.play();
       }
+    } on MissingPluginException {
+      // Ignore – setPitch / platform gaps on some Android devices.
     } catch (e, stack) {
-      FirebaseCrashlytics.instance.recordError(e, stack, reason: 'CmsProvider playPause failed');
+      FirebaseCrashlytics.instance.recordError(e, stack,
+          reason: 'CmsProvider playPause failed');
     }
   }
 
@@ -111,7 +171,8 @@ class CmsProvider with ChangeNotifier {
     try {
       await audioPlayer.seek(position);
     } catch (e, stack) {
-      FirebaseCrashlytics.instance.recordError(e, stack, reason: 'CmsProvider seek failed');
+      FirebaseCrashlytics.instance.recordError(e, stack,
+          reason: 'CmsProvider seek failed');
     }
   }
 
@@ -125,6 +186,8 @@ class CmsProvider with ChangeNotifier {
     await seek(target < Duration.zero ? Duration.zero : target);
   }
 
+  // ── Lifecycle ──
+
   @override
   void dispose() {
     _isDisposed = true;
@@ -135,6 +198,8 @@ class CmsProvider with ChangeNotifier {
     super.dispose();
   }
 
+  // ── Segment parsing (CMS) ──
+
   List<StorySegment> parseLexicalJson(Map<String, dynamic> json) {
     final List<StorySegment> segments = [];
 
@@ -143,13 +208,11 @@ class CmsProvider with ChangeNotifier {
         if (node['type'] == 'text') {
           String raw = node['text'] ?? "";
 
-          // --- REMOVE break tags from text ---
           String cleaned =
               raw
                   .replaceAll(RegExp(r'<break time="([\d.]+)s"\s*\/>'), "")
                   .trim();
 
-          // Extract breaks separately
           final breakRegex = RegExp(r'<break time="([\d.]+)s"\s*\/>');
           final breaks = breakRegex.allMatches(raw);
 

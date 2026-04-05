@@ -246,7 +246,7 @@ class _PlayVisualSurfaceState extends State<PlayVisualSurface> {
   }
 
   Widget _loadingPlaceholder() {
-    return const ColoredBox(color: Color(0xFF1A1A1A));
+    return const _VideoShimmer();
   }
 }
 
@@ -260,7 +260,7 @@ class _VideoCover extends StatelessWidget {
     final w = controller.value.size.width;
     final h = controller.value.size.height;
     if (w == 0 || h == 0) {
-      return const Center(child: CircularProgressIndicator());
+      return const _VideoShimmer();
     }
     return ClipRect(
       child: SizedBox.expand(
@@ -273,6 +273,56 @@ class _VideoCover extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _VideoShimmer extends StatefulWidget {
+  const _VideoShimmer();
+
+  @override
+  State<_VideoShimmer> createState() => _VideoShimmerState();
+}
+
+class _VideoShimmerState extends State<_VideoShimmer>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        final position = _controller.value;
+        return ShaderMask(
+          shaderCallback: (bounds) {
+            return LinearGradient(
+              begin: Alignment(position * 2 - 1.3, 0),
+              end: Alignment(position * 2 - 0.7, 0),
+              colors: [Colors.grey[200]!, Colors.grey[100]!, Colors.grey[200]!],
+            ).createShader(bounds);
+          },
+          child: ColoredBox(
+            color: Colors.grey[200]!,
+            child: const SizedBox.expand(),
+          ),
+        );
+      },
     );
   }
 }
