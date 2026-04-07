@@ -2,7 +2,7 @@ name: mindfulminis
 description: "Mindfulminis official app"
 publish_to: "none"
 
-version: 1.1.9+29
+version: 1.2.0+30
 
 environment:
   sdk: ^3.7.2
