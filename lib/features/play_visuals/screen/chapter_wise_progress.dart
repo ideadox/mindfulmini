@@ -3,12 +3,11 @@ import 'package:mindfulminis/core/utils/yoga_rich_text_parser.dart';
 
 import '../../../common/models/story_segment.dart';
 
-/// Apple Music-style synced lyrics view.
+/// Apple Music / Instagram-style synced lyrics view.
 ///
-/// Shows 5 visible lines: 2 previous (faded), the active line (bold/bright),
-/// and 2 upcoming (faded). The active line smoothly scrolls into position as
-/// the audio progresses. Works with both plain-text [StorySegment] (CMS) and
-/// rich-text [YogaSegment] (yoga) content.
+/// Shows the active line prominently with surrounding context lines faded.
+/// Lines slide upward smoothly as the audio progresses, mimicking the
+/// lyric scroll in Apple Music and Instagram stories.
 class LyricLineBuilder extends StatelessWidget {
   final List<StorySegment> segments;
   final List<YogaSegment> yogaSegments;
@@ -45,18 +44,25 @@ class LyricLineBuilder extends StatelessWidget {
     );
   }
 
-  /// Flattens segments into displayable text lines (skipping empty/break ones).
+  // Max characters per displayed chunk (~2 lines at 22px on most screens).
+  static const int _maxChunkChars = 70;
+
+  /// Flattens segments into displayable text lines, splitting long ones
+  /// into ~2-line chunks so that audio sync advances through each piece.
   List<_LyricLine> _buildTextLines() {
     // CMS path — plain text
     if (segments.isNotEmpty) {
       final lines = <_LyricLine>[];
       for (int i = 0; i < segments.length; i++) {
         if (segments[i].text.isNotEmpty) {
-          lines.add(_LyricLine(
-            plainText: segments[i].text,
-            weight: segments[i].text.length.clamp(5, 99999).toDouble(),
-            sourceIndex: i,
-          ));
+          final chunks = _splitAtWordBoundary(segments[i].text, _maxChunkChars);
+          for (final chunk in chunks) {
+            lines.add(_LyricLine(
+              plainText: chunk,
+              weight: chunk.length.clamp(5, 99999).toDouble(),
+              sourceIndex: i,
+            ));
+          }
         } else {
           // Break segment — add weight to previous line or skip
           final breakWeight =
@@ -71,16 +77,55 @@ class LyricLineBuilder extends StatelessWidget {
 
     // Yoga path — rich text
     if (yogaSegments.isNotEmpty) {
-      return yogaSegments.asMap().entries.map((e) {
-        return _LyricLine(
-          textSpans: e.value.textSpans,
-          weight: e.value.charCount.clamp(5, 99999).toDouble(),
-          sourceIndex: e.key,
-        );
-      }).toList();
+      final lines = <_LyricLine>[];
+      for (int i = 0; i < yogaSegments.length; i++) {
+        final fullText = yogaSegments[i].textSpans.map((s) => s.text).join();
+        if (fullText.length <= _maxChunkChars) {
+          lines.add(_LyricLine(
+            textSpans: yogaSegments[i].textSpans,
+            weight: yogaSegments[i].charCount.clamp(5, 99999).toDouble(),
+            sourceIndex: i,
+          ));
+        } else {
+          // Split the plain text and create simple text lines
+          final chunks = _splitAtWordBoundary(fullText, _maxChunkChars);
+          for (final chunk in chunks) {
+            lines.add(_LyricLine(
+              plainText: chunk,
+              weight: chunk.length.clamp(5, 99999).toDouble(),
+              sourceIndex: i,
+            ));
+          }
+        }
+      }
+      return lines;
     }
 
     return [];
+  }
+
+  /// Splits [text] into chunks of roughly [maxChars], breaking at word
+  /// boundaries so words are never cut in half.
+  static List<String> _splitAtWordBoundary(String text, int maxChars) {
+    if (text.length <= maxChars) return [text];
+
+    final chunks = <String>[];
+    final words = text.split(RegExp(r'\s+'));
+    final buffer = StringBuffer();
+
+    for (final word in words) {
+      if (buffer.isEmpty) {
+        buffer.write(word);
+      } else if (buffer.length + 1 + word.length <= maxChars) {
+        buffer.write(' $word');
+      } else {
+        chunks.add(buffer.toString());
+        buffer.clear();
+        buffer.write(word);
+      }
+    }
+    if (buffer.isNotEmpty) chunks.add(buffer.toString());
+    return chunks;
   }
 
   int _getActiveIndex(List<_LyricLine> lines, int audioTotalMs) {
@@ -125,8 +170,8 @@ class _LyricLine {
       plainText ?? textSpans?.map((s) => s.text).join() ?? '';
 }
 
-/// Renders 5 lines with the active line prominent and surrounding lines faded.
-class _LyricsStack extends StatelessWidget {
+/// Renders lyrics with smooth slide-up animation like Apple Music / Instagram.
+class _LyricsStack extends StatefulWidget {
   final List<_LyricLine> lines;
   final int activeIndex;
   final Color activeColor;
@@ -140,75 +185,170 @@ class _LyricsStack extends StatelessWidget {
   });
 
   @override
+  State<_LyricsStack> createState() => _LyricsStackState();
+}
+
+class _LyricsStackState extends State<_LyricsStack>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _slideAnimation;
+  late Animation<double> _fadeAnimation;
+
+  int _displayedIndex = 0;
+  int _previousIndex = 0;
+
+  // Show 1 before + active + 1 after = 3 visible lines
+  static const int _surroundCount = 1;
+  static const int _maxTextLines = 3;
+
+  @override
+  void initState() {
+    super.initState();
+    _displayedIndex = widget.activeIndex;
+    _previousIndex = widget.activeIndex;
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+
+    _slideAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
+  }
+
+  @override
+  void didUpdateWidget(covariant _LyricsStack oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.activeIndex != _displayedIndex) {
+      _previousIndex = _displayedIndex;
+      _displayedIndex = widget.activeIndex;
+      _controller.forward(from: 0.0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // Show 1 before + active + 1 after = 3 lines
-    const int surroundCount = 1;
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, _) {
+        final t = _slideAnimation.value;
+        final fade = _fadeAnimation.value;
 
-    return ClipRect(
-      child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 350),
-        transitionBuilder: (child, animation) {
-          return FadeTransition(opacity: animation, child: child);
-        },
-        child: Column(
-          key: ValueKey(activeIndex),
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: List.generate(surroundCount * 2 + 1, (i) {
-            final lineIndex = activeIndex - surroundCount + i;
-            final isActive = lineIndex == activeIndex;
+        return ClipRect(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: List.generate(_surroundCount * 2 + 1, (i) {
+              final targetLineIndex = _displayedIndex - _surroundCount + i;
 
-            final double opacity = isActive ? 1.0 : 0.3;
-            final double fontSize = isActive ? 24 : 18;
-            final fontWeight =
-                isActive ? FontWeight.w700 : FontWeight.w500;
-            final color = isActive ? activeColor : inactiveColor;
+              final isTransitioning = _controller.isAnimating;
+              final lineIndex = targetLineIndex;
+              final isActive = lineIndex == _displayedIndex;
 
-            // Out of range — invisible spacer to maintain layout
-            if (lineIndex < 0 || lineIndex >= lines.length) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: SizedBox(height: fontSize * 1.4),
+              // Slide offset: lines move up as new active line arrives
+              final slideOffset = _previousIndex != _displayedIndex
+                  ? Offset(
+                      0,
+                      (1 - t) *
+                          (_displayedIndex > _previousIndex ? 0.3 : -0.3),
+                    )
+                  : Offset.zero;
+
+              // Opacity: active line fades in, others crossfade
+              double opacity;
+              if (isActive) {
+                opacity = isTransitioning ? fade : 1.0;
+              } else {
+                opacity = 0.35;
+              }
+
+              // Out of range — invisible spacer
+              if (lineIndex < 0 || lineIndex >= widget.lines.length) {
+                return _buildSpacer(isActive ? 22.0 : 17.0);
+              }
+
+              final line = widget.lines[lineIndex];
+
+              return SlideTransition(
+                position: AlwaysStoppedAnimation(slideOffset),
+                child: _buildLineWidget(
+                  line: line,
+                  isActive: isActive,
+                  opacity: opacity,
+                ),
               );
-            }
+            }),
+          ),
+        );
+      },
+    );
+  }
 
-            final line = lines[lineIndex];
+  Widget _buildSpacer(double fontSize) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: SizedBox(height: fontSize * 1.4),
+    );
+  }
 
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: Opacity(
-                opacity: opacity,
-                child: line.textSpans != null
-                    ? RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          children: line.textSpans!.map((span) {
-                            return TextSpan(
-                              text: span.text,
-                              style: TextStyle(
-                                fontSize: fontSize,
-                                fontWeight: fontWeight,
-                                color: color,
-                                height: 1.4,
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      )
-                    : Text(
-                        line.displayText,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: fontSize,
-                          fontWeight: fontWeight,
-                          color: color,
-                          height: 1.4,
-                        ),
+  Widget _buildLineWidget({
+    required _LyricLine line,
+    required bool isActive,
+    required double opacity,
+  }) {
+    final double fontSize = isActive ? 22 : 17;
+    final fontWeight = isActive ? FontWeight.w700 : FontWeight.w500;
+    final color = isActive ? widget.activeColor : widget.inactiveColor;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: AnimatedOpacity(
+        opacity: opacity,
+        duration: const Duration(milliseconds: 350),
+        child: line.textSpans != null
+            ? RichText(
+                textAlign: TextAlign.left,
+                maxLines: _maxTextLines,
+                overflow: TextOverflow.ellipsis,
+                text: TextSpan(
+                  children: line.textSpans!.map((span) {
+                    return TextSpan(
+                      text: span.text,
+                      style: TextStyle(
+                        fontSize: fontSize,
+                        fontWeight: span.isBold ? FontWeight.w800 : fontWeight,
+                        fontStyle:
+                            span.isItalic ? FontStyle.italic : FontStyle.normal,
+                        color: color,
+                        height: 1.35,
                       ),
-            ),
-          );
-          }),
-        ),
+                    );
+                  }).toList(),
+                ),
+              )
+            : Text(
+                line.displayText,
+                textAlign: TextAlign.left,
+                maxLines: _maxTextLines,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: fontSize,
+                  fontWeight: fontWeight,
+                  color: color,
+                  height: 1.35,
+                ),
+              ),
       ),
     );
   }
