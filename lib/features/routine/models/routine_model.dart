@@ -9,6 +9,7 @@ class RoutineModel {
   final bool hasReminder;
   final List<String> reminderDays;
   final String reminderTime; // "09:00"
+  final DateTime? extendedDate;
   final DateTime createdAt;
   final DateTime updatedAt;
   final int v;
@@ -24,10 +25,17 @@ class RoutineModel {
     required this.hasReminder,
     required this.reminderDays,
     required this.reminderTime,
+    this.extendedDate,
     required this.createdAt,
     required this.updatedAt,
     required this.v,
   });
+
+  /// The computed end date of the routine.
+  DateTime get endDate => startDate.add(Duration(days: durationDays));
+
+  /// Whether the routine was extended from a previous end date.
+  bool get wasExtended => extendedDate != null;
 
   /// Returns the 0-based day number since the routine started.
   /// If the routine hasn't started yet, returns 0.
@@ -49,6 +57,9 @@ class RoutineModel {
       hasReminder: json['hasReminder'] ?? false,
       reminderDays: List<String>.from(json['reminderDays'] ?? []),
       reminderTime: json['reminderTime'] ?? '',
+      extendedDate: json['extendedDate'] != null
+          ? DateTime.parse(json['extendedDate'])
+          : null,
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       v: json['__v'] ?? 0,
@@ -66,6 +77,8 @@ class RoutineModel {
       "hasReminder": hasReminder,
       "reminderDays": reminderDays,
       "reminderTime": reminderTime,
+      if (extendedDate != null)
+        "extendedDate": extendedDate!.toIso8601String(),
     };
   }
 
@@ -80,6 +93,7 @@ class RoutineModel {
     bool? hasReminder,
     List<String>? reminderDays,
     String? reminderTime,
+    DateTime? extendedDate,
     DateTime? createdAt,
     DateTime? updatedAt,
     int? v,
@@ -95,6 +109,7 @@ class RoutineModel {
       hasReminder: hasReminder ?? this.hasReminder,
       reminderDays: reminderDays ?? this.reminderDays,
       reminderTime: reminderTime ?? this.reminderTime,
+      extendedDate: extendedDate ?? this.extendedDate,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       v: v ?? this.v,

@@ -6,6 +6,7 @@ import 'package:mindfulminis/core/app_colors.dart';
 import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:mindfulminis/core/services/remote_config_service.dart';
+import 'package:intl/intl.dart';
 import 'package:mindfulminis/features/routine/models/routine_model.dart';
 import 'package:mindfulminis/features/routine/widgets/five_step_progressbar.dart';
 import 'package:mindfulminis/gen/assets.gen.dart';
@@ -136,6 +137,25 @@ class MyroutineBriefCard extends StatelessWidget {
                                 color: HexColor('#47454D'),
                               ),
                             ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '${DateFormat('MMM d').format(routineModel.startDate)} – ${DateFormat('MMM d').format(routineModel.endDate)}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                            if (routineModel.wasExtended) ...[
+                              const SizedBox(height: 2),
+                              Text(
+                                'Extended from ${DateFormat('MMM d').format(routineModel.extendedDate!)}',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            ],
                             Space.h16,
                             Row(
                               children: [

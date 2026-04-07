@@ -25,6 +25,13 @@ class JournalProvider with ChangeNotifier {
 
   List<GratiudeJournalModel> gratitudeJournals = [];
   bool isLoading = false;
+
+  bool get hasJournalForToday {
+    final now = DateTime.now();
+    return gratitudeJournals.any(
+      (j) => j.date.day == now.day && j.date.month == now.month && j.date.year == now.year,
+    );
+  }
   Future<void> getGratitudeJournals() async {
     try {
       isLoading = true;

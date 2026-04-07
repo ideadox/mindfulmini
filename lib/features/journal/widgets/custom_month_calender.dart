@@ -21,14 +21,18 @@ class CustomMonthCalender extends StatefulWidget {
 }
 
 class _CustomMonthCalenderState extends State<CustomMonthCalender> {
-  DateTime? _tooltipDate;
-
-  bool _isSameDate(DateTime a, DateTime b) {
-    return a.day == b.day && a.month == b.month && a.year == b.year;
-  }
-
   static String _dayKey(DateTime d) =>
       '${d.year}-${d.month}-${d.day}';
+
+  /// Minimum weeks needed to display every day of the current month.
+  int _weeksInMonth() {
+    final now = DateTime.now();
+    final firstOfMonth = DateTime(now.year, now.month, 1);
+    final daysInMonth = DateTime(now.year, now.month + 1, 0).day;
+    // Sunday-based offset: Sunday=0, Mon=1 ... Sat=6
+    final startOffset = firstOfMonth.weekday % 7;
+    return ((startOffset + daysInMonth) / 7).ceil();
+  }
 
   GratiudeJournalModel _journalForDay(
     DateTime day,
@@ -75,26 +79,23 @@ class _CustomMonthCalenderState extends State<CustomMonthCalender> {
             ),
           ),
           Space.h20,
-          SizedBox(
-            height: 450,
-            child: SfCalendar(
+          ClipRect(
+            child: SizedBox(
+              height: _weeksInMonth() * 80.0 + 40,
+              child: OverflowBox(
+                maxHeight: 6 * 80.0 + 40,
+                alignment: Alignment.topCenter,
+                child: SizedBox(
+                  height: 6 * 80.0 + 40,
+                  child: SfCalendar(
               onTap: (calendarTapDetails) {
                 final tappedDate = calendarTapDetails.date;
                 if (tappedDate == null) return;
                 final journal = _journalForDay(tappedDate, byDay);
                 if (journal.id.isEmpty) {
-                  setState(() {
-                    _tooltipDate =
-                        _tooltipDate != null &&
-                                _isSameDate(_tooltipDate!, tappedDate)
-                            ? null
-                            : tappedDate;
-                  });
+                  widget.provider.navigateToCreateJournal();
                   return;
                 }
-                setState(() {
-                  _tooltipDate = null;
-                });
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -116,17 +117,23 @@ class _CustomMonthCalenderState extends State<CustomMonthCalender> {
               headerHeight: 0,
 
               // Custom cell draws selection; disable default border/fill.
-              todayHighlightColor: Colors.transparent,
+              todayHighlightColor: AppColors.primary,
               selectionDecoration: const BoxDecoration(
                 color: Colors.transparent,
                 border: Border.fromBorderSide(BorderSide.none),
               ),
 
               cellBorderColor: Colors.transparent,
+              viewHeaderStyle: ViewHeaderStyle(
+                dayTextStyle: TextStyle(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
               monthViewSettings: MonthViewSettings(
-                dayFormat: 'EEE',
-                numberOfWeeksInView: 5,
-
+                dayFormat: 'EEEEE',
+                numberOfWeeksInView: 6,
                 appointmentDisplayMode: MonthAppointmentDisplayMode.none,
                 monthCellStyle: MonthCellStyle(
                   textStyle: TextStyle(color: AppColors.primary),
@@ -144,12 +151,6 @@ class _CustomMonthCalenderState extends State<CustomMonthCalender> {
                     details.date.month != details.visibleDates[10].month;
 
                 final journal = _journalForDay(details.date, byDay);
-                final showTooltip =
-                    _tooltipDate != null && _isSameDate(_tooltipDate!, details.date);
-                final isSelected =
-                    isToday ||
-                    (_tooltipDate != null &&
-                        _isSameDate(_tooltipDate!, details.date));
 
                 final cellContent = Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -160,7 +161,7 @@ class _CustomMonthCalenderState extends State<CustomMonthCalender> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(100),
                         boxShadow:
-                            !isSelected
+                            !isToday
                                 ? null
                                 : [
                                   BoxShadow(
@@ -225,81 +226,11 @@ class _CustomMonthCalenderState extends State<CustomMonthCalender> {
                   ],
                 );
 
-                return Stack(
-                  clipBehavior: Clip.none,
-                  alignment: Alignment.topCenter,
-                  children: [
-                    cellContent,
-                    if (showTooltip)
-                      Positioned(
-                        top: -112,
-                        child: Material(
-                          color: Colors.transparent,
-                          child: Container(
-                            width: 210,
-                            padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.08),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Text(
-                                  'Tap a day to log your mood and track your happiness journey over time.',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                SizedBox(
-                                  height: 30,
-                                  width: 90,
-                                  child: DecoratedBox(
-                                    decoration: BoxDecoration(
-                                      gradient: const LinearGradient(
-                                        colors: [
-                                          Color(0xFF6E40F9),
-                                          Color(0xFFA569FB),
-                                          Color(0xFFCE89FF),
-                                        ],
-                                      ),
-                                      borderRadius: BorderRadius.circular(24),
-                                    ),
-                                    child: TextButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          _tooltipDate = null;
-                                        });
-                                      },
-                                      child: const Text(
-                                        'Got it!',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                );
+                return cellContent;
               },
+            ),
+          ),
+              ),
             ),
           ),
         ],

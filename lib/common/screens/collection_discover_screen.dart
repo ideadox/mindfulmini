@@ -7,7 +7,6 @@ import 'package:mindfulminis/common/data/discover_data.dart';
 import 'package:mindfulminis/common/models/cms_model.dart';
 import 'package:mindfulminis/common/models/series_model.dart';
 import 'package:mindfulminis/common/providers/collection_discover_provider.dart';
-import 'package:mindfulminis/common/screens/series_list_screen.dart';
 import 'package:mindfulminis/common/widgets/collection_card_duration_badge.dart';
 import 'package:mindfulminis/common/widgets/custom_back_button.dart';
 import 'package:mindfulminis/common/widgets/views_widget.dart';
@@ -48,8 +47,10 @@ class _CollectionDiscoverScreenState extends State<CollectionDiscoverScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final profileProvider =
-          Provider.of<ProfileProvider>(context, listen: false);
+      final profileProvider = Provider.of<ProfileProvider>(
+        context,
+        listen: false,
+      );
       final profileId = profileProvider.userProfile?.id;
 
       final provider = CollectionDiscoverProvider(
@@ -72,9 +73,7 @@ class _CollectionDiscoverScreenState extends State<CollectionDiscoverScreen> {
   Widget build(BuildContext context) {
     final provider = _provider;
     if (provider == null) {
-      return Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return ChangeNotifierProvider.value(
@@ -129,11 +128,8 @@ class _CollectionDiscoverScreenState extends State<CollectionDiscoverScreen> {
       if (section.isSeries && section.series != null) {
         flushSingles();
         slivers.add(
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            sliver: SliverToBoxAdapter(
-              child: _buildSeriesCard(context, section.series!, provider),
-            ),
+          SliverToBoxAdapter(
+            child: _buildSeriesSection(context, section.series!, provider),
           ),
         );
       } else if (section.isSingle && section.item != null) {
@@ -146,7 +142,9 @@ class _CollectionDiscoverScreenState extends State<CollectionDiscoverScreen> {
   }
 
   Widget _buildContent(
-      BuildContext context, CollectionDiscoverProvider provider) {
+    BuildContext context,
+    CollectionDiscoverProvider provider,
+  ) {
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
@@ -178,17 +176,16 @@ class _CollectionDiscoverScreenState extends State<CollectionDiscoverScreen> {
                 Text(
                   widget.title,
                   textAlign: TextAlign.center,
-                  style: AppTextTheme.titleTextTheme(context)
-                      .titleMedium
+                  style: AppTextTheme.titleTextTheme(context).titleMedium
                       ?.copyWith(fontWeight: FontWeight.w600, fontSize: 22),
                 ),
                 Space.h4,
                 Text(
                   widget.subtitle,
                   textAlign: TextAlign.center,
-                  style: AppTextTheme.bodyTextStyle(context)
-                      .bodyMedium
-                      ?.copyWith(fontSize: 14),
+                  style: AppTextTheme.bodyTextStyle(
+                    context,
+                  ).bodyMedium?.copyWith(fontSize: 14),
                 ),
                 Space.h16,
               ],
@@ -213,123 +210,83 @@ class _CollectionDiscoverScreenState extends State<CollectionDiscoverScreen> {
     );
   }
 
-  Widget _buildSeriesCard(BuildContext context, SeriesModel series,
-      CollectionDiscoverProvider provider) {
+  Widget _buildSeriesSection(
+    BuildContext context,
+    SeriesModel series,
+    CollectionDiscoverProvider provider,
+  ) {
     final allItemIds = series.items.map((e) => e.id).toList();
     final isFullyViewed = provider.isSeriesFullyViewed(allItemIds);
 
-    final thumbnailUrl = series.thumbnail != null
-        ? ApiConstants.mediaBaseUrl + series.thumbnail!.filename
-        : (series.items.isNotEmpty && series.items.first.cardImageFilename != null
-            ? ApiConstants.mediaBaseUrl + series.items.first.cardImageFilename!
-            : null);
-
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: () {
-          if (_provider == null) return;
-          sl<GoRouter>().pushNamed(
-            SeriesListScreen.routeName,
-            extra: {
-              'series': series,
-              'collectionSlug': widget.collectionSlug,
-              'provider': _provider!,
-            },
-          );
-        },
-        child: Container(
-          height: 200,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.08),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: Stack(
-              fit: StackFit.expand,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Row(
               children: [
-                if (thumbnailUrl != null)
-                  CachedNetworkImage(
-                    imageUrl: thumbnailUrl,
-                    fit: BoxFit.cover,
-                    placeholder: (_, __) =>
-                        Container(color: Colors.grey.shade200),
-                    errorWidget: (_, __, ___) =>
-                        Container(color: Colors.grey.shade200),
-                  )
-                else
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: AppColors.secondaryGradient,
-                    ),
-                  ),
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withValues(alpha: 0.7),
-                      ],
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 16,
-                  bottom: 16,
-                  right: 16,
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         series.displayName,
                         style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 2),
                       Text(
                         _seriesSubtitle(series),
                         style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.85),
+                          color: Colors.grey.shade600,
                           fontSize: 13,
                         ),
                       ),
                     ],
                   ),
                 ),
-                if (isFullyViewed)
-                  Positioned(
-                    top: 12,
-                    right: 12,
-                    child: _buildViewedBadge(),
-                  ),
+                if (isFullyViewed) _buildViewedBadge(),
               ],
             ),
           ),
-        ),
+          Space.h12,
+          SizedBox(
+            height: 268,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              itemCount: series.items.length,
+              separatorBuilder: (_, __) => Space.w12,
+              itemBuilder: (context, index) {
+                final item = series.items[index];
+                return SizedBox(
+                  width: 177,
+                  child: _buildSingleCard(context, item, provider),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildSingleCard(BuildContext context, CmsModel item,
-      CollectionDiscoverProvider provider) {
+  Widget _buildSingleCard(
+    BuildContext context,
+    CmsModel item,
+    CollectionDiscoverProvider provider,
+  ) {
     final isViewed = provider.isViewed(item.id);
-    final thumbnailUrl = item.cardImageFilename != null
-        ? Uri.encodeFull(ApiConstants.mediaBaseUrl + item.cardImageFilename!)
-        : null;
+    final thumbnailUrl =
+        item.cardImageFilename != null
+            ? Uri.encodeFull(
+              ApiConstants.mediaBaseUrl + item.cardImageFilename!,
+            )
+            : null;
 
     return InkWell(
       borderRadius: BorderRadius.circular(12),
@@ -343,24 +300,26 @@ class _CollectionDiscoverScreenState extends State<CollectionDiscoverScreen> {
                 child: CachedNetworkImage(
                   imageUrl: thumbnailUrl,
                   fit: BoxFit.cover,
-                  placeholder: (_, __) => Container(
-                    color: Colors.grey.shade200,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Colors.grey.shade400,
+                  placeholder:
+                      (_, __) => Container(
+                        color: Colors.grey.shade200,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.grey.shade400,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  errorWidget: (_, __, ___) => Container(
-                    color: Colors.grey.shade200,
-                    child: Icon(
-                      Icons.broken_image,
-                      color: Colors.grey.shade400,
-                    ),
-                  ),
+                  errorWidget:
+                      (_, __, ___) => Container(
+                        color: Colors.grey.shade200,
+                        child: Icon(
+                          Icons.broken_image,
+                          color: Colors.grey.shade400,
+                        ),
+                      ),
                 ),
               )
             else
@@ -409,20 +368,14 @@ class _CollectionDiscoverScreenState extends State<CollectionDiscoverScreen> {
       try {
         final yogaData = sl<YogaData>();
         final yogaContent = await yogaData.getYogaContentById(item.id);
-        sl<GoRouter>().pushNamed(
-          PlayVisuals.routeName,
-          extra: yogaContent,
-        );
+        sl<GoRouter>().pushNamed(PlayVisuals.routeName, extra: yogaContent);
       } catch (e) {
         log('Error fetching yoga content: $e');
       }
     } else {
       sl<GoRouter>().pushNamed(
         PlayVisuals.routeName,
-        queryParameters: {
-          'collection': widget.collectionSlug,
-          'id': item.id,
-        },
+        queryParameters: {'collection': widget.collectionSlug, 'id': item.id},
       );
     }
   }
@@ -461,5 +414,4 @@ class _CollectionDiscoverScreenState extends State<CollectionDiscoverScreen> {
       ),
     );
   }
-
 }

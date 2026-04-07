@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -E \"\\\\.dart$\")",
+      "Bash(flutter analyze:*)",
+      "Bash(find /Users/hitiksaini -name flutter -type f -path */bin/*)",
+      "Bash(export PATH=$HOME/development/flutter/bin:$HOME/.pub-cache/bin:$HOME/flutter/bin:/opt/homebrew/bin:$PATH)",
+      "Bash(mdfind -name flutter -onlyin /Users/hitiksaini)",
+      "Bash(grep \"bin/flutter$\")",
+      "Bash(/Users/hitiksaini/development/flutter/bin/flutter analyze:*)",
+      "Bash(/Users/hitiksaini/development/flutter/bin/dart doc:*)",
+      "Bash(find /Users/hitiksaini/.pub-cache/hosted/pub.dev -path */syncfusion_flutter_calendar* -name calendar.dart)",
+      "Bash(npx tsc:*)",
+      "Bash(export PATH=/opt/homebrew/bin:/usr/local/bin:$HOME/.nvm/versions/node/*/bin:$PATH)",
+      "Read(//Users/hitiksaini/Developer/ideadox/mindfulmini/$HOME/.nvm/versions/node/*/bin/**)",
+      "Bash(export PATH=\"/usr/local/bin:$PATH\")",
+      "Bash(/usr/local/bin/npx --prefix /Users/hitiksaini/Developer/ideadox/node-mm tsc --noEmit --project /Users/hitiksaini/Developer/ideadox/node-mm/tsconfig.json)",
+      "Read(//usr/local/bin/**)",
+      "Read(//usr/local/lib/node_modules/npm/bin/**)",
+      "Bash(/usr/local/bin/node --version)",
+      "Bash(PATH=\"/usr/local/bin:$PATH\" /usr/local/bin/node /Users/hitiksaini/Developer/ideadox/node-mm/node_modules/.bin/tsc --noEmit --project /Users/hitiksaini/Developer/ideadox/node-mm/tsconfig.json)"
+    ]
+  }
+}

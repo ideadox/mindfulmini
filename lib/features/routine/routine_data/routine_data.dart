@@ -41,6 +41,20 @@ class RoutineData {
     }
   }
 
+  /// PATCH /routines/:id/extend — Extend an existing routine by additional days
+  Future<RoutineModel> extendRoutine(String routineId, int additionalDays) async {
+    try {
+      final res = await httpService.patch(
+        '${ApiConstants.createRoutineUrl}/$routineId/extend',
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'additionalDays': additionalDays}),
+      );
+      return RoutineModel.fromJson(res['data']);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   /// GET /routines?profileId=X — Fetch all routines for a profile
   Future<List<RoutineModel>> getRoutines(String profileId) async {
     try {

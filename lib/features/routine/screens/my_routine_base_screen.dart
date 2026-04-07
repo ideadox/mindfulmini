@@ -6,7 +6,9 @@ import 'package:mindfulminis/core/app_spacing.dart';
 import 'package:mindfulminis/features/routine/providers/routine_provider.dart';
 import 'package:mindfulminis/features/routine/screens/create_routine_screen.dart';
 import 'package:mindfulminis/features/routine/screens/routine_detail_screen.dart';
+import 'package:mindfulminis/features/routine/widgets/extend_routine_sheet.dart';
 import 'package:mindfulminis/features/routine/widgets/myroutine_brief_card.dart';
+import 'package:mindfulminis/features/routine/widgets/routine_shimmer_loader.dart';
 import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:provider/provider.dart';
 
@@ -54,6 +56,9 @@ class _MyRoutineBaseScreenState extends State<MyRoutineBaseScreen> {
                       ),
                     ),
                   ),
+                  if (provider.loading)
+                    const Expanded(child: RoutineShimmerLoader())
+                  else
                   Expanded(
                     child: RefreshIndicator(
                       onRefresh: () async {
@@ -74,10 +79,13 @@ class _MyRoutineBaseScreenState extends State<MyRoutineBaseScreen> {
                             onTap: () async {
                               if (context.mounted) {
                                 if (isExpired) {
-                                  await sl<GoRouter>().pushNamed(
-                                    CreateRoutineScreen.routeName,
+                                  final result = await showExtendRoutineSheet(
+                                    context,
+                                    routineModel,
                                   );
-                                  provider.getRoutines(notify: false);
+                                  if (result != null) {
+                                    provider.getRoutines(notify: false);
+                                  }
                                 } else {
                                   await sl<GoRouter>().pushNamed(
                                     RoutineDetailScreen.routeName,

@@ -9,6 +9,7 @@ import 'package:mindfulminis/features/profile/providers/profile_provider.dart';
 import 'package:mindfulminis/features/routine/providers/routine_activity_provider.dart';
 import 'package:mindfulminis/features/routine/widgets/horizontal_week_calender.dart';
 import 'package:mindfulminis/features/routine/widgets/routine_level_container.dart';
+import 'package:mindfulminis/features/routine/widgets/routine_detail_shimmer.dart';
 import 'package:provider/provider.dart';
 
 import '../models/routine_model.dart';
@@ -66,7 +67,7 @@ class RoutineDetailScreen extends StatelessWidget {
         body: Consumer<RoutineActivityProvider>(
           builder: (context, provider, _) {
             if (provider.loading) {
-              return const Center(child: CircularProgressIndicator());
+              return const RoutineDetailShimmer();
             }
 
             final hasGoals =
@@ -140,11 +141,8 @@ class RoutineDetailScreen extends StatelessWidget {
                         Builder(
                           builder: (context) {
                             if (provider.innerLoading) {
-                              return const Padding(
-                                padding: EdgeInsets.only(top: 40),
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
+                              return const RoutineDetailShimmer(
+                                showHeader: false,
                               );
                             }
 

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../profile/providers/profile_provider.dart';
 import '../providers/routine_provider.dart';
+import '../widgets/routine_shimmer_loader.dart';
 import 'my_routine_base_screen.dart';
 import 'routine_screen.dart';
 
@@ -28,7 +29,7 @@ class RoutineDecider extends StatelessWidget {
           child: Consumer<RoutineProvider>(
             builder: (context, p, _) {
               if (p.loading) {
-                return const Center(child: CircularProgressIndicator());
+                return const Scaffold(body: RoutineShimmerLoader());
               }
               if (p.error != null) {
                 return Center(
