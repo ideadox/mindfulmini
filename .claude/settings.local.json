@@ -18,7 +18,28 @@
       "Read(//usr/local/bin/**)",
       "Read(//usr/local/lib/node_modules/npm/bin/**)",
       "Bash(/usr/local/bin/node --version)",
-      "Bash(PATH=\"/usr/local/bin:$PATH\" /usr/local/bin/node /Users/hitiksaini/Developer/ideadox/node-mm/node_modules/.bin/tsc --noEmit --project /Users/hitiksaini/Developer/ideadox/node-mm/tsconfig.json)"
+      "Bash(PATH=\"/usr/local/bin:$PATH\" /usr/local/bin/node /Users/hitiksaini/Developer/ideadox/node-mm/node_modules/.bin/tsc --noEmit --project /Users/hitiksaini/Developer/ideadox/node-mm/tsconfig.json)",
+      "WebFetch(domain:elevenlabs.io)",
+      "Bash(python3 -c \"import elevenlabs; import inspect; from elevenlabs.client import ElevenLabs; methods = [m for m in dir\\(ElevenLabs\\(api_key='x'\\).text_to_speech\\) if not m.startswith\\('_'\\)]; print\\('text_to_speech methods:'\\); print\\('\\\\n'.join\\(methods\\)\\)\")",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(/Users/hitiksaini/Developer/ideadox/story_teller/.venv/bin/python -c \"from elevenlabs.client import ElevenLabs; tts = ElevenLabs\\(api_key='x'\\).text_to_speech; methods = [m for m in dir\\(tts\\) if not m.startswith\\('_'\\) and 'timestamp' in m.lower\\(\\)]; print\\('Timestamp methods:', methods\\); from elevenlabs.types.audio_with_timestamps_response import AudioWithTimestampsResponse; print\\('Response fields:', list\\(AudioWithTimestampsResponse.model_fields.keys\\(\\)\\)\\);  from elevenlabs.types.character_alignment_response_model import CharacterAlignmentResponseModel; print\\('Alignment fields:', list\\(CharacterAlignmentResponseModel.model_fields.keys\\(\\)\\)\\)\")",
+      "Bash(/Users/hitiksaini/Developer/ideadox/story_teller/.venv/bin/python -m py_compile /Users/hitiksaini/Developer/ideadox/story_teller/app.py /Users/hitiksaini/Developer/ideadox/story_teller/elevenlabs_tts.py)",
+      "Bash(echo \"payloadcms tsc exit=$?\")",
+      "Bash(echo \"node-mm tsc exit=$?\")",
+      "Bash(lsof -i :8000 -sTCP:LISTEN)",
+      "Bash(/Users/hitiksaini/Developer/ideadox/story_teller/.venv/bin/python -c \"import uvicorn, fastapi, elevenlabs, boto3; print\\('deps OK'\\)\")",
+      "Bash(.venv/bin/uvicorn app:app --host 127.0.0.1 --port 4012 --log-level info)",
+      "Bash(curl -sf http://127.0.0.1:4012/openapi.json -o /dev/null)",
+      "Bash(curl -s -X POST http://127.0.0.1:4012/v1/audio -H 'Content-Type: application/json' -d '{ *)",
+      "Bash(tee /tmp/tts_response.json)",
+      "Bash(python3 -m json.tool)",
+      "Bash(kill %1)",
+      "Bash(pkill -f \"uvicorn app:app --host 127.0.0.1 --port 4012\")",
+      "Bash(lsof -i :4012 -sTCP:LISTEN)",
+      "Bash(echo \"tsc exit=$?\")",
+      "Bash(/Users/hitiksaini/Developer/ideadox/story_teller/.venv/bin/pip show *)",
+      "Bash(tee /tmp/prod_smoke.json)",
+      "Bash(curl -s \"https://devapi.mindfulminis.life/api/v1/cms/meditation?limit=1\")"
     ]
   }
 }

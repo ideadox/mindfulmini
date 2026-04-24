@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mindfulminis/core/utils/yoga_rich_text_parser.dart';
 
+import '../../../common/models/audio_timings.dart';
 import '../../../common/models/story_segment.dart';
 
 /// Apple Music / Instagram-style synced lyrics view.
@@ -16,6 +17,12 @@ class LyricLineBuilder extends StatelessWidget {
   final Color activeColor;
   final Color inactiveColor;
 
+  /// When present, the view advances lines using the end time of the last
+  /// visible character in each chunk instead of proportional weights. This
+  /// produces karaoke-grade sync and stays correct across authored `<break>`
+  /// pauses and audio-speed changes.
+  final AudioTimings? timings;
+
   const LyricLineBuilder({
     super.key,
     this.segments = const [],
@@ -24,6 +31,7 @@ class LyricLineBuilder extends StatelessWidget {
     required this.totalDuration,
     required this.activeColor,
     required this.inactiveColor,
+    this.timings,
   });
 
   @override
@@ -49,7 +57,19 @@ class LyricLineBuilder extends StatelessWidget {
 
   /// Flattens segments into displayable text lines, splitting long ones
   /// into ~2-line chunks so that audio sync advances through each piece.
+  /// When [timings] is present, each line additionally carries the audio
+  /// start time of its first visible character — that drives activation so
+  /// a line stays visible across any trailing silence until the next line
+  /// is actually spoken.
   List<_LyricLine> _buildTextLines() {
+    final cursor = <int>[0]; // mutable single-element cursor for timings lookup
+
+    int? lookupStartMs(String chunk) {
+      final t = timings;
+      if (t == null) return null;
+      return t.startMsForSubstring(chunk, fromIndex: cursor[0], cursorOut: cursor);
+    }
+
     // CMS path — plain text
     if (segments.isNotEmpty) {
       final lines = <_LyricLine>[];
@@ -61,10 +81,14 @@ class LyricLineBuilder extends StatelessWidget {
               plainText: chunk,
               weight: chunk.length.clamp(5, 99999).toDouble(),
               sourceIndex: i,
+              startMs: lookupStartMs(chunk),
             ));
           }
         } else {
-          // Break segment — add weight to previous line or skip
+          // Break segment — fold into the previous line's *weight* for the
+          // fallback path. With real timings, the break is implicit in the
+          // gap between this line's startMs and the next line's startMs,
+          // so no further adjustment is needed.
           final breakWeight =
               (segments[i].delay.inMilliseconds / 70.0).clamp(1.0, 99999.0);
           if (lines.isNotEmpty) {
@@ -85,6 +109,7 @@ class LyricLineBuilder extends StatelessWidget {
             textSpans: yogaSegments[i].textSpans,
             weight: yogaSegments[i].charCount.clamp(5, 99999).toDouble(),
             sourceIndex: i,
+            startMs: lookupStartMs(fullText),
           ));
         } else {
           // Split the plain text and create simple text lines
@@ -94,6 +119,7 @@ class LyricLineBuilder extends StatelessWidget {
               plainText: chunk,
               weight: chunk.length.clamp(5, 99999).toDouble(),
               sourceIndex: i,
+              startMs: lookupStartMs(chunk),
             ));
           }
         }
@@ -129,6 +155,26 @@ class LyricLineBuilder extends StatelessWidget {
   }
 
   int _getActiveIndex(List<_LyricLine> lines, int audioTotalMs) {
+    // Prefer real timestamps when every line has one.
+    final allTimed = lines.every((l) => l.startMs != null);
+    if (allTimed && lines.isNotEmpty) {
+      final nowMs = currentPosition.inMilliseconds;
+      // The active line is the last one whose startMs has already been
+      // reached. This keeps the current line visible through any silence
+      // that follows (e.g. authored `<break>` pauses) until the next line
+      // actually begins speaking.
+      int active = 0;
+      for (int i = 0; i < lines.length; i++) {
+        if (lines[i].startMs! <= nowMs) {
+          active = i;
+        } else {
+          break;
+        }
+      }
+      return active;
+    }
+
+    // Fallback: weight-proportional sync for legacy content.
     final fraction =
         (currentPosition.inMilliseconds / audioTotalMs).clamp(0.0, 1.0);
     final totalWeight = lines.fold<double>(0, (a, b) => a + b.weight);
@@ -152,11 +198,17 @@ class _LyricLine {
   final double weight;
   final int sourceIndex;
 
+  /// Audio start time (ms) of this line's first visible character.
+  /// Populated only when [LyricLineBuilder.timings] was available at build
+  /// time; drives line activation in the timestamp-sync path.
+  final int? startMs;
+
   const _LyricLine({
     this.plainText,
     this.textSpans,
     required this.weight,
     required this.sourceIndex,
+    this.startMs,
   });
 
   _LyricLine copyWithExtraWeight(double extra) => _LyricLine(
@@ -164,6 +216,7 @@ class _LyricLine {
         textSpans: textSpans,
         weight: weight + extra,
         sourceIndex: sourceIndex,
+        startMs: startMs,
       );
 
   String get displayText =>

@@ -8,6 +8,7 @@ class CmsModel {
   final Media? media;
   final Media? motionPicture;
   final Media? audio;
+  final Media? audioTimings;
   final List<Tag> tags;
   final bool inSeries;
   final String seriesId;
@@ -68,6 +69,7 @@ class CmsModel {
     required this.media,
     this.motionPicture,
     this.audio,
+    this.audioTimings,
     required this.tags,
     required this.inSeries,
     required this.seriesId,
@@ -97,7 +99,12 @@ class CmsModel {
       motionPicture: json['motionPicture'] != null && json['motionPicture'] is Map
           ? Media.fromJson(json['motionPicture'])
           : null,
-      audio: json['audio'] != null ? Media.fromJson(json['audio']) : null,
+      audio: json['audio'] != null && json['audio'] is Map
+          ? Media.fromJson(json['audio'])
+          : null,
+      audioTimings: json['audioTimings'] != null && json['audioTimings'] is Map
+          ? Media.fromJson(json['audioTimings'])
+          : null,
       tags: json['tags'] != null && json['tags'] is List
           ? (json['tags'] as List).map((t) => Tag.fromJson(t)).toList()
           : [],
@@ -121,6 +128,7 @@ class CmsModel {
       if (media != null) 'media': media!.toJson(),
       if (motionPicture != null) 'motionPicture': motionPicture!.toJson(),
       if (audio != null) 'audio': audio!.toJson(),
+      if (audioTimings != null) 'audioTimings': audioTimings!.toJson(),
       'tags': tags.map((t) => t.toJson()).toList(),
       'inSeries': inSeries,
       'series': seriesId,

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:just_audio/just_audio.dart';
 import 'package:mindfulminis/common/data/cms_data.dart';
 import 'package:mindfulminis/core/api_constants.dart';
@@ -9,6 +10,7 @@ import 'package:mindfulminis/core/injection/injection.dart';
 import 'package:mindfulminis/core/utils/yoga_rich_text_parser.dart';
 import 'package:mindfulminis/features/yoga/models/yoga_content_model.dart';
 
+import '../../../common/models/audio_timings.dart';
 import '../../../common/models/cms_model.dart';
 import '../../../common/models/story_segment.dart';
 
@@ -30,6 +32,11 @@ class CmsProvider with ChangeNotifier {
   CmsModel? cms;
   List<StorySegment> segments = [];
   List<YogaSegment> yogaSegments = [];
+
+  /// Character-level ElevenLabs alignment for the current audio, when
+  /// available. Drives exact text/audio sync in the lyric view. `null` for
+  /// legacy content generated before the timestamps rollout.
+  AudioTimings? audioTimings;
 
   bool isLoading = true;
   bool isPlaying = false;
@@ -73,6 +80,7 @@ class CmsProvider with ChangeNotifier {
     }
     // Audio init in background – UI is already visible
     _initializeAudio(cms?.audio?.filename);
+    _loadTimings(cms?.audioTimings?.filename);
   }
 
   Future<void> _initFromYoga(YogaContentModel yogaContent) async {
@@ -94,6 +102,27 @@ class CmsProvider with ChangeNotifier {
   }
 
   // ── Audio ──
+
+  Future<void> _loadTimings(String? filename) async {
+    if (filename == null || filename.isEmpty) return;
+    final url = '${ApiConstants.mediaBaseUrl}$filename';
+    try {
+      final resp = await http.get(Uri.parse(url));
+      if (_isDisposed) return;
+      if (resp.statusCode != 200) {
+        // Non-fatal: the lyric view falls back to proportional sync.
+        return;
+      }
+      audioTimings = AudioTimings.fromJsonString(resp.body);
+      notifyListeners();
+    } catch (e, stack) {
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stack,
+        reason: 'CmsProvider timings load failed for url=$url',
+      );
+    }
+  }
 
   Future<void> _initializeAudio(String? filename) async {
     if (filename == null) return;

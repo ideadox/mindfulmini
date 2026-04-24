@@ -391,6 +391,7 @@ class _PlayVisualsState extends State<PlayVisuals>
                         totalDuration: provider.totalDuration,
                         activeColor: _lyricColor,
                         inactiveColor: _lyricColor,
+                        timings: provider.audioTimings,
                       );
                     },
                   ),
@@ -459,6 +460,7 @@ class _PlayVisualsState extends State<PlayVisuals>
                       totalDuration: provider.totalDuration,
                       activeColor: _lyricColor,
                       inactiveColor: _lyricColor,
+                      timings: provider.audioTimings,
                     );
                   },
                 ),
